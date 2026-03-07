@@ -7,6 +7,14 @@
     "3.11",
     "3.12"
   ],
-  "evidenceRetentionDays": 30,
+  "evidenceRetentionDays": 90,
+  "workloadsToAudit": [
+    "sharePoint"
+  ],
+  "coverageThresholdPercent": 80,
+  "alertOnCoverageBelow": 70,
+  "maxItemsPerScan": 10000,
+  "generateRemediationManifest": true,
+  "autoLabelingEnabled": false,
   "notificationMode": "summary"
 }

@@ -9,6 +9,17 @@
     "2.5",
     "2.12"
   ],
-  "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "evidenceRetentionDays": 90,
+  "scanWorkloads": [
+    "sharePoint"
+  ],
+  "remediationMode": "detectOnly",
+  "maxSitesPerRun": 500,
+  "alertThreshold": 10,
+  "notificationMode": "summary",
+  "enableSiteOwnerNotifications": false,
+  "enableRestrictedSharePointSearch": false,
+  "restrictedSharePointSearchEnabled": false,
+  "requireOwnerAttestation": false,
+  "requireExaminerReadyEvidence": false
 }

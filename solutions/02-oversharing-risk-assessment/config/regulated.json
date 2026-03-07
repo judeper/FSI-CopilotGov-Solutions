@@ -9,6 +9,19 @@
     "2.5",
     "2.12"
   ],
-  "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "evidenceRetentionDays": 2555,
+  "scanWorkloads": [
+    "sharePoint",
+    "oneDrive",
+    "teams"
+  ],
+  "remediationMode": "notify",
+  "maxSitesPerRun": -1,
+  "alertThreshold": 1,
+  "notificationMode": "strict",
+  "enableSiteOwnerNotifications": true,
+  "enableRestrictedSharePointSearch": true,
+  "restrictedSharePointSearchEnabled": true,
+  "requireOwnerAttestation": true,
+  "requireExaminerReadyEvidence": true
 }

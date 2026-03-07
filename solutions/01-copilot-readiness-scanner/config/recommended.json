@@ -8,6 +8,11 @@
     "1.7",
     "1.9"
   ],
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "evidenceRetentionDays": 180,
+  "scanSchedule": "daily",
+  "alertThreshold": 75,
+  "maxSitesScanned": 2000,
+  "includeGuestAccounts": true,
+  "notificationMode": "standard",
+  "enablePowerBIDashboard": true
 }

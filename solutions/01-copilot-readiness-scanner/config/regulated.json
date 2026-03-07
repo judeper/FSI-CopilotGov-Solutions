@@ -8,6 +8,12 @@
     "1.7",
     "1.9"
   ],
-  "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "evidenceRetentionDays": 2555,
+  "scanSchedule": "continuous",
+  "alertThreshold": 90,
+  "maxSitesScanned": -1,
+  "includeGuestAccounts": true,
+  "notificationMode": "strict",
+  "requireExaminerReadyEvidence": true,
+  "immutableEvidenceStorage": true
 }

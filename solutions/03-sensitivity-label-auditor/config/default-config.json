@@ -1,7 +1,8 @@
 {
   "solution": "03-sensitivity-label-auditor",
+  "solutionCode": "SLA",
   "displayName": "Sensitivity Label Coverage Auditor",
-  "version": "v0.1.0",
+  "version": "v0.2.0",
   "controls": [
     "1.5",
     "2.2",
@@ -10,9 +11,74 @@
   ],
   "track": "A",
   "priority": "P1",
+  "phase": 2,
+  "solutionType": "PowerShell + Power Automate",
+  "regulations": [
+    "FINRA 4511",
+    "SEC 17a-4",
+    "GDPR",
+    "GLBA 501(b)"
+  ],
+  "evidenceOutputs": [
+    "label-coverage-report",
+    "label-gap-findings",
+    "remediation-manifest"
+  ],
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\03-sensitivity-label-auditor",
     "notificationChannel": "SLA-governance-alerts",
-    "dashboardFeedEnabled": true
-  }
+    "dashboardFeedEnabled": true,
+    "powerAutomateMode": "documentation-first"
+  },
+  "workloadsToAudit": [
+    "sharePoint",
+    "oneDrive",
+    "exchange"
+  ],
+  "labelTaxonomy": [
+    {
+      "tier": 1,
+      "name": "Public",
+      "description": "Approved for public release with no customer or regulated data."
+    },
+    {
+      "tier": 2,
+      "name": "Internal",
+      "description": "Business information for internal use that does not require heightened regulatory handling."
+    },
+    {
+      "tier": 3,
+      "name": "Confidential",
+      "description": "Sensitive business information such as customer, financial, or operational material that requires controlled access."
+    },
+    {
+      "tier": 4,
+      "name": "Highly Confidential",
+      "description": "Regulated or highly sensitive information that requires strict handling, limited sharing, and enhanced monitoring."
+    },
+    {
+      "tier": 5,
+      "name": "Restricted",
+      "description": "Trading-sensitive, privileged legal, or similarly constrained information requiring the strongest protections."
+    }
+  ],
+  "coverageThreshold": {
+    "overallPercent": 90,
+    "prioritySitesPercent": 95,
+    "byWorkload": {
+      "sharePoint": 90,
+      "oneDrive": 88,
+      "exchange": 85
+    },
+    "byLabelTier": {
+      "tier1Public": 100,
+      "tier2Internal": 95,
+      "tier3Confidential": 90,
+      "tier4HighlyConfidential": 95,
+      "tier5Restricted": 100
+    }
+  },
+  "prioritySites": [],
+  "remediationManifestMaxItems": 500,
+  "graphApiVersion": "beta"
 }

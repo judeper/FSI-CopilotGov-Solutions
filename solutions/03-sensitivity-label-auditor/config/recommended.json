@@ -7,6 +7,17 @@
     "3.11",
     "3.12"
   ],
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "evidenceRetentionDays": 365,
+  "workloadsToAudit": [
+    "sharePoint",
+    "oneDrive",
+    "exchange"
+  ],
+  "coverageThresholdPercent": 90,
+  "alertOnCoverageBelow": 85,
+  "maxItemsPerScan": 100000,
+  "generateRemediationManifest": true,
+  "autoLabelingEnabled": true,
+  "notificationMode": "standard",
+  "enablePowerAutomateAlerts": true
 }

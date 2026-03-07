@@ -1,7 +1,8 @@
 {
   "solution": "01-copilot-readiness-scanner",
+  "solutionCode": "CRS",
   "displayName": "Copilot Readiness Assessment Scanner",
-  "version": "v0.1.0",
+  "version": "v0.2.0",
   "controls": [
     "1.1",
     "1.5",
@@ -11,9 +12,31 @@
   ],
   "track": "A",
   "priority": "P0",
+  "reportFormat": "powerbi-json",
+  "graphApiVersion": "beta",
+  "scanDomains": [
+    "licensing",
+    "identity",
+    "defender",
+    "purview",
+    "powerPlatform",
+    "copilotConfig"
+  ],
+  "scoringWeights": {
+    "1.1": 0.3,
+    "1.5": 0.18,
+    "1.6": 0.22,
+    "1.7": 0.12,
+    "1.9": 0.18
+  },
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\01-copilot-readiness-scanner",
     "notificationChannel": "CRS-governance-alerts",
-    "dashboardFeedEnabled": true
+    "dashboardFeedEnabled": true,
+    "powerBIWorkspace": "Copilot Governance",
+    "retentionReviewOwners": [
+      "SecurityOperations",
+      "ComplianceEngineering"
+    ]
   }
 }

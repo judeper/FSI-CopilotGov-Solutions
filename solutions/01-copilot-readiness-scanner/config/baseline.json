@@ -8,6 +8,10 @@
     "1.7",
     "1.9"
   ],
-  "evidenceRetentionDays": 30,
+  "evidenceRetentionDays": 90,
+  "scanSchedule": "weekly",
+  "alertThreshold": 60,
+  "maxSitesScanned": 500,
+  "includeGuestAccounts": false,
   "notificationMode": "summary"
 }
