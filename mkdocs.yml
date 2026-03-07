@@ -1,6 +1,6 @@
 site_name: FSI Copilot Governance Solutions
 site_url: "https://judeper.github.io/FSI-CopilotGov-Solutions/"
-site_description: Deployable automation patterns for Microsoft 365 Copilot governance in financial services
+site_description: Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services
 repo_url: https://github.com/judeper/FSI-CopilotGov-Solutions
 repo_name: judeper/FSI-CopilotGov-Solutions
 copyright: "Copyright 2026 FSI Copilot Governance Team"
