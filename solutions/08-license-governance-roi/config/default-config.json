@@ -8,11 +8,32 @@
     "4.6",
     "4.8"
   ],
+  "framework_ids": [
+    "glba-501b",
+    "sox-302-404",
+    "occ-2011-12",
+    "ffiec-it-handbook"
+  ],
+  "evidenceOutputs": [
+    "license-utilization-report",
+    "roi-scorecard",
+    "reallocation-recommendations"
+  ],
   "track": "C",
   "priority": "P1",
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\08-license-governance-roi",
     "notificationChannel": "LGR-governance-alerts",
-    "dashboardFeedEnabled": true
+    "dashboardFeedEnabled": true,
+    "inactivityThresholdDays": 30,
+    "roiSignalSources": [
+      "VivaInsights",
+      "M365UsageReports"
+    ],
+    "reallocationTriggerUtilizationPct": 40,
+    "licenseSkus": [
+      "Copilot for Microsoft 365"
+    ],
+    "reportingPeriodDays": 90
   }
 }

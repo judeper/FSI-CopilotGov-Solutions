@@ -1,7 +1,11 @@
 {
   "solution": "09-feature-management-controller",
+  "solutionCode": "FMC",
   "displayName": "Copilot Feature Management Controller",
-  "version": "v0.1.0",
+  "version": "0.1.0",
+  "track": "C",
+  "domain": "operations-analytics",
+  "priority": "P1",
   "controls": [
     "2.6",
     "4.1",
@@ -11,11 +15,121 @@
     "4.12",
     "4.13"
   ],
-  "track": "C",
-  "priority": "P1",
-  "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\09-feature-management-controller",
-    "notificationChannel": "FMC-governance-alerts",
-    "dashboardFeedEnabled": true
+  "regulations": [
+    "SEC Reg FD",
+    "FINRA 3110"
+  ],
+  "framework_ids": [
+    "finra-3110",
+    "finra-4511",
+    "sec-17a4",
+    "sec-reg-sp",
+    "sec-reg-fd",
+    "glba-501b",
+    "sox-302-404",
+    "occ-2011-12",
+    "ffiec-it-handbook"
+  ],
+  "evidenceOutputs": [
+    "feature-state-baseline",
+    "rollout-ring-history",
+    "drift-findings"
+  ],
+  "governanceTiers": [
+    "baseline",
+    "recommended",
+    "regulated"
+  ],
+  "featureCategories": [
+    "m365-core",
+    "teams-experiences",
+    "power-platform-copilot",
+    "plugin-and-connector-governance"
+  ],
+  "rolloutRings": {
+    "Preview Ring": {
+      "targetPercentage": 5,
+      "approvalRequired": true,
+      "defaultState": "pilot",
+      "maxAudience": "approved testers"
+    },
+    "Early Adopters": {
+      "targetPercentage": 15,
+      "approvalRequired": true,
+      "defaultState": "limited",
+      "maxAudience": "business champions"
+    },
+    "General Availability": {
+      "targetPercentage": 80,
+      "approvalRequired": true,
+      "defaultState": "broad",
+      "maxAudience": "approved workforce"
+    },
+    "Restricted": {
+      "targetPercentage": 0,
+      "approvalRequired": true,
+      "defaultState": "blocked",
+      "maxAudience": "not approved"
+    }
+  },
+  "driftAlertThreshold": 3,
+  "graph": {
+    "endpoint": "https://graph.microsoft.com/beta/policies/featureRolloutPolicies",
+    "requiredScopes": [
+      "Policy.Read.All",
+      "Policy.ReadWrite.FeatureRollout",
+      "Directory.Read.All",
+      "Reports.Read.All"
+    ]
+  },
+  "teamsAdmin": {
+    "policySource": "Teams Admin Center",
+    "policyAreas": [
+      "Teams meetings",
+      "Teams chat",
+      "Teams app policies"
+    ],
+    "requiresTeamsAdministrator": true
+  },
+  "powerPlatform": {
+    "adminApi": "Power Platform Admin API",
+    "coverage": [
+      "Power Apps Copilot",
+      "Power Automate Copilot"
+    ],
+    "documentationFirst": true
+  },
+  "dataverse": {
+    "tables": {
+      "baseline": "fsi_cg_fmc_baseline",
+      "finding": "fsi_cg_fmc_finding",
+      "evidence": "fsi_cg_fmc_evidence"
+    },
+    "defaultCapacityMb": 256,
+    "evidenceRetentionDays": 180
+  },
+  "powerAutomate": {
+    "documentationFirst": true,
+    "flows": [
+      {
+        "name": "FMC-DriftMonitor",
+        "trigger": "Hourly recurrence",
+        "purpose": "Collect current feature state, compare baseline, and create drift findings."
+      },
+      {
+        "name": "FMC-RingPromotion",
+        "trigger": "On-demand",
+        "purpose": "Document and orchestrate approved feature ring promotions or rollbacks."
+      },
+      {
+        "name": "FMC-ChangeNotifier",
+        "trigger": "Change event",
+        "purpose": "Notify operations, compliance, and service owners when feature state changes."
+      }
+    ]
+  },
+  "notifications": {
+    "channel": "FMC-governance-alerts",
+    "mode": "summary"
   }
 }

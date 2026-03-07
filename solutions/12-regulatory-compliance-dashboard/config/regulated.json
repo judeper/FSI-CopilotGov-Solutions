@@ -9,6 +9,33 @@
     "4.5",
     "4.7"
   ],
+  "dependencies": [
+    "06-audit-trail-manager",
+    "11-risk-tiered-rollout"
+  ],
+  "aggregationCadence": "daily",
+  "freshnessCheckCadence": "hourly",
+  "freshnessThresholdHours": 25,
   "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "enabledFrameworks": [
+    "FINRA 4511",
+    "FINRA 3110",
+    "SEC 17a-4",
+    "OCC 2011-12",
+    "DORA",
+    "GLBA 501(b)",
+    "SOX 404"
+  ],
+  "maturityScoring": {
+    "enabled": true,
+    "trendWindowDays": 180
+  },
+  "examinationPackages": {
+    "enabled": true,
+    "autoGenerate": true
+  },
+  "notifications": {
+    "mode": "strict",
+    "channel": "RCD-governance-alerts"
+  }
 }

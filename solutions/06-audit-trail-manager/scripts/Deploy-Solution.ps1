@@ -93,7 +93,7 @@ $tierConfig = Read-AtmJsonFile -Path (Join-Path $solutionRoot ("config\{0}.json"
 $ualStatusFlag = if ($defaultConfig.defaults.PSObject.Properties.Name -contains 'unifiedAuditLogEnabled') {
     $defaultConfig.defaults.unifiedAuditLogEnabled
 } else {
-    $defaultConfig.defaults.uniifiedAuditLogEnabled
+    $defaultConfig.defaults.unifiedAuditLogEnabled
 }
 
 if ([string]::IsNullOrWhiteSpace([string]$ualStatusFlag)) {

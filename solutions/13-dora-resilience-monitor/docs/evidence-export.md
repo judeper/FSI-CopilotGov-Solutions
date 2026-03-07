@@ -13,7 +13,7 @@ The `service-health-log` artifact captures the operational state of Copilot-depe
 - `checkedAt`: timestamp of the monitoring observation
 - `pollingIntervalMinutes`: cadence defined by the selected tier
 - `retentionDays`: retention requirement applied to the evidence set
-- `sourceEndpoint`: monitoring source, normally Microsoft Graph service communications
+- `sourceEndpoint`: monitoring source, such as `local-graph-stub`, `sample-json-env`, or the live Microsoft Graph service communications endpoint when implemented
 - `incidentId`: related service-health incident identifier when present
 - `impactDescription`: analyst-readable description of the workload condition
 

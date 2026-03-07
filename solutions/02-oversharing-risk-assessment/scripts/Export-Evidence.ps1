@@ -58,6 +58,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+
 function ConvertTo-Hashtable {
     [CmdletBinding()]
     param(
@@ -165,15 +169,13 @@ function Write-JsonWithHash {
 
     $Content | ConvertTo-Json -Depth 10 | Set-Content -Path $Path -Encoding utf8
 
-    $hash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
-    $hashPath = "{0}.sha256" -f $Path
-    Set-Content -Path $hashPath -Value $hash -Encoding ascii
+    $hashInfo = Write-CopilotGovSha256File -Path $Path
 
     return [pscustomobject]@{
         name = $ArtifactName
         type = $ArtifactType
         path = ([System.IO.Path]::GetFullPath($Path))
-        hash = $hash
+        hash = $hashInfo.Hash
     }
 }
 
@@ -310,7 +312,7 @@ $package = [ordered]@{
     metadata = [ordered]@{
         solution = $configuration.solution
         solutionCode = $configuration.solutionCode
-        exportVersion = $configuration.version
+        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
         exportedAt = (Get-Date).ToString('o')
         tier = $ConfigurationTier
         periodStart = $PeriodStart.ToString('yyyy-MM-dd')
@@ -327,6 +329,11 @@ $package = [ordered]@{
 }
 
 $packageArtifact = Write-JsonWithHash -Path (Join-Path $outputRoot '02-oversharing-risk-assessment-evidence-package.json') -Content $package -ArtifactName 'ora-evidence-package' -ArtifactType 'evidence-package'
+$validation = Test-CopilotGovEvidencePackage -Path $packageArtifact.path -ExpectedArtifacts @($configuration.evidenceOutputs)
+if (-not $validation.IsValid) {
+    $details = ($validation.Errors | ForEach-Object { ' - {0}' -f $_ }) -join [Environment]::NewLine
+    throw ("Evidence validation failed for {0}:{1}{2}" -f $packageArtifact.path, [Environment]::NewLine, $details)
+}
 
 [pscustomobject]@{
     PackagePath = $packageArtifact.path

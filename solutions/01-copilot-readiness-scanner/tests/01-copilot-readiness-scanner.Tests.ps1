@@ -117,3 +117,27 @@ Describe 'Evidence export doc' {
         (Get-Content -Path $evidenceDocPath -Raw) | Should -Match 'data-hygiene-findings'
     }
 }
+
+Describe 'Runtime honesty markers' {
+    It 'Monitor-Compliance.ps1 labels simulated readiness output clearly' {
+        $monitorOutputPath = Join-Path $TestDrive 'monitor'
+        $results = @(& (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -TenantId 'contoso.onmicrosoft.com' -ExportPath $monitorOutputPath 3>$null)
+
+        $results.Count | Should -BeGreaterThan 0
+        foreach ($result in $results) {
+            $result.RuntimeMode | Should -Be 'documentation-first'
+            $result.DataSourceMode | Should -Be 'simulated-baseline'
+            $result.Status | Should -Not -Be 'implemented'
+            $result.SimulationWarning | Should -Match 'no live Microsoft Graph'
+        }
+    }
+
+    It 'Export-Evidence.ps1 tags sample evidence packages' {
+        $evidenceOutputPath = Join-Path $TestDrive 'evidence'
+        $exportResult = & (Join-Path $scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -TenantId 'contoso.onmicrosoft.com' -OutputPath $evidenceOutputPath
+        $package = Get-Content -Path $exportResult.PackagePath -Raw | ConvertFrom-Json -Depth 20
+
+        $package.metadata.runtimeMode | Should -Be 'documentation-first-sample-data'
+        $package.summary.statusSemantics | Should -Match 'documentation-first sample evidence'
+    }
+}

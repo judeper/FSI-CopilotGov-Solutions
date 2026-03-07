@@ -353,6 +353,10 @@ $policyTemplateExport | ConvertTo-Json -Depth 8 | Set-Content -Path $policyTempl
 $reviewerQueueMetrics | ConvertTo-Json -Depth 8 | Set-Content -Path $queueMetricsPath -Encoding utf8
 $lexiconUpdateLog | ConvertTo-Json -Depth 8 | Set-Content -Path $lexiconLogPath -Encoding utf8
 
+$policyTemplateHash = (Write-CopilotGovSha256File -Path $policyTemplatePath).Hash
+$queueMetricsHash = (Write-CopilotGovSha256File -Path $queueMetricsPath).Hash
+$lexiconLogHash = (Write-CopilotGovSha256File -Path $lexiconLogPath).Hash
+
 $controls = @(
     [pscustomobject]@{
         controlId = '2.10'
@@ -382,9 +386,9 @@ $controls = @(
 )
 
 $artifacts = @(
-    [pscustomobject]@{ name = 'policy-template-export'; type = 'json'; path = $policyTemplatePath }
-    [pscustomobject]@{ name = 'reviewer-queue-metrics'; type = 'json'; path = $queueMetricsPath }
-    [pscustomobject]@{ name = 'lexicon-update-log'; type = 'json'; path = $lexiconLogPath }
+    [pscustomobject]@{ name = 'policy-template-export'; type = 'json'; path = $policyTemplatePath; hash = $policyTemplateHash }
+    [pscustomobject]@{ name = 'reviewer-queue-metrics'; type = 'json'; path = $queueMetricsPath; hash = $queueMetricsHash }
+    [pscustomobject]@{ name = 'lexicon-update-log'; type = 'json'; path = $lexiconLogPath; hash = $lexiconLogHash }
 )
 
 $summary = [ordered]@{

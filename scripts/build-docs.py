@@ -10,6 +10,8 @@ try:
 except ImportError:
     yaml = None  # type: ignore[assignment]
 
+from traceability import FRAMEWORK_BLOB_ROOT
+
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE_DOCS = ROOT / "docs"
 SITE_DOCS = ROOT / "site-docs"
@@ -36,10 +38,6 @@ def load_yaml(path: Path):
     return json.loads(text)
 
 
-FRAMEWORK_SITE = "https://judeper.github.io/FSI-CopilotGov"
-FRAMEWORK_BLOB = "https://github.com/judeper/FSI-CopilotGov/blob/main"
-
-
 def rewrite_solution_links(content: str) -> str:
     """Rewrite relative links in solution docs for the site-docs context.
 
@@ -56,7 +54,12 @@ def rewrite_solution_links(content: str) -> str:
         # Framework playbook / control links
         if "playbooks/control-implementations" in path or path.startswith("docs/controls"):
             clean = path.lstrip("./")
-            return f"{prefix}{FRAMEWORK_BLOB}/{clean}{suffix}"
+            return f"{prefix}{FRAMEWORK_BLOB_ROOT}/{clean}{suffix}"
+        # Solution-to-solution links should target site-docs index.md files.
+        if re.fullmatch(r"(?:\.\./)+\d{2}-[a-z0-9-]+/?", path):
+            return f"{prefix}{path.rstrip('/')}/index.md{suffix}"
+        if re.fullmatch(r"(?:\.\./)+\d{2}-[a-z0-9-]+/README\.md", path):
+            return f"{prefix}{path[:-9]}index.md{suffix}"
         # Strip docs/ prefix for intra-solution links
         clean = path
         if clean.startswith("./docs/"):

@@ -33,6 +33,17 @@ def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def get_evidence_outputs(config: dict) -> list:
+    if isinstance(config.get("evidenceOutputs"), list):
+        return config["evidenceOutputs"]
+
+    defaults = config.get("defaults")
+    if isinstance(defaults, dict) and isinstance(defaults.get("evidenceOutputs"), list):
+        return defaults["evidenceOutputs"]
+
+    return []
+
+
 def validate_solution(slug: str) -> list:
     errors = []
     sol_dir = SOLUTIONS_ROOT / slug
@@ -62,6 +73,17 @@ def validate_solution(slug: str) -> list:
                 load_json(cfg_path)
             except json.JSONDecodeError as exc:
                 errors.append(f"{slug}: invalid JSON in {cfg}: {exc}")
+
+    default_config_path = sol_dir / "config" / "default-config.json"
+    if default_config_path.exists():
+        default_config = load_json(default_config_path)
+        evidence_outputs = get_evidence_outputs(default_config)
+        if not evidence_outputs:
+            errors.append(f"{slug}: config/default-config.json must declare evidenceOutputs")
+        elif any(not isinstance(item, str) or not item.strip() for item in evidence_outputs):
+            errors.append(f"{slug}: evidenceOutputs must contain non-empty strings only")
+        elif len(set(evidence_outputs)) != len(evidence_outputs):
+            errors.append(f"{slug}: evidenceOutputs contains duplicate entries")
 
     return errors
 

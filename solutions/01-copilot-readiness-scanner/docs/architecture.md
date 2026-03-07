@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Copilot Readiness Assessment Scanner is a PowerShell-first solution that collects readiness signals from six Microsoft 365 governance domains, applies a financial services weighting model, and exports structured artifacts for Power BI reporting and evidence retention. The architecture is intentionally modular so customer teams can extend live tenant connectors, adjust score thresholds, and add new regulatory evidence outputs without changing the repository-wide contracts.
+The Copilot Readiness Assessment Scanner is a PowerShell-first solution that documents how to collect readiness signals from six Microsoft 365 governance domains, applies a financial services weighting model, and exports structured artifacts for Power BI reporting and evidence retention. The architecture is intentionally modular so customer teams can replace the repository's representative sample logic with live tenant connectors, adjust score thresholds, and add new regulatory evidence outputs without changing the repository-wide contracts.
 
 ## Component Diagram
 
@@ -65,8 +65,10 @@ The Copilot Readiness Assessment Scanner is a PowerShell-first solution that col
 
 1. `Deploy-Solution.ps1` loads `config/default-config.json` and the selected tier file, validates operator prerequisites, and records the deployment state.
 2. `Monitor-Compliance.ps1` uses the merged configuration to determine which domains to scan, what thresholds to apply, and how broadly to inspect the tenant.
-3. Domain scan functions call Microsoft Graph, Purview-aligned services, SharePoint Online, and Power Platform admin endpoints to gather readiness indicators.
+3. Domain scan functions currently emit representative domain findings and sample scores while marking clear insertion points for Microsoft Graph, Purview-aligned services, SharePoint Online, and Power Platform admin endpoints.
 4. The scoring engine converts domain findings into weighted control scores, calculates an overall readiness posture, and assigns operational statuses.
+
+> **Note:** Repository version uses representative sample data. For live implementation, customer must bind Microsoft Graph, Purview, and SharePoint endpoints with tenant-specific authentication.
 5. `Export-Evidence.ps1` writes the readiness scorecard, data hygiene findings, and remediation plan artifacts, then creates a package aligned to the shared evidence schema.
 6. Power BI ingests the JSON artifacts to provide executive dashboards, control drill-downs, and remediation views for stakeholders.
 
@@ -127,6 +129,6 @@ The solution integrates with shared repository modules to stay aligned with repo
 
 ## Operational Notes
 
-- The current scripts are implementation-ready stubs that provide credible flow, structure, and outputs without embedding tenant-specific secrets.
+- The current scripts are documentation-first monitoring stubs that provide credible flow, structure, and outputs without embedding tenant-specific secrets or claiming live tenant collection.
 - Power BI models should treat the readiness package as a staging input and keep long-term trend logic in the report dataset rather than in the scanner scripts.
 - Customers with very large SharePoint estates should plan for sampling, throttling management, and off-peak execution windows.

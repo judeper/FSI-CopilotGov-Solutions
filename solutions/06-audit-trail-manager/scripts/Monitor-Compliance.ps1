@@ -129,7 +129,7 @@ $timestamp = (Get-Date).ToString('o')
 $ualStatusFlag = if ($defaultConfig.defaults.PSObject.Properties.Name -contains 'unifiedAuditLogEnabled') {
     $defaultConfig.defaults.unifiedAuditLogEnabled
 } else {
-    $defaultConfig.defaults.uniifiedAuditLogEnabled
+    $defaultConfig.defaults.unifiedAuditLogEnabled
 }
 
 $requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)

@@ -1,0 +1,38 @@
+{
+  "solution": "04-finra-supervision-workflow",
+  "tier": "regulated",
+  "mode": "documentation-first",
+  "periodStart": "2026-01-01",
+  "periodEnd": "2026-01-31",
+  "summary": {
+    "configuredZones": [
+      "Zone1",
+      "Zone2",
+      "Zone3"
+    ],
+    "escalationEnabled": true
+  },
+  "records": [
+    {
+      "zone": "Zone1",
+      "tier": "regulated",
+      "reviewPercent": 25,
+      "slaHours": 48,
+      "escalationEnabled": true
+    },
+    {
+      "zone": "Zone2",
+      "tier": "regulated",
+      "reviewPercent": 50,
+      "slaHours": 24,
+      "escalationEnabled": true
+    },
+    {
+      "zone": "Zone3",
+      "tier": "regulated",
+      "reviewPercent": 100,
+      "slaHours": 4,
+      "escalationEnabled": true
+    }
+  ]
+}

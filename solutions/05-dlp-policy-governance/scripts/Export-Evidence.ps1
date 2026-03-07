@@ -335,30 +335,15 @@ $packageResult = Export-SolutionEvidencePackage `
     -OutputPath $OutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts $artifacts
-
-$packagePath = $packageResult.Path
-$package = [ordered]@{
-    metadata = [ordered]@{
-        solution = '05-dlp-policy-governance'
-        solutionCode = 'DPG'
-        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
-        exportedAt = (Get-Date).ToString('o')
-        tier = $ConfigurationTier
+    -Artifacts $artifacts `
+    -AdditionalMetadata @{
         periodStart = $PeriodStart.ToString('yyyy-MM-dd')
         periodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
     }
-    summary = $summary
-    controls = $controls
-    artifacts = $artifacts
-}
-
-$package | ConvertTo-Json -Depth 10 | Set-Content -Path $packagePath -Encoding utf8
-$packageHash = Write-HashCompanion -Path $packagePath
 
 [pscustomobject]@{
-    evidencePackagePath = $packagePath
-    evidencePackageHash = $packageHash
+    evidencePackagePath = $packageResult.Path
+    evidencePackageHash = $packageResult.Hash
     baselineArtifact = $baselineArtifactPath
     driftArtifact = $driftArtifactPath
     exceptionArtifact = $exceptionArtifactPath

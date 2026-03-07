@@ -1,6 +1,8 @@
 # Conditional Access Policy Automation for Copilot
 
-> Status: implemented | Version: v0.2.0 | Priority: P1 | Track: B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** B
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -12,11 +14,22 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 
 - Targets Microsoft 365 Copilot and Copilot Studio application IDs in Conditional Access policies.
 - Generates tier-aware policy templates for baseline, recommended, and regulated deployments.
-- Applies low, medium, and high risk-tier access patterns for Copilot users and administrators.
-- Captures a JSON baseline of approved policy state for change-control and drift monitoring.
+- Documents and prepares tier-aware Conditional Access policy patterns for low, medium, and high risk-tier users and administrators.
+- Prepares a JSON baseline template of approved policy state for change-control and drift monitoring.
 - Detects unauthorized policy changes outside the approved change process.
 - Maintains an exception register with approver, approval date, business justification, and expiry.
 - Exports evidence packages aligned to `..\..\data\evidence-schema.json`.
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not create Conditional Access policies in Entra ID (policy templates and Graph API commands are generated for manual review and execution)
+- ❌ Does not connect to Microsoft Graph APIs (scripts use representative sample data)
+- ❌ Does not deploy Power Automate flows (drift alert workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Copilot application targets
 
@@ -72,6 +85,12 @@ The exception register is the authoritative list of approved deviations from the
 
 Expired exceptions should be treated as findings until they are closed or renewed through the approved supervisory process.
 
+## Prerequisites
+
+- Confirm that `05-dlp-policy-governance` is complete and that the latest protection baseline has been reviewed.
+- Confirm Azure AD P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
+- Ensure Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
+
 ## Deployment steps
 
 1. Confirm that `05-dlp-policy-governance` is complete.
@@ -84,7 +103,7 @@ Expired exceptions should be treated as findings until they are closed or renewe
 
 See `docs\deployment-guide.md` for the detailed workflow.
 
-## Evidence collection
+## Evidence Export
 
 | Evidence output | Description | Source |
 |-----------------|-------------|--------|
@@ -103,13 +122,17 @@ See `docs\deployment-guide.md` for the detailed workflow.
 | `docs\*.md` | Architecture, prerequisites, deployment, evidence, and troubleshooting guidance |
 | `tests\07-conditional-access-automation.Tests.ps1` | Pester validation for docs, configs, and scripts |
 
-## Regulatory alignment
+## Related Controls
 
 | Control | Objective | Regulations | Evidence |
 |---------|-----------|-------------|----------|
 | `2.3` | Copilot access control and Conditional Access enforcement | OCC 2011-12, FINRA 3110, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
 | `2.6` | Controlled feature enablement, exception handling, and drift oversight | OCC 2011-12, FINRA 3110 | `drift-alert-summary.json`, `access-exception-register.json` |
 | `2.9` | Device compliance requirements for Copilot sessions | OCC 2011-12, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
+
+## Regulatory Alignment
+
+This solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 by defining approved Copilot access patterns, preserving baseline and drift evidence, and documenting exception approvals for regulated populations. It supports access governance and change review, but production rollout still requires tenant-specific administrator action and oversight.
 
 ## Known limitations
 

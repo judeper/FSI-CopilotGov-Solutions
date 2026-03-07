@@ -2,6 +2,15 @@
   {
     "solution": "01-copilot-readiness-scanner",
     "display_name": "Copilot Readiness Assessment Scanner",
+    "framework_ids": [
+      "finra-3110",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance"
+    ],
     "controls": [
       {
         "control_id": "1.1",
@@ -138,6 +147,13 @@
   {
     "solution": "02-oversharing-risk-assessment",
     "display_name": "Oversharing Risk Assessment and Remediation",
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
     "controls": [
       {
         "control_id": "1.2",
@@ -300,6 +316,16 @@
   {
     "solution": "03-sensitivity-label-auditor",
     "display_name": "Sensitivity Label Coverage Auditor",
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook",
+      "gdpr"
+    ],
     "controls": [
       {
         "control_id": "1.5",
@@ -410,6 +436,11 @@
   {
     "solution": "04-finra-supervision-workflow",
     "display_name": "FINRA Supervision Workflow for Copilot",
+    "framework_ids": [
+      "finra-2210",
+      "finra-3110",
+      "sec-reg-bi"
+    ],
     "controls": [
       {
         "control_id": "3.4",
@@ -494,6 +525,14 @@
   {
     "solution": "05-dlp-policy-governance",
     "display_name": "DLP Policy Governance for Copilot",
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "dora",
+      "gdpr"
+    ],
     "controls": [
       {
         "control_id": "2.1",
@@ -578,6 +617,13 @@
   {
     "solution": "06-audit-trail-manager",
     "display_name": "Copilot Interaction Audit Trail Manager",
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "sox-302-404",
+      "cftc-1-31"
+    ],
     "controls": [
       {
         "control_id": "3.1",
@@ -714,6 +760,13 @@
   {
     "solution": "07-conditional-access-automation",
     "display_name": "Conditional Access Policy Automation for Copilot",
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "controls": [
       {
         "control_id": "2.3",
@@ -798,6 +851,12 @@
   {
     "solution": "08-license-governance-roi",
     "display_name": "License Governance and ROI Tracker",
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook"
+    ],
     "controls": [
       {
         "control_id": "1.9",
@@ -908,6 +967,17 @@
   {
     "solution": "09-feature-management-controller",
     "display_name": "Copilot Feature Management Controller",
+    "framework_ids": [
+      "finra-3110",
+      "finra-4511",
+      "sec-17a4",
+      "sec-reg-sp",
+      "sec-reg-fd",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook"
+    ],
     "controls": [
       {
         "control_id": "2.6",
@@ -1096,6 +1166,15 @@
   {
     "solution": "10-connector-plugin-governance",
     "display_name": "Copilot Connector and Plugin Governance",
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
+    ],
     "controls": [
       {
         "control_id": "1.13",
@@ -1206,6 +1285,15 @@
   {
     "solution": "11-risk-tiered-rollout",
     "display_name": "Risk-Tiered Rollout Automation",
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
+    ],
     "controls": [
       {
         "control_id": "1.9",
@@ -1316,6 +1404,18 @@
   {
     "solution": "12-regulatory-compliance-dashboard",
     "display_name": "Regulatory Compliance Dashboard",
+    "framework_ids": [
+      "finra-3110",
+      "finra-4511",
+      "sec-17a4",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "sr-11-7",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "controls": [
       {
         "control_id": "3.7",
@@ -1478,6 +1578,14 @@
   {
     "solution": "13-dora-resilience-monitor",
     "display_name": "DORA Operational Resilience Monitor",
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora",
+      "gdpr"
+    ],
     "controls": [
       {
         "control_id": "2.7",
@@ -1588,6 +1696,14 @@
   {
     "solution": "14-communication-compliance-config",
     "display_name": "Communication Compliance Configurator",
+    "framework_ids": [
+      "finra-2210",
+      "finra-3110",
+      "sec-reg-bi",
+      "fca-sysc-10",
+      "glba-501b",
+      "sox-302-404"
+    ],
     "controls": [
       {
         "control_id": "2.10",
@@ -1724,6 +1840,13 @@
   {
     "solution": "15-pages-notebooks-gap-monitor",
     "display_name": "Copilot Pages and Notebooks Compliance Gap Monitor",
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "glba-501b",
+      "sox-302-404"
+    ],
     "controls": [
       {
         "control_id": "2.11",

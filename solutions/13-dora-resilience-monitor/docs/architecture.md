@@ -2,14 +2,14 @@
 
 ## Solution Overview
 
-The DORA Operational Resilience Monitor (DRM) provides a repeatable monitoring and evidence pattern for Microsoft 365 Copilot dependencies in financial-services environments. It focuses on service-health polling, DORA-aligned incident classification, resilience-test tracking, and packaging outputs that can be reviewed by operations, compliance, internal audit, or examiners.
+The DORA Operational Resilience Monitor (DRM) provides a repeatable monitoring and evidence pattern for Microsoft 365 Copilot dependencies in financial-services environments. It focuses on a service-health polling pattern, DORA-aligned incident classification, resilience-test tracking, and packaging outputs that can be reviewed by operations, compliance, internal audit, or examiners.
 
 ## Component Diagram
 
 ```text
 +---------------------------------------------------------------+
 | Microsoft Graph Service Communications API                    |
-| /admin/serviceAnnouncement/healthOverviews                    |
+| /admin/serviceAnnouncement/healthOverviews (live target)      |
 +------------------------------+--------------------------------+
                                |
                                v
@@ -51,8 +51,8 @@ The DORA Operational Resilience Monitor (DRM) provides a repeatable monitoring a
 
 ## Data Flow
 
-1. Microsoft Graph service communications exposes workload health details through `/admin/serviceAnnouncement/healthOverviews`.
-2. `scripts/Monitor-Compliance.ps1` polls the health endpoint, normalizes workload names, and records service-health snapshots.
+1. Microsoft Graph service communications can expose workload health details through `/admin/serviceAnnouncement/healthOverviews` when a live implementation is wired.
+2. `scripts/Monitor-Compliance.ps1` currently consumes a local stub or operator-supplied sample payload, normalizes workload names, and records service-health snapshots that mirror the target contract.
 3. The incident classifier maps workload degradation or outage conditions to a DORA-oriented severity outcome: major, significant, or minor.
 4. The resilience test tracker evaluates whether annual operational-resilience exercises are current and whether RTO or RPO expectations have been documented.
 5. `scripts/Export-Evidence.ps1` collects monitoring records, incident findings, and test results into separate JSON artifacts and then packages them with the shared evidence export module.
@@ -63,6 +63,8 @@ The DORA Operational Resilience Monitor (DRM) provides a repeatable monitoring a
 ### Service Health Poller
 
 The Service Health Poller queries the Microsoft Graph service communications surface for workload status across Exchange Online, SharePoint Online, Microsoft Teams, Microsoft Graph, Microsoft 365 Apps, and Microsoft Copilot. The current repository implementation is a documentation-first stub with a clear insertion point for the authenticated Graph call so the script remains testable in offline delivery environments.
+
+> **Note:** The Service Health Poller described here provides the framework for Microsoft Graph service communications integration. The current repository version uses a local stub with representative sample data. Customer must configure Graph API authentication and endpoint binding for live service health polling.
 
 ### Incident Classifier
 

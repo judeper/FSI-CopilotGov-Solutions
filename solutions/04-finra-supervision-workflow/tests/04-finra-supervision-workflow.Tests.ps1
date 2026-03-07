@@ -65,4 +65,27 @@ Describe 'FINRA Supervision Workflow for Copilot solution' {
         $content | Should -Match '3.5'
         $content | Should -Match '3.6'
     }
+
+    It 'README uses documentation-first status language' {
+        $readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
+        $readme | Should -Match 'documentation-first'
+        $readme | Should -Not -Match 'status-implemented'
+    }
+
+    It 'Monitor-Compliance.ps1 stays below implemented without live verification' {
+        $monitorResult = & (Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1') -ConfigurationTier recommended -OutputPath (Join-Path $TestDrive 'monitor') 3>$null
+
+        $monitorResult.runtimeMode | Should -Be 'documentation-first'
+        $monitorResult.overallStatus | Should -Be 'partial'
+        @($monitorResult.controls | Where-Object { $_.status -eq 'implemented' }).Count | Should -Be 0
+    }
+
+    It 'Export-Evidence.ps1 marks default evidence as documentation-first sample data' {
+        $exportResult = & (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1') -ConfigurationTier recommended -OutputPath (Join-Path $TestDrive 'evidence') -PeriodStart '2026-01-01' -PeriodEnd '2026-01-31'
+        $package = Get-Content -Path $exportResult.PackagePath -Raw | ConvertFrom-Json -Depth 20
+
+        $package.metadata.evidenceMode | Should -Be 'documentation-first'
+        $package.metadata.warning | Should -Match 'sample evidence'
+        $package.summary.overallStatus | Should -Be 'partial'
+    }
 }

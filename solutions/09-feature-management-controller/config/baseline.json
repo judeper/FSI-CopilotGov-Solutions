@@ -1,15 +1,70 @@
 {
   "solution": "09-feature-management-controller",
   "tier": "baseline",
-  "controls": [
-    "2.6",
-    "4.1",
-    "4.2",
-    "4.3",
-    "4.4",
-    "4.12",
-    "4.13"
+  "scopeDescription": "Standard Copilot features only for initial policy inventory and supervised pilot review.",
+  "appCoverage": [
+    "Microsoft 365 Copilot Chat",
+    "Teams Copilot"
   ],
-  "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "ringManagementEnabled": false,
+  "changeApprovalMode": "standard",
+  "strictChangeApprovalRequired": false,
+  "evidenceRetentionDays": 90,
+  "driftAlertThreshold": 3,
+  "driftMonitoring": {
+    "checkIntervalHours": 24,
+    "alertMode": "summary",
+    "createFindings": true
+  },
+  "rolloutRings": {
+    "Preview Ring": {
+      "targetPercentage": 5,
+      "enabled": false,
+      "approvalRequired": true
+    },
+    "Early Adopters": {
+      "targetPercentage": 15,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "General Availability": {
+      "targetPercentage": 80,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "Restricted": {
+      "targetPercentage": 0,
+      "enabled": true,
+      "approvalRequired": true
+    }
+  },
+  "features": [
+    {
+      "featureId": "m365-copilot-chat",
+      "displayName": "Microsoft 365 Copilot Chat",
+      "sourceSystem": "Microsoft 365 Admin Center",
+      "category": "m365-core",
+      "expectedEnabled": true,
+      "expectedRing": "General Availability",
+      "riskNote": "Standard productivity assistant approved for monitored broad use."
+    },
+    {
+      "featureId": "teams-copilot-chat",
+      "displayName": "Copilot in Teams chat",
+      "sourceSystem": "Teams Admin Center",
+      "category": "teams-experiences",
+      "expectedEnabled": true,
+      "expectedRing": "Early Adopters",
+      "riskNote": "Limited to trained pilot users until supervision review is complete."
+    },
+    {
+      "featureId": "power-automate-copilot-designer",
+      "displayName": "Copilot in Power Automate designer",
+      "sourceSystem": "Power Platform Admin API",
+      "category": "power-platform-copilot",
+      "expectedEnabled": false,
+      "expectedRing": "Restricted",
+      "riskNote": "Held in restricted state during the baseline tier."
+    }
+  ]
 }

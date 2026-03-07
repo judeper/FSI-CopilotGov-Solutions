@@ -21,7 +21,14 @@
   "regulations": [
     "OCC 2011-12",
     "FINRA 3110",
-    "DORA Article 9"
+    "DORA"
+  ],
+  "framework_ids": [
+    "finra-3110",
+    "glba-501b",
+    "occ-2011-12",
+    "ffiec-it-handbook",
+    "dora"
   ],
   "dependencies": [
     "05-dlp-policy-governance"

@@ -1,6 +1,30 @@
 # Troubleshooting
 
-- Confirm the selected governance tier exists in the configuration files.
-- Confirm shared modules can be imported from `../../scripts/common/`.
-- Confirm evidence exports write both the JSON payload and the `.sha256` companion file.
-- Confirm control mappings still match `../../data/solution-catalog.json`.
+## Common Scenarios
+
+| Symptom | Likely cause | Remediation |
+|---------|--------------|-------------|
+| Graph collection fails with `403 Forbidden` when reading `/policies/featureRolloutPolicies`. | The operator does not have Microsoft 365 Global Administrator rights or the delegated app is missing `Policy.ReadWrite.FeatureRollout`. | Reconfirm the role assignment, add the missing Graph permission, grant admin consent if required, and rerun the deployment script. |
+| Teams Copilot settings are missing from the inventory. | Teams Administrator rights are missing, or the Teams policy export was not refreshed before the run. | Refresh the Teams policy export, confirm Teams Administrator access, and rerun inventory collection. |
+| Power Platform Copilot settings show as unmanaged. | The target environment in Power Platform Admin Center does not match the environment referenced during deployment. | Verify the environment name passed to `-Environment`, update the tier configuration if necessary, and rerun baseline capture. |
+| Drift alerts keep firing after an approved feature change. | The baseline was not refreshed after the approved ring promotion or restriction. | Capture a new baseline with `Deploy-Solution.ps1`, store the approval reference, and rerun `Monitor-Compliance.ps1`. |
+| Regulated tier shows connector exposure findings for third-party plugins. | Connector and plugin inventory is broader than the approved feature scope. | Review plugin and connector approvals, move the feature to `Restricted` if necessary, and coordinate with the connector governance solution for deeper assessment. |
+| Evidence export writes JSON but no `.sha256` file is present. | The output path is not writable or the export process was interrupted after payload creation. | Re-run `Export-Evidence.ps1` with a writable output path and verify the hash file immediately after export. |
+
+## Script-Level Checks
+
+1. Confirm the tier file exists under `config\`.
+2. Confirm the baseline path passed to `Monitor-Compliance.ps1` points to a JSON file that contains feature definitions.
+3. Confirm the output directory exists or can be created by the current user.
+4. Confirm shared modules under `..\..\scripts\common\` are available.
+
+## Drift Review Tips
+
+- Ring mismatch usually indicates an unapproved promotion or rollback.
+- Enablement mismatch usually indicates a feature toggle was changed outside the approved workflow.
+- Missing feature records usually indicate a collection gap or a new Copilot capability that needs to be added to the baseline.
+
+## Escalation Guidance
+
+- Escalate SEC Reg FD-related feature exposure risks to compliance and business supervision teams immediately if a feature widens access to research or issuer-sensitive content.
+- Escalate FINRA 3110-related supervision gaps when ring promotion occurs without documented approval or when alerting is disabled in a regulated deployment.

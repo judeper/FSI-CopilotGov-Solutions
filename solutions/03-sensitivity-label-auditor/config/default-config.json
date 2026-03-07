@@ -19,6 +19,16 @@
     "GDPR",
     "GLBA 501(b)"
   ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-17a3",
+    "sec-17a4",
+    "sec-reg-sp",
+    "glba-501b",
+    "sox-302-404",
+    "ffiec-it-handbook",
+    "gdpr"
+  ],
   "evidenceOutputs": [
     "label-coverage-report",
     "label-gap-findings",

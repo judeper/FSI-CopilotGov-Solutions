@@ -225,3 +225,41 @@ Describe 'DORA Operational Resilience Monitor - Documentation Validation' {
         $architecture | Should -Match 'DORA Art\. 17'
     }
 }
+
+Describe 'DORA Operational Resilience Monitor - Runtime honesty validation' {
+    It 'Monitor-Compliance.ps1 labels the default local stub path' {
+        $monitorResult = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'monitor') -TenantId '' -ClientId '' 3>$null
+
+        $monitorResult.RuntimeMode | Should -Be 'local-stub'
+        $monitorResult.OverallStatus | Should -Not -Be 'implemented'
+        @($monitorResult.ServiceHealthSummary | Select-Object -ExpandProperty Source -Unique) | Should -Contain 'local-graph-stub'
+    }
+
+    It 'Export-Evidence.ps1 keeps stub-backed incident reporting below implemented' {
+        $originalSamplePayload = $env:DRM_SERVICE_HEALTH_SAMPLE_JSON
+        $originalTenant = $env:AZURE_TENANT_ID
+        $originalClient = $env:AZURE_CLIENT_ID
+        $originalSecret = $env:AZURE_CLIENT_SECRET
+
+        try {
+            Remove-Item Env:DRM_SERVICE_HEALTH_SAMPLE_JSON -ErrorAction SilentlyContinue
+            $env:AZURE_TENANT_ID = ''
+            $env:AZURE_CLIENT_ID = ''
+            Remove-Item Env:AZURE_CLIENT_SECRET -ErrorAction SilentlyContinue
+
+            $exportResult = & (Join-Path $scriptsPath 'Export-Evidence.ps1') -ConfigurationTier recommended -OutputPath (Join-Path $TestDrive 'evidence')
+            $package = Get-Content -Path $exportResult.Package.Path -Raw | ConvertFrom-Json -Depth 20
+            $serviceHealthLog = Get-Content -Path (Join-Path $TestDrive 'evidence\service-health-log-recommended.json') -Raw | ConvertFrom-Json -Depth 20
+
+            ($package.controls | Where-Object { $_.controlId -eq '4.9' }).status | Should -Be 'partial'
+            $package.metadata.runtimeMode | Should -Be 'local-stub'
+            $serviceHealthLog.warning | Should -Match 'local Graph stub'
+        }
+        finally {
+            if ($null -ne $originalSamplePayload) { $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = $originalSamplePayload } else { Remove-Item Env:DRM_SERVICE_HEALTH_SAMPLE_JSON -ErrorAction SilentlyContinue }
+            if ($null -ne $originalTenant) { $env:AZURE_TENANT_ID = $originalTenant } else { Remove-Item Env:AZURE_TENANT_ID -ErrorAction SilentlyContinue }
+            if ($null -ne $originalClient) { $env:AZURE_CLIENT_ID = $originalClient } else { Remove-Item Env:AZURE_CLIENT_ID -ErrorAction SilentlyContinue }
+            if ($null -ne $originalSecret) { $env:AZURE_CLIENT_SECRET = $originalSecret } else { Remove-Item Env:AZURE_CLIENT_SECRET -ErrorAction SilentlyContinue }
+        }
+    }
+}

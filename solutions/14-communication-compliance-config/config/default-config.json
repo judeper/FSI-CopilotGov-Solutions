@@ -20,6 +20,14 @@
     "SEC Reg BI",
     "FCA SYSC 10"
   ],
+  "framework_ids": [
+    "finra-2210",
+    "finra-3110",
+    "sec-reg-bi",
+    "fca-sysc-10",
+    "glba-501b",
+    "sox-302-404"
+  ],
   "dependencies": [
     "04-finra-supervision-workflow"
   ],

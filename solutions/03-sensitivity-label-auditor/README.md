@@ -1,6 +1,8 @@
 # Sensitivity Label Coverage Auditor
 
-> **Status:** Active | **Version:** v0.2.0 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** A
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -14,6 +16,17 @@ Sensitivity Label Coverage Auditor measures how much in-scope content is actuall
 - Analyzes auto-labeling policy gaps, including the daily 100,000 file processing cap.
 - Generates a remediation manifest that ranks unlabeled sites, drives, and mailboxes for action.
 - Documents Power Automate alerting patterns for label gap notifications and remediation approvals.
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft Purview APIs (scripts use representative sample data)
+- ❌ Does not scan sensitivity label taxonomy live
+- ❌ Does not deploy Power Automate flows (flow designs are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Architecture Reference
 
@@ -51,6 +64,10 @@ See `docs\architecture.md` for the component diagram, Graph data flow, workload 
    ```powershell
    .\scripts\Export-Evidence.ps1 -ConfigurationTier recommended -TenantId "<tenant-id>"
    ```
+
+## Deployment
+
+Deployment starts by confirming the prerequisite label taxonomy and upstream readiness outputs, then registering the solution configuration with `Deploy-Solution.ps1`. After registration, run `Monitor-Compliance.ps1` to capture the initial workload coverage baseline, review the remediation manifest with records and compliance owners, and use `Export-Evidence.ps1` to publish the evidence package for audit support.
 
 ## Solution Components
 

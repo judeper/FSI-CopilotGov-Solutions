@@ -58,6 +58,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+
 function Get-SolutionRoot {
     return (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 }
@@ -115,11 +119,7 @@ function Write-Sha256CompanionFile {
         [string]$Path
     )
 
-    $hashValue = (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
-    $hashPath = '{0}.sha256' -f $Path
-    $hashLine = '{0} *{1}' -f $hashValue, [System.IO.Path]::GetFileName($Path)
-    Set-Content -Path $hashPath -Value $hashLine -Encoding ascii
-    return $hashPath
+    return (Write-CopilotGovSha256File -Path $Path)
 }
 
 function New-ArtifactRecord {
@@ -131,13 +131,17 @@ function New-ArtifactRecord {
         [string]$Type,
 
         [Parameter(Mandatory)]
-        [string]$Path
+        [string]$Path,
+
+        [Parameter(Mandatory)]
+        [string]$Hash
     )
 
     return [pscustomobject]@{
         name = $Name
         type = $Type
         path = $Path
+        hash = $Hash
     }
 }
 
@@ -175,7 +179,7 @@ $null = New-Item -Path $stagingPath -ItemType Directory -Force
 $monitorScriptPath = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
 $monitorResult = & $monitorScriptPath -ConfigurationTier $ConfigurationTier -TenantId $TenantId -OutputPath $stagingPath
 
-$exportedAt = (Get-Date).ToString('s')
+$exportedAt = (Get-Date).ToString('o')
 $coveragePath = Join-Path $resolvedOutputPath 'label-coverage-report.json'
 $gapFindingsPath = Join-Path $resolvedOutputPath 'label-gap-findings.json'
 $remediationManifestPath = Join-Path $resolvedOutputPath 'remediation-manifest.json'
@@ -234,16 +238,16 @@ $remediationManifestArtifact = [pscustomobject]@{
 }
 
 Write-JsonFile -Path $coveragePath -Content $coverageArtifact
-$coverageHashPath = Write-Sha256CompanionFile -Path $coveragePath
+$coverageHash = Write-Sha256CompanionFile -Path $coveragePath
 Write-JsonFile -Path $gapFindingsPath -Content $gapFindingsArtifact
-$gapHashPath = Write-Sha256CompanionFile -Path $gapFindingsPath
+$gapHash = Write-Sha256CompanionFile -Path $gapFindingsPath
 Write-JsonFile -Path $remediationManifestPath -Content $remediationManifestArtifact
-$manifestHashPath = Write-Sha256CompanionFile -Path $remediationManifestPath
+$manifestHash = Write-Sha256CompanionFile -Path $remediationManifestPath
 
 $artifacts = @(
-    New-ArtifactRecord -Name 'label-coverage-report' -Type 'json' -Path $coveragePath
-    New-ArtifactRecord -Name 'label-gap-findings' -Type 'json' -Path $gapFindingsPath
-    New-ArtifactRecord -Name 'remediation-manifest' -Type 'json' -Path $remediationManifestPath
+    New-ArtifactRecord -Name 'label-coverage-report' -Type 'json' -Path $coveragePath -Hash $coverageHash.Hash
+    New-ArtifactRecord -Name 'label-gap-findings' -Type 'json' -Path $gapFindingsPath -Hash $gapHash.Hash
+    New-ArtifactRecord -Name 'remediation-manifest' -Type 'json' -Path $remediationManifestPath -Hash $manifestHash.Hash
 )
 
 $summary = [pscustomobject]@{
@@ -257,7 +261,7 @@ $package = [pscustomobject]@{
     metadata = [pscustomobject]@{
         solution = $configuration.solution
         solutionCode = $configuration.solutionCode
-        exportVersion = $configuration.version
+        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
         exportedAt = $exportedAt
         tier = $ConfigurationTier
     }
@@ -267,7 +271,12 @@ $package = [pscustomobject]@{
 }
 
 Write-JsonFile -Path $packagePath -Content $package
-$packageHashPath = Write-Sha256CompanionFile -Path $packagePath
+$packageHash = Write-Sha256CompanionFile -Path $packagePath
+$validation = Test-CopilotGovEvidencePackage -Path $packagePath -ExpectedArtifacts @($configuration.evidenceOutputs)
+if (-not $validation.IsValid) {
+    $details = ($validation.Errors | ForEach-Object { ' - {0}' -f $_ }) -join [Environment]::NewLine
+    throw ("Evidence validation failed for {0}:{1}{2}" -f $packagePath, [Environment]::NewLine, $details)
+}
 
 [pscustomobject]@{
     solution = $configuration.displayName
@@ -278,6 +287,6 @@ $packageHashPath = Write-Sha256CompanionFile -Path $packagePath
     periodEnd = $PeriodEnd.ToString('s')
     packagePath = $packagePath
     artifactPaths = $artifacts
-    hashFiles = @($coverageHashPath, $gapHashPath, $manifestHashPath, $packageHashPath)
+    hashFiles = @($coverageHash.HashPath, $gapHash.HashPath, $manifestHash.HashPath, $packageHash.HashPath)
     summary = $summary
 }

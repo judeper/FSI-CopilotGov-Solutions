@@ -7,6 +7,101 @@
     "1.12",
     "4.12"
   ],
+  "waveDefinitions": [
+    {
+      "waveNumber": 0,
+      "name": "Wave 0 - Pilot 50 Users",
+      "maxUsers": 50,
+      "includedRiskTiers": [
+        "Tier1"
+      ],
+      "approvalMode": "business-owner",
+      "gateCriteria": [
+        "scannerComplete",
+        "minimumReadinessScore",
+        "serviceHealthGreen",
+        "supportDeskCoverage"
+      ]
+    },
+    {
+      "waveNumber": 1,
+      "name": "Wave 1 - 500 Users Tier 1 and Tier 2",
+      "maxUsers": 500,
+      "includedRiskTiers": [
+        "Tier1",
+        "Tier2"
+      ],
+      "approvalMode": "control-owner",
+      "gateCriteria": [
+        "wave0Success",
+        "dlpValidatedForTier2",
+        "supervisionCoverage",
+        "incidentThreshold"
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "name": "Wave 2 - Full Tier 1 and Tier 2",
+      "maxUsers": 2000,
+      "includedRiskTiers": [
+        "Tier1",
+        "Tier2"
+      ],
+      "approvalMode": "rollout-board",
+      "gateCriteria": [
+        "trainingCompletion",
+        "backlogWithinThreshold",
+        "dashboardHealthy"
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "name": "Wave 3 - Tier 3 Restricted Release",
+      "maxUsers": 250,
+      "includedRiskTiers": [
+        "Tier3"
+      ],
+      "approvalMode": "cab",
+      "gateCriteria": [
+        "caPolicyValidated",
+        "auditTrailVerified",
+        "dlpCoverage",
+        "doraResilienceReview"
+      ]
+    }
+  ],
+  "notifications": {
+    "mode": "strict",
+    "summaryRecipients": [
+      "copilot-operations@contoso.example",
+      "control-owners@contoso.example",
+      "cab@contoso.example"
+    ],
+    "approvalChannel": "RTR-regulated-approvals"
+  },
+  "approvalWorkflow": {
+    "enabled": true,
+    "cabApprovalRequired": true,
+    "requiredApprovers": [
+      "BusinessOwner",
+      "ControlOwner",
+      "CAB"
+    ]
+  },
+  "analytics": {
+    "vivaInsightsEnabled": true
+  },
+  "resilience": {
+    "doraGateRequired": true
+  },
+  "gateThresholds": {
+    "minimumPilotReadinessPercent": 96,
+    "minimumExpansionReadinessPercent": 93,
+    "maximumOpenIncidents": 2
+  },
+  "auditTrail": {
+    "fullAuditTrailRequired": true
+  },
   "evidenceRetentionDays": 365,
   "notificationMode": "strict"
 }

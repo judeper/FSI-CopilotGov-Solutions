@@ -2,4 +2,7 @@
 
 ## v0.1.0
 
-- Added the initial scaffold for Copilot Connector and Plugin Governance.
+- Replaced shallow scaffold content with detailed connector and plugin governance guidance tailored to financial services operations and analytics teams.
+- Added deployment, monitoring, and evidence export PowerShell stubs that model connector discovery, approval routing, data-flow attestation, and compliance monitoring.
+- Added realistic baseline, recommended, and regulated configuration files for connector risk categories, blocked connectors, approval SLAs, and evidence retention.
+- Expanded Pester coverage for documentation presence, script metadata, connector governance configuration, and PowerShell syntax validation.

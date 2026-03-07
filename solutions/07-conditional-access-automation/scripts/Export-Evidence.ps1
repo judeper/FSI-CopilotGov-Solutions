@@ -104,7 +104,7 @@ function Merge-Configuration {
         [hashtable]$TierConfig
     )
 
-    $copilotAppIds = if ($TierConfig.ContainsKey('copilotAppIds') -and $TierConfig.copilotAppIds.Count -gt 0) {
+    $copilotAppIds = if ($TierConfig.ContainsKey('copilotAppIds') -and @($TierConfig.copilotAppIds).Count -gt 0) {
         @($TierConfig.copilotAppIds)
     }
     else {
@@ -182,10 +182,10 @@ function New-PolicyTemplate {
         $null = $grantControls.Add('compliantDevice')
     }
 
-    $namedLocations = if ($RiskTierSettings.ContainsKey('namedLocations') -and $RiskTierSettings.namedLocations.Count -gt 0) {
+    $namedLocations = if ($RiskTierSettings.ContainsKey('namedLocations') -and @($RiskTierSettings.namedLocations).Count -gt 0) {
         @($RiskTierSettings.namedLocations)
     }
-    elseif ($Configuration.namedLocations.Count -gt 0) {
+    elseif (@($Configuration.namedLocations).Count -gt 0) {
         @($Configuration.namedLocations)
     }
     else {
@@ -227,7 +227,7 @@ function New-PolicyTemplate {
         riskTier = $RiskTierName
         targetedAppIds = @($Configuration.copilotAppIds)
         grantControls = [ordered]@{
-            operator = if ($grantControls.Count -gt 1) { 'AND' } else { 'OR' }
+            operator = if (@($grantControls).Count -gt 1) { 'AND' } else { 'OR' }
             builtInControls = @($grantControls)
         }
         conditions = $conditions
@@ -335,10 +335,10 @@ else {
     }
 }
 
-$policyTemplates = if ($baselineDocument -is [hashtable] -and $baselineDocument.ContainsKey('policies') -and $baselineDocument.policies.Count -gt 0) {
+$policyTemplates = if ($baselineDocument -is [hashtable] -and $baselineDocument.ContainsKey('policies') -and @($baselineDocument.policies).Count -gt 0) {
     @($baselineDocument.policies)
 }
-elseif ($baselineDocument -is [hashtable] -and $baselineDocument.ContainsKey('policyTemplates') -and $baselineDocument.policyTemplates.Count -gt 0) {
+elseif ($baselineDocument -is [hashtable] -and $baselineDocument.ContainsKey('policyTemplates') -and @($baselineDocument.policyTemplates).Count -gt 0) {
     @($baselineDocument.policyTemplates)
 }
 else {
@@ -419,6 +419,15 @@ $summary = [ordered]@{
     exceptionCount = $exceptionCount
 }
 
+$additionalMetadata = [ordered]@{}
+if ($PSBoundParameters.ContainsKey('PeriodStart')) {
+    $additionalMetadata['periodStart'] = $PeriodStart.ToString('yyyy-MM-dd')
+}
+
+if ($PSBoundParameters.ContainsKey('PeriodEnd')) {
+    $additionalMetadata['periodEnd'] = $PeriodEnd.ToString('yyyy-MM-dd')
+}
+
 $packageResult = Export-SolutionEvidencePackage `
     -Solution $config.solution `
     -SolutionCode $config.solutionCode `
@@ -426,25 +435,8 @@ $packageResult = Export-SolutionEvidencePackage `
     -OutputPath $OutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts @($policyArtifact, $driftArtifact, $exceptionArtifact)
-
-if ($PSBoundParameters.ContainsKey('PeriodStart') -or $PSBoundParameters.ContainsKey('PeriodEnd')) {
-    $packageDocument = Read-JsonFile -Path $packageResult.Path
-    if ($PSBoundParameters.ContainsKey('PeriodStart')) {
-        $packageDocument.metadata.periodStart = $PeriodStart.ToString('yyyy-MM-dd')
-    }
-    if ($PSBoundParameters.ContainsKey('PeriodEnd')) {
-        $packageDocument.metadata.periodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
-    }
-
-    $packageDocument | ConvertTo-Json -Depth 12 | Set-Content -Path $packageResult.Path -Encoding utf8
-    $updatedHash = Get-CopilotGovSha256 -Path $packageResult.Path
-    Set-Content -Path ($packageResult.Path + '.sha256') -Value ("{0}  {1}" -f $updatedHash, [IO.Path]::GetFileName($packageResult.Path)) -Encoding utf8
-    $packageResult = [pscustomobject]@{
-        Path = $packageResult.Path
-        Hash = $updatedHash
-    }
-}
+    -Artifacts @($policyArtifact, $driftArtifact, $exceptionArtifact) `
+    -AdditionalMetadata $additionalMetadata
 
 [pscustomobject]@{
     Solution = $config.displayName

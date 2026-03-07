@@ -46,6 +46,8 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
+$script:DocumentationFirstWarning = 'Documentation-first export emits configuration-based sample evidence. Use -LiveExport with Dataverse connectivity before treating supervisory controls as implemented.'
+
 function Read-JsonFile {
     [CmdletBinding()]
     param(
@@ -288,6 +290,7 @@ function Get-DocumentationEvidenceData {
             solution = '04-finra-supervision-workflow'
             tier = $Tier
             mode = 'documentation-first'
+            warning = $script:DocumentationFirstWarning
             periodStart = $StartDate.ToString('yyyy-MM-dd')
             periodEnd = $EndDate.ToString('yyyy-MM-dd')
             summary = [ordered]@{
@@ -300,6 +303,7 @@ function Get-DocumentationEvidenceData {
             solution = '04-finra-supervision-workflow'
             tier = $Tier
             mode = 'documentation-first'
+            warning = $script:DocumentationFirstWarning
             periodStart = $StartDate.ToString('yyyy-MM-dd')
             periodEnd = $EndDate.ToString('yyyy-MM-dd')
             summary = [ordered]@{
@@ -312,6 +316,7 @@ function Get-DocumentationEvidenceData {
             solution = '04-finra-supervision-workflow'
             tier = $Tier
             mode = 'documentation-first'
+            warning = $script:DocumentationFirstWarning
             periodStart = $StartDate.ToString('yyyy-MM-dd')
             periodEnd = $EndDate.ToString('yyyy-MM-dd')
             summary = [ordered]@{
@@ -431,6 +436,7 @@ function Get-LiveEvidenceData {
             solution = '04-finra-supervision-workflow'
             tier = $Tier
             mode = 'live-export'
+            warning = 'Live-export mode reads Dataverse rows, but Power Automate and Dataverse implementations remain customer-managed outside this repository.'
             periodStart = $StartDate.ToString('yyyy-MM-dd')
             periodEnd = $EndDate.ToString('yyyy-MM-dd')
             summary = [ordered]@{
@@ -443,6 +449,7 @@ function Get-LiveEvidenceData {
             solution = '04-finra-supervision-workflow'
             tier = $Tier
             mode = 'live-export'
+            warning = 'Live-export mode reads Dataverse rows, but Power Automate and Dataverse implementations remain customer-managed outside this repository.'
             periodStart = $StartDate.ToString('yyyy-MM-dd')
             periodEnd = $EndDate.ToString('yyyy-MM-dd')
             summary = [ordered]@{
@@ -455,6 +462,7 @@ function Get-LiveEvidenceData {
             solution = '04-finra-supervision-workflow'
             tier = $Tier
             mode = 'live-export'
+            warning = 'Live-export mode reads Dataverse rows, but Power Automate and Dataverse implementations remain customer-managed outside this repository.'
             periodStart = $StartDate.ToString('yyyy-MM-dd')
             periodEnd = $EndDate.ToString('yyyy-MM-dd')
             summary = [ordered]@{
@@ -490,22 +498,37 @@ $samplingArtifact = Write-JsonArtifact -FileName 'sampling-summary' -ArtifactTyp
 $controls = @(
     [pscustomobject]@{
         controlId = '3.4'
-        status = if ($LiveExport -and @($data['queueSnapshot']['records']).Count -eq 0) { 'partial' } else { 'implemented' }
-        notes = 'Supports compliance with supervisory coverage by capturing queue intake, zone assignment, sampling configuration, and SLA targets.'
+        status = if ($LiveExport) { if (@($data['queueSnapshot']['records']).Count -eq 0) { 'partial' } else { 'implemented' } } else { 'partial' }
+        notes = if ($LiveExport) {
+            'Supports compliance with supervisory coverage by capturing queue intake, zone assignment, sampling configuration, and SLA targets.'
+        }
+        else {
+            'Documentation-first sample evidence captures the intended queue, sampling, and SLA pattern; live Dataverse rows are required before treating supervisory coverage as implemented.'
+        }
     }
     [pscustomobject]@{
         controlId = '3.5'
-        status = if ($LiveExport -and @($data['reviewDispositionLog']['records']).Count -eq 0) { 'partial' } else { 'implemented' }
-        notes = 'Supports compliance with review disposition accountability through reviewer actions, timestamps, and recorded outcomes.'
+        status = if ($LiveExport) { if (@($data['reviewDispositionLog']['records']).Count -eq 0) { 'partial' } else { 'implemented' } } else { 'partial' }
+        notes = if ($LiveExport) {
+            'Supports compliance with review disposition accountability through reviewer actions, timestamps, and recorded outcomes.'
+        }
+        else {
+            'Documentation-first sample evidence preserves the intended review-disposition contract, but live reviewer actions are not exported by default.'
+        }
     }
     [pscustomobject]@{
         controlId = '3.6'
-        status = if ($configuration['exceptionTracking']['enabled']) { 'implemented' } else { 'partial' }
-        notes = 'Supports compliance with exception tracking through escalation settings, breach logging, and review notes retained for audit.'
+        status = if ($LiveExport -and $configuration['exceptionTracking']['enabled']) { 'implemented' } else { 'partial' }
+        notes = if ($LiveExport -and $configuration['exceptionTracking']['enabled']) {
+            'Supports compliance with exception tracking through escalation settings, breach logging, and review notes retained for audit.'
+        }
+        else {
+            'Exception tracking configuration is documented and exportable, but default repository output remains documentation-first until live Dataverse evidence is supplied.'
+        }
     }
 )
 
-$overallStatus = if (@($controls | Where-Object { $_.status -ne 'implemented' }).Count -eq 0) { 'implemented' } else { 'partial' }
+$overallStatus = if ($LiveExport -and @($controls | Where-Object { $_.status -ne 'implemented' }).Count -eq 0) { 'implemented' } else { 'partial' }
 $summary = [ordered]@{
     overallStatus = $overallStatus
     recordCount = [int]$data['recordCount']
@@ -520,25 +543,23 @@ $package = Export-SolutionEvidencePackage `
     -OutputPath $OutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts @($queueArtifact, $logArtifact, $samplingArtifact)
-
-$packagePayload = Get-Content -Path $package.Path -Raw | ConvertFrom-Json -AsHashtable
-$packagePayload['metadata']['periodStart'] = $PeriodStart
-$packagePayload['metadata']['periodEnd'] = $PeriodEnd
-$packagePayload['metadata']['evidenceMode'] = if ($LiveExport) { 'live-export' } else { 'documentation-first' }
-$packagePayload['metadata']['policyId'] = $configuration['purviewPolicyId']
-$packagePayload['metadata']['environmentUrl'] = $configuration['dataverseEnvironmentUrl']
-$packagePayload | ConvertTo-Json -Depth 12 | Set-Content -Path $package.Path -Encoding utf8
-
-$packageHash = Get-CopilotGovSha256 -Path $package.Path
-Set-Content -Path ($package.Path + '.sha256') -Value ("{0}  {1}" -f $packageHash, [System.IO.Path]::GetFileName($package.Path)) -Encoding utf8
+    -Artifacts @($queueArtifact, $logArtifact, $samplingArtifact) `
+    -ExpectedArtifacts @($configuration['evidenceOutputs']) `
+    -AdditionalMetadata @{
+        periodStart = $PeriodStart
+        periodEnd = $PeriodEnd
+        evidenceMode = if ($LiveExport) { 'live-export' } else { 'documentation-first' }
+        warning = if ($LiveExport) { 'Live-export reads Dataverse records but still depends on customer-managed Power Platform assets.' } else { $script:DocumentationFirstWarning }
+        policyId = $configuration['purviewPolicyId']
+        environmentUrl = $configuration['dataverseEnvironmentUrl']
+    }
 
 [pscustomobject]@{
     Solution = 'FINRA Supervision Workflow for Copilot'
     Tier = $ConfigurationTier
     Mode = if ($LiveExport) { 'live-export' } else { 'documentation-first' }
     PackagePath = $package.Path
-    PackageHash = $packageHash
+    PackageHash = $package.Hash
     Artifacts = @($queueArtifact, $logArtifact, $samplingArtifact)
 }
 

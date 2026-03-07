@@ -32,6 +32,23 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$script:RuntimeMode = 'documentation-first'
+$script:StatusWarning = 'Monitor-Compliance.ps1 validates configuration posture and an optional endpoint probe only; it does not confirm live queue processing or reviewer activity.'
+
+function Resolve-DocumentationFirstStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [bool]$HasFindings
+    )
+
+    if ($HasFindings) {
+        return 'monitor-only'
+    }
+
+    return 'partial'
+}
+
 function Read-JsonFile {
     [CmdletBinding()]
     param(
@@ -255,9 +272,9 @@ elseif ($ConfigurationTier -ne 'baseline') {
 $controls = @(
     [pscustomobject]@{
         controlId = '3.4'
-        status = if ($samplingFindings.Count -eq 0 -and $slaFindings.Count -eq 0) { 'implemented' } else { 'partial' }
+        status = Resolve-DocumentationFirstStatus -HasFindings (($samplingFindings.Count -gt 0) -or ($slaFindings.Count -gt 0))
         notes = if ($samplingFindings.Count -eq 0 -and $slaFindings.Count -eq 0) {
-            'Supervision coverage is configured for the expected zones with valid sampling rates and SLA targets.'
+            'Sampling rates and SLA targets are configured for the expected zones, but live supervisory queue processing is not validated by this script.'
         }
         else {
             ($samplingFindings + $slaFindings) -join ' '
@@ -265,9 +282,9 @@ $controls = @(
     }
     [pscustomobject]@{
         controlId = '3.5'
-        status = if ($control35Findings.Count -eq 0) { 'implemented' } else { 'partial' }
+        status = Resolve-DocumentationFirstStatus -HasFindings ($control35Findings.Count -gt 0)
         notes = if ($control35Findings.Count -eq 0) {
-            'Review dispositions and immutable logging requirements are configured for the active tier.'
+            'Review dispositions and immutable logging requirements are configured for the active tier, but live reviewer actions are not inspected here.'
         }
         else {
             $control35Findings -join ' '
@@ -275,9 +292,9 @@ $controls = @(
     }
     [pscustomobject]@{
         controlId = '3.6'
-        status = if ($control36Findings.Count -eq 0) { 'implemented' } else { 'partial' }
+        status = Resolve-DocumentationFirstStatus -HasFindings ($control36Findings.Count -gt 0)
         notes = if ($control36Findings.Count -eq 0) {
-            'Exception tracking, escalation handling, and notification settings are configured for the active tier.'
+            'Exception tracking, escalation handling, and notification settings are configured for the active tier, but the repository monitor does not verify live exception rows.'
         }
         else {
             $control36Findings -join ' '
@@ -293,15 +310,29 @@ else {
         attempted = $false
         connected = $null
         queueHealth = 'skipped'
-        notes = @('Live Dataverse verification was not requested.')
+        notes = @('Live Dataverse verification was not requested; output reflects documentation-first configuration checks only.')
     }
 }
 
-$overallStatus = if (@($controls | Where-Object { $_.status -ne 'implemented' }).Count -eq 0 -and (-not $LiveCheck -or $liveCheckResult.connected)) {
-    'implemented'
+$dataSourceMode = if ($LiveCheck -and $liveCheckResult.connected) {
+    'configuration-plus-endpoint-probe'
+}
+elseif ($LiveCheck) {
+    'configuration-plus-failed-endpoint-probe'
+}
+else {
+    'configuration-only'
+}
+
+$overallStatus = if (@($controls | Where-Object { $_.status -eq 'monitor-only' }).Count -gt 0 -or ($LiveCheck -and -not $liveCheckResult.connected)) {
+    'monitor-only'
 }
 else {
     'partial'
+}
+
+if (-not $LiveCheck -or -not $liveCheckResult.connected) {
+    Write-Warning $script:StatusWarning
 }
 
 $result = [ordered]@{
@@ -310,6 +341,9 @@ $result = [ordered]@{
     tier = $ConfigurationTier
     checkedAt = (Get-Date).ToString('o')
     overallStatus = $overallStatus
+    runtimeMode = $script:RuntimeMode
+    dataSourceMode = $dataSourceMode
+    statusWarning = $script:StatusWarning
     supportedZones = $configuration['supportedZones']
     samplingRates = $configuration['samplingRates']
     slaHoursByZone = $configuration['slaHoursByZone']

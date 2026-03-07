@@ -1,0 +1,75 @@
+{
+  "solution": "04-finra-supervision-workflow",
+  "tier": "regulated",
+  "mode": "documentation-first",
+  "periodStart": "2026-01-01",
+  "periodEnd": "2026-01-31",
+  "summary": {
+    "recordCount": 7,
+    "actionSummary": [
+      {
+        "zone": "Zone1",
+        "actions": 2
+      },
+      {
+        "zone": "Zone2",
+        "actions": 2
+      },
+      {
+        "zone": "Zone3",
+        "actions": 3
+      }
+    ]
+  },
+  "records": [
+    {
+      "fsi_lognumber": "LOG-001-01",
+      "fsi_queueitem": "FSW-Z1-001",
+      "fsi_action": "ingested",
+      "fsi_actor": "Ingest Flagged Items",
+      "fsi_timestamp": "2026-01-01T01:00:00.0000000"
+    },
+    {
+      "fsi_lognumber": "LOG-001-02",
+      "fsi_queueitem": "FSW-Z1-001",
+      "fsi_action": "assigned",
+      "fsi_actor": "Assignment Flow",
+      "fsi_timestamp": "2026-01-01T02:00:00.0000000"
+    },
+    {
+      "fsi_lognumber": "LOG-002-01",
+      "fsi_queueitem": "FSW-Z2-002",
+      "fsi_action": "ingested",
+      "fsi_actor": "Ingest Flagged Items",
+      "fsi_timestamp": "2026-01-01T02:00:00.0000000"
+    },
+    {
+      "fsi_lognumber": "LOG-002-02",
+      "fsi_queueitem": "FSW-Z2-002",
+      "fsi_action": "assigned",
+      "fsi_actor": "Assignment Flow",
+      "fsi_timestamp": "2026-01-01T03:00:00.0000000"
+    },
+    {
+      "fsi_lognumber": "LOG-003-01",
+      "fsi_queueitem": "FSW-Z3-003",
+      "fsi_action": "ingested",
+      "fsi_actor": "Ingest Flagged Items",
+      "fsi_timestamp": "2026-01-01T03:00:00.0000000"
+    },
+    {
+      "fsi_lognumber": "LOG-003-02",
+      "fsi_queueitem": "FSW-Z3-003",
+      "fsi_action": "assigned",
+      "fsi_actor": "Assignment Flow",
+      "fsi_timestamp": "2026-01-01T04:00:00.0000000"
+    },
+    {
+      "fsi_lognumber": "LOG-003-03",
+      "fsi_queueitem": "FSW-Z3-003",
+      "fsi_action": "sla-warning",
+      "fsi_actor": "Escalation Flow",
+      "fsi_timestamp": "2026-01-01T05:00:00.0000000"
+    }
+  ]
+}

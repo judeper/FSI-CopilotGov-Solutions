@@ -1,14 +1,18 @@
 # AGENTS.md - Instructions for AI Agents
 
-This repository contains deployable governance solution scaffolds for Microsoft 365 Copilot in regulated financial services.
+This repository contains documentation-first governance solution scaffolds for Microsoft 365 Copilot in regulated financial services.
 
 ## Core Expectations
 
 - Treat `FSI-CopilotGov` as the source of truth for control intent, playbooks, and regulatory language.
 - Keep this repository standalone at runtime; link back to framework docs, but do not introduce cross-repo execution dependencies.
 - Use cautious language such as "supports compliance with" and "helps meet".
+- Do not use overstated claims implying live API integration when scripts use representative sample data (e.g., avoid "performs Graph API-based scanning", "sequences license assignment", "aggregates evidence into Power BI").
 - Do not commit exported Power Automate runtime artifacts; document how to build flows and apps instead.
 - Use Dataverse logical names in lowercase without inserted underscores between words.
+- Every solution README must include a `## Scope Boundaries` section listing what the solution does NOT do.
+- Every solution README must use the standardized status line format: `> **Status:** Documentation-first scaffold | **Version:** vX.Y.Z | **Priority:** PX | **Track:** X`
+- Every solution README must include a disclaimer banner linking to `docs/disclaimer.md` and `docs/documentation-vs-runnable-assets-guide.md`.
 
 ## Solution Catalog
 

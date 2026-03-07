@@ -85,6 +85,7 @@ function Get-DrmConfiguration {
         solutionCode = $defaultConfig.solutionCode
         version = $defaultConfig.version
         defaults = $defaultConfig.defaults
+        evidenceOutputs = $defaultConfig.evidenceOutputs
         tier = $tierConfig.tier
         controls = $tierConfig.controls
         evidenceRetentionDays = $tierConfig.evidenceRetentionDays
@@ -181,6 +182,7 @@ $serviceHealthRecords = @(
             pollingIntervalMinutes = $configuration.serviceHealthPollingIntervalMinutes
             retentionDays = $configuration.evidenceRetentionDays
             sourceEndpoint = $entry.Source
+            runtimeMode = $entry.RuntimeMode
             incidentId = $entry.IncidentId
             impactDescription = $entry.ImpactDescription
         }
@@ -194,6 +196,8 @@ $serviceHealthArtifact = [ordered]@{
     generatedAt = (Get-Date).ToString('o')
     pollingIntervalMinutes = $configuration.serviceHealthPollingIntervalMinutes
     retentionDays = $configuration.evidenceRetentionDays
+    runtimeMode = $complianceStatus.RuntimeMode
+    warning = $complianceStatus.StatusWarning
     records = $serviceHealthRecords
 }
 $serviceHealthFile = New-DrmArtifactFile -Path (Join-Path $resolvedOutputPath ("service-health-log-{0}.json" -f $ConfigurationTier)) -Content $serviceHealthArtifact
@@ -224,6 +228,8 @@ $incidentRegisterArtifact = [ordered]@{
     periodStart = $PeriodStart.ToString('o')
     periodEnd = $PeriodEnd.ToString('o')
     generatedAt = (Get-Date).ToString('o')
+    runtimeMode = $complianceStatus.RuntimeMode
+    warning = $complianceStatus.StatusWarning
     records = $incidentRecords
 }
 $incidentRegisterFile = New-DrmArtifactFile -Path (Join-Path $resolvedOutputPath ("incident-register-{0}.json" -f $ConfigurationTier)) -Content $incidentRegisterArtifact
@@ -264,6 +270,8 @@ $resilienceArtifact = [ordered]@{
     periodStart = $PeriodStart.ToString('o')
     periodEnd = $PeriodEnd.ToString('o')
     generatedAt = (Get-Date).ToString('o')
+    runtimeMode = $complianceStatus.RuntimeMode
+    warning = $complianceStatus.StatusWarning
     records = $resilienceRecords
 }
 $resilienceFile = New-DrmArtifactFile -Path (Join-Path $resolvedOutputPath ("resilience-test-results-{0}.json" -f $ConfigurationTier)) -Content $resilienceArtifact
@@ -276,8 +284,8 @@ $controls = @(
     },
     [pscustomobject]@{
         controlId = '4.9'
-        status = 'implemented'
-        notes = 'Incident reporting and DORA-aligned severity classification are included in the exported incident register.'
+        status = 'partial'
+        notes = 'Incident reporting and DORA-aligned severity classification are included in the exported incident register, but repository monitoring still relies on stub or sample service-health input.'
     },
     [pscustomobject]@{
         controlId = '4.10'
@@ -319,13 +327,20 @@ $package = Export-SolutionEvidencePackage `
     -OutputPath $resolvedOutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts $artifacts
+    -Artifacts $artifacts `
+    -ExpectedArtifacts @($configuration.evidenceOutputs) `
+    -AdditionalMetadata @{
+        runtimeMode = $complianceStatus.RuntimeMode
+        warning = $complianceStatus.StatusWarning
+        dataSourceMode = $complianceStatus.DataSourceMode
+    }
 
 $result = [pscustomobject]@{
     Summary = $summary
     Controls = $controls
     Artifacts = $artifacts
     Package = $package
+    RuntimeMode = $complianceStatus.RuntimeMode
 }
 
 if ($PassThru) {

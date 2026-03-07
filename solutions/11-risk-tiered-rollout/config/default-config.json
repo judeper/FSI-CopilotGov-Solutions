@@ -1,18 +1,191 @@
 {
   "solution": "11-risk-tiered-rollout",
+  "solutionCode": "RTR",
   "displayName": "Risk-Tiered Rollout Automation",
-  "version": "v0.1.0",
+  "version": "0.1.0",
+  "track": "C",
+  "priority": "P0",
   "controls": [
     "1.9",
     "1.11",
     "1.12",
     "4.12"
   ],
-  "track": "C",
-  "priority": "P0",
-  "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\11-risk-tiered-rollout",
-    "notificationChannel": "RTR-governance-alerts",
-    "dashboardFeedEnabled": true
-  }
+  "framework_ids": [
+    "finra-3110",
+    "glba-501b",
+    "sox-302-404",
+    "occ-2011-12",
+    "ffiec-it-handbook",
+    "interagency-ai-guidance",
+    "dora"
+  ],
+  "evidenceOutputs": [
+    "wave-readiness-log",
+    "approval-history",
+    "rollout-health-dashboard"
+  ],
+  "dependencies": {
+    "readinessScanner": {
+      "solution": "01-copilot-readiness-scanner",
+      "requiredArtifactPath": "solutions\\01-copilot-readiness-scanner\\artifacts\\01-copilot-readiness-scanner-evidence.json",
+      "maxArtifactAgeDays": 14,
+      "requiredSignals": [
+        "licenseReadiness",
+        "identityReadiness",
+        "purviewReadiness"
+      ]
+    }
+  },
+  "waveDefinitions": [
+    {
+      "waveNumber": 0,
+      "name": "Wave 0 - Pilot",
+      "maxUsers": 50,
+      "includedRiskTiers": [
+        "Tier1"
+      ],
+      "approvalMode": "business-owner",
+      "gateCriteria": [
+        "scannerComplete",
+        "minimumReadinessScore",
+        "serviceHealthGreen",
+        "supportDeskCoverage"
+      ]
+    },
+    {
+      "waveNumber": 1,
+      "name": "Wave 1 - Managed Expansion",
+      "maxUsers": 500,
+      "includedRiskTiers": [
+        "Tier1",
+        "Tier2"
+      ],
+      "approvalMode": "control-owner",
+      "gateCriteria": [
+        "wave0Success",
+        "dlpValidatedForTier2",
+        "supervisionCoverage",
+        "incidentThreshold"
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "name": "Wave 2 - Full Tier 1 and Tier 2",
+      "maxUsers": 2000,
+      "includedRiskTiers": [
+        "Tier1",
+        "Tier2"
+      ],
+      "approvalMode": "rollout-board",
+      "gateCriteria": [
+        "trainingCompletion",
+        "backlogWithinThreshold",
+        "dashboardHealthy"
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "name": "Wave 3 - Tier 3 Release",
+      "maxUsers": 250,
+      "includedRiskTiers": [
+        "Tier3"
+      ],
+      "approvalMode": "cab",
+      "gateCriteria": [
+        "caPolicyValidated",
+        "auditTrailVerified",
+        "dlpCoverage",
+        "doraResilienceReview"
+      ]
+    }
+  ],
+  "riskTierCriteria": {
+    "tier1": {
+      "label": "Tier 1 - Standard Users",
+      "departments": [
+        "Operations",
+        "Finance",
+        "Retail Banking",
+        "Wealth Support"
+      ],
+      "minimumReadinessScore": 70
+    },
+    "tier2": {
+      "label": "Tier 2 - Regulated Role Users",
+      "departments": [
+        "Compliance",
+        "Legal",
+        "Human Resources"
+      ],
+      "minimumReadinessScore": 80,
+      "requiresDlp": true,
+      "requiresSupervision": true
+    },
+    "tier3": {
+      "label": "Tier 3 - Privileged or Executive Users",
+      "departments": [
+        "Executive",
+        "IT Administration",
+        "Trading"
+      ],
+      "minimumReadinessScore": 90,
+      "requiresConditionalAccess": true,
+      "requiresDlp": true,
+      "requiresAuditTrail": true
+    }
+  },
+  "gateThresholds": {
+    "minimumPilotReadinessPercent": 95,
+    "minimumExpansionReadinessPercent": 90,
+    "maximumOpenIncidents": 3
+  },
+  "notifications": {
+    "mode": "standard",
+    "summaryRecipients": [
+      "copilot-operations@contoso.example",
+      "risk-governance@contoso.example"
+    ],
+    "approvalChannel": "RTR-governance-alerts"
+  },
+  "approvalWorkflow": {
+    "enabled": true,
+    "cabApprovalRequired": false,
+    "requiredApprovers": [
+      "BusinessOwner",
+      "ControlOwner"
+    ]
+  },
+  "analytics": {
+    "vivaInsightsEnabled": false
+  },
+  "resilience": {
+    "doraGateRequired": false
+  },
+  "dataverse": {
+    "tables": {
+      "baseline": "fsi_cg_rtr_baseline",
+      "finding": "fsi_cg_rtr_finding",
+      "evidence": "fsi_cg_rtr_evidence"
+    }
+  },
+  "licenseAssignment": {
+    "skuPartNumber": "MICROSOFT_365_COPILOT",
+    "groupMode": "wave-based",
+    "dryRunByDefault": true
+  },
+  "powerAutomate": {
+    "flows": [
+      "Wave-Readiness-Check",
+      "Gate-Approval-Request",
+      "License-Assignment-Trigger"
+    ]
+  },
+  "powerBI": {
+    "dataset": "RTR Rollout Health Dataset",
+    "dashboard": "RTR Rollout Health Dashboard",
+    "healthScoreWarningThreshold": 85
+  },
+  "evidenceRetentionDays": 90,
+  "notificationMode": "standard"
 }

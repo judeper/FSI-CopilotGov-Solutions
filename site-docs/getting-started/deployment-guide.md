@@ -2,12 +2,35 @@
 
 This guide maps common Microsoft 365 Copilot governance needs to the solution set in this repository.
 
-## Recommended Sequence
+## Operator Preflight
 
-1. Run the readiness and oversharing solutions before enabling broad Copilot access.
-2. Add supervision, DLP, audit trail, and Conditional Access controls for regulated workloads.
-3. Layer in rollout orchestration, feature management, connector governance, and compliance reporting.
-4. Finish with resilience, communication-compliance, and compensating-control solutions.
+1. Review `docs\getting-started\prerequisites.md` and `docs\getting-started\identity-and-secrets-prep.md` before planning tenant changes.
+2. Confirm named owners, escalation paths, and the operating cadence in `docs\operational-handbook.md`, `docs\operational-raci.md`, `docs\operational-cadence.md`, and `docs\escalation-procedures.md`.
+3. Use `docs\documentation-vs-runnable-assets-guide.md` to decide which repository assets are authoritative documentation, starter templates, or directly runnable scripts.
+4. Run `pwsh -File scripts\deployment\Validate-Prerequisites.ps1` and record any gaps in `DELIVERY-CHECKLIST-TEMPLATE.md`.
+
+## Recommended Wave Sequence
+
+### Wave 0 — Operator preflight and non-production validation
+
+- Confirm identity ownership, secret storage, evidence destination, and change-window approvals.
+- Validate the intended deployment sequence in a non-production tenant before scheduling a production wave.
+
+### Wave 1 — Readiness and oversharing foundation
+
+- Run the readiness and oversharing solutions before enabling broad Copilot access.
+
+### Wave 2 — Security and compliance controls
+
+- Add supervision, DLP, audit trail, and Conditional Access controls for regulated workloads.
+
+### Wave 3 — Rollout orchestration and reporting
+
+- Layer in rollout orchestration, feature management, connector governance, and compliance reporting.
+
+### Wave 4 — Resilience and compensating controls
+
+- Finish with resilience, communication-compliance, and compensating-control solutions.
 
 ## Use-Case Mapping
 

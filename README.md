@@ -1,6 +1,6 @@
 # FSI-CopilotGov-Solutions
 
-Deployable automation patterns for the [FSI-CopilotGov](https://github.com/judeper/FSI-CopilotGov) framework.
+Governance solution scaffolds and documentation patterns for the [FSI-CopilotGov](https://github.com/judeper/FSI-CopilotGov) framework.
 
 This repository translates the framework's 54 controls and 216 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
 
@@ -31,6 +31,53 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 | 14 | [Communication Compliance Configurator](./solutions/14-communication-compliance-config/README.md) | P1 | D | 2.10, 3.4, 3.5, 3.6, 3.9 |
 | 15 | [Copilot Pages and Notebooks Compliance Gap Monitor](./solutions/15-pages-notebooks-gap-monitor/README.md) | P2 | D | 2.11, 3.2, 3.3, 3.11 |
 
+## Implementation Depth
+
+> ⚠️ This is a **documentation-first** repository. All solutions provide governance scaffolds, templates,
+> and scripts using representative sample data. No solution connects to live Microsoft 365 services
+> in its repository form. See [Disclaimer](./docs/disclaimer.md) and
+> [Documentation vs Runnable Assets Guide](./docs/documentation-vs-runnable-assets-guide.md).
+
+| ID | Solution | Scripts | Live API Calls | Data Source | Tenant Binding Required |
+|----|----------|---------|---------------|-------------|------------------------|
+| 01 | Copilot Readiness Scanner | ✅ | ❌ | Representative sample scores | Graph, Purview |
+| 02 | Oversharing Risk Assessment | ✅ | ❌ | Representative sample data | Graph, SharePoint |
+| 03 | Sensitivity Label Auditor | ✅ | ❌ | Representative sample data | Purview |
+| 04 | FINRA Supervision Workflow | ✅ | ❌ | Representative sample data | Purview Communication Compliance |
+| 05 | DLP Policy Governance | ✅ | ❌ | Local config baseline comparison | Purview DLP |
+| 06 | Audit Trail Manager | ✅ | ❌ | Tier configuration validation | UAL, Purview, eDiscovery |
+| 07 | Conditional Access Automation | ✅ | ❌ | Generated policy templates | Entra ID, Graph |
+| 08 | License Governance ROI | ✅ | ❌ | Representative sample usage data | Graph, Viva Insights |
+| 09 | Feature Management Controller | ✅ | ❌ | Tier-defined feature templates | M365 Admin, Graph, Teams Admin |
+| 10 | Connector Plugin Governance | ✅ | ❌ | Config-defined connector lists | Power Platform Admin |
+| 11 | Risk-Tiered Rollout | ✅ | ❌ | Wave manifest generation | Graph (license assignment) |
+| 12 | Regulatory Compliance Dashboard | ✅ | ❌ | Seeded reference data | Dataverse, Power BI |
+| 13 | DORA Resilience Monitor | ✅ | ❌ | Local stub sample data | Graph (service health), Sentinel |
+| 14 | Communication Compliance Config | ✅ | ❌ | Policy template generation | Purview Communication Compliance |
+| 15 | Pages Notebooks Gap Monitor | ✅ | ❌ | Representative sample data | Audit, eDiscovery |
+
+## Connectivity Readiness
+
+This table summarizes which Microsoft 365 and Azure services each solution requires for production use.
+
+| ID | Graph API | Dataverse | Power BI | Power Automate | Purview | Entra ID | Other |
+|----|-----------|-----------|----------|----------------|---------|----------|-------|
+| 01 | ✅ | ✅ | ✅ | ✅ | ✅ | — | SharePoint |
+| 02 | ✅ | ✅ | ✅ | ✅ | — | — | SharePoint |
+| 03 | — | ✅ | ✅ | ✅ | ✅ | — | — |
+| 04 | — | ✅ | — | ✅ | ✅ | — | — |
+| 05 | — | ✅ | ✅ | ✅ | ✅ | — | Exchange |
+| 06 | — | ✅ | ✅ | ✅ | ✅ | — | eDiscovery |
+| 07 | ✅ | ✅ | ✅ | ✅ | — | ✅ | — |
+| 08 | ✅ | ✅ | ✅ | ✅ | — | — | Viva Insights |
+| 09 | ✅ | ✅ | ✅ | ✅ | — | — | Teams Admin |
+| 10 | — | ✅ | ✅ | ✅ | — | — | Power Platform |
+| 11 | ✅ | ✅ | — | ✅ | — | — | — |
+| 12 | — | ✅ | ✅ | ✅ | — | — | — |
+| 13 | ✅ | ✅ | ✅ | ✅ | — | — | Sentinel |
+| 14 | — | ✅ | ✅ | ✅ | ✅ | — | — |
+| 15 | — | ✅ | ✅ | ✅ | ✅ | — | eDiscovery |
+
 ## Delivery Model
 
 1. **Preflight contract gate** — freeze templates, shared contracts, mappings, and validation rules.
@@ -44,6 +91,12 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 - Solutions provide documentation, scripts, templates, and evidence packaging guidance.
 - Exported Power Automate runtime artifacts are intentionally excluded; the repository documents how to build flows and apps safely in each tenant.
 - Documentation should use precise FSI language such as "supports compliance with" or "helps meet" rather than absolute claims.
+
+## Operator Handoff
+
+- Start with [Common Prerequisites](./docs/getting-started/prerequisites.md) and [Identity and Secrets Prep](./docs/getting-started/identity-and-secrets-prep.md).
+- Use [DEPLOYMENT-GUIDE.md](./DEPLOYMENT-GUIDE.md) for wave sequencing, [Operational Handbook](./docs/operational-handbook.md) for ownership and support expectations, and [Documentation vs Runnable Assets Guide](./docs/documentation-vs-runnable-assets-guide.md) to keep the documentation-first boundary clear.
+- Run `pwsh -File scripts\deployment\Validate-Prerequisites.ps1` and capture the result in `DELIVERY-CHECKLIST-TEMPLATE.md` before customer handoff or production execution.
 
 ## Local Validation
 

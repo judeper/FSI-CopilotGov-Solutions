@@ -1,15 +1,81 @@
 {
   "solution": "09-feature-management-controller",
   "tier": "recommended",
-  "controls": [
-    "2.6",
-    "4.1",
-    "4.2",
-    "4.3",
-    "4.4",
-    "4.12",
-    "4.13"
+  "scopeDescription": "Active ring management for Microsoft 365 and Teams Copilot features with tighter monitoring.",
+  "appCoverage": [
+    "Microsoft 365 Copilot Chat",
+    "Microsoft Word Copilot",
+    "Teams Copilot chat",
+    "Teams Copilot meetings"
   ],
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "ringManagementEnabled": true,
+  "changeApprovalMode": "manager-approved",
+  "strictChangeApprovalRequired": false,
+  "evidenceRetentionDays": 180,
+  "driftAlertThreshold": 3,
+  "driftMonitoring": {
+    "checkIntervalHours": 4,
+    "alertMode": "targeted",
+    "createFindings": true
+  },
+  "rolloutRings": {
+    "Preview Ring": {
+      "targetPercentage": 5,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "Early Adopters": {
+      "targetPercentage": 15,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "General Availability": {
+      "targetPercentage": 80,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "Restricted": {
+      "targetPercentage": 0,
+      "enabled": true,
+      "approvalRequired": true
+    }
+  },
+  "features": [
+    {
+      "featureId": "m365-copilot-chat",
+      "displayName": "Microsoft 365 Copilot Chat",
+      "sourceSystem": "Microsoft 365 Admin Center",
+      "category": "m365-core",
+      "expectedEnabled": true,
+      "expectedRing": "General Availability",
+      "riskNote": "Approved for broad use after core policy review."
+    },
+    {
+      "featureId": "word-copilot-drafting",
+      "displayName": "Copilot drafting in Word",
+      "sourceSystem": "Microsoft 365 Admin Center",
+      "category": "m365-core",
+      "expectedEnabled": true,
+      "expectedRing": "Early Adopters",
+      "riskNote": "Limited while document handling controls are being monitored."
+    },
+    {
+      "featureId": "teams-copilot-chat",
+      "displayName": "Copilot in Teams chat",
+      "sourceSystem": "Teams Admin Center",
+      "category": "teams-experiences",
+      "expectedEnabled": true,
+      "expectedRing": "Early Adopters",
+      "riskNote": "Scoped to trained pilot users with supervisory review."
+    },
+    {
+      "featureId": "teams-copilot-meetings",
+      "displayName": "Copilot in Teams meetings",
+      "sourceSystem": "Teams Admin Center",
+      "category": "teams-experiences",
+      "expectedEnabled": true,
+      "expectedRing": "Preview Ring",
+      "riskNote": "Kept in pilot due to transcript and meeting summary sensitivity."
+    }
+  ]
 }

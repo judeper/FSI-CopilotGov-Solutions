@@ -1,15 +1,111 @@
 {
   "solution": "09-feature-management-controller",
   "tier": "regulated",
-  "controls": [
-    "2.6",
-    "4.1",
-    "4.2",
-    "4.3",
-    "4.4",
-    "4.12",
-    "4.13"
+  "scopeDescription": "All tracked Copilot features with hourly drift checks, strict change approval, and full workload coverage.",
+  "appCoverage": [
+    "Microsoft 365 Copilot Chat",
+    "Microsoft Word Copilot",
+    "Teams Copilot chat",
+    "Teams Copilot meetings",
+    "Power Apps Copilot",
+    "Power Automate Copilot",
+    "Third-party connectors and plugins"
   ],
+  "ringManagementEnabled": true,
+  "changeApprovalMode": "compliance-and-operations-approved",
+  "strictChangeApprovalRequired": true,
   "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "driftAlertThreshold": 3,
+  "driftMonitoring": {
+    "checkIntervalHours": 1,
+    "alertMode": "immediate",
+    "createFindings": true
+  },
+  "rolloutRings": {
+    "Preview Ring": {
+      "targetPercentage": 5,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "Early Adopters": {
+      "targetPercentage": 15,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "General Availability": {
+      "targetPercentage": 80,
+      "enabled": true,
+      "approvalRequired": true
+    },
+    "Restricted": {
+      "targetPercentage": 0,
+      "enabled": true,
+      "approvalRequired": true
+    }
+  },
+  "features": [
+    {
+      "featureId": "m365-copilot-chat",
+      "displayName": "Microsoft 365 Copilot Chat",
+      "sourceSystem": "Microsoft 365 Admin Center",
+      "category": "m365-core",
+      "expectedEnabled": true,
+      "expectedRing": "General Availability",
+      "riskNote": "Broad use allowed once supervisory controls are documented."
+    },
+    {
+      "featureId": "word-copilot-drafting",
+      "displayName": "Copilot drafting in Word",
+      "sourceSystem": "Microsoft 365 Admin Center",
+      "category": "m365-core",
+      "expectedEnabled": true,
+      "expectedRing": "Early Adopters",
+      "riskNote": "Limited while document generation controls are reviewed."
+    },
+    {
+      "featureId": "teams-copilot-chat",
+      "displayName": "Copilot in Teams chat",
+      "sourceSystem": "Teams Admin Center",
+      "category": "teams-experiences",
+      "expectedEnabled": true,
+      "expectedRing": "Early Adopters",
+      "riskNote": "Scoped due to supervision and communication retention requirements."
+    },
+    {
+      "featureId": "teams-copilot-meetings",
+      "displayName": "Copilot in Teams meetings",
+      "sourceSystem": "Teams Admin Center",
+      "category": "teams-experiences",
+      "expectedEnabled": true,
+      "expectedRing": "Preview Ring",
+      "riskNote": "Pilot-only because summaries may expose sensitive meeting content."
+    },
+    {
+      "featureId": "power-apps-copilot-maker",
+      "displayName": "Copilot for Power Apps makers",
+      "sourceSystem": "Power Platform Admin API",
+      "category": "power-platform-copilot",
+      "expectedEnabled": true,
+      "expectedRing": "Early Adopters",
+      "riskNote": "Enabled only for approved builders with environment-level review."
+    },
+    {
+      "featureId": "power-automate-copilot-designer",
+      "displayName": "Copilot in Power Automate designer",
+      "sourceSystem": "Power Platform Admin API",
+      "category": "power-platform-copilot",
+      "expectedEnabled": true,
+      "expectedRing": "Preview Ring",
+      "riskNote": "Kept in pilot until workflow output review is stable."
+    },
+    {
+      "featureId": "third-party-plugin-execution",
+      "displayName": "Third-party plugin and connector execution",
+      "sourceSystem": "Microsoft 365 Admin Center",
+      "category": "plugin-and-connector-governance",
+      "expectedEnabled": false,
+      "expectedRing": "Restricted",
+      "riskNote": "Disabled until connector risk assessment and approval are complete."
+    }
+  ]
 }

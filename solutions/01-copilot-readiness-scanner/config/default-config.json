@@ -10,6 +10,15 @@
     "1.7",
     "1.9"
   ],
+  "framework_ids": [
+    "finra-3110",
+    "sec-reg-sp",
+    "glba-501b",
+    "sox-302-404",
+    "occ-2011-12",
+    "ffiec-it-handbook",
+    "interagency-ai-guidance"
+  ],
   "track": "A",
   "priority": "P0",
   "reportFormat": "powerbi-json",
@@ -29,6 +38,11 @@
     "1.7": 0.12,
     "1.9": 0.18
   },
+  "evidenceOutputs": [
+    "readiness-scorecard",
+    "data-hygiene-findings",
+    "remediation-plan"
+  ],
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\01-copilot-readiness-scanner",
     "notificationChannel": "CRS-governance-alerts",

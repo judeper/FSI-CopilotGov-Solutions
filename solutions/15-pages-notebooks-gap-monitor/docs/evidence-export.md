@@ -64,7 +64,7 @@ The combined evidence package uses the shared repository contract:
 - `summary.findingCount`
 - `summary.exceptionCount`
 - `controls[]` with `controlId`, `status`, and `notes`
-- `artifacts[]` with `name`, `type`, and `path`
+- `artifacts[]` with `name`, `type`, `path`, and `hash`
 
 Each export creates:
 

@@ -153,7 +153,7 @@ function Merge-Configuration {
         [hashtable]$TierConfig
     )
 
-    $copilotAppIds = if ($TierConfig.ContainsKey('copilotAppIds') -and $TierConfig.copilotAppIds.Count -gt 0) {
+    $copilotAppIds = if ($TierConfig.ContainsKey('copilotAppIds') -and @($TierConfig.copilotAppIds).Count -gt 0) {
         @($TierConfig.copilotAppIds)
     }
     else {
@@ -236,10 +236,10 @@ function New-PolicyTemplate {
         $null = $grantControls.Add('compliantDevice')
     }
 
-    $namedLocations = if ($RiskTierSettings.ContainsKey('namedLocations') -and $RiskTierSettings.namedLocations.Count -gt 0) {
+    $namedLocations = if ($RiskTierSettings.ContainsKey('namedLocations') -and @($RiskTierSettings.namedLocations).Count -gt 0) {
         @($RiskTierSettings.namedLocations)
     }
-    elseif ($Configuration.namedLocations.Count -gt 0) {
+    elseif (@($Configuration.namedLocations).Count -gt 0) {
         @($Configuration.namedLocations)
     }
     else {
@@ -281,7 +281,7 @@ function New-PolicyTemplate {
         riskTier = $RiskTierName
         targetedAppIds = @($Configuration.copilotAppIds)
         grantControls = [ordered]@{
-            operator = if ($grantControls.Count -gt 1) { 'AND' } else { 'OR' }
+            operator = if (@($grantControls).Count -gt 1) { 'AND' } else { 'OR' }
             builtInControls = @($grantControls)
         }
         conditions = $conditions
@@ -476,12 +476,12 @@ function Compare-BaselinePolicies {
         $baselinePolicies = @($BaselineDocument)
     }
 
-    if ($baselinePolicies.Count -eq 0) {
+    if (@($baselinePolicies).Count -eq 0) {
         $findings.Add((New-Finding -Id 'baseline-empty' -Severity 'medium' -ControlId '2.6' -Category 'Baseline' -Description 'Baseline snapshot does not contain Copilot Conditional Access policies.'))
         return $findings
     }
 
-    if ($baselinePolicies.Count -ne $ExpectedPolicies.Count) {
+    if (@($baselinePolicies).Count -ne @($ExpectedPolicies).Count) {
         $findings.Add((New-Finding -Id 'drift-policy-count' -Severity 'medium' -ControlId '2.3' -Category 'Drift' -Description 'Baseline policy count does not match the expected Copilot policy count.'))
     }
 
@@ -645,8 +645,8 @@ $driftSummary = [ordered]@{
     solutionCode = $config.solutionCode
     configurationTier = $ConfigurationTier
     generatedAt = (Get-Date).ToString('o')
-    driftDetected = ($driftFindings.Count -gt 0)
-    changeCount = $driftFindings.Count
+    driftDetected = (@($driftFindings).Count -gt 0)
+    changeCount = @($driftFindings).Count
     changes = @(
         foreach ($finding in $driftFindings) {
             [pscustomobject]@{
@@ -660,24 +660,23 @@ $driftSummary = [ordered]@{
 }
 Write-JsonFile -Path $driftSummaryPath -InputObject $driftSummary
 
-$result = [pscustomobject]@{
-    Solution = $config.displayName
-    SolutionCode = $config.solutionCode
-    ConfigurationTier = $ConfigurationTier
-    CheckedAt = (Get-Date).ToString('o')
-    OverallStatus = $overallStatus
-    FindingCount = $findings.Count
-    ExpiredExceptionCount = $expiredExceptions.Count
-    DriftFindingCount = $driftFindings.Count
-    BaselinePath = $resolvedBaselinePath
-    ExceptionRegisterPath = $resolvedExceptionRegisterPath
-    Controls = $controlsArray
-    Findings = $findingsArray
-}
+$result = [ordered]@{}
+$result['Solution'] = $config.displayName
+$result['SolutionCode'] = $config.solutionCode
+$result['ConfigurationTier'] = $ConfigurationTier
+$result['CheckedAt'] = (Get-Date).ToString('o')
+$result['OverallStatus'] = $overallStatus
+$result['FindingCount'] = [int]$findings.Count
+$result['ExpiredExceptionCount'] = [int]$expiredExceptions.Count
+$result['DriftFindingCount'] = [int]$driftFindings.Count
+$result['BaselinePath'] = $resolvedBaselinePath
+$result['ExceptionRegisterPath'] = $resolvedExceptionRegisterPath
+$result['Controls'] = $controlsArray
+$result['Findings'] = $findingsArray
 Write-JsonFile -Path $compliancePath -InputObject $result
 
-if ($AlertOnDrift -and $driftFindings.Count -gt 0) {
-    Write-Warning ("{0} drift-related findings detected for Copilot Conditional Access." -f $driftFindings.Count)
+if ($AlertOnDrift -and @($driftFindings).Count -gt 0) {
+    Write-Warning ("{0} drift-related findings detected for Copilot Conditional Access." -f @($driftFindings).Count)
 }
 
 [pscustomobject]$result

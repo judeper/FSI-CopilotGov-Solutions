@@ -1,6 +1,8 @@
 # Communication Compliance Configurator
 
-> **Status:** Active (v0.1.0) | **Priority:** P1 | **Track:** D | **Solution Code:** CCC
+> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** D | **Solution Code:** CCC
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -10,12 +12,24 @@ This solution depends on `04-finra-supervision-workflow` for downstream review r
 
 ## Features
 
-- Deploys tier-aware policy templates for Copilot-assisted retail and institutional communications.
-- Manages supervised lexicon terms for AI disclosure, promotional language, best-interest phrasing, and conflict indicators.
+- Generates tier-aware policy templates for Copilot-assisted retail and institutional communications. Policy deployment to Microsoft Purview requires manual steps in the compliance portal.
+- Documents supervised lexicon design for AI disclosure, promotional language, best-interest phrasing, and conflict indicators. Lexicon implementation requires customer review and configuration in the Purview compliance portal.
 - Documents reviewer assignment, SLA, escalation, and dual-review workflows.
-- Captures reviewer queue metrics for pending items, review age, and escalations.
+- Documents how reviewer queue metrics should be collected and monitored. Queue metrics collection requires implementation in the customer's Purview environment.
 - Supports insider risk correlation planning for Copilot usage patterns and supervisory escalation.
 - Packages evidence outputs aligned to the shared evidence schema and repository contracts.
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not deploy communication compliance policies to Microsoft Purview (policy templates are generated for manual portal configuration)
+- ❌ Does not manage lexicon terms automatically (lexicon designs are documented for manual entry)
+- ❌ Does not configure reviewer queues or workflows (workflow designs are documented for manual setup)
+- ❌ Does not deploy Power Automate flows (escalation workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Architecture
 
@@ -59,6 +73,10 @@ See [docs/architecture.md](./docs/architecture.md) for the detailed data flow an
 | `docs\prerequisites.md` | Licensing, role, dependency, and sign-off requirements |
 | `docs\troubleshooting.md` | Common operational issues and examination-readiness troubleshooting |
 | `tests\14-communication-compliance-config.Tests.ps1` | Pester validation for files, configuration, documentation, and script syntax |
+
+## Deployment
+
+Deploy this solution by generating the tier-aware policy templates with `Deploy-Solution.ps1`, reviewing the template output with compliance stakeholders, publishing the approved templates manually in Microsoft Purview, and then running `Monitor-Compliance.ps1` plus `Export-Evidence.ps1` to capture queue readiness and evidence artifacts. The detailed portal and operating steps remain in [docs\deployment-guide.md](./docs/deployment-guide.md).
 
 ## Prerequisites
 

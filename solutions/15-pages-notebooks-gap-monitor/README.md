@@ -1,6 +1,8 @@
 # Copilot Pages and Notebooks Compliance Gap Monitor
 
-> Status: Active (v0.1.0) | Track: D | Priority: P2 | Solution Code: PNGM
+> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P2 | **Track:** D | **Solution Code:** PNGM
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -28,6 +30,18 @@ This solution gives compliance, legal, and operations teams a repeatable way to 
 - Tier-aware configuration for baseline, recommended, and regulated deployments
 - Evidence packaging for gap-findings, compensating-control-log, and preservation-exception-register
 
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft 365 APIs for Pages or Notebooks monitoring (scripts use representative sample data)
+- ❌ Does not enforce preservation policies or eDiscovery holds automatically
+- ❌ Does not register compensating controls automatically (registration framework is documented for manual use)
+- ❌ Does not deploy Power Automate flows (gap notification workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+
 ## Architecture
 
 The solution uses a documentation-first monitoring pattern:
@@ -39,6 +53,12 @@ The solution uses a documentation-first monitoring pattern:
 5. Evidence export packages the current state into examiner-ready JSON artifacts.
 
 The solution also depends on `06-audit-trail-manager` for supporting audit evidence and retention baseline context.
+
+## Prerequisites
+
+- Confirm that `06-audit-trail-manager` is deployed and that the current retention baseline has been reviewed.
+- Review [docs/prerequisites.md](./docs/prerequisites.md) for the required Microsoft 365 licenses, compliance roles, and stakeholder approvals.
+- Ensure compliance and legal owners are available to review preservation exceptions and compensating controls before the first regulated export.
 
 ## Quick Start
 
@@ -69,6 +89,10 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 | `docs/prerequisites.md` | Required licenses, roles, permissions, and dependency expectations |
 | `docs/troubleshooting.md` | Known issues, workarounds, and review guidance |
 | `tests/15-pages-notebooks-gap-monitor.Tests.ps1` | Pester validation for configuration, documentation, and script contract coverage |
+
+## Deployment
+
+Deploy the solution by initializing the selected tier with `Deploy-Solution.ps1`, running `Monitor-Compliance.ps1` to populate the initial gap register, reviewing the documented gaps with compliance and legal stakeholders, and then exporting the approved state with `Export-Evidence.ps1`. Because this solution is monitor-only, deployment focuses on documentation, review cadence, and preservation exception governance rather than tenant-side enforcement.
 
 ## Related Controls
 

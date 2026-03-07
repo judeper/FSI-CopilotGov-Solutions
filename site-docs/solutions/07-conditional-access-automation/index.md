@@ -1,67 +1,143 @@
 # Conditional Access Policy Automation for Copilot
 
-> **Status:** Scaffolded | **Version:** v0.1.0 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** B
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-Deploys Conditional Access patterns for Copilot users and watches for policy drift across risk tiers and device states. This scaffold establishes the required documentation, scripts, config files, and evidence-export pattern for later implementation work.
+Conditional Access Policy Automation for Copilot deploys, validates, and documents Conditional Access patterns for Microsoft 365 Copilot. The solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 by defining risk-tiered access patterns, capturing approved policy baselines, monitoring for policy drift, and maintaining an exception register for approved overrides.
 
-## Features
+This solution is scoped to Conditional Access controls for Copilot access. It depends on `05-dlp-policy-governance` so that prompt, response, and content protection controls are in place before Copilot access is widened.
 
-- Maps to the following controls: 2.3, 2.6, 2.9
-- Supports the `baseline`, `recommended`, and `regulated` configuration tiers
-- Reuses the shared modules under `../../scripts/common/`
-- Publishes evidence with the shared JSON and SHA-256 packaging pattern
+## What this solution does
 
-## Architecture
+- Targets Microsoft 365 Copilot and Copilot Studio application IDs in Conditional Access policies.
+- Generates tier-aware policy templates for baseline, recommended, and regulated deployments.
+- Documents and prepares tier-aware Conditional Access policy patterns for low, medium, and high risk-tier users and administrators.
+- Prepares a JSON baseline template of approved policy state for change-control and drift monitoring.
+- Detects unauthorized policy changes outside the approved change process.
+- Maintains an exception register with approver, approval date, business justification, and expiry.
+- Exports evidence packages aligned to `..\..\data\evidence-schema.json`.
 
-The scaffold uses a documentation-first pattern for Power Automate and Power BI assets, a PowerShell entry point for deployment and monitoring, and configuration files that align to the repository-wide contract.
+## Scope Boundaries
 
-## Quick Start
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
 
-1. Review [Prerequisites](prerequisites.md).
-2. Review [Deployment Guide](deployment-guide.md).
-3. Validate the scaffold with `python scripts/validate-solutions.py` from the repository root.
-4. Add workload-specific implementation logic in this solution track after shared contracts are frozen.
+- ❌ Does not create Conditional Access policies in Entra ID (policy templates and Graph API commands are generated for manual review and execution)
+- ❌ Does not connect to Microsoft Graph APIs (scripts use representative sample data)
+- ❌ Does not deploy Power Automate flows (drift alert workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
-## Solution Components
+## Copilot application targets
 
-| Path | Purpose |
-|------|---------|
-| `scripts/Deploy-Solution.ps1` | Tier-aware deployment entry point for the solution scaffold |
-| `scripts/Monitor-Compliance.ps1` | Control-status snapshot and monitoring placeholder |
-| `scripts/Export-Evidence.ps1` | Evidence export entry point aligned to the shared schema |
-| `config/*.json` | Default, baseline, recommended, and regulated settings |
-| `docs/*.md` | Architecture, prerequisites, deployment, evidence, and troubleshooting guidance |
-| `tests/*.Tests.ps1` | Pester placeholder coverage for the scaffold |
+| Application | App ID | Purpose in this solution |
+|-------------|--------|--------------------------|
+| Microsoft Copilot for M365 | `2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4` | Primary Conditional Access target for Copilot user access |
+| Copilot Studio | `7df0a125-d3be-4c96-aa54-591f83ff541c` | Optional secondary target for makers and administrators |
 
-## Deployment
+## Regulatory context
 
-Use `scripts/Deploy-Solution.ps1` for tier-aware deployment manifests and `scripts/Monitor-Compliance.ps1` for scaffolded status output.
+### OCC 2011-12
+
+OCC 2011-12 expects banks to govern third-party technology with strong access control, change management, and ongoing monitoring. This solution supports compliance with those expectations by documenting who can access Copilot, how approved baselines are maintained, and how unauthorized policy changes are detected.
+
+### FINRA 3110
+
+FINRA 3110 requires supervisory systems that can review and control access to regulated technology workflows. This solution supports compliance with those expectations by defining approval workflows for access exceptions, preserving evidence of overrides, and monitoring Conditional Access changes that affect supervised populations.
+
+### DORA Article 9
+
+DORA Article 9 focuses on ICT security, including identity, access management, and control over critical services. This solution supports compliance with those expectations by defining tiered authentication, compliant-device requirements, and named-location restrictions for Copilot access.
+
+## Conditional Access policy patterns by risk tier
+
+| Configuration tier | Low risk users | Medium risk users | High risk users |
+|--------------------|----------------|-------------------|-----------------|
+| `baseline` | MFA required; no compliant-device requirement; no named-location requirement | MFA required; no compliant-device requirement; no named-location requirement | MFA required; no compliant-device requirement; no named-location requirement |
+| `recommended` | MFA required; no named-location requirement | MFA plus compliant device; named locations for Zone 2 | MFA plus compliant device; named locations for Zone 2 and Zone 3 |
+| `regulated` | MFA plus compliant device; named location required | MFA plus compliant device; named location required | MFA plus compliant device; named location required; block unknown device states |
+
+Additional regulated-tier safeguards include blocking legacy authentication pathways and requiring strict exception review before temporary overrides are granted.
+
+## Drift detection overview
+
+The solution stores an approved Conditional Access baseline as JSON and compares that baseline with the current Copilot policy state. Scheduled monitoring highlights differences in targeted application IDs, grant controls, device requirements, and named-location conditions so that unauthorized edits can be investigated quickly.
+
+Typical drift scenarios include:
+
+- MFA removed from a medium or high risk policy.
+- Compliant-device requirements disabled outside the approved change window.
+- Named-location assignments changed for regulated users.
+- Copilot app IDs removed or replaced in a policy target.
+
+## Exception register
+
+The exception register is the authoritative list of approved deviations from the Copilot Conditional Access baseline. Each exception entry should capture:
+
+- Requestor and affected population.
+- Approver and approval date.
+- Business justification.
+- Compensating controls.
+- Expiry date and review cadence.
+
+Expired exceptions should be treated as findings until they are closed or renewed through the approved supervisory process.
 
 ## Prerequisites
 
-- Microsoft 365 and workload permissions appropriate for the mapped controls
-- Shared contract files under `data/` and `scripts/common/`
-- A chosen governance tier for the target deployment
+- Confirm that `05-dlp-policy-governance` is complete and that the latest protection baseline has been reviewed.
+- Confirm Azure AD P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
+- Ensure Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
 
-## Related Controls
+## Deployment steps
 
-| Control | Title | Playbooks |
-|---------|-------|-----------|
-| 2.3 | Conditional Access Policies for Copilot Workloads | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.3/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.3/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.3/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.3/troubleshooting.md) |
-| 2.6 | Copilot Web Search and Web Grounding Controls | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.6/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.6/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.6/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.6/troubleshooting.md) |
-| 2.9 | Defender for Cloud Apps — Copilot Session Controls | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.9/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.9/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.9/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.9/troubleshooting.md) |
+1. Confirm that `05-dlp-policy-governance` is complete.
+2. Confirm Azure AD P1 or P2 licensing and required administrator roles.
+3. Run `scripts\Deploy-Solution.ps1` for the selected tier to generate policy templates, a deployment manifest, and a baseline stub.
+4. Review generated policy templates and Graph API command examples.
+5. Create or update Conditional Access policies in the Entra admin center or via Microsoft Graph.
+6. Run `scripts\Monitor-Compliance.ps1` to validate configuration consistency and drift posture.
+7. Run `scripts\Export-Evidence.ps1` to publish evidence outputs and the shared evidence package.
 
-## Regulatory Alignment
-
-This solution supports compliance with: OCC 2011-12, FINRA 3110, DORA.
+See `docs\deployment-guide.md` for the detailed workflow.
 
 ## Evidence Export
 
-The solution is expected to publish: ca-policy-state, drift-alert-summary, access-exception-register. Evidence packages must align to `../../data/evidence-schema.json`.
+| Evidence output | Description | Source |
+|-----------------|-------------|--------|
+| `ca-policy-state.json` | Snapshot of Copilot-targeting Conditional Access settings, including MFA, compliant-device, and location requirements | `scripts\Export-Evidence.ps1` |
+| `drift-alert-summary.json` | Drift findings since the approved baseline, including change descriptions and severity | `scripts\Monitor-Compliance.ps1` and `scripts\Export-Evidence.ps1` |
+| `access-exception-register.json` | Approved access overrides with approver, justification, and expiry | Deployment artifacts or existing exception register |
 
-## Known Limitations
+## Solution components
 
-- This scaffold does not yet include tenant-specific implementation logic.
-- Power Automate and Power BI artifacts remain documentation-led until the implementation track fills in workload details.
+| Path | Purpose |
+|------|---------|
+| `scripts\Deploy-Solution.ps1` | Generates Copilot Conditional Access policy templates, baseline stubs, and deployment metadata |
+| `scripts\Monitor-Compliance.ps1` | Validates the selected tier, checks exceptions, and identifies drift findings |
+| `scripts\Export-Evidence.ps1` | Produces solution evidence artifacts and the shared evidence package |
+| `config\*.json` | Defines shared defaults and tier-specific policy expectations |
+| `docs\*.md` | Architecture, prerequisites, deployment, evidence, and troubleshooting guidance |
+| `tests\07-conditional-access-automation.Tests.ps1` | Pester validation for docs, configs, and scripts |
+
+## Related Controls
+
+| Control | Objective | Regulations | Evidence |
+|---------|-----------|-------------|----------|
+| `2.3` | Copilot access control and Conditional Access enforcement | OCC 2011-12, FINRA 3110, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
+| `2.6` | Controlled feature enablement, exception handling, and drift oversight | OCC 2011-12, FINRA 3110 | `drift-alert-summary.json`, `access-exception-register.json` |
+| `2.9` | Device compliance requirements for Copilot sessions | OCC 2011-12, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
+
+## Regulatory Alignment
+
+This solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 by defining approved Copilot access patterns, preserving baseline and drift evidence, and documenting exception approvals for regulated populations. It supports access governance and change review, but production rollout still requires tenant-specific administrator action and oversight.
+
+## Known limitations
+
+- Conditional Access policy creation requires Azure AD P1 or P2 licensing, and risk-based policies require Azure AD P2.
+- Copilot app targeting requires Microsoft 365 E3 or E5 licensing with the appropriate Copilot entitlement.
+- Conditional Access policy evaluation can take about 5 minutes after a change before the new state is consistently enforced.
+- Named-location strategies still require tenant-specific design for branch offices, vendors, and break-glass accounts.
+- This solution documents Graph API deployment commands, but production execution still requires administrator review and tenant connectivity.

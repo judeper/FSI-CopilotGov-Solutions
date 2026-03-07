@@ -1,7 +1,11 @@
 {
   "solution": "12-regulatory-compliance-dashboard",
+  "solutionCode": "RCD",
   "displayName": "Regulatory Compliance Dashboard",
   "version": "v0.1.0",
+  "track": "C",
+  "domain": "operations-analytics",
+  "priority": "P0",
   "controls": [
     "3.7",
     "3.8",
@@ -10,11 +14,101 @@
     "4.5",
     "4.7"
   ],
-  "track": "C",
-  "priority": "P0",
+  "framework_ids": [
+    "finra-3110",
+    "finra-4511",
+    "sec-17a4",
+    "sec-reg-sp",
+    "glba-501b",
+    "sox-302-404",
+    "occ-2011-12",
+    "sr-11-7",
+    "ffiec-it-handbook",
+    "dora"
+  ],
+  "evidenceOutputs": [
+    "control-status-snapshot",
+    "framework-coverage-matrix",
+    "dashboard-export"
+  ],
+  "dependencies": [
+    "06-audit-trail-manager",
+    "11-risk-tiered-rollout"
+  ],
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\12-regulatory-compliance-dashboard",
     "notificationChannel": "RCD-governance-alerts",
-    "dashboardFeedEnabled": true
+    "dashboardWorkspace": "FSI Copilot Governance",
+    "evidenceFreshnessThresholdHours": 25,
+    "aggregationCadence": "daily",
+    "freshnessCheckCadence": "hourly",
+    "documentationLedPowerBI": true
+  },
+  "regulatoryFrameworks": [
+    {
+      "id": "finra-4511",
+      "name": "FINRA 4511",
+      "enabledByDefault": true
+    },
+    {
+      "id": "finra-3110",
+      "name": "FINRA 3110",
+      "enabledByDefault": true
+    },
+    {
+      "id": "sec-17a-4",
+      "name": "SEC 17a-4",
+      "enabledByDefault": true
+    },
+    {
+      "id": "occ-2011-12",
+      "name": "OCC 2011-12",
+      "enabledByDefault": true
+    },
+    {
+      "id": "dora",
+      "name": "DORA",
+      "enabledByDefault": true
+    },
+    {
+      "id": "glba-501b",
+      "name": "GLBA 501(b)",
+      "enabledByDefault": true
+    },
+    {
+      "id": "sox-404",
+      "name": "SOX 404",
+      "enabledByDefault": false
+    }
+  ],
+  "maturityScoreWeights": {
+    "3.7": 0.22,
+    "3.8": 0.18,
+    "3.12": 0.17,
+    "3.13": 0.13,
+    "4.5": 0.15,
+    "4.7": 0.15
+  },
+  "dataverse": {
+    "tables": [
+      "fsi_cg_rcd_baseline",
+      "fsi_cg_rcd_finding",
+      "fsi_cg_rcd_evidence"
+    ],
+    "connectionReference": "RCD-DataverseConnection"
+  },
+  "powerBI": {
+    "templateName": "RCD-GovernanceDashboard.pbit",
+    "datasetTables": [
+      "ControlMaster",
+      "ImplementationStatus",
+      "EvidenceLog",
+      "RegulatoryMapping"
+    ],
+    "rowLevelSecurityRoles": [
+      "ExecutiveReader",
+      "ControlOwner",
+      "RegulatoryReadiness"
+    ]
   }
 }

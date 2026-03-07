@@ -17,8 +17,16 @@
   "regulations": [
     "GLBA 501(b)",
     "SEC Reg S-P",
-    "DORA Article 9",
+    "DORA",
     "GDPR"
+  ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-reg-sp",
+    "glba-501b",
+    "sox-302-404",
+    "dora",
+    "gdpr"
   ],
   "dependencies": [
     "03-sensitivity-label-auditor"

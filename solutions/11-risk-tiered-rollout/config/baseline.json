@@ -7,6 +7,65 @@
     "1.12",
     "4.12"
   ],
+  "waveDefinitions": [
+    {
+      "waveNumber": 0,
+      "name": "Wave 0 - Tier 1 Pilot",
+      "maxUsers": 25,
+      "includedRiskTiers": [
+        "Tier1"
+      ],
+      "approvalMode": "business-owner",
+      "gateCriteria": [
+        "scannerComplete",
+        "minimumReadinessScore",
+        "serviceHealthGreen",
+        "supportDeskCoverage"
+      ]
+    },
+    {
+      "waveNumber": 1,
+      "name": "Wave 1 - Tier 1 Expansion",
+      "maxUsers": 250,
+      "includedRiskTiers": [
+        "Tier1"
+      ],
+      "approvalMode": "business-owner",
+      "gateCriteria": [
+        "wave0Success",
+        "incidentThreshold"
+      ]
+    }
+  ],
+  "notifications": {
+    "mode": "summary",
+    "summaryRecipients": [
+      "copilot-operations@contoso.example"
+    ],
+    "approvalChannel": "RTR-summary-alerts"
+  },
+  "approvalWorkflow": {
+    "enabled": false,
+    "cabApprovalRequired": false,
+    "requiredApprovers": [
+      "BusinessOwner"
+    ]
+  },
+  "analytics": {
+    "vivaInsightsEnabled": false
+  },
+  "resilience": {
+    "doraGateRequired": false
+  },
+  "gateThresholds": {
+    "minimumPilotReadinessPercent": 95,
+    "minimumExpansionReadinessPercent": 92,
+    "maximumOpenIncidents": 2
+  },
+  "manualReviewRequiredTiers": [
+    "Tier2",
+    "Tier3"
+  ],
   "evidenceRetentionDays": 30,
   "notificationMode": "summary"
 }

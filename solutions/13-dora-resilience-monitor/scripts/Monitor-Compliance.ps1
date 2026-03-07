@@ -6,7 +6,8 @@
     Collects Microsoft 365 Copilot dependency health observations, applies a DORA Art. 17
     severity model, evaluates resilience-test currency, and emits a structured compliance
     status object for dashboard and evidence workflows. The repository implementation uses
-    a local stub for the Microsoft Graph call so the script remains testable without
+    a local stub data source and returns representative sample results; Microsoft Graph
+    integration is required for live tenant polling. The script remains testable without
     external connectivity.
 
 .PARAMETER ConfigurationTier
@@ -64,6 +65,8 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+$script:StubWarning = 'Service health output came from the local Graph stub and does not confirm live Microsoft 365 polling.'
+$script:SampleWarning = 'Service health output came from DRM_SERVICE_HEALTH_SAMPLE_JSON and does not confirm live Microsoft Graph polling.'
 
 function Get-DrmConfiguration {
     [CmdletBinding()]
@@ -201,10 +204,19 @@ function Get-ServiceHealthStatus {
                     AffectedUserPct = $affectedUserPct
                     ImpactDescription = $impactDescription
                     IsCritical = $isCritical
-                    Source = 'Graph /admin/serviceAnnouncement/healthOverviews'
+                    Source = 'sample-json-env'
+                    RuntimeMode = 'sample-json'
+                    Warning = $script:SampleWarning
                 }
             }
         )
+    }
+
+    $stubWarning = if ([string]::IsNullOrWhiteSpace($TenantId) -or [string]::IsNullOrWhiteSpace($ClientId) -or $null -eq $ClientSecret) {
+        $script:StubWarning
+    }
+    else {
+        'Client credentials were supplied, but live monitoring is not wired in this repository; local stub records were emitted instead.'
     }
 
     if ([string]::IsNullOrWhiteSpace($TenantId) -or [string]::IsNullOrWhiteSpace($ClientId) -or $null -eq $ClientSecret) {
@@ -230,10 +242,30 @@ function Get-ServiceHealthStatus {
                 AffectedUserPct = 0
                 ImpactDescription = 'No active service advisories captured by the local Graph stub.'
                 IsCritical = $service -in $criticalServices
-                Source = 'Graph /admin/serviceAnnouncement/healthOverviews'
+                Source = 'local-graph-stub'
+                RuntimeMode = 'local-stub'
+                Warning = $stubWarning
             }
         }
     )
+}
+
+function Resolve-DrmReportedStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('implemented', 'partial', 'monitor-only', 'playbook-only')]
+        [string]$CandidateStatus,
+
+        [Parameter(Mandatory)]
+        [string]$RuntimeMode
+    )
+
+    if ($RuntimeMode -ne 'live-graph' -and $CandidateStatus -eq 'implemented') {
+        return 'partial'
+    }
+
+    return $CandidateStatus
 }
 
 function Invoke-DoraSeverityClassification {
@@ -372,6 +404,17 @@ $resolvedClientSecret = Resolve-DrmClientSecret -Secret $ClientSecret
 
 Write-Verbose 'Collecting service-health snapshots.'
 $serviceHealthSummary = @(Get-ServiceHealthStatus -MonitoredServices $configuration.defaults.monitoredServices -TenantId $TenantId -ClientId $ClientId -ClientSecret $resolvedClientSecret)
+$runtimeModes = @($serviceHealthSummary | Select-Object -ExpandProperty RuntimeMode -Unique)
+$runtimeMode = if ($runtimeModes.Count -eq 1) { [string]$runtimeModes[0] } else { 'mixed-nonlive' }
+$statusWarning = if ($runtimeMode -eq 'sample-json') {
+    $script:SampleWarning
+}
+elseif ($runtimeMode -eq 'local-stub') {
+    $script:StubWarning
+}
+else {
+    'Service health output combined multiple non-live sources; validate live Graph wiring before treating status as implemented.'
+}
 
 Write-Verbose 'Classifying service-health incidents with DORA severity logic.'
 $incidentFindings = @(
@@ -386,18 +429,23 @@ $incidentFindings = @(
 Write-Verbose 'Checking resilience-test schedule.'
 $resilienceTestStatus = Get-ResilienceTestDue -ResilienceConfiguration $configuration.resilienceTestTracking -Tier $ConfigurationTier
 
-$overallStatus = 'implemented'
+$candidateOverallStatus = 'implemented'
 if ($incidentFindings.Count -gt 0) {
-    $overallStatus = 'monitor-only'
+    $candidateOverallStatus = 'monitor-only'
 }
 elseif ($ConfigurationTier -eq 'regulated' -and $resilienceTestStatus.Status -in @('missing', 'overdue')) {
-    $overallStatus = 'partial'
+    $candidateOverallStatus = 'partial'
 }
+$overallStatus = Resolve-DrmReportedStatus -CandidateStatus $candidateOverallStatus -RuntimeMode $runtimeMode
 
+Write-Warning $statusWarning
 $complianceStatus = [pscustomobject]@{
     Solution = $configuration.displayName
     Tier = $ConfigurationTier
     OverallStatus = $overallStatus
+    RuntimeMode = $runtimeMode
+    DataSourceMode = $runtimeMode
+    StatusWarning = $statusWarning
     ServiceHealthSummary = $serviceHealthSummary
     IncidentFindings = $incidentFindings
     ResilienceTestStatus = $resilienceTestStatus

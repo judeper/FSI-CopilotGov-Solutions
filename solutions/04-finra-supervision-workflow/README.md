@@ -1,8 +1,12 @@
 # FINRA Supervision Workflow for Copilot
 
-![Status: implemented](https://img.shields.io/badge/status-implemented-brightgreen)
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P0 | **Track:** B
 
-## Solution summary
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
+
+## Overview
+
+FINRA Supervision Workflow for Copilot routes flagged Copilot-assisted communications into a documented supervisory queue, applies zone and governance-tier sampling, enforces review SLAs, and produces examiner-ready evidence exports. It is documentation-first for Dataverse and Power Automate assets so regulated teams can build the flows and tables manually inside a controlled environment.
 
 | Field | Value |
 | --- | --- |
@@ -19,6 +23,19 @@
 This solution routes Copilot-assisted communications that were flagged by Microsoft Purview Communication Compliance into a supervisory review queue. It supports compliance with FINRA supervision obligations by assigning reviewers based on zone and governance tier, applying configurable sampling rates, enforcing review SLAs, and recording review actions in an append-only log.
 
 The solution is documentation-first. Dataverse tables, Power Automate flows, connection references, and environment variables are described here and in the docs folder so that regulated teams can deploy them manually in a controlled Power Platform environment.
+
+By default, repository evidence exports remain configuration-driven sample data until `scripts\Export-Evidence.ps1 -LiveExport` is pointed at a customer-managed Dataverse environment with live queue records.
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft Purview Communication Compliance APIs
+- ❌ Does not route flagged communications automatically (workflow is documented, not deployed)
+- ❌ Does not deploy Power Automate flows (supervision flows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Regulatory context
 
@@ -86,7 +103,7 @@ See [docs\architecture.md](docs/architecture.md) and [docs\deployment-guide.md](
 6. Build the four Power Automate flows manually and test queue routing, review completion, and escalation behavior.
 7. Run `scripts\Monitor-Compliance.ps1` and `scripts\Export-Evidence.ps1` to validate readiness and produce evidence artifacts.
 
-## Evidence collection
+## Evidence Export
 
 Run the export script after configuration changes and at the end of each review period.
 
@@ -106,13 +123,17 @@ Evidence artifacts follow `data\evidence-schema.json` and include:
 
 Each export writes a `.sha256` companion file so reviewers can verify package integrity before filing evidence in the firm's records repository.
 
-## Regulatory alignment
+## Related Controls
 
 | Control | Supervisory objective | Solution capability | Evidence output |
 | --- | --- | --- | --- |
 | 3.4 | Coverage of flagged Copilot-assisted communications | Zone and tier sampling, mandatory review routing, and SLA assignment | supervision-queue-snapshot, sampling-summary |
 | 3.5 | Review disposition accountability | Reviewer outcome capture, principal assignment, and append-only action log | review-disposition-log |
 | 3.6 | Exception and escalation tracking | SLA breach detection, escalation recipients, and exception reason capture | supervision-queue-snapshot, review-disposition-log, sampling-summary |
+
+## Regulatory Alignment
+
+This solution supports compliance with FINRA 3110, FINRA 2210, and SEC Reg BI by documenting supervisory intake, reviewer assignment, escalation handling, and retained evidence for Copilot-assisted communications. It provides an implementation pattern for supervisory workflow evidence and does not replace legal review, principal sign-off, or firm-specific written supervisory procedures.
 
 ## Known limitations
 

@@ -25,6 +25,13 @@
     "CFTC 1.31",
     "SOX 404"
   ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-17a3",
+    "sec-17a4",
+    "sox-302-404",
+    "cftc-1-31"
+  ],
   "defaults": {
     "auditEventTypes": [
       "CopilotInteraction",
@@ -45,7 +52,6 @@
       "Advanced"
     ],
     "ediscoveryHoldRequired": true,
-    "uniifiedAuditLogEnabled": "check",
     "unifiedAuditLogEnabled": "check",
     "evidenceOutputs": [
       "audit-log-completeness",

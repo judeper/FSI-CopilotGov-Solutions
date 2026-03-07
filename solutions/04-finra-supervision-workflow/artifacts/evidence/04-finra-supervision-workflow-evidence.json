@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "solution": "04-finra-supervision-workflow",
+    "solutionCode": "FSW",
+    "exportVersion": "1.0.0",
+    "exportedAt": "2026-03-06T20:50:56.332026-05:00",
+    "tier": "regulated",
+    "periodStart": "2026-01-01",
+    "periodEnd": "2026-01-31",
+    "evidenceMode": "documentation-first",
+    "policyId": "00000000-0000-0000-0000-000000000000",
+    "environmentUrl": "https://contoso.crm.dynamics.com"
+  },
+  "summary": {
+    "recordCount": 13,
+    "overallStatus": "implemented",
+    "exceptionCount": 1,
+    "findingCount": 0
+  },
+  "controls": [
+    {
+      "controlId": "3.4",
+      "status": "implemented",
+      "notes": "Supports compliance with supervisory coverage by capturing queue intake, zone assignment, sampling configuration, and SLA targets."
+    },
+    {
+      "controlId": "3.5",
+      "status": "implemented",
+      "notes": "Supports compliance with review disposition accountability through reviewer actions, timestamps, and recorded outcomes."
+    },
+    {
+      "controlId": "3.6",
+      "status": "implemented",
+      "notes": "Supports compliance with exception tracking through escalation settings, breach logging, and review notes retained for audit."
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "supervision-queue-snapshot",
+      "type": "supervision-queue-snapshot",
+      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\solutions\\04-finra-supervision-workflow\\scripts\\..\\artifacts\\evidence\\supervision-queue-snapshot.json",
+      "hash": "c0c9234e289984d335f326db7e1f6cff44bd1e805124ac7ebd52ebf7927e0dc2"
+    },
+    {
+      "name": "review-disposition-log",
+      "type": "review-disposition-log",
+      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\solutions\\04-finra-supervision-workflow\\scripts\\..\\artifacts\\evidence\\review-disposition-log.json",
+      "hash": "4de413b0632505e8d7e17fe30c810ff953645f21f34cbfc122b997d9479b9934"
+    },
+    {
+      "name": "sampling-summary",
+      "type": "sampling-summary",
+      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\solutions\\04-finra-supervision-workflow\\scripts\\..\\artifacts\\evidence\\sampling-summary.json",
+      "hash": "a08c12ea9c9ce7161f229fcdefd62042c70c878804e27335920965308feb5209"
+    }
+  ]
+}

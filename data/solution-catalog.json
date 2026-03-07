@@ -27,6 +27,15 @@
       "OCC 2011-12",
       "FFIEC IT Handbook"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance"
+    ],
     "summary": "Assesses tenant readiness across licensing, identity, Purview, SharePoint, and Copilot-specific data hygiene signals.",
     "evidence_outputs": [
       "readiness-scorecard",
@@ -79,6 +88,13 @@
       "SEC Reg S-P",
       "FINRA 4511",
       "FFIEC IT Handbook"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
     ],
     "summary": "Detects overshared SharePoint, Teams, and OneDrive content that could widen Copilot grounding beyond intended audiences.",
     "evidence_outputs": [
@@ -133,6 +149,16 @@
       "GDPR",
       "GLBA 501(b)"
     ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook",
+      "gdpr"
+    ],
     "summary": "Measures label coverage across in-scope workloads and identifies unlabeled content that weakens Copilot data protection controls.",
     "evidence_outputs": [
       "label-coverage-report",
@@ -183,6 +209,11 @@
       "FINRA 2210",
       "SEC Reg BI"
     ],
+    "framework_ids": [
+      "finra-2210",
+      "finra-3110",
+      "sec-reg-bi"
+    ],
     "summary": "Routes flagged Copilot-assisted communications into a reviewer queue with sampling, escalation, and exception tracking.",
     "evidence_outputs": [
       "supervision-queue-snapshot",
@@ -229,6 +260,14 @@
       "SEC Reg S-P",
       "DORA",
       "GDPR"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "dora",
+      "gdpr"
     ],
     "summary": "Deploys, baselines, and monitors DLP policies that target Copilot prompts, responses, and grounded content access patterns.",
     "evidence_outputs": [
@@ -283,6 +322,13 @@
       "CFTC 1.31",
       "SOX 404"
     ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "sox-302-404",
+      "cftc-1-31"
+    ],
     "summary": "Configures retention, validates Copilot audit completeness, and packages evidence for books-and-records examinations.",
     "evidence_outputs": [
       "audit-log-completeness",
@@ -332,6 +378,13 @@
       "FINRA 3110",
       "DORA"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "summary": "Deploys Conditional Access patterns for Copilot users and watches for policy drift across risk tiers and device states.",
     "evidence_outputs": [
       "ca-policy-state",
@@ -379,6 +432,12 @@
     "regulations": [
       "OCC 2011-12",
       "SOX 404"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook"
     ],
     "summary": "Tracks license usage, inactivity, business-value signals, and reallocation opportunities for Copilot subscriptions.",
     "evidence_outputs": [
@@ -433,6 +492,17 @@
       "SEC Reg FD",
       "FINRA 3110"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "finra-4511",
+      "sec-17a4",
+      "sec-reg-sp",
+      "sec-reg-fd",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook"
+    ],
     "summary": "Centralizes Copilot feature toggles, rollout rings, and drift monitoring across applications and user cohorts.",
     "evidence_outputs": [
       "feature-state-baseline",
@@ -485,6 +555,15 @@
       "OCC 2011-12",
       "DORA"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
+    ],
     "summary": "Inventories connectors and plugins, routes approval requests, and records data-flow decisions for extensibility scenarios.",
     "evidence_outputs": [
       "connector-inventory",
@@ -535,6 +614,15 @@
       "OCC 2011-12",
       "FINRA 3110",
       "DORA"
+    ],
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
     ],
     "summary": "Sequences Copilot license assignment, prerequisite checks, pilot waves, and expansion gates by risk tier.",
     "evidence_outputs": [
@@ -592,6 +680,18 @@
       "DORA",
       "GLBA 501(b)"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "finra-4511",
+      "sec-17a4",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "sr-11-7",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "summary": "Aggregates solution outputs into a control-centric dashboard that highlights implementation state, evidence freshness, and regulatory coverage.",
     "evidence_outputs": [
       "control-status-snapshot",
@@ -645,6 +745,14 @@
       "OCC 2011-12",
       "FFIEC IT Handbook"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora",
+      "gdpr"
+    ],
     "summary": "Monitors Copilot service health, incident classification, resilience evidence, and operational-risk reporting for regulated environments.",
     "evidence_outputs": [
       "service-health-log",
@@ -697,6 +805,14 @@
       "SEC Reg BI",
       "FCA SYSC 10"
     ],
+    "framework_ids": [
+      "finra-2210",
+      "finra-3110",
+      "sec-reg-bi",
+      "fca-sysc-10",
+      "glba-501b",
+      "sox-302-404"
+    ],
     "summary": "Publishes communication compliance policy patterns for Copilot-assisted content and tracks reviewer workflows and escalations.",
     "evidence_outputs": [
       "policy-template-export",
@@ -747,6 +863,13 @@
       "SEC 17a-4",
       "FINRA 4511",
       "SOX 404"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "glba-501b",
+      "sox-302-404"
     ],
     "summary": "Surfaces known compliance gaps in Copilot Pages and Notebooks and documents compensating controls until platform coverage improves.",
     "evidence_outputs": [

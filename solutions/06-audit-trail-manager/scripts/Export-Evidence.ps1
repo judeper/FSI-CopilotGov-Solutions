@@ -124,8 +124,9 @@ $periodEndString = $PeriodEnd.ToString('yyyy-MM-dd')
 
 $ualStatusFlag = if ($defaultConfig.defaults.PSObject.Properties.Name -contains 'unifiedAuditLogEnabled') {
     $defaultConfig.defaults.unifiedAuditLogEnabled
-} else {
-    $defaultConfig.defaults.uniifiedAuditLogEnabled
+}
+else {
+    'check'
 }
 
 $regulationNames = [ordered]@{
@@ -336,20 +337,17 @@ $package = Export-SolutionEvidencePackage `
     -OutputPath $outputFolder `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts $artifacts
-
-$packagePayload = Get-Content -Path $package.Path -Raw | ConvertFrom-Json -Depth 20
-Add-Member -InputObject $packagePayload.metadata -NotePropertyName 'periodStart' -NotePropertyValue $periodStartString -Force
-Add-Member -InputObject $packagePayload.metadata -NotePropertyName 'periodEnd' -NotePropertyValue $periodEndString -Force
-Add-Member -InputObject $packagePayload.metadata -NotePropertyName 'tenantId' -NotePropertyValue $TenantId -Force
-$packagePayload | ConvertTo-Json -Depth 20 | Set-Content -Path $package.Path -Encoding utf8
-$packageHash = Get-CopilotGovSha256 -Path $package.Path
-Set-Content -Path ($package.Path + '.sha256') -Value ('{0}  {1}' -f $packageHash, [IO.Path]::GetFileName($package.Path)) -Encoding utf8
+    -Artifacts $artifacts `
+    -AdditionalMetadata @{
+        periodStart = $periodStartString
+        periodEnd = $periodEndString
+        tenantId = $TenantId
+    }
 
 [pscustomobject]@{
     Solution = $defaultConfig.solution
     Tier = $ConfigurationTier
     PackagePath = $package.Path
-    PackageHash = $packageHash
+    PackageHash = $package.Hash
     ArtifactPaths = @($artifacts.path)
 }

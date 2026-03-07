@@ -100,7 +100,12 @@ function Write-ArtifactFile {
     $directory = Split-Path -Parent $Path
     $null = New-Item -ItemType Directory -Path $directory -Force
     $Content | ConvertTo-Json -Depth 8 | Set-Content -Path $Path -Encoding utf8
-    return $Path
+    $hashInfo = Write-CopilotGovSha256File -Path $Path
+
+    return [pscustomobject]@{
+        Path = $Path
+        Hash = $hashInfo.Hash
+    }
 }
 
 if ($PeriodEnd -lt $PeriodStart) {
@@ -246,9 +251,9 @@ $exceptionRegisterArtifact = [ordered]@{
 }
 
 $null = New-Item -ItemType Directory -Path $OutputPath -Force
-Write-ArtifactFile -Path $gapFindingsPath -Content $gapFindingsArtifact | Out-Null
-Write-ArtifactFile -Path $compensatingControlPath -Content $compensatingControlArtifact | Out-Null
-Write-ArtifactFile -Path $exceptionRegisterPath -Content $exceptionRegisterArtifact | Out-Null
+$gapFindingsFile = Write-ArtifactFile -Path $gapFindingsPath -Content $gapFindingsArtifact
+$compensatingControlFile = Write-ArtifactFile -Path $compensatingControlPath -Content $compensatingControlArtifact
+$exceptionRegisterFile = Write-ArtifactFile -Path $exceptionRegisterPath -Content $exceptionRegisterArtifact
 
 $controls = @(
     [pscustomobject]@{
@@ -277,17 +282,20 @@ $artifacts = @(
     [pscustomobject]@{
         name = 'gap-findings'
         type = 'gap-findings'
-        path = $gapFindingsPath
+        path = $gapFindingsFile.Path
+        hash = $gapFindingsFile.Hash
     }
     [pscustomobject]@{
         name = 'compensating-control-log'
         type = 'compensating-control-log'
-        path = $compensatingControlPath
+        path = $compensatingControlFile.Path
+        hash = $compensatingControlFile.Hash
     }
     [pscustomobject]@{
         name = 'preservation-exception-register'
         type = 'preservation-exception-register'
-        path = $exceptionRegisterPath
+        path = $exceptionRegisterFile.Path
+        hash = $exceptionRegisterFile.Hash
     }
 )
 

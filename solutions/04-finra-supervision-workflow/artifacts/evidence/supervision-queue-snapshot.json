@@ -1,0 +1,65 @@
+{
+  "solution": "04-finra-supervision-workflow",
+  "tier": "regulated",
+  "mode": "documentation-first",
+  "periodStart": "2026-01-01",
+  "periodEnd": "2026-01-31",
+  "summary": {
+    "recordCount": 3,
+    "stateSummary": [
+      {
+        "state": "PendingReview",
+        "count": 1
+      },
+      {
+        "state": "InReview",
+        "count": 1
+      },
+      {
+        "state": "Escalated",
+        "count": 1
+      }
+    ]
+  },
+  "records": [
+    {
+      "fsi_queuenumber": "FSW-Z1-001",
+      "fsi_sourcetype": "PurviewCommunicationCompliance",
+      "fsi_sourceid": "doc-sample-001",
+      "fsi_agentid": "Microsoft365Copilot",
+      "fsi_zone": "Zone1",
+      "fsi_tier": "regulated",
+      "fsi_state": "PendingReview",
+      "fsi_assignedprincipal": "principal.zone1@contoso.com",
+      "fsi_sladue": "2026-01-03T00:00:00.0000000",
+      "fsi_reviewoutcome": "Pending",
+      "fsi_reviewnotes": "Documentation-first sample item generated from tier configuration."
+    },
+    {
+      "fsi_queuenumber": "FSW-Z2-002",
+      "fsi_sourcetype": "PurviewCommunicationCompliance",
+      "fsi_sourceid": "doc-sample-002",
+      "fsi_agentid": "Microsoft365Copilot",
+      "fsi_zone": "Zone2",
+      "fsi_tier": "regulated",
+      "fsi_state": "InReview",
+      "fsi_assignedprincipal": "principal.zone2@contoso.com",
+      "fsi_sladue": "2026-01-02T02:00:00.0000000",
+      "fsi_reviewoutcome": "Pending",
+      "fsi_reviewnotes": "Documentation-first sample item generated from tier configuration."
+    },
+    {
+      "fsi_queuenumber": "FSW-Z3-003",
+      "fsi_sourcetype": "PurviewCommunicationCompliance",
+      "fsi_sourceid": "doc-sample-003",
+      "fsi_agentid": "Microsoft365Copilot",
+      "fsi_zone": "Zone3",
+      "fsi_tier": "regulated",
+      "fsi_state": "Escalated",
+      "fsi_assignedprincipal": "principal.zone3@contoso.com",
+      "fsi_sladue": "2026-01-01T08:00:00.0000000",
+      "fsi_reviewoutcome": "Escalated",
+      "fsi_reviewnotes": "High-risk item requires immediate principal review."
+    }
+  ]
+}

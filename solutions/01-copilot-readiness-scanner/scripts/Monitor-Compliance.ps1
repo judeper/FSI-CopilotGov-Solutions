@@ -52,6 +52,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$script:RuntimeMode = 'documentation-first'
+$script:DataSourceMode = 'simulated-baseline'
+$script:SimulationWarning = 'Representative sample readiness scores were emitted; no live Microsoft Graph, Purview, SharePoint, or Power Platform calls were performed.'
+
 function Get-RepositoryRoot {
     [CmdletBinding()]
     param()
@@ -179,6 +183,21 @@ function Get-DomainStatus {
     return 'playbook-only'
 }
 
+function Resolve-ReportedStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('implemented', 'partial', 'monitor-only', 'playbook-only')]
+        [string]$CandidateStatus
+    )
+
+    if ($script:DataSourceMode -eq 'simulated-baseline' -and $CandidateStatus -eq 'implemented') {
+        return 'partial'
+    }
+
+    return $CandidateStatus
+}
+
 function New-DomainResult {
     [CmdletBinding()]
     param(
@@ -197,7 +216,8 @@ function New-DomainResult {
 
     $tierModifier = Get-TierModifier -Tier $Configuration.tier
     $score = [Math]::Max(0, [Math]::Min(100, $BaseScore + $tierModifier))
-    $status = Get-DomainStatus -Score $score -AlertThreshold ([int]$Configuration.alertThreshold)
+    $rawStatus = Get-DomainStatus -Score $score -AlertThreshold ([int]$Configuration.alertThreshold)
+    $status = Resolve-ReportedStatus -CandidateStatus $rawStatus
 
     return [pscustomobject]@{
         Domain    = $Domain
@@ -205,6 +225,10 @@ function New-DomainResult {
         Status    = $status
         Issues    = $Issues
         Timestamp = (Get-Date).ToString('o')
+        RuntimeMode = $script:RuntimeMode
+        DataSourceMode = $script:DataSourceMode
+        StatusBasis = if ($rawStatus -ne $status) { 'Implemented score downgraded to partial because the repository emitted a simulated baseline.' } else { 'Sample score mapped to the repository status vocabulary.' }
+        SimulationWarning = $script:SimulationWarning
     }
 }
 
@@ -351,6 +375,7 @@ try {
         throw "Unsupported domain selection: $([string]::Join(', ', $unsupportedDomains))"
     }
 
+    Write-Warning $script:SimulationWarning
     $scanResults = foreach ($domain in $selectedDomains) {
         switch ($domain) {
             'licensing' { Invoke-LicensingScan -Configuration $configuration -TenantId $TenantId }
@@ -368,7 +393,7 @@ try {
     $exportFilePath = Join-Path $resolvedExportPath $exportFileName
     $scanResults | ConvertTo-Json -Depth 6 | Set-Content -Path $exportFilePath -Encoding utf8
 
-    Write-Information "Monitoring baseline exported to $exportFilePath"
+    Write-Information "Simulated monitoring baseline exported to $exportFilePath"
     $scanResults
 }
 catch {

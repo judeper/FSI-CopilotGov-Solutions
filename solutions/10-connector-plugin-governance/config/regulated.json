@@ -7,6 +7,38 @@
     "2.14",
     "4.13"
   ],
+  "approvalModel": {
+    "autoApproveLowRisk": false,
+    "requireApprovalForAllConnectors": true,
+    "mandatoryReviewStages": [
+      "security-review",
+      "ciso-dlp-review",
+      "final-approval"
+    ],
+    "highRiskReviewStages": [
+      "security-review",
+      "ciso-dlp-review",
+      "ciso-sign-off"
+    ],
+    "mandatoryCisoSignoffForHighRisk": true,
+    "maintainDoraThirdPartyRegister": true
+  },
+  "approvalSLAHours": {
+    "low": 24,
+    "medium": 24,
+    "high": 24,
+    "blocked": 0
+  },
+  "dataFlowPolicy": {
+    "requireAttestationForExternalEgress": true,
+    "allowCrossBoundaryByException": false,
+    "requireAnnualReattestation": true
+  },
+  "doraRegister": {
+    "required": true,
+    "reconciliationFrequency": "monthly",
+    "ownerRole": "ThirdPartyRiskManagement"
+  },
   "evidenceRetentionDays": 365,
   "notificationMode": "strict"
 }

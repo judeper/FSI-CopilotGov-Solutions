@@ -1,6 +1,8 @@
 # Oversharing Risk Assessment and Remediation
 
-> **Status:** Active | **Version:** v0.2.0 | **Priority:** P0 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P0 | **Track:** A
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -18,20 +20,41 @@ The design focuses on the highest-risk FSI exposure scenarios: customer PII, tra
 - Restricted SharePoint Search enablement planning for tighter Copilot grounding boundaries
 - Evidence export packages for oversharing-findings, remediation-queue, and site-owner-attestations
 
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft Graph or SharePoint APIs (scripts use representative sample data)
+- ❌ Does not remediate oversharing automatically (remediation queue is documented, not executed)
+- ❌ Does not deploy Power Automate flows (flow designs are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md) for the component diagram, workload data flow, remediation modes, and Power Automate integration pattern.
 
+## Prerequisites
+
+- Review [docs/prerequisites.md](docs/prerequisites.md) and confirm the required admin roles, PowerShell modules, and API access are in place.
+- Verify that solution [01-copilot-readiness-scanner](../01-copilot-readiness-scanner/) has already produced baseline output that can be used to prioritize high-risk workloads.
+- Confirm SharePoint Advanced Management licensing and DSPM for AI prerequisites are available for the target tenant.
+
 ## Quick Start
 
 1. Review [docs/prerequisites.md](docs/prerequisites.md) and confirm the required admin roles, PowerShell modules, and API access are in place.
-2. Verify that solution [01-copilot-readiness-scanner](..\01-copilot-readiness-scanner\README.md) has already produced baseline output that can be used to prioritize high-risk workloads.
+2. Verify that solution [01-copilot-readiness-scanner](../01-copilot-readiness-scanner/) has already produced baseline output that can be used to prioritize high-risk workloads.
 3. Check that SharePoint Advanced Management licensing and DSPM for AI prerequisites are available for the target tenant.
 4. Select the appropriate governance tier from `config\baseline.json`, `config\recommended.json`, or `config\regulated.json`.
 5. Run `scripts\Deploy-Solution.ps1 -ConfigurationTier <tier> -TenantId <tenant-guid> -ScanMode DetectOnly` to validate configuration and create the deployment manifest.
 6. Run `scripts\Monitor-Compliance.ps1` in detect-only mode to generate the initial oversharing findings set.
 7. Review the remediation queue, plan waves by risk tier, then enable owner notifications after stakeholder sign-off.
 8. Run `scripts\Export-Evidence.ps1` to package evidence artifacts and SHA-256 companion files.
+
+## Deployment
+
+Deploy this solution in detect-only mode first so stakeholders can review oversharing findings and approve remediation sequencing before any enforcement changes are considered. After the deployment manifest is created with `Deploy-Solution.ps1`, run `Monitor-Compliance.ps1` to capture the first finding set, review the remediation queue with site owners and compliance teams, then run `Export-Evidence.ps1` to archive the approved baseline.
 
 ## Solution Components
 

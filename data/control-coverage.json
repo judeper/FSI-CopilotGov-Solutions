@@ -7,6 +7,11 @@
     "solutions": [
       "01-copilot-readiness-scanner"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance"
+    ],
     "notes": "Readiness scoring and evidence collection are native outputs of solution 01.",
     "playbooks": [
       {
@@ -38,6 +43,11 @@
     "coverage": "automated",
     "solutions": [
       "02-oversharing-risk-assessment"
+    ],
+    "framework_ids": [
+      "sec-reg-sp",
+      "glba-501b",
+      "ffiec-it-handbook"
     ],
     "notes": "Oversharing detection and remediation queues are native outputs of solution 02.",
     "playbooks": [
@@ -71,6 +81,10 @@
     "solutions": [
       "02-oversharing-risk-assessment"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
     "notes": "Restricted search allow-list decisions still require administrator review after automated discovery.",
     "playbooks": [
       {
@@ -102,6 +116,11 @@
     "coverage": "partially-automated",
     "solutions": [
       "02-oversharing-risk-assessment"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
     ],
     "notes": "Semantic index scope recommendations are automated, while final policy scope remains governed by administrators.",
     "playbooks": [
@@ -136,6 +155,12 @@
       "01-copilot-readiness-scanner",
       "03-sensitivity-label-auditor"
     ],
+    "framework_ids": [
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
     "notes": "Readiness and label-audit workflows both measure and report label posture.",
     "playbooks": [
       {
@@ -169,6 +194,12 @@
       "01-copilot-readiness-scanner",
       "02-oversharing-risk-assessment"
     ],
+    "framework_ids": [
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
     "notes": "Permission analysis is a shared foundation across solutions 01 and 02.",
     "playbooks": [
       {
@@ -201,6 +232,10 @@
     "solutions": [
       "01-copilot-readiness-scanner"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
     "notes": "Readiness scanning validates SharePoint Advanced Management posture, while enablement remains guided.",
     "playbooks": [
       {
@@ -231,6 +266,11 @@
     "pillar": "Readiness & Assessment",
     "coverage": "playbook-only",
     "solutions": [],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
       {
@@ -265,6 +305,12 @@
       "08-license-governance-roi",
       "11-risk-tiered-rollout"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "notes": "License planning data is reused across readiness, rollout, and ROI tracking.",
     "playbooks": [
       {
@@ -295,6 +341,11 @@
     "pillar": "Readiness & Assessment",
     "coverage": "playbook-only",
     "solutions": [],
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "ffiec-it-handbook"
+    ],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
       {
@@ -326,6 +377,12 @@
     "coverage": "partially-automated",
     "solutions": [
       "11-risk-tiered-rollout"
+    ],
+    "framework_ids": [
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
     ],
     "notes": "Rollout orchestration supports adoption planning, but executive communication plans remain outside solution scope.",
     "playbooks": [
@@ -359,6 +416,13 @@
     "solutions": [
       "11-risk-tiered-rollout"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "glba-501b",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
+    ],
     "notes": "Training completion signals can be tracked, but learning content remains owned by the customer.",
     "playbooks": [
       {
@@ -390,6 +454,13 @@
     "coverage": "automated",
     "solutions": [
       "10-connector-plugin-governance"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
     ],
     "notes": "Connector governance inventories extensibility and approval states.",
     "playbooks": [
@@ -423,6 +494,13 @@
     "solutions": [
       "05-dlp-policy-governance"
     ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "dora"
+    ],
     "notes": "Solution 05 publishes DLP baselines, drift findings, and exception evidence.",
     "playbooks": [
       {
@@ -454,6 +532,10 @@
     "coverage": "automated",
     "solutions": [
       "03-sensitivity-label-auditor"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404"
     ],
     "notes": "Solution 03 measures label coverage and flags gaps by workload.",
     "playbooks": [
@@ -487,6 +569,11 @@
     "solutions": [
       "07-conditional-access-automation"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "notes": "Conditional Access templates, drift monitoring, and evidence export live in solution 07.",
     "playbooks": [
       {
@@ -517,6 +604,7 @@
     "pillar": "Security & Protection",
     "coverage": "playbook-only",
     "solutions": [],
+    "framework_ids": [],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
       {
@@ -548,6 +636,9 @@
     "coverage": "automated",
     "solutions": [
       "02-oversharing-risk-assessment"
+    ],
+    "framework_ids": [
+      "glba-501b"
     ],
     "notes": "Data minimization benefits from oversharing remediation and restricted search recommendations.",
     "playbooks": [
@@ -582,6 +673,10 @@
       "07-conditional-access-automation",
       "09-feature-management-controller"
     ],
+    "framework_ids": [
+      "sec-reg-fd",
+      "glba-501b"
+    ],
     "notes": "Feature management and access policies can govern web grounding, while business policy still drives enablement decisions.",
     "playbooks": [
       {
@@ -615,6 +710,11 @@
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "dora",
+      "gdpr"
+    ],
     "notes": "Residency evidence is aggregated through monitoring and control attestations rather than direct automation.",
     "playbooks": [
       {
@@ -645,6 +745,10 @@
     "pillar": "Security & Protection",
     "coverage": "playbook-only",
     "solutions": [],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
       {
@@ -676,6 +780,11 @@
     "coverage": "partially-automated",
     "solutions": [
       "07-conditional-access-automation"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook",
+      "dora"
     ],
     "notes": "Session-control posture is tracked through access-policy baselines and supporting configuration evidence.",
     "playbooks": [
@@ -710,6 +819,12 @@
       "12-regulatory-compliance-dashboard",
       "14-communication-compliance-config"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "fca-sysc-10",
+      "glba-501b",
+      "sox-302-404"
+    ],
     "notes": "Insider-risk readiness is reported through policy-health and communications-monitoring signals.",
     "playbooks": [
       {
@@ -741,6 +856,10 @@
     "coverage": "automated",
     "solutions": [
       "15-pages-notebooks-gap-monitor"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "glba-501b"
     ],
     "notes": "Solution 15 focuses on Pages and Notebook sharing controls and compensating evidence.",
     "playbooks": [
@@ -774,6 +893,10 @@
     "solutions": [
       "02-oversharing-risk-assessment"
     ],
+    "framework_ids": [
+      "sec-reg-sp",
+      "glba-501b"
+    ],
     "notes": "External-sharing exposure is surfaced through oversharing findings and site-owner remediation workflows.",
     "playbooks": [
       {
@@ -805,6 +928,11 @@
     "coverage": "automated",
     "solutions": [
       "10-connector-plugin-governance"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook",
+      "dora"
     ],
     "notes": "Solution 10 inventories and governs connector and plugin access paths.",
     "playbooks": [
@@ -838,6 +966,10 @@
     "solutions": [
       "10-connector-plugin-governance"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "dora"
+    ],
     "notes": "Declarative-agent governance aligns with the same extensibility approval and inventory controls.",
     "playbooks": [
       {
@@ -868,6 +1000,9 @@
     "pillar": "Security & Protection",
     "coverage": "playbook-only",
     "solutions": [],
+    "framework_ids": [
+      "ffiec-it-handbook"
+    ],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
       {
@@ -899,6 +1034,12 @@
     "coverage": "automated",
     "solutions": [
       "06-audit-trail-manager"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sox-302-404",
+      "cftc-1-31"
     ],
     "notes": "Solution 06 configures and validates Copilot audit logging.",
     "playbooks": [
@@ -933,6 +1074,12 @@
       "06-audit-trail-manager",
       "15-pages-notebooks-gap-monitor"
     ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a4",
+      "sox-302-404",
+      "cftc-1-31"
+    ],
     "notes": "Retention controls are packaged through solution 06, with gap-specific coverage in solution 15.",
     "playbooks": [
       {
@@ -965,6 +1112,11 @@
     "solutions": [
       "06-audit-trail-manager",
       "15-pages-notebooks-gap-monitor"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a4",
+      "cftc-1-31"
     ],
     "notes": "eDiscovery readiness is captured by audit-trail evidence and Pages gap monitoring.",
     "playbooks": [
@@ -999,6 +1151,12 @@
       "04-finra-supervision-workflow",
       "14-communication-compliance-config"
     ],
+    "framework_ids": [
+      "finra-2210",
+      "finra-3110",
+      "sec-reg-bi",
+      "fca-sysc-10"
+    ],
     "notes": "Supervision and communication-compliance policies work together to monitor Copilot-assisted communications.",
     "playbooks": [
       {
@@ -1031,6 +1189,9 @@
     "solutions": [
       "04-finra-supervision-workflow",
       "14-communication-compliance-config"
+    ],
+    "framework_ids": [
+      "finra-2210"
     ],
     "notes": "FINRA communication-review templates and reviewer workflows are the primary outputs.",
     "playbooks": [
@@ -1065,6 +1226,11 @@
       "04-finra-supervision-workflow",
       "14-communication-compliance-config"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "sec-reg-bi",
+      "fca-sysc-10"
+    ],
     "notes": "Supervisor queues and reviewer evidence address oversight requirements.",
     "playbooks": [
       {
@@ -1096,6 +1262,11 @@
     "coverage": "dashboard-monitored",
     "solutions": [
       "12-regulatory-compliance-dashboard"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "dora"
     ],
     "notes": "Regulatory reporting readiness is aggregated through the control dashboard and unified evidence manifests.",
     "playbooks": [
@@ -1129,6 +1300,10 @@
     "solutions": [
       "12-regulatory-compliance-dashboard"
     ],
+    "framework_ids": [
+      "occ-2011-12",
+      "sr-11-7"
+    ],
     "notes": "Model-risk alignment remains evidence-led and is reflected through dashboard rollups.",
     "playbooks": [
       {
@@ -1160,6 +1335,10 @@
     "coverage": "partially-automated",
     "solutions": [
       "14-communication-compliance-config"
+    ],
+    "framework_ids": [
+      "sec-reg-bi",
+      "fca-sysc-10"
     ],
     "notes": "Disclosure lexicons and policy templates can be configured, but supervisory judgment remains necessary.",
     "playbooks": [
@@ -1194,6 +1373,11 @@
       "02-oversharing-risk-assessment",
       "05-dlp-policy-governance"
     ],
+    "framework_ids": [
+      "sec-reg-sp",
+      "glba-501b",
+      "dora"
+    ],
     "notes": "Privacy obligations are supported through oversharing and DLP control evidence.",
     "playbooks": [
       {
@@ -1227,6 +1411,12 @@
       "03-sensitivity-label-auditor",
       "06-audit-trail-manager",
       "15-pages-notebooks-gap-monitor"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a3",
+      "sec-17a4",
+      "cftc-1-31"
     ],
     "notes": "Books-and-records posture is supported by label coverage, audit retention, and Pages/Notebooks gap monitoring.",
     "playbooks": [
@@ -1263,6 +1453,11 @@
       "06-audit-trail-manager",
       "12-regulatory-compliance-dashboard"
     ],
+    "framework_ids": [
+      "sox-302-404",
+      "dora",
+      "cftc-1-31"
+    ],
     "notes": "Evidence packaging is a shared requirement across the mapped solutions and the dashboard.",
     "playbooks": [
       {
@@ -1294,6 +1489,9 @@
     "coverage": "dashboard-monitored",
     "solutions": [
       "12-regulatory-compliance-dashboard"
+    ],
+    "framework_ids": [
+      "ffiec-it-handbook"
     ],
     "notes": "FFIEC alignment is surfaced through control mappings and dashboard evidence rather than direct automation.",
     "playbooks": [
@@ -1327,6 +1525,12 @@
     "solutions": [
       "09-feature-management-controller"
     ],
+    "framework_ids": [
+      "sec-reg-fd",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
     "notes": "Solution 09 governs Copilot feature state and drift detection.",
     "playbooks": [
       {
@@ -1358,6 +1562,13 @@
     "coverage": "partially-automated",
     "solutions": [
       "09-feature-management-controller"
+    ],
+    "framework_ids": [
+      "finra-3110",
+      "finra-4511",
+      "sec-17a4",
+      "sec-reg-sp",
+      "sec-reg-fd"
     ],
     "notes": "Teams meetings governance is handled as a feature-governance workflow, with policy design still owned by administrators.",
     "playbooks": [
@@ -1391,6 +1602,13 @@
     "solutions": [
       "09-feature-management-controller"
     ],
+    "framework_ids": [
+      "finra-3110",
+      "finra-4511",
+      "sec-reg-fd",
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
     "notes": "Teams Phone and Queues settings are tracked and exported through centralized feature governance.",
     "playbooks": [
       {
@@ -1422,6 +1640,11 @@
     "coverage": "partially-automated",
     "solutions": [
       "09-feature-management-controller"
+    ],
+    "framework_ids": [
+      "sec-reg-fd",
+      "glba-501b",
+      "ffiec-it-handbook"
     ],
     "notes": "Viva configuration can be measured and drift-monitored, while privacy decisions remain customer-specific.",
     "playbooks": [
@@ -1456,6 +1679,11 @@
       "08-license-governance-roi",
       "12-regulatory-compliance-dashboard"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
     "notes": "Usage analytics feed both operational dashboards and compliance coverage views.",
     "playbooks": [
       {
@@ -1487,6 +1715,10 @@
     "coverage": "automated",
     "solutions": [
       "08-license-governance-roi"
+    ],
+    "framework_ids": [
+      "sox-302-404",
+      "ffiec-it-handbook"
     ],
     "notes": "Solution 08 focuses on adoption and impact measurement.",
     "playbooks": [
@@ -1520,6 +1752,11 @@
     "solutions": [
       "12-regulatory-compliance-dashboard"
     ],
+    "framework_ids": [
+      "sec-reg-sp",
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
     "notes": "Feedback and telemetry posture is reflected through central evidence and control status.",
     "playbooks": [
       {
@@ -1551,6 +1788,11 @@
     "coverage": "automated",
     "solutions": [
       "08-license-governance-roi"
+    ],
+    "framework_ids": [
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook"
     ],
     "notes": "Cost allocation and optimization are direct outputs of the ROI tracker.",
     "playbooks": [
@@ -1584,6 +1826,12 @@
     "solutions": [
       "13-dora-resilience-monitor"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "notes": "Operational incident evidence and classification are central to solution 13.",
     "playbooks": [
       {
@@ -1616,6 +1864,12 @@
     "solutions": [
       "13-dora-resilience-monitor"
     ],
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "notes": "Business-continuity and resilience evidence are central to solution 13.",
     "playbooks": [
       {
@@ -1647,6 +1901,12 @@
     "coverage": "partially-automated",
     "solutions": [
       "13-dora-resilience-monitor"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook",
+      "dora"
     ],
     "notes": "Solution 13 records Sentinel-readiness hooks and supporting resilience telemetry.",
     "playbooks": [
@@ -1681,6 +1941,13 @@
       "09-feature-management-controller",
       "11-risk-tiered-rollout"
     ],
+    "framework_ids": [
+      "sec-reg-fd",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook",
+      "dora"
+    ],
     "notes": "Change management for rollouts is shared between feature governance and rollout orchestration.",
     "playbooks": [
       {
@@ -1713,6 +1980,14 @@
     "solutions": [
       "09-feature-management-controller",
       "10-connector-plugin-governance"
+    ],
+    "framework_ids": [
+      "sec-reg-fd",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "dora"
     ],
     "notes": "Extensibility governance is captured through feature-state and connector-governance evidence.",
     "playbooks": [

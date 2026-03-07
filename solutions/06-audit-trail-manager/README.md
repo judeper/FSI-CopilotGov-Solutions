@@ -1,6 +1,8 @@
 # Copilot Interaction Audit Trail Manager
 
-> Status: implemented | Version: v0.2.0 | Priority: P0 | Track: B | Solution code: ATM
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P0 | **Track:** B | **Solution Code:** ATM
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -18,12 +20,23 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 
 ## What this solution does
 
-- Verifies that Microsoft 365 Unified Audit Log (UAL) is enabled and that CopilotInteraction and AIInteraction events are included in validation scope.
+- Supports validation of Microsoft 365 Unified Audit Log configuration by checking tier-specific audit level expectations and confirming that CopilotInteraction and AIInteraction events are included in validation scope.
 - Documents Purview retention policy and retention label requirements for Copilot interaction artifacts.
-- Tracks eDiscovery readiness indicators including preservation status, hold counts, case coverage, and custodian scope.
+- Validates eDiscovery readiness against tier requirements including preservation status, hold counts, case coverage, and custodian scope.
 - Packages JSON evidence with SHA-256 companion files for examination support.
-- Defines Power BI dashboard metrics for audit completeness, retention coverage, and eDiscovery readiness.
-- Defines Power Automate exception alert expectations for retention and evidence gaps.
+- Defines Power BI dashboard metrics for audit completeness, retention coverage, and eDiscovery readiness (requires customer implementation in their tenant).
+- Defines Power Automate exception alert expectations for retention and evidence gaps (requires customer implementation in their tenant).
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft 365 Unified Audit Log APIs (scripts validate configuration expectations against tier requirements)
+- ❌ Does not verify actual audit event capture (UAL event validation requires manual verification through the compliance portal)
+- ❌ Does not deploy Power Automate flows (alert workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Regulatory context
 
@@ -45,10 +58,14 @@ This solution supports compliance with those obligations by organizing audit val
 
 See [docs/prerequisites.md](./docs/prerequisites.md) for the detailed prerequisite matrix.
 
+## Deployment
+
+Deploy this solution in stages: validate Unified Audit Log coverage, generate the retention manifest, confirm eDiscovery readiness, then publish the first evidence package. The detailed configuration and operating activities are organized in the following subsections so teams can execute the rollout in a controlled order.
+
 ## Audit configuration steps
 
 1. Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
-2. Run the operational completeness check aligned to `Check-AuditLogCompleteness` to verify that `CopilotInteraction` and `AIInteraction` events are being captured.
+2. Manually verify that CopilotInteraction and AIInteraction events appear in the Unified Audit Log through the Security & Compliance portal or PowerShell.
 3. Confirm the expected audit level for the selected tier:
    - baseline: Standard
    - recommended: Advanced
@@ -96,7 +113,17 @@ The Power Automate flow is documentation-first in this repository. The expected 
 - Alert when eDiscovery hold readiness is incomplete for the selected tier.
 - Route notifications to the compliance operations owner and solution mailbox.
 
-## Evidence collection overview
+## Related Controls
+
+| Control | Focus | How this solution supports the control |
+|---------|-------|----------------------------------------|
+| 3.1 | Audit trail completeness | Validates Unified Audit Log readiness and confirms Copilot interaction event coverage. |
+| 3.2 | Data retention policies for Copilot interactions | Documents retention schedules, labels, and tier-specific policy expectations. |
+| 3.3 | eDiscovery for Copilot-generated content | Tracks case readiness, hold coverage, and custodian scope before evidence export. |
+| 3.11 | Record keeping and books-and-records compliance | Organizes retention manifests and readiness outputs that support recordkeeping reviews. |
+| 3.12 | Evidence collection and audit attestation | Packages JSON artifacts and SHA-256 companion files for downstream audit handling. |
+
+## Evidence Export
 
 `Export-Evidence.ps1` creates the following artifact set:
 
@@ -108,7 +135,7 @@ The Power Automate flow is documentation-first in this repository. The expected 
 
 The evidence package supports compliance with recordkeeping examinations by preserving configuration state, control notes, and artifact integrity hashes.
 
-## Regulatory alignment
+## Regulatory Alignment
 
 | Regulation | Retention expectation | Solution support | Notes |
 |------------|-----------------------|------------------|-------|

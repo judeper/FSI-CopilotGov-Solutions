@@ -17,6 +17,13 @@
     "FINRA 4511",
     "SOX 404"
   ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-17a3",
+    "sec-17a4",
+    "glba-501b",
+    "sox-302-404"
+  ],
   "evidenceOutputs": [
     "gap-findings",
     "compensating-control-log",

@@ -1,6 +1,8 @@
 # DLP Policy Governance for Copilot
 
-> Status: implemented | Version: v0.2.0 | Priority: P1 | Track: B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** B
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
@@ -8,7 +10,7 @@ DLP Policy Governance for Copilot deploys a read-only governance pattern for Mic
 
 This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 ICT security expectations, and GDPR by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
-## Primary controls
+## Related Controls
 
 - 2.1 - DLP coverage for Copilot workloads and sensitive content paths
 - 3.10 - Policy monitoring and drift review
@@ -16,12 +18,23 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 
 ## What the solution does
 
-- Captures a baseline snapshot of Copilot-scoped DLP policy expectations by workload and label condition
-- Monitors drift between the stored baseline and the current governance tier definition
+- Compares a baseline snapshot of Copilot-scoped DLP policy expectations by workload and label condition
+- Validates alignment between the stored baseline and the current governance tier definition
 - Checks policy modes such as Audit and Block for expected sensitivity label handling
 - Validates workload coverage for Teams, SharePoint, OneDrive, and Exchange
 - Documents a Power Automate approval flow for policy exceptions and attestation evidence
 - Exports evidence artifacts that align to `data\evidence-schema.json`
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft Purview DLP APIs (scripts compare local configuration baselines)
+- ❌ Does not create or modify DLP policies (policy templates are provided for manual deployment)
+- ❌ Does not deploy Power Automate flows (exception workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Prerequisites
 
@@ -31,7 +44,7 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 - Operators have Compliance Administrator, Security Reader, or DLP Compliance Management permissions
 - PowerShell 7, `ExchangeOnlineManagement`, and `Microsoft.Graph` are available for read-only data collection
 
-See [docs\prerequisites.md](docs\prerequisites.md) for details.
+See [docs/prerequisites.md](docs/prerequisites.md) for details.
 
 ## DLP policy scope
 
@@ -86,9 +99,9 @@ The repository uses a documentation-first pattern for Power Automate assets. The
 5. Schedule `Monitor-Compliance.ps1` based on the selected tier.
 6. Run `Export-Evidence.ps1` for the required reporting period and archive the resulting evidence package.
 
-See [docs\deployment-guide.md](docs\deployment-guide.md) for detailed steps.
+See [docs/deployment-guide.md](docs/deployment-guide.md) for detailed steps.
 
-## Evidence collection
+## Evidence Export
 
 This solution exports the following evidence outputs:
 
@@ -98,9 +111,9 @@ This solution exports the following evidence outputs:
 
 Each exported file receives a `.sha256` companion and is referenced from the solution evidence package.
 
-See [docs\evidence-export.md](docs\evidence-export.md) for package details.
+See [docs/evidence-export.md](docs/evidence-export.md) for package details.
 
-## Regulatory alignment
+## Regulatory Alignment
 
 | Regulation or control driver | How the solution supports compliance with the requirement | Evidence output |
 |------------------------------|-----------------------------------------------------------|-----------------|

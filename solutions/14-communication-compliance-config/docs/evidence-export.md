@@ -59,7 +59,7 @@ The packaged evidence JSON follows the shared schema fields:
 - `metadata`: `solution`, `solutionCode`, `exportVersion`, `exportedAt`, `tier`
 - `summary`: `overallStatus`, `recordCount`, `findingCount`, `exceptionCount`
 - `controls[]`: `controlId`, `status`, `notes`
-- `artifacts[]`: `name`, `type`, `path`
+- `artifacts[]`: `name`, `type`, `path`, `hash`
 
 The solution writes the package and SHA-256 hash file into the selected output folder.
 

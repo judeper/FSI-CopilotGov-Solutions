@@ -18,6 +18,11 @@
     "FINRA 2210",
     "SEC Reg BI"
   ],
+  "framework_ids": [
+    "finra-2210",
+    "finra-3110",
+    "sec-reg-bi"
+  ],
   "evidenceOutputs": [
     "supervision-queue-snapshot",
     "review-disposition-log",

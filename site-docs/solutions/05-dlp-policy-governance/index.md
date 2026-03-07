@@ -1,67 +1,133 @@
 # DLP Policy Governance for Copilot
 
-> **Status:** Scaffolded | **Version:** v0.1.0 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** B
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-Deploys, baselines, and monitors DLP policies that target Copilot prompts, responses, and grounded content access patterns. This scaffold establishes the required documentation, scripts, config files, and evidence-export pattern for later implementation work.
+DLP Policy Governance for Copilot deploys a read-only governance pattern for Microsoft 365 Copilot data loss prevention policy review. It snapshots Purview DLP policy settings that target Copilot prompts, Copilot responses, and grounded content access patterns, compares those settings to a stored baseline, routes approved exceptions through a Power Automate approval flow, and exports evidence for compliance review.
 
-## Features
-
-- Maps to the following controls: 2.1, 3.10, 3.12
-- Supports the `baseline`, `recommended`, and `regulated` configuration tiers
-- Reuses the shared modules under `../../scripts/common/`
-- Publishes evidence with the shared JSON and SHA-256 packaging pattern
-
-## Architecture
-
-The scaffold uses a documentation-first pattern for Power Automate and Power BI assets, a PowerShell entry point for deployment and monitoring, and configuration files that align to the repository-wide contract.
-
-## Quick Start
-
-1. Review [Prerequisites](prerequisites.md).
-2. Review [Deployment Guide](deployment-guide.md).
-3. Validate the scaffold with `python scripts/validate-solutions.py` from the repository root.
-4. Add workload-specific implementation logic in this solution track after shared contracts are frozen.
-
-## Solution Components
-
-| Path | Purpose |
-|------|---------|
-| `scripts/Deploy-Solution.ps1` | Tier-aware deployment entry point for the solution scaffold |
-| `scripts/Monitor-Compliance.ps1` | Control-status snapshot and monitoring placeholder |
-| `scripts/Export-Evidence.ps1` | Evidence export entry point aligned to the shared schema |
-| `config/*.json` | Default, baseline, recommended, and regulated settings |
-| `docs/*.md` | Architecture, prerequisites, deployment, evidence, and troubleshooting guidance |
-| `tests/*.Tests.ps1` | Pester placeholder coverage for the scaffold |
-
-## Deployment
-
-Use `scripts/Deploy-Solution.ps1` for tier-aware deployment manifests and `scripts/Monitor-Compliance.ps1` for scaffolded status output.
-
-## Prerequisites
-
-- Microsoft 365 and workload permissions appropriate for the mapped controls
-- Shared contract files under `data/` and `scripts/common/`
-- A chosen governance tier for the target deployment
+This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 ICT security expectations, and GDPR by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
 ## Related Controls
 
-| Control | Title | Playbooks |
-|---------|-------|-----------|
-| 2.1 | DLP Policies for M365 Copilot Interactions | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.1/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.1/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.1/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/2.1/troubleshooting.md) |
-| 3.10 | SEC Reg S-P -- Privacy of Consumer Financial Information | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.10/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.10/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.10/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.10/troubleshooting.md) |
-| 3.12 | Evidence Collection and Audit Attestation | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.12/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.12/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.12/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/main/docs/playbooks/control-implementations/3.12/troubleshooting.md) |
+- 2.1 - DLP coverage for Copilot workloads and sensitive content paths
+- 3.10 - Policy monitoring and drift review
+- 3.12 - Evidence collection and exception attestation
 
-## Regulatory Alignment
+## What the solution does
 
-This solution supports compliance with: GLBA 501(b), SEC Reg S-P, DORA, GDPR.
+- Compares a baseline snapshot of Copilot-scoped DLP policy expectations by workload and label condition
+- Validates alignment between the stored baseline and the current governance tier definition
+- Checks policy modes such as Audit and Block for expected sensitivity label handling
+- Validates workload coverage for Teams, SharePoint, OneDrive, and Exchange
+- Documents a Power Automate approval flow for policy exceptions and attestation evidence
+- Exports evidence artifacts that align to `data\evidence-schema.json`
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft Purview DLP APIs (scripts compare local configuration baselines)
+- ❌ Does not create or modify DLP policies (policy templates are provided for manual deployment)
+- ❌ Does not deploy Power Automate flows (exception workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+
+## Prerequisites
+
+- Dependency `03-sensitivity-label-auditor` is complete and the latest label inventory has been reviewed
+- Microsoft 365 E5 or E5 Compliance licensing is available for Purview DLP and Copilot data protection features
+- Power Automate Premium is available if the exception approval flow is deployed
+- Operators have Compliance Administrator, Security Reader, or DLP Compliance Management permissions
+- PowerShell 7, `ExchangeOnlineManagement`, and `Microsoft.Graph` are available for read-only data collection
+
+See [docs/prerequisites.md](prerequisites.md) for details.
+
+## DLP policy scope
+
+This solution focuses on DLP policies that support Copilot governance across the following workloads:
+
+- Teams chat and channel prompts or responses that may expose sensitive data
+- SharePoint grounded content sources used by Copilot
+- OneDrive grounded content sources used by Copilot
+- Exchange content paths that may surface in Copilot-assisted workflows
+
+The baseline and monitoring logic track:
+
+- Sensitivity label conditions, including NPI and PII labels used for GLBA and privacy use cases
+- Policy action modes such as Audit and Block
+- Scope definitions for included and excluded user groups
+- Exception handling requirements by governance tier
+- Evidence retention and notification settings needed for review
+
+## Power Automate exception flow
+
+The repository uses a documentation-first pattern for Power Automate assets. The exception approval flow is described in the architecture and deployment guides and is intended to:
+
+1. Receive a request when a policy owner needs a temporary DLP exception for a Copilot workload.
+2. Validate the request against the stored baseline and current drift findings.
+3. Route the request to the required approver based on tier:
+   - Baseline: service owner review when used
+   - Recommended: Compliance Administrator approval
+   - Regulated: senior compliance sign-off and CCO approval for policy changes
+4. Record the approved exception with attestor, approval date, justification, and expiry date.
+5. Feed approved records into the `exception-attestations` evidence artifact.
+
+## Solution components
+
+| Path | Purpose |
+|------|---------|
+| `scripts\Deploy-Solution.ps1` | Creates the DLP baseline template, deployment manifest, and connection stubs |
+| `scripts\Monitor-Compliance.ps1` | Compares baseline content to tier expectations and writes drift findings |
+| `scripts\Export-Evidence.ps1` | Packages evidence artifacts and writes SHA-256 companions |
+| `config\default-config.json` | Shared defaults, workload scope, policy mode defaults, and dataverse names |
+| `config\baseline.json` | Audit-only baseline tier settings |
+| `config\recommended.json` | Daily monitoring and high-sensitivity block settings |
+| `config\regulated.json` | Regulated tier settings with strict attestation and approval requirements |
+| `docs\*.md` | Architecture, deployment, evidence, prerequisites, and troubleshooting guidance |
+| `tests\05-dlp-policy-governance.Tests.ps1` | Pester checks for required files and PowerShell syntax |
+
+## Deployment overview
+
+1. Confirm that solution `03-sensitivity-label-auditor` has produced a current label inventory.
+2. Connect to Security and Compliance PowerShell and Microsoft Graph with read permissions.
+3. Run `Deploy-Solution.ps1` to create the baseline template and deployment manifest.
+4. Configure the Power Automate exception approval flow using the documented design.
+5. Schedule `Monitor-Compliance.ps1` based on the selected tier.
+6. Run `Export-Evidence.ps1` for the required reporting period and archive the resulting evidence package.
+
+See [docs/deployment-guide.md](deployment-guide.md) for detailed steps.
 
 ## Evidence Export
 
-The solution is expected to publish: dlp-policy-baseline, policy-drift-findings, exception-attestations. Evidence packages must align to `../../data/evidence-schema.json`.
+This solution exports the following evidence outputs:
 
-## Known Limitations
+- `dlp-policy-baseline` - JSON snapshot of Copilot-scoped DLP policy expectations and baseline metadata
+- `policy-drift-findings` - array of detected workload, mode, or exception-handling drift
+- `exception-attestations` - array of approved exceptions with attestor, date, and justification
 
-- This scaffold does not yet include tenant-specific implementation logic.
-- Power Automate and Power BI artifacts remain documentation-led until the implementation track fills in workload details.
+Each exported file receives a `.sha256` companion and is referenced from the solution evidence package.
+
+See [docs/evidence-export.md](evidence-export.md) for package details.
+
+## Regulatory Alignment
+
+| Regulation or control driver | How the solution supports compliance with the requirement | Evidence output |
+|------------------------------|-----------------------------------------------------------|-----------------|
+| GLBA 501(b) | Helps teams monitor DLP handling for NPI that may appear in Copilot prompts, responses, or grounded content access. | `dlp-policy-baseline`, `policy-drift-findings` |
+| SEC Reg S-P | Helps document whether privacy-related policy modes and scoping remain aligned to approved standards. | `policy-drift-findings`, `exception-attestations` |
+| DORA Article 9 | Helps operations teams review ICT security governance, policy changes, and exception approvals for Copilot-connected workloads. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
+| GDPR | Helps monitor whether personal data handling controls remain in approved DLP modes and scope definitions. | `policy-drift-findings`, `exception-attestations` |
+| Control 2.1 | Validates Copilot DLP coverage across in-scope workloads and sensitivity conditions. | `dlp-policy-baseline`, `policy-drift-findings` |
+| Control 3.10 | Tracks drift against an approved baseline and supports scheduled review. | `policy-drift-findings` |
+| Control 3.12 | Records and packages exception approvals and audit evidence. | `exception-attestations` |
+
+## Known limitations
+
+- Some tenants expose Purview DLP metadata in read-only form only after Exchange Online and Security and Compliance sessions are connected.
+- Copilot-specific workload coverage can depend on Microsoft 365 E5 or E5 Compliance plus the required Copilot licensing.
+- The Power Automate approval flow is documentation-led in this repository and still requires tenant-specific connection setup.
+- Drift results are only as current as the latest baseline and policy snapshot available to the monitoring process.

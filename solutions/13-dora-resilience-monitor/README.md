@@ -1,10 +1,12 @@
 # DORA Operational Resilience Monitor
 
-> Status: Active | Version: v0.1.0 | Priority: P1 | Track: D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** D
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-The DORA Operational Resilience Monitor (DRM) provides an operational-resilience monitoring and evidence pattern for Microsoft 365 Copilot in regulated financial-services environments. The solution monitors Microsoft 365 service health for Copilot-dependent services, classifies ICT incidents against a DORA-aligned incident taxonomy, records resilience test evidence, and publishes operational-risk dashboard feeds that can be consumed by solution 12-regulatory-compliance-dashboard. DRM supports compliance with DORA, OCC 2011-12, and the FFIEC IT Handbook by improving visibility, escalation readiness, and evidence quality for Copilot dependencies.
+The DORA Operational Resilience Monitor (DRM) provides an operational-resilience monitoring and evidence pattern for Microsoft 365 Copilot in regulated financial-services environments. The repository implementation uses a local stub or operator-supplied sample payload for Copilot-dependent service health, classifies ICT incidents against a DORA-aligned incident taxonomy, records resilience test evidence, and publishes operational-risk dashboard feeds that can be consumed by solution 12-regulatory-compliance-dashboard. DRM supports compliance with DORA, OCC 2011-12, and the FFIEC IT Handbook by improving visibility, escalation readiness, and evidence quality for Copilot dependencies.
 
 ## What This Solution Monitors
 
@@ -17,13 +19,25 @@ The DORA Operational Resilience Monitor (DRM) provides an operational-resilience
 
 | Capability | Description |
 |------------|-------------|
-| Service health polling | Captures workload health snapshots for Copilot-dependent Microsoft 365 services through the Microsoft Graph service communications surface |
+| Service health polling pattern | Provides a monitoring framework for service health assessment; current version uses representative sample data and requires Microsoft Graph integration for live deployment |
 | DORA incident classification | Maps outages and degradations to major, significant, or minor ICT incident outcomes for examiner-ready incident triage |
 | Resilience test tracking | Records annual exercise dates, recovery objectives, outcomes, and reminders for Copilot dependency testing |
 | Evidence packaging | Exports JSON artifacts with SHA-256 companion files for service-health-log, incident-register, and resilience-test-results |
 | Tier-aware deployment | Applies baseline, recommended, or regulated operating settings for polling cadence, evidence retention, and escalation rigor |
 | Dashboard integration | Produces structured control-state outputs that can feed 12-regulatory-compliance-dashboard for enterprise reporting |
 | Documentation-first automation | Describes a Power Automate flow pattern for notifications and routing without forcing deployment-time workflow changes |
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not poll Microsoft 365 service health APIs (scripts use a local stub with representative sample data)
+- ❌ Does not connect to Microsoft Sentinel (incident correlation is documented, not integrated)
+- ❌ Does not execute DORA Article 17 reporting automatically (reporting templates are provided for manual completion)
+- ❌ Does not deploy Power Automate flows (resilience alerting workflows are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Architecture
 
@@ -34,7 +48,7 @@ The solution uses PowerShell scripts for deployment, monitoring, and evidence ex
 1. Review [docs/prerequisites.md](docs/prerequisites.md) and confirm Microsoft 365, Entra ID, PowerShell, and network requirements.
 2. Select the governance tier that matches the target operating model and review `config/<tier-name>.json` together with `config/default-config.json`.
 3. Run `scripts\Deploy-Solution.ps1` with `-WhatIf` first to validate the manifest and tier-specific settings.
-4. Run `scripts\Monitor-Compliance.ps1` to capture an initial service-health baseline and confirm resilience-test status.
+4. Run `scripts\Monitor-Compliance.ps1` to capture an initial service-health baseline from the local stub or an operator-supplied sample payload and confirm resilience-test status.
 5. Run `scripts\Export-Evidence.ps1` to generate the evidence package and verify that each JSON file has a matching `.sha256` companion.
 6. Connect the exported control-state output to solution 12-regulatory-compliance-dashboard if enterprise rollup reporting is required.
 
@@ -51,13 +65,17 @@ The solution uses PowerShell scripts for deployment, monitoring, and evidence ex
 | `docs/prerequisites.md` | Microsoft 365, Entra, PowerShell, and role requirements |
 | `docs/troubleshooting.md` | Common issues, resolutions, and escalation guidance |
 | `scripts/Deploy-Solution.ps1` | Tier-aware deployment manifest generation and configuration validation |
-| `scripts/Monitor-Compliance.ps1` | Service-health monitoring, incident classification, and resilience status collection |
+| `scripts/Monitor-Compliance.ps1` | Service-health monitoring, incident classification, and resilience status collection using a local stub or sample payload until live Graph polling is added |
 | `scripts/Export-Evidence.ps1` | Evidence artifact creation and package export using shared modules |
 | `config/default-config.json` | Shared DRM defaults including monitored services and dashboard feed settings |
 | `config/baseline.json` | Baseline tier settings for summary monitoring and alerting |
 | `config/recommended.json` | Recommended tier settings for incident logging and resilience tracking |
 | `config/regulated.json` | Regulated tier settings for DORA-oriented reporting, immutability, and Sentinel integration |
 | `tests/13-dora-resilience-monitor.Tests.ps1` | Pester tests for file presence, config content, script syntax, and documentation references |
+
+## Deployment
+
+Deploy DRM by selecting the target governance tier, generating the deployment manifest with `Deploy-Solution.ps1`, validating the live service-health integration plan, and then scheduling `Monitor-Compliance.ps1` for the required polling cadence. In the repository state the initial monitoring run uses the local stub or an operator-supplied sample payload; use `Export-Evidence.ps1` to publish the first evidence package and connect the resulting outputs to solution 12 if centralized reporting is required.
 
 ## Prerequisites
 
@@ -94,6 +112,7 @@ All evidence packages are written as JSON with SHA-256 companion files and are a
 ## Known Limitations
 
 - DRM is primarily a monitoring and evidence solution. It does not perform automated service remediation or tenant failover orchestration.
+- Default monitoring output is produced from a local stub or `DRM_SERVICE_HEALTH_SAMPLE_JSON`; live Microsoft Graph polling still requires tenant authentication wiring outside the repository.
 - Control 2.7 remains monitor-only until tenant geo settings and approved-region data sources are connected.
 - Control 4.11 remains monitor-only until a Microsoft Sentinel workspace, data connector, and alert rules are provisioned outside this solution.
 - Control 4.10 is partial because resilience documentation and test tracking are included, but automated failover validation requires additional tenant-specific engineering.

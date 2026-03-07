@@ -56,6 +56,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$script:RuntimeMode = 'documentation-first-sample-data'
+$script:DataSourceMode = 'simulated-control-evidence'
+$script:RuntimeWarning = 'Artifacts were generated from representative sample findings in the repository and do not confirm live tenant scans.'
+
 function Get-RepositoryRoot {
     [CmdletBinding()]
     param()
@@ -159,7 +163,7 @@ function Get-EvidenceSchemaVersion {
         return (Get-CopilotGovEvidenceSchemaVersion)
     }
 
-    return '1.0.0'
+    return '1.1.0'
 }
 
 function Get-StatusNumericScore {
@@ -289,6 +293,7 @@ try {
     }
 
     Import-SharedModule -ModuleName 'IntegrationConfig.psm1' -Optional | Out-Null
+    Import-SharedModule -ModuleName 'EvidenceExport.psm1' | Out-Null
     $configuration = Get-SolutionConfiguration -Tier $ConfigurationTier
     $resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
     $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
@@ -393,12 +398,16 @@ try {
             periodStart = $PeriodStart.ToString('yyyy-MM-dd')
             periodEnd  = $PeriodEnd.ToString('yyyy-MM-dd')
             generatedAt = (Get-Date).ToString('o')
+            runtimeMode = $script:RuntimeMode
+            dataSourceMode = $script:DataSourceMode
+            warning = $script:RuntimeWarning
         }
         summary = [ordered]@{
             overallReadinessScore = $overallReadinessScore
             alertThreshold        = $configuration.alertThreshold
             scanDomains           = $configuration.scanDomains
             reportFormat          = $configuration.reportFormat
+            warning               = $script:RuntimeWarning
         }
         controls = $controls
     }
@@ -409,6 +418,9 @@ try {
             tenantId   = $TenantId
             tier       = $ConfigurationTier
             generatedAt = (Get-Date).ToString('o')
+            runtimeMode = $script:RuntimeMode
+            dataSourceMode = $script:DataSourceMode
+            warning = $script:RuntimeWarning
         }
         findings = $findings
     }
@@ -419,6 +431,9 @@ try {
             tenantId   = $TenantId
             tier       = $ConfigurationTier
             generatedAt = (Get-Date).ToString('o')
+            runtimeMode = $script:RuntimeMode
+            dataSourceMode = $script:DataSourceMode
+            warning = $script:RuntimeWarning
         }
         actions = $remediationActions
     }
@@ -465,13 +480,27 @@ try {
             tier          = $ConfigurationTier
             periodStart   = $PeriodStart.ToString('yyyy-MM-dd')
             periodEnd     = $PeriodEnd.ToString('yyyy-MM-dd')
+            runtimeMode   = $script:RuntimeMode
+            dataSourceMode = $script:DataSourceMode
+            warning       = $script:RuntimeWarning
         }
-        summary   = $summary
+        summary   = [ordered]@{
+            overallStatus = $summary.overallStatus
+            recordCount = $summary.recordCount
+            findingCount = $summary.findingCount
+            exceptionCount = $summary.exceptionCount
+            statusSemantics = 'Control states describe documentation-first sample evidence and must not be treated as proof of live scanning depth.'
+        }
         controls  = $controls
         artifacts = $artifactEntries
     }
 
     $packageArtifact = Write-JsonArtifact -Path (Join-Path $resolvedOutputPath $packageArtifactName) -Payload $packagePayload
+    $validation = Test-CopilotGovEvidencePackage -Path $packageArtifact.Path -ExpectedArtifacts @($configuration.evidenceOutputs)
+    if (-not $validation.IsValid) {
+        $details = ($validation.Errors | ForEach-Object { ' - {0}' -f $_ }) -join [Environment]::NewLine
+        throw ("Evidence validation failed for {0}:{1}{2}" -f $packageArtifact.Path, [Environment]::NewLine, $details)
+    }
 
     [pscustomobject]@{
         PackagePath    = $packageArtifact.Path
@@ -481,6 +510,7 @@ try {
         FindingCount   = $summary.findingCount
         ExceptionCount = $summary.exceptionCount
         ArtifactCount  = $artifactEntries.Count
+        RuntimeMode    = $script:RuntimeMode
     }
 }
 catch {

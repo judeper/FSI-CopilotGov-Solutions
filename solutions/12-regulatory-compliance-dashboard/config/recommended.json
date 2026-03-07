@@ -9,6 +9,31 @@
     "4.5",
     "4.7"
   ],
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "dependencies": [
+    "06-audit-trail-manager",
+    "11-risk-tiered-rollout"
+  ],
+  "aggregationCadence": "daily",
+  "freshnessThresholdHours": 25,
+  "evidenceRetentionDays": 180,
+  "enabledFrameworks": [
+    "FINRA 4511",
+    "FINRA 3110",
+    "SEC 17a-4",
+    "OCC 2011-12",
+    "DORA",
+    "GLBA 501(b)"
+  ],
+  "maturityScoring": {
+    "enabled": true,
+    "trendWindowDays": 90
+  },
+  "examinationPackages": {
+    "enabled": true,
+    "autoGenerate": false
+  },
+  "notifications": {
+    "mode": "standard",
+    "channel": "RCD-governance-alerts"
+  }
 }

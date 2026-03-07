@@ -7,6 +7,38 @@
     "2.14",
     "4.13"
   ],
-  "evidenceRetentionDays": 90,
+  "approvalModel": {
+    "autoApproveLowRisk": true,
+    "autoApprovedConnectorIds": [
+      "shared_sharepointonline",
+      "shared_teams",
+      "shared_office365",
+      "shared_outlook"
+    ],
+    "mediumRiskReviewStages": [
+      "security-review"
+    ],
+    "highRiskReviewStages": [
+      "security-review",
+      "ciso-dlp-review"
+    ],
+    "mandatoryReviewStages": [
+      "security-review",
+      "ciso-dlp-review"
+    ],
+    "requireApprovalForCertifiedThirdParty": true,
+    "requireApprovalForHighRisk": true
+  },
+  "approvalSLAHours": {
+    "low": 24,
+    "medium": 48,
+    "high": 24,
+    "blocked": 0
+  },
+  "dataFlowPolicy": {
+    "requireAttestationForExternalEgress": true,
+    "allowCrossBoundaryByException": false
+  },
+  "evidenceRetentionDays": 180,
   "notificationMode": "standard"
 }

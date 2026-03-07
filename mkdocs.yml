@@ -62,7 +62,14 @@ nav:
   - Getting Started:
     - getting-started/index.md
     - Prerequisites: getting-started/prerequisites.md
+    - Identity and Secrets Prep: getting-started/identity-and-secrets-prep.md
+    - Documentation vs Runnable Assets: documentation-vs-runnable-assets-guide.md
     - Deployment Guide: getting-started/deployment-guide.md
+  - Operations:
+    - Operational Handbook: operational-handbook.md
+    - Operational RACI: operational-raci.md
+    - Operational Cadence: operational-cadence.md
+    - Escalation Procedures: escalation-procedures.md
   - Solutions:
     - solutions/index.md
     - Readiness and Data Governance:

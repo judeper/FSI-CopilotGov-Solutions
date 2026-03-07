@@ -7,6 +7,18 @@
     "4.6",
     "4.8"
   ],
-  "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "notificationMode": "summary",
+  "inactivityThresholdDays": 30,
+  "reallocationTriggerUtilizationPct": 40,
+  "vivaInsightsEnabled": false,
+  "reportingPeriodDays": 90,
+  "evidenceRetentionDays": 90,
+  "managerApprovalRequired": true,
+  "auditTrailMode": "summary",
+  "evidencePackagingProfile": "standard",
+  "dataverseTables": [
+    "fsi_cg_lgr_baseline",
+    "fsi_cg_lgr_finding",
+    "fsi_cg_lgr_evidence"
+  ]
 }

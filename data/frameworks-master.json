@@ -1,9 +1,13 @@
 [
   {
     "id": "finra-2210",
+    "display_name": "FINRA 2210",
     "title": "FINRA Rule 2210",
     "issuer": "FINRA",
     "category": "communications",
+    "aliases": [
+      "FINRA Rule 2210"
+    ],
     "keywords": [
       "2210",
       "finra rule 2210"
@@ -19,9 +23,13 @@
   },
   {
     "id": "finra-3110",
+    "display_name": "FINRA 3110",
     "title": "FINRA Rule 3110",
     "issuer": "FINRA",
     "category": "supervision",
+    "aliases": [
+      "FINRA Rule 3110"
+    ],
     "keywords": [
       "3110",
       "finra rule 3110"
@@ -47,9 +55,13 @@
   },
   {
     "id": "finra-4511",
+    "display_name": "FINRA 4511",
     "title": "FINRA Rule 4511",
     "issuer": "FINRA",
     "category": "books-and-records",
+    "aliases": [
+      "FINRA Rule 4511"
+    ],
     "keywords": [
       "4511",
       "finra rule 4511"
@@ -76,9 +88,13 @@
   },
   {
     "id": "sec-17a3",
+    "display_name": "SEC 17a-3",
     "title": "SEC Rule 17a-3",
     "issuer": "SEC",
     "category": "books-and-records",
+    "aliases": [
+      "SEC Rule 17a-3"
+    ],
     "keywords": [
       "17a-3"
     ],
@@ -94,9 +110,13 @@
   },
   {
     "id": "sec-17a4",
+    "display_name": "SEC 17a-4",
     "title": "SEC Rule 17a-4",
     "issuer": "SEC",
     "category": "books-and-records",
+    "aliases": [
+      "SEC Rule 17a-4"
+    ],
     "keywords": [
       "17a-4"
     ],
@@ -116,9 +136,15 @@
   },
   {
     "id": "sec-reg-sp",
+    "display_name": "SEC Reg S-P",
     "title": "SEC Regulation S-P",
     "issuer": "SEC",
     "category": "privacy",
+    "aliases": [
+      "SEC Regulation S-P",
+      "SEC Regulation S-P (Rule 248.30)",
+      "SEC Regulation S-P (17 CFR 248.30)"
+    ],
     "keywords": [
       "reg s-p",
       "regulation s-p"
@@ -144,9 +170,13 @@
   },
   {
     "id": "sec-reg-bi",
+    "display_name": "SEC Reg BI",
     "title": "SEC Regulation Best Interest",
     "issuer": "SEC",
     "category": "conduct",
+    "aliases": [
+      "SEC Regulation Best Interest"
+    ],
     "keywords": [
       "reg bi"
     ],
@@ -162,22 +192,63 @@
   },
   {
     "id": "sec-reg-fd",
+    "display_name": "SEC Reg FD",
     "title": "SEC Regulation FD",
     "issuer": "SEC",
     "category": "communications",
+    "aliases": [
+      "SEC Regulation FD"
+    ],
     "keywords": [
       "reg fd"
     ],
-    "controls": [],
+    "controls": [
+      "2.6",
+      "4.1",
+      "4.2",
+      "4.3",
+      "4.4",
+      "4.12",
+      "4.13"
+    ],
     "solutions": [
       "09-feature-management-controller"
-    ]
+    ],
+    "traceability_note": "Controls are derived from the feature-governance scope in solution 09 because upstream control citations describe disclosure-sensitive feature enablement without naming Regulation FD directly."
+  },
+  {
+    "id": "fca-sysc-10",
+    "display_name": "FCA SYSC 10",
+    "title": "FCA SYSC 10",
+    "issuer": "Financial Conduct Authority",
+    "category": "conduct",
+    "aliases": [
+      "FCA Handbook SYSC 10"
+    ],
+    "keywords": [
+      "fca sysc 10",
+      "conflicts of interest"
+    ],
+    "controls": [
+      "2.10",
+      "3.4",
+      "3.6",
+      "3.9"
+    ],
+    "solutions": [
+      "14-communication-compliance-config"
+    ],
+    "traceability_note": "Controls capture the conflict-indicator monitoring, supervisory follow-up, and disclosure-support claims already documented in solution 14 until upstream control references cite FCA SYSC 10 directly."
   },
   {
     "id": "glba-501b",
+    "display_name": "GLBA 501(b)",
     "title": "GLBA 501(b)",
     "issuer": "FTC",
     "category": "privacy",
+    "aliases": [
+      "GLBA Title V (Privacy)"
+    ],
     "keywords": [
       "glba",
       "501(b)"
@@ -239,9 +310,19 @@
   },
   {
     "id": "sox-302-404",
+    "display_name": "SOX 404",
     "title": "SOX Sections 302 and 404",
     "issuer": "Congress",
     "category": "internal-controls",
+    "aliases": [
+      "SOX Sections 302 and 404",
+      "SOX 302/404",
+      "SOX Section 404",
+      "SOX 404 (Internal Controls)",
+      "SOX Section 404 (Control Effectiveness Monitoring)",
+      "SOX Section 404 (Control Effectiveness)",
+      "SOX Section 404 (Internal Controls over Financial Reporting)"
+    ],
     "keywords": [
       "sox",
       "302",
@@ -286,9 +367,16 @@
   },
   {
     "id": "occ-2011-12",
+    "display_name": "OCC 2011-12",
     "title": "OCC 2011-12 / Bulletin 2013-29",
     "issuer": "OCC",
     "category": "risk-management",
+    "aliases": [
+      "OCC 2011-12 / Bulletin 2013-29",
+      "OCC Bulletin 2013-29",
+      "OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)",
+      "OCC Bulletin 2013-29 (Third-Party Relationships)"
+    ],
     "keywords": [
       "occ 2011-12",
       "occ bulletin 2013-29",
@@ -317,9 +405,13 @@
   },
   {
     "id": "sr-11-7",
+    "display_name": "SR 11-7",
     "title": "Federal Reserve SR 11-7",
     "issuer": "Federal Reserve",
     "category": "model-risk",
+    "aliases": [
+      "Federal Reserve SR 11-7"
+    ],
     "keywords": [
       "sr 11-7"
     ],
@@ -332,9 +424,20 @@
   },
   {
     "id": "ffiec-it-handbook",
+    "display_name": "FFIEC IT Handbook",
     "title": "FFIEC IT Examination Handbook",
     "issuer": "FFIEC",
     "category": "examination",
+    "aliases": [
+      "FFIEC IT Examination Handbook",
+      "FFIEC IT Handbook (Information Security Booklet)",
+      "FFIEC IT Examination Handbook (Access Control)",
+      "FFIEC IT Handbook (IT Operations)",
+      "FFIEC IT Handbook (Management)",
+      "FFIEC IT Handbook (Outsourcing Technology Services)",
+      "FFIEC IT Examination Handbook (Information Security)",
+      "FFIEC IT Handbook (Information Security)"
+    ],
     "keywords": [
       "ffiec"
     ],
@@ -386,9 +489,13 @@
   },
   {
     "id": "interagency-ai-guidance",
+    "display_name": "Interagency AI Guidance",
     "title": "Interagency AI Guidance (2023)",
     "issuer": "OCC / Federal Reserve / FDIC",
     "category": "risk-management",
+    "aliases": [
+      "Interagency AI Guidance (2023)"
+    ],
     "keywords": [
       "interagency ai guidance"
     ],
@@ -406,13 +513,40 @@
   },
   {
     "id": "dora",
+    "display_name": "DORA",
     "title": "Digital Operational Resilience Act",
     "issuer": "European Union",
     "category": "operational-resilience",
+    "aliases": [
+      "Digital Operational Resilience Act",
+      "DORA Article 9",
+      "DORA Art. 17",
+      "DORA Art. 18",
+      "DORA Art. 19"
+    ],
     "keywords": [
       "dora"
     ],
-    "controls": [],
+    "controls": [
+      "1.9",
+      "1.11",
+      "1.12",
+      "1.13",
+      "2.1",
+      "2.3",
+      "2.7",
+      "2.9",
+      "2.13",
+      "2.14",
+      "3.7",
+      "3.10",
+      "3.12",
+      "4.9",
+      "4.10",
+      "4.11",
+      "4.12",
+      "4.13"
+    ],
     "solutions": [
       "05-dlp-policy-governance",
       "07-conditional-access-automation",
@@ -420,13 +554,16 @@
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor"
-    ]
+    ],
+    "traceability_note": "Controls consolidate the DORA Article 9, 17, 18, and reporting claims already documented in solutions 05, 07, 10, 11, 12, and 13 until upstream control references carry direct DORA article citations."
   },
   {
     "id": "gdpr",
+    "display_name": "GDPR",
     "title": "GDPR",
     "issuer": "European Union",
     "category": "privacy",
+    "aliases": [],
     "keywords": [
       "gdpr"
     ],
@@ -441,15 +578,26 @@
   },
   {
     "id": "cftc-1-31",
+    "display_name": "CFTC 1.31",
     "title": "CFTC Rule 1.31",
     "issuer": "CFTC",
     "category": "books-and-records",
+    "aliases": [
+      "CFTC Rule 1.31"
+    ],
     "keywords": [
       "cftc 1.31"
     ],
-    "controls": [],
+    "controls": [
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.11",
+      "3.12"
+    ],
     "solutions": [
       "06-audit-trail-manager"
-    ]
+    ],
+    "traceability_note": "Controls are derived from the audit, retention, and eDiscovery scope in solution 06 because upstream control citations currently name adjacent SEC and FINRA recordkeeping obligations instead of CFTC 1.31 directly."
   }
 ]

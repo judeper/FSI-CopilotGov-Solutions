@@ -7,6 +7,21 @@
     "4.6",
     "4.8"
   ],
+  "notificationMode": "strict",
+  "inactivityThresholdDays": 14,
+  "reallocationTriggerUtilizationPct": 75,
+  "vivaInsightsEnabled": true,
+  "reportingPeriodDays": 90,
   "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "managerApprovalRequired": true,
+  "auditTrailMode": "full",
+  "fullAuditTrail": true,
+  "sox404EvidencePackagingEnabled": true,
+  "exceptionReviewCadenceDays": 7,
+  "evidencePackagingProfile": "sox404-attestation",
+  "dataverseTables": [
+    "fsi_cg_lgr_baseline",
+    "fsi_cg_lgr_finding",
+    "fsi_cg_lgr_evidence"
+  ]
 }

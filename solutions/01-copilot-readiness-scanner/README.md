@@ -1,19 +1,32 @@
 # Copilot Readiness Assessment Scanner
 
-> **Status:** Active | **Version:** v0.2.0 | **Priority:** P0 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P0 | **Track:** A
+
+> ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-The Copilot Readiness Assessment Scanner scans six Microsoft 365 governance domains - licensing, Entra identity, Defender security, Purview compliance, Power Platform governance, and Copilot configuration - to produce a scored readiness report for financial services environments. It extends Microsoft Automated Readiness Assessment patterns with regulatory weighting that reflects FINRA 3110 supervision, SEC records retention readiness, GLBA safeguard expectations, OCC model governance oversight, and FFIEC control maturity reviews.
+The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 readiness assessment pattern - licensing, Entra identity, Defender security, Purview compliance, Power Platform governance, and Copilot configuration - and emits representative sample scores for financial services environments. It extends Microsoft Automated Readiness Assessment patterns with regulatory weighting that reflects FINRA 3110 supervision, SEC records retention readiness, GLBA safeguard expectations, OCC model governance oversight, and FFIEC control maturity reviews while leaving live tenant connectors as explicit implementation steps.
 
 ## Features
 
-- Performs Graph API-based scanning across licensing, identity, security, compliance, governance, and Copilot configuration domains.
+- Provides a scanning framework across six governance domains with representative sample data; ready for Microsoft Graph API integration when deployed to a tenant.
 - Uses a PowerShell scoring engine to translate technical findings into tier-aware readiness scores and control-level status outputs.
 - Supports `baseline`, `recommended`, and `regulated` governance tiers with different monitoring cadence, evidence retention, and alert thresholds.
 - Exports evidence packages aligned to the shared schema, including companion SHA-256 files for downstream audit handling.
 - Produces Power BI-ready JSON artifacts that can be used to populate executive scorecards and remediation dashboards.
 - Tracks FSI-relevant controls 1.1, 1.5, 1.6, 1.7, and 1.9 in a format suitable for control owners, security teams, and exam preparation leads.
+
+## Scope Boundaries
+
+> **Important:** This solution provides governance scaffolds, templates, and documentation-first
+> scripts. It does not modify tenant state or connect to live services in its repository form.
+
+- ❌ Does not connect to Microsoft Graph APIs (scripts use representative sample data with hardcoded readiness scores)
+- ❌ Does not scan Purview, SharePoint, or Exchange configurations live
+- ❌ Does not deploy Power Automate flows (flow designs are documented, not exported)
+- ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
+- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
 ## Architecture
 
@@ -25,7 +38,7 @@ The solution uses tiered configuration, PowerShell collection scripts, shared he
 2. Select the target governance tier from `config\baseline.json`, `config\recommended.json`, or `config\regulated.json`.
 3. Update solution settings in `config\default-config.json` and the selected tier file to reflect the target tenant and operating model.
 4. Run `scripts\Deploy-Solution.ps1` to validate prerequisites, confirm Graph connectivity placeholders, and write a deployment manifest.
-5. Run `scripts\Monitor-Compliance.ps1` to create a readiness baseline across the six scanning domains.
+5. Run `scripts\Monitor-Compliance.ps1` to generate a simulated readiness baseline across the six scanning domains and review the sample-data warning in the output.
 6. Run `scripts\Export-Evidence.ps1` to generate the evidence package, companion hashes, and Power BI-ready artifacts.
 
 ## Solution Components
@@ -33,7 +46,7 @@ The solution uses tiered configuration, PowerShell collection scripts, shared he
 | Path | Purpose |
 |------|---------|
 | `scripts/Deploy-Solution.ps1` | Validates local prerequisites, merges tier configuration, creates deployment manifests, and records deployment activity |
-| `scripts/Monitor-Compliance.ps1` | Runs domain-level readiness checks and exports scored monitoring output for dashboard ingestion |
+| `scripts/Monitor-Compliance.ps1` | Runs sample domain-level readiness checks, labels the output as simulated, and exports scored monitoring output for dashboard ingestion |
 | `scripts/Export-Evidence.ps1` | Builds evidence artifacts and a schema-aligned package with SHA-256 companion files |
 | `config/default-config.json` | Shared solution metadata, scan domain list, scoring weights, and reporting defaults |
 | `config/baseline.json` | Minimum governance configuration for initial Copilot rollout assessments |
@@ -48,7 +61,7 @@ The solution uses tiered configuration, PowerShell collection scripts, shared he
 
 ## Deployment
 
-Deploy the solution from this folder after confirming the correct governance tier and tenant access model. `Deploy-Solution.ps1` writes a manifest and deployment log entry, `Monitor-Compliance.ps1` captures the initial readiness baseline, and `Export-Evidence.ps1` creates the evidence package used for governance review and audit support.
+Deploy the solution from this folder after confirming the correct governance tier and tenant access model. `Deploy-Solution.ps1` writes a manifest and deployment log entry, `Monitor-Compliance.ps1` captures a simulated readiness baseline that must be replaced by live tenant queries for production use, and `Export-Evidence.ps1` creates the evidence package used for governance review and audit support.
 
 ## Prerequisites
 
@@ -77,7 +90,7 @@ The solution exports the following evidence types: `readiness-scorecard`, `data-
 
 ## Known Limitations
 
-- Live Microsoft 365 and Purview API calls still require tenant-specific authentication wiring and approved service principal registration.
+- The repository monitor currently emits representative sample scores and findings; live Microsoft 365, Purview, SharePoint, and Power Platform API calls still require tenant-specific authentication wiring and approved service principal registration.
 - Sensitivity label taxonomy quality cannot be fully validated from metadata alone and still requires compliance owner review.
 - Very large tenants may require batching, API throttling controls, and staged site sampling to complete scans within operational windows.
 - Power BI visuals depend on a customer-managed dataset refresh process and are not published automatically by the current script set.
