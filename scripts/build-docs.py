@@ -60,6 +60,10 @@ def rewrite_solution_links(content: str) -> str:
             return f"{prefix}{path.rstrip('/')}/index.md{suffix}"
         if re.fullmatch(r"(?:\.\./)+\d{2}-[a-z0-9-]+/README\.md", path):
             return f"{prefix}{path[:-9]}index.md{suffix}"
+        # Root docs/ links from solution READMEs (../../docs/X.md -> ../../X.md in site-docs)
+        if path.startswith("../../docs/"):
+            clean = "../../" + path[len("../../docs/"):]
+            return f"{prefix}{clean}{suffix}"
         # Strip docs/ prefix for intra-solution links
         clean = path
         if clean.startswith("./docs/"):
