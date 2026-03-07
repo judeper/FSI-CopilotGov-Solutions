@@ -1,0 +1,18 @@
+{
+  "solution": "15-pages-notebooks-gap-monitor",
+  "displayName": "Copilot Pages and Notebooks Compliance Gap Monitor",
+  "version": "v0.1.0",
+  "controls": [
+    "2.11",
+    "3.2",
+    "3.3",
+    "3.11"
+  ],
+  "track": "D",
+  "priority": "P2",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\15-pages-notebooks-gap-monitor",
+    "notificationChannel": "PNGM-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

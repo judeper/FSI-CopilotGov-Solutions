@@ -1,0 +1,18 @@
+{
+  "id": "finra-2210",
+  "title": "FINRA Rule 2210",
+  "issuer": "FINRA",
+  "category": "communications",
+  "keywords": [
+    "2210",
+    "finra rule 2210"
+  ],
+  "controls": [
+    "3.4",
+    "3.5"
+  ],
+  "solutions": [
+    "04-finra-supervision-workflow",
+    "14-communication-compliance-config"
+  ]
+}

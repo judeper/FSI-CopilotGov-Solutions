@@ -1,0 +1,16 @@
+{
+  "feedVersion": "1.0.0",
+  "requiredFields": [
+    "solution",
+    "controlId",
+    "status",
+    "evidencePath",
+    "exportedAt"
+  ],
+  "allowedStatuses": [
+    "implemented",
+    "partial",
+    "monitor-only",
+    "playbook-only"
+  ]
+}

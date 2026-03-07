@@ -1,0 +1,13 @@
+{
+  "id": "cftc-1-31",
+  "title": "CFTC Rule 1.31",
+  "issuer": "CFTC",
+  "category": "books-and-records",
+  "keywords": [
+    "cftc 1.31"
+  ],
+  "controls": [],
+  "solutions": [
+    "06-audit-trail-manager"
+  ]
+}

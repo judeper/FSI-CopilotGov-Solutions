@@ -1,0 +1,33 @@
+name: Validate Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'solutions/**'
+      - 'mkdocs.yml'
+      - 'scripts/build-docs.py'
+      - 'scripts/validate-documentation.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'solutions/**'
+      - 'mkdocs.yml'
+      - 'scripts/build-docs.py'
+      - 'scripts/validate-documentation.py'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python scripts/build-docs.py
+      - run: python scripts/validate-documentation.py
+      - run: pip install -r requirements-docs.txt
+      - run: mkdocs build --strict

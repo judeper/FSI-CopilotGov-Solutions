@@ -1,0 +1,11 @@
+{
+  "solution": "07-conditional-access-automation",
+  "tier": "regulated",
+  "controls": [
+    "2.3",
+    "2.6",
+    "2.9"
+  ],
+  "evidenceRetentionDays": 365,
+  "notificationMode": "strict"
+}

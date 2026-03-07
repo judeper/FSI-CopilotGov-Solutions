@@ -1,0 +1,11 @@
+{
+  "name": "FINRA Communication Compliance for Copilot",
+  "tier": "regulated",
+  "keywords": [
+    "promissory language",
+    "guaranteed returns",
+    "insider trading",
+    "unauthorized advice"
+  ],
+  "reviewQueue": "Copilot-FINRA-Supervisors"
+}

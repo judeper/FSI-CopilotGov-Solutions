@@ -1,0 +1,12 @@
+{
+  "solution": "10-connector-plugin-governance",
+  "tier": "recommended",
+  "controls": [
+    "1.13",
+    "2.13",
+    "2.14",
+    "4.13"
+  ],
+  "evidenceRetentionDays": 90,
+  "notificationMode": "standard"
+}

@@ -1,0 +1,17 @@
+{
+  "solution": "04-finra-supervision-workflow",
+  "displayName": "FINRA Supervision Workflow for Copilot",
+  "version": "v0.1.0",
+  "controls": [
+    "3.4",
+    "3.5",
+    "3.6"
+  ],
+  "track": "B",
+  "priority": "P0",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\04-finra-supervision-workflow",
+    "notificationChannel": "FSW-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

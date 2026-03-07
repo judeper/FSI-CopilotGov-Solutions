@@ -1,0 +1,22 @@
+{
+  "id": "sec-17a4",
+  "title": "SEC Rule 17a-4",
+  "issuer": "SEC",
+  "category": "books-and-records",
+  "keywords": [
+    "17a-4"
+  ],
+  "controls": [
+    "3.2",
+    "3.3",
+    "3.11",
+    "4.2"
+  ],
+  "solutions": [
+    "03-sensitivity-label-auditor",
+    "06-audit-trail-manager",
+    "09-feature-management-controller",
+    "12-regulatory-compliance-dashboard",
+    "15-pages-notebooks-gap-monitor"
+  ]
+}

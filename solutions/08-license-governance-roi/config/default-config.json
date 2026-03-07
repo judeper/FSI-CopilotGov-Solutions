@@ -1,0 +1,18 @@
+{
+  "solution": "08-license-governance-roi",
+  "displayName": "License Governance and ROI Tracker",
+  "version": "v0.1.0",
+  "controls": [
+    "1.9",
+    "4.5",
+    "4.6",
+    "4.8"
+  ],
+  "track": "C",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\08-license-governance-roi",
+    "notificationChannel": "LGR-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

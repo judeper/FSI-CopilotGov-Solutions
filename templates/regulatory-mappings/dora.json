@@ -1,0 +1,18 @@
+{
+  "id": "dora",
+  "title": "Digital Operational Resilience Act",
+  "issuer": "European Union",
+  "category": "operational-resilience",
+  "keywords": [
+    "dora"
+  ],
+  "controls": [],
+  "solutions": [
+    "05-dlp-policy-governance",
+    "07-conditional-access-automation",
+    "10-connector-plugin-governance",
+    "11-risk-tiered-rollout",
+    "12-regulatory-compliance-dashboard",
+    "13-dora-resilience-monitor"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "solution": "01-copilot-readiness-scanner",
+  "tier": "baseline",
+  "controls": [
+    "1.1",
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.9"
+  ],
+  "evidenceRetentionDays": 30,
+  "notificationMode": "summary"
+}

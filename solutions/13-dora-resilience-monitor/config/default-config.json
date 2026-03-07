@@ -1,0 +1,18 @@
+{
+  "solution": "13-dora-resilience-monitor",
+  "displayName": "DORA Operational Resilience Monitor",
+  "version": "v0.1.0",
+  "controls": [
+    "2.7",
+    "4.9",
+    "4.10",
+    "4.11"
+  ],
+  "track": "D",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\13-dora-resilience-monitor",
+    "notificationChannel": "DRM-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

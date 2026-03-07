@@ -1,0 +1,19 @@
+{
+  "solution": "14-communication-compliance-config",
+  "displayName": "Communication Compliance Configurator",
+  "version": "v0.1.0",
+  "controls": [
+    "2.10",
+    "3.4",
+    "3.5",
+    "3.6",
+    "3.9"
+  ],
+  "track": "D",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\14-communication-compliance-config",
+    "notificationChannel": "CCC-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "solution": "10-connector-plugin-governance",
+  "displayName": "Copilot Connector and Plugin Governance",
+  "version": "v0.1.0",
+  "controls": [
+    "1.13",
+    "2.13",
+    "2.14",
+    "4.13"
+  ],
+  "track": "C",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\10-connector-plugin-governance",
+    "notificationChannel": "CPG-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

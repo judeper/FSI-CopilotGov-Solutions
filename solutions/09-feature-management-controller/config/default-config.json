@@ -1,0 +1,21 @@
+{
+  "solution": "09-feature-management-controller",
+  "displayName": "Copilot Feature Management Controller",
+  "version": "v0.1.0",
+  "controls": [
+    "2.6",
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4",
+    "4.12",
+    "4.13"
+  ],
+  "track": "C",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\09-feature-management-controller",
+    "notificationChannel": "FMC-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

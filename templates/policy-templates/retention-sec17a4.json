@@ -1,0 +1,7 @@
+{
+  "name": "Copilot Interaction Retention - SEC 17a-4",
+  "tier": "regulated",
+  "recordClass": "copilot-interaction",
+  "durationDays": 2555,
+  "requiresHoldReview": true
+}

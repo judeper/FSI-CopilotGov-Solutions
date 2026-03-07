@@ -1,0 +1,11 @@
+{
+  "solution": "05-dlp-policy-governance",
+  "tier": "regulated",
+  "controls": [
+    "2.1",
+    "3.10",
+    "3.12"
+  ],
+  "evidenceRetentionDays": 365,
+  "notificationMode": "strict"
+}

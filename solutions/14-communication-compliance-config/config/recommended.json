@@ -1,0 +1,13 @@
+{
+  "solution": "14-communication-compliance-config",
+  "tier": "recommended",
+  "controls": [
+    "2.10",
+    "3.4",
+    "3.5",
+    "3.6",
+    "3.9"
+  ],
+  "evidenceRetentionDays": 90,
+  "notificationMode": "standard"
+}

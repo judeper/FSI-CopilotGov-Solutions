@@ -1,0 +1,47 @@
+{
+  "id": "sox-302-404",
+  "title": "SOX Sections 302 and 404",
+  "issuer": "Congress",
+  "category": "internal-controls",
+  "keywords": [
+    "sox",
+    "302",
+    "404"
+  ],
+  "controls": [
+    "1.4",
+    "1.5",
+    "1.6",
+    "1.8",
+    "1.9",
+    "2.1",
+    "2.2",
+    "2.10",
+    "3.1",
+    "3.2",
+    "3.7",
+    "3.12",
+    "4.1",
+    "4.5",
+    "4.6",
+    "4.8",
+    "4.11",
+    "4.12",
+    "4.13"
+  ],
+  "solutions": [
+    "01-copilot-readiness-scanner",
+    "02-oversharing-risk-assessment",
+    "03-sensitivity-label-auditor",
+    "05-dlp-policy-governance",
+    "06-audit-trail-manager",
+    "08-license-governance-roi",
+    "09-feature-management-controller",
+    "10-connector-plugin-governance",
+    "11-risk-tiered-rollout",
+    "12-regulatory-compliance-dashboard",
+    "13-dora-resilience-monitor",
+    "14-communication-compliance-config",
+    "15-pages-notebooks-gap-monitor"
+  ]
+}

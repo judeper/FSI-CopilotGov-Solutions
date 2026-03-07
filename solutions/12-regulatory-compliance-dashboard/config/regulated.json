@@ -1,0 +1,14 @@
+{
+  "solution": "12-regulatory-compliance-dashboard",
+  "tier": "regulated",
+  "controls": [
+    "3.7",
+    "3.8",
+    "3.12",
+    "3.13",
+    "4.5",
+    "4.7"
+  ],
+  "evidenceRetentionDays": 365,
+  "notificationMode": "strict"
+}

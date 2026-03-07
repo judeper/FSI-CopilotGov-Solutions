@@ -1,0 +1,28 @@
+{
+  "id": "finra-3110",
+  "title": "FINRA Rule 3110",
+  "issuer": "FINRA",
+  "category": "supervision",
+  "keywords": [
+    "3110",
+    "finra rule 3110"
+  ],
+  "controls": [
+    "1.12",
+    "2.10",
+    "3.4",
+    "3.6",
+    "4.2",
+    "4.3"
+  ],
+  "solutions": [
+    "01-copilot-readiness-scanner",
+    "04-finra-supervision-workflow",
+    "07-conditional-access-automation",
+    "09-feature-management-controller",
+    "10-connector-plugin-governance",
+    "11-risk-tiered-rollout",
+    "12-regulatory-compliance-dashboard",
+    "14-communication-compliance-config"
+  ]
+}

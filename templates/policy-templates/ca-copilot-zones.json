@@ -1,0 +1,18 @@
+{
+  "name": "Copilot Conditional Access Tiers",
+  "tiers": {
+    "baseline": {
+      "mfa": "required",
+      "deviceCompliance": "optional"
+    },
+    "recommended": {
+      "mfa": "required",
+      "deviceCompliance": "required"
+    },
+    "regulated": {
+      "mfa": "required",
+      "deviceCompliance": "required",
+      "sessionControls": "strict"
+    }
+  }
+}

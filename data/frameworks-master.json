@@ -1,0 +1,455 @@
+[
+  {
+    "id": "finra-2210",
+    "title": "FINRA Rule 2210",
+    "issuer": "FINRA",
+    "category": "communications",
+    "keywords": [
+      "2210",
+      "finra rule 2210"
+    ],
+    "controls": [
+      "3.4",
+      "3.5"
+    ],
+    "solutions": [
+      "04-finra-supervision-workflow",
+      "14-communication-compliance-config"
+    ]
+  },
+  {
+    "id": "finra-3110",
+    "title": "FINRA Rule 3110",
+    "issuer": "FINRA",
+    "category": "supervision",
+    "keywords": [
+      "3110",
+      "finra rule 3110"
+    ],
+    "controls": [
+      "1.12",
+      "2.10",
+      "3.4",
+      "3.6",
+      "4.2",
+      "4.3"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "04-finra-supervision-workflow",
+      "07-conditional-access-automation",
+      "09-feature-management-controller",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout",
+      "12-regulatory-compliance-dashboard",
+      "14-communication-compliance-config"
+    ]
+  },
+  {
+    "id": "finra-4511",
+    "title": "FINRA Rule 4511",
+    "issuer": "FINRA",
+    "category": "books-and-records",
+    "keywords": [
+      "4511",
+      "finra rule 4511"
+    ],
+    "controls": [
+      "2.1",
+      "2.11",
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.11",
+      "4.2",
+      "4.3"
+    ],
+    "solutions": [
+      "02-oversharing-risk-assessment",
+      "03-sensitivity-label-auditor",
+      "05-dlp-policy-governance",
+      "06-audit-trail-manager",
+      "09-feature-management-controller",
+      "12-regulatory-compliance-dashboard",
+      "15-pages-notebooks-gap-monitor"
+    ]
+  },
+  {
+    "id": "sec-17a3",
+    "title": "SEC Rule 17a-3",
+    "issuer": "SEC",
+    "category": "books-and-records",
+    "keywords": [
+      "17a-3"
+    ],
+    "controls": [
+      "3.1",
+      "3.11"
+    ],
+    "solutions": [
+      "03-sensitivity-label-auditor",
+      "06-audit-trail-manager",
+      "15-pages-notebooks-gap-monitor"
+    ]
+  },
+  {
+    "id": "sec-17a4",
+    "title": "SEC Rule 17a-4",
+    "issuer": "SEC",
+    "category": "books-and-records",
+    "keywords": [
+      "17a-4"
+    ],
+    "controls": [
+      "3.2",
+      "3.3",
+      "3.11",
+      "4.2"
+    ],
+    "solutions": [
+      "03-sensitivity-label-auditor",
+      "06-audit-trail-manager",
+      "09-feature-management-controller",
+      "12-regulatory-compliance-dashboard",
+      "15-pages-notebooks-gap-monitor"
+    ]
+  },
+  {
+    "id": "sec-reg-sp",
+    "title": "SEC Regulation S-P",
+    "issuer": "SEC",
+    "category": "privacy",
+    "keywords": [
+      "reg s-p",
+      "regulation s-p"
+    ],
+    "controls": [
+      "1.2",
+      "1.5",
+      "1.6",
+      "2.1",
+      "2.12",
+      "3.10",
+      "4.2",
+      "4.7"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "02-oversharing-risk-assessment",
+      "03-sensitivity-label-auditor",
+      "05-dlp-policy-governance",
+      "09-feature-management-controller",
+      "12-regulatory-compliance-dashboard"
+    ]
+  },
+  {
+    "id": "sec-reg-bi",
+    "title": "SEC Regulation Best Interest",
+    "issuer": "SEC",
+    "category": "conduct",
+    "keywords": [
+      "reg bi"
+    ],
+    "controls": [
+      "3.4",
+      "3.6",
+      "3.9"
+    ],
+    "solutions": [
+      "04-finra-supervision-workflow",
+      "14-communication-compliance-config"
+    ]
+  },
+  {
+    "id": "sec-reg-fd",
+    "title": "SEC Regulation FD",
+    "issuer": "SEC",
+    "category": "communications",
+    "keywords": [
+      "reg fd"
+    ],
+    "controls": [],
+    "solutions": [
+      "09-feature-management-controller"
+    ]
+  },
+  {
+    "id": "glba-501b",
+    "title": "GLBA 501(b)",
+    "issuer": "FTC",
+    "category": "privacy",
+    "keywords": [
+      "glba",
+      "501(b)"
+    ],
+    "controls": [
+      "1.1",
+      "1.2",
+      "1.3",
+      "1.4",
+      "1.5",
+      "1.6",
+      "1.7",
+      "1.8",
+      "1.9",
+      "1.10",
+      "1.12",
+      "1.13",
+      "2.1",
+      "2.2",
+      "2.3",
+      "2.5",
+      "2.6",
+      "2.7",
+      "2.8",
+      "2.9",
+      "2.10",
+      "2.11",
+      "2.12",
+      "2.13",
+      "2.14",
+      "3.7",
+      "3.10",
+      "4.1",
+      "4.3",
+      "4.4",
+      "4.5",
+      "4.7",
+      "4.9",
+      "4.10",
+      "4.11",
+      "4.12",
+      "4.13"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "02-oversharing-risk-assessment",
+      "03-sensitivity-label-auditor",
+      "05-dlp-policy-governance",
+      "07-conditional-access-automation",
+      "08-license-governance-roi",
+      "09-feature-management-controller",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout",
+      "12-regulatory-compliance-dashboard",
+      "13-dora-resilience-monitor",
+      "14-communication-compliance-config",
+      "15-pages-notebooks-gap-monitor"
+    ]
+  },
+  {
+    "id": "sox-302-404",
+    "title": "SOX Sections 302 and 404",
+    "issuer": "Congress",
+    "category": "internal-controls",
+    "keywords": [
+      "sox",
+      "302",
+      "404"
+    ],
+    "controls": [
+      "1.4",
+      "1.5",
+      "1.6",
+      "1.8",
+      "1.9",
+      "2.1",
+      "2.2",
+      "2.10",
+      "3.1",
+      "3.2",
+      "3.7",
+      "3.12",
+      "4.1",
+      "4.5",
+      "4.6",
+      "4.8",
+      "4.11",
+      "4.12",
+      "4.13"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "02-oversharing-risk-assessment",
+      "03-sensitivity-label-auditor",
+      "05-dlp-policy-governance",
+      "06-audit-trail-manager",
+      "08-license-governance-roi",
+      "09-feature-management-controller",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout",
+      "12-regulatory-compliance-dashboard",
+      "13-dora-resilience-monitor",
+      "14-communication-compliance-config",
+      "15-pages-notebooks-gap-monitor"
+    ]
+  },
+  {
+    "id": "occ-2011-12",
+    "title": "OCC 2011-12 / Bulletin 2013-29",
+    "issuer": "OCC",
+    "category": "risk-management",
+    "keywords": [
+      "occ 2011-12",
+      "occ bulletin 2013-29",
+      "occ"
+    ],
+    "controls": [
+      "1.10",
+      "1.11",
+      "1.13",
+      "3.8",
+      "4.8",
+      "4.9",
+      "4.10",
+      "4.13"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "07-conditional-access-automation",
+      "08-license-governance-roi",
+      "09-feature-management-controller",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout",
+      "12-regulatory-compliance-dashboard",
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "sr-11-7",
+    "title": "Federal Reserve SR 11-7",
+    "issuer": "Federal Reserve",
+    "category": "model-risk",
+    "keywords": [
+      "sr 11-7"
+    ],
+    "controls": [
+      "3.8"
+    ],
+    "solutions": [
+      "12-regulatory-compliance-dashboard"
+    ]
+  },
+  {
+    "id": "ffiec-it-handbook",
+    "title": "FFIEC IT Examination Handbook",
+    "issuer": "FFIEC",
+    "category": "examination",
+    "keywords": [
+      "ffiec"
+    ],
+    "controls": [
+      "1.1",
+      "1.2",
+      "1.3",
+      "1.4",
+      "1.5",
+      "1.6",
+      "1.7",
+      "1.8",
+      "1.9",
+      "1.10",
+      "1.11",
+      "1.12",
+      "1.13",
+      "2.3",
+      "2.8",
+      "2.9",
+      "2.13",
+      "2.15",
+      "3.13",
+      "4.1",
+      "4.3",
+      "4.4",
+      "4.5",
+      "4.6",
+      "4.7",
+      "4.8",
+      "4.9",
+      "4.10",
+      "4.11",
+      "4.12",
+      "4.13"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "02-oversharing-risk-assessment",
+      "03-sensitivity-label-auditor",
+      "07-conditional-access-automation",
+      "08-license-governance-roi",
+      "09-feature-management-controller",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout",
+      "12-regulatory-compliance-dashboard",
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "interagency-ai-guidance",
+    "title": "Interagency AI Guidance (2023)",
+    "issuer": "OCC / Federal Reserve / FDIC",
+    "category": "risk-management",
+    "keywords": [
+      "interagency ai guidance"
+    ],
+    "controls": [
+      "1.1",
+      "1.11",
+      "1.12",
+      "1.13"
+    ],
+    "solutions": [
+      "01-copilot-readiness-scanner",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout"
+    ]
+  },
+  {
+    "id": "dora",
+    "title": "Digital Operational Resilience Act",
+    "issuer": "European Union",
+    "category": "operational-resilience",
+    "keywords": [
+      "dora"
+    ],
+    "controls": [],
+    "solutions": [
+      "05-dlp-policy-governance",
+      "07-conditional-access-automation",
+      "10-connector-plugin-governance",
+      "11-risk-tiered-rollout",
+      "12-regulatory-compliance-dashboard",
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "gdpr",
+    "title": "GDPR",
+    "issuer": "European Union",
+    "category": "privacy",
+    "keywords": [
+      "gdpr"
+    ],
+    "controls": [
+      "2.7"
+    ],
+    "solutions": [
+      "03-sensitivity-label-auditor",
+      "05-dlp-policy-governance",
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "cftc-1-31",
+    "title": "CFTC Rule 1.31",
+    "issuer": "CFTC",
+    "category": "books-and-records",
+    "keywords": [
+      "cftc 1.31"
+    ],
+    "controls": [],
+    "solutions": [
+      "06-audit-trail-manager"
+    ]
+  }
+]

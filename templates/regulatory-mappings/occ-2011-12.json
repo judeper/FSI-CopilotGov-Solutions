@@ -1,0 +1,31 @@
+{
+  "id": "occ-2011-12",
+  "title": "OCC 2011-12 / Bulletin 2013-29",
+  "issuer": "OCC",
+  "category": "risk-management",
+  "keywords": [
+    "occ 2011-12",
+    "occ bulletin 2013-29",
+    "occ"
+  ],
+  "controls": [
+    "1.10",
+    "1.11",
+    "1.13",
+    "3.8",
+    "4.8",
+    "4.9",
+    "4.10",
+    "4.13"
+  ],
+  "solutions": [
+    "01-copilot-readiness-scanner",
+    "07-conditional-access-automation",
+    "08-license-governance-roi",
+    "09-feature-management-controller",
+    "10-connector-plugin-governance",
+    "11-risk-tiered-rollout",
+    "12-regulatory-compliance-dashboard",
+    "13-dora-resilience-monitor"
+  ]
+}

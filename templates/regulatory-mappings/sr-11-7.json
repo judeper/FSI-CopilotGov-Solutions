@@ -1,0 +1,15 @@
+{
+  "id": "sr-11-7",
+  "title": "Federal Reserve SR 11-7",
+  "issuer": "Federal Reserve",
+  "category": "model-risk",
+  "keywords": [
+    "sr 11-7"
+  ],
+  "controls": [
+    "3.8"
+  ],
+  "solutions": [
+    "12-regulatory-compliance-dashboard"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "solution": "08-license-governance-roi",
+  "tier": "recommended",
+  "controls": [
+    "1.9",
+    "4.5",
+    "4.6",
+    "4.8"
+  ],
+  "evidenceRetentionDays": 90,
+  "notificationMode": "standard"
+}

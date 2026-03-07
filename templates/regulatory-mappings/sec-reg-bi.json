@@ -1,0 +1,18 @@
+{
+  "id": "sec-reg-bi",
+  "title": "SEC Regulation Best Interest",
+  "issuer": "SEC",
+  "category": "conduct",
+  "keywords": [
+    "reg bi"
+  ],
+  "controls": [
+    "3.4",
+    "3.6",
+    "3.9"
+  ],
+  "solutions": [
+    "04-finra-supervision-workflow",
+    "14-communication-compliance-config"
+  ]
+}

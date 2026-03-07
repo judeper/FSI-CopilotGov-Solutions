@@ -1,0 +1,12 @@
+{
+  "solution": "11-risk-tiered-rollout",
+  "tier": "regulated",
+  "controls": [
+    "1.9",
+    "1.11",
+    "1.12",
+    "4.12"
+  ],
+  "evidenceRetentionDays": 365,
+  "notificationMode": "strict"
+}

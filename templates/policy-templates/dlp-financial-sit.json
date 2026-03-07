@@ -1,0 +1,17 @@
+{
+  "name": "Copilot Financial DLP Baseline",
+  "tier": "recommended",
+  "locations": [
+    "m365-copilot",
+    "exchange",
+    "sharepoint",
+    "onedrive"
+  ],
+  "sensitiveInformationTypes": [
+    "ABA Routing Number",
+    "Bank Account Number",
+    "Credit Card Number",
+    "SWIFT Code"
+  ],
+  "action": "block-with-override"
+}

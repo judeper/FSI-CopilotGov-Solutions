@@ -1,0 +1,13 @@
+{
+  "id": "sec-reg-fd",
+  "title": "SEC Regulation FD",
+  "issuer": "SEC",
+  "category": "communications",
+  "keywords": [
+    "reg fd"
+  ],
+  "controls": [],
+  "solutions": [
+    "09-feature-management-controller"
+  ]
+}

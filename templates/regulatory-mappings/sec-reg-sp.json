@@ -1,0 +1,28 @@
+{
+  "id": "sec-reg-sp",
+  "title": "SEC Regulation S-P",
+  "issuer": "SEC",
+  "category": "privacy",
+  "keywords": [
+    "reg s-p",
+    "regulation s-p"
+  ],
+  "controls": [
+    "1.2",
+    "1.5",
+    "1.6",
+    "2.1",
+    "2.12",
+    "3.10",
+    "4.2",
+    "4.7"
+  ],
+  "solutions": [
+    "01-copilot-readiness-scanner",
+    "02-oversharing-risk-assessment",
+    "03-sensitivity-label-auditor",
+    "05-dlp-policy-governance",
+    "09-feature-management-controller",
+    "12-regulatory-compliance-dashboard"
+  ]
+}

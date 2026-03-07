@@ -1,0 +1,185 @@
+site_name: FSI Copilot Governance Solutions
+site_url: "https://judeper.github.io/FSI-CopilotGov-Solutions/"
+site_description: Deployable automation patterns for Microsoft 365 Copilot governance in financial services
+repo_url: https://github.com/judeper/FSI-CopilotGov-Solutions
+repo_name: judeper/FSI-CopilotGov-Solutions
+copyright: "Copyright 2026 FSI Copilot Governance Team"
+docs_dir: site-docs
+
+theme:
+  name: material
+  custom_dir: overrides
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.indexes
+    - navigation.footer
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.path
+    - navigation.prune
+    - search.suggest
+    - search.highlight
+    - announce.dismiss
+  palette:
+    - scheme: default
+      primary: blue grey
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue grey
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: false
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - getting-started/index.md
+    - Prerequisites: getting-started/prerequisites.md
+    - Deployment Guide: getting-started/deployment-guide.md
+  - Solutions:
+    - solutions/index.md
+    - Readiness and Data Governance:
+      - Copilot Readiness Assessment Scanner:
+        - solutions/01-copilot-readiness-scanner/index.md
+        - Architecture: solutions/01-copilot-readiness-scanner/architecture.md
+        - Deployment Guide: solutions/01-copilot-readiness-scanner/deployment-guide.md
+        - Evidence Export: solutions/01-copilot-readiness-scanner/evidence-export.md
+        - Prerequisites: solutions/01-copilot-readiness-scanner/prerequisites.md
+        - Troubleshooting: solutions/01-copilot-readiness-scanner/troubleshooting.md
+      - Oversharing Risk Assessment and Remediation:
+        - solutions/02-oversharing-risk-assessment/index.md
+        - Architecture: solutions/02-oversharing-risk-assessment/architecture.md
+        - Deployment Guide: solutions/02-oversharing-risk-assessment/deployment-guide.md
+        - Evidence Export: solutions/02-oversharing-risk-assessment/evidence-export.md
+        - Prerequisites: solutions/02-oversharing-risk-assessment/prerequisites.md
+        - Troubleshooting: solutions/02-oversharing-risk-assessment/troubleshooting.md
+      - Sensitivity Label Coverage Auditor:
+        - solutions/03-sensitivity-label-auditor/index.md
+        - Architecture: solutions/03-sensitivity-label-auditor/architecture.md
+        - Deployment Guide: solutions/03-sensitivity-label-auditor/deployment-guide.md
+        - Evidence Export: solutions/03-sensitivity-label-auditor/evidence-export.md
+        - Prerequisites: solutions/03-sensitivity-label-auditor/prerequisites.md
+        - Troubleshooting: solutions/03-sensitivity-label-auditor/troubleshooting.md
+    - Security and Compliance Enforcement:
+      - FINRA Supervision Workflow for Copilot:
+        - solutions/04-finra-supervision-workflow/index.md
+        - Architecture: solutions/04-finra-supervision-workflow/architecture.md
+        - Deployment Guide: solutions/04-finra-supervision-workflow/deployment-guide.md
+        - Evidence Export: solutions/04-finra-supervision-workflow/evidence-export.md
+        - Prerequisites: solutions/04-finra-supervision-workflow/prerequisites.md
+        - Troubleshooting: solutions/04-finra-supervision-workflow/troubleshooting.md
+      - DLP Policy Governance for Copilot:
+        - solutions/05-dlp-policy-governance/index.md
+        - Architecture: solutions/05-dlp-policy-governance/architecture.md
+        - Deployment Guide: solutions/05-dlp-policy-governance/deployment-guide.md
+        - Evidence Export: solutions/05-dlp-policy-governance/evidence-export.md
+        - Prerequisites: solutions/05-dlp-policy-governance/prerequisites.md
+        - Troubleshooting: solutions/05-dlp-policy-governance/troubleshooting.md
+      - Copilot Interaction Audit Trail Manager:
+        - solutions/06-audit-trail-manager/index.md
+        - Architecture: solutions/06-audit-trail-manager/architecture.md
+        - Deployment Guide: solutions/06-audit-trail-manager/deployment-guide.md
+        - Evidence Export: solutions/06-audit-trail-manager/evidence-export.md
+        - Prerequisites: solutions/06-audit-trail-manager/prerequisites.md
+        - Troubleshooting: solutions/06-audit-trail-manager/troubleshooting.md
+      - Conditional Access Policy Automation for Copilot:
+        - solutions/07-conditional-access-automation/index.md
+        - Architecture: solutions/07-conditional-access-automation/architecture.md
+        - Deployment Guide: solutions/07-conditional-access-automation/deployment-guide.md
+        - Evidence Export: solutions/07-conditional-access-automation/evidence-export.md
+        - Prerequisites: solutions/07-conditional-access-automation/prerequisites.md
+        - Troubleshooting: solutions/07-conditional-access-automation/troubleshooting.md
+    - Operations and Analytics:
+      - License Governance and ROI Tracker:
+        - solutions/08-license-governance-roi/index.md
+        - Architecture: solutions/08-license-governance-roi/architecture.md
+        - Deployment Guide: solutions/08-license-governance-roi/deployment-guide.md
+        - Evidence Export: solutions/08-license-governance-roi/evidence-export.md
+        - Prerequisites: solutions/08-license-governance-roi/prerequisites.md
+        - Troubleshooting: solutions/08-license-governance-roi/troubleshooting.md
+      - Copilot Feature Management Controller:
+        - solutions/09-feature-management-controller/index.md
+        - Architecture: solutions/09-feature-management-controller/architecture.md
+        - Deployment Guide: solutions/09-feature-management-controller/deployment-guide.md
+        - Evidence Export: solutions/09-feature-management-controller/evidence-export.md
+        - Prerequisites: solutions/09-feature-management-controller/prerequisites.md
+        - Troubleshooting: solutions/09-feature-management-controller/troubleshooting.md
+      - Copilot Connector and Plugin Governance:
+        - solutions/10-connector-plugin-governance/index.md
+        - Architecture: solutions/10-connector-plugin-governance/architecture.md
+        - Deployment Guide: solutions/10-connector-plugin-governance/deployment-guide.md
+        - Evidence Export: solutions/10-connector-plugin-governance/evidence-export.md
+        - Prerequisites: solutions/10-connector-plugin-governance/prerequisites.md
+        - Troubleshooting: solutions/10-connector-plugin-governance/troubleshooting.md
+      - Risk-Tiered Rollout Automation:
+        - solutions/11-risk-tiered-rollout/index.md
+        - Architecture: solutions/11-risk-tiered-rollout/architecture.md
+        - Deployment Guide: solutions/11-risk-tiered-rollout/deployment-guide.md
+        - Evidence Export: solutions/11-risk-tiered-rollout/evidence-export.md
+        - Prerequisites: solutions/11-risk-tiered-rollout/prerequisites.md
+        - Troubleshooting: solutions/11-risk-tiered-rollout/troubleshooting.md
+      - Regulatory Compliance Dashboard:
+        - solutions/12-regulatory-compliance-dashboard/index.md
+        - Architecture: solutions/12-regulatory-compliance-dashboard/architecture.md
+        - Deployment Guide: solutions/12-regulatory-compliance-dashboard/deployment-guide.md
+        - Evidence Export: solutions/12-regulatory-compliance-dashboard/evidence-export.md
+        - Prerequisites: solutions/12-regulatory-compliance-dashboard/prerequisites.md
+        - Troubleshooting: solutions/12-regulatory-compliance-dashboard/troubleshooting.md
+    - Regulatory Resilience:
+      - DORA Operational Resilience Monitor:
+        - solutions/13-dora-resilience-monitor/index.md
+        - Architecture: solutions/13-dora-resilience-monitor/architecture.md
+        - Deployment Guide: solutions/13-dora-resilience-monitor/deployment-guide.md
+        - Evidence Export: solutions/13-dora-resilience-monitor/evidence-export.md
+        - Prerequisites: solutions/13-dora-resilience-monitor/prerequisites.md
+        - Troubleshooting: solutions/13-dora-resilience-monitor/troubleshooting.md
+      - Communication Compliance Configurator:
+        - solutions/14-communication-compliance-config/index.md
+        - Architecture: solutions/14-communication-compliance-config/architecture.md
+        - Deployment Guide: solutions/14-communication-compliance-config/deployment-guide.md
+        - Evidence Export: solutions/14-communication-compliance-config/evidence-export.md
+        - Prerequisites: solutions/14-communication-compliance-config/prerequisites.md
+        - Troubleshooting: solutions/14-communication-compliance-config/troubleshooting.md
+      - Copilot Pages and Notebooks Compliance Gap Monitor:
+        - solutions/15-pages-notebooks-gap-monitor/index.md
+        - Architecture: solutions/15-pages-notebooks-gap-monitor/architecture.md
+        - Deployment Guide: solutions/15-pages-notebooks-gap-monitor/deployment-guide.md
+        - Evidence Export: solutions/15-pages-notebooks-gap-monitor/evidence-export.md
+        - Prerequisites: solutions/15-pages-notebooks-gap-monitor/prerequisites.md
+        - Troubleshooting: solutions/15-pages-notebooks-gap-monitor/troubleshooting.md
+  - Reference:
+    - reference/index.md
+    - Architecture: reference/architecture.md
+    - Control Coverage: reference/control-coverage.md
+    - Examination Readiness: reference/examination-readiness.md
+    - Shared Modules Contract: reference/shared-modules-contract.md
+    - Changelog: reference/changelog.md
+  - Disclaimer: disclaimer.md
+

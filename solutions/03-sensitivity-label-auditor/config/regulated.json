@@ -1,0 +1,12 @@
+{
+  "solution": "03-sensitivity-label-auditor",
+  "tier": "regulated",
+  "controls": [
+    "1.5",
+    "2.2",
+    "3.11",
+    "3.12"
+  ],
+  "evidenceRetentionDays": 365,
+  "notificationMode": "strict"
+}

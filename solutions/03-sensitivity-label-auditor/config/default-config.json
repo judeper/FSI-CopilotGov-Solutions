@@ -1,0 +1,18 @@
+{
+  "solution": "03-sensitivity-label-auditor",
+  "displayName": "Sensitivity Label Coverage Auditor",
+  "version": "v0.1.0",
+  "controls": [
+    "1.5",
+    "2.2",
+    "3.11",
+    "3.12"
+  ],
+  "track": "A",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\03-sensitivity-label-auditor",
+    "notificationChannel": "SLA-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

@@ -1,0 +1,776 @@
+[
+  {
+    "id": "01",
+    "slug": "01-copilot-readiness-scanner",
+    "display_name": "Copilot Readiness Assessment Scanner",
+    "track": "A",
+    "domain": "readiness-data",
+    "priority": "P0",
+    "phase": 1,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power BI"
+    ],
+    "primary_controls": [
+      "1.1",
+      "1.5",
+      "1.6",
+      "1.7",
+      "1.9"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "FINRA 3110",
+      "SEC Reg S-P",
+      "GLBA 501(b)",
+      "OCC 2011-12",
+      "FFIEC IT Handbook"
+    ],
+    "summary": "Assesses tenant readiness across licensing, identity, Purview, SharePoint, and Copilot-specific data hygiene signals.",
+    "evidence_outputs": [
+      "readiness-scorecard",
+      "data-hygiene-findings",
+      "remediation-plan"
+    ],
+    "dependencies": [],
+    "controls": [
+      "1.1",
+      "1.5",
+      "1.6",
+      "1.7",
+      "1.9"
+    ],
+    "control_count": 5,
+    "code": "CRS",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "02",
+    "slug": "02-oversharing-risk-assessment",
+    "display_name": "Oversharing Risk Assessment and Remediation",
+    "track": "A",
+    "domain": "readiness-data",
+    "priority": "P0",
+    "phase": 1,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "1.2",
+      "1.3",
+      "1.4",
+      "2.5",
+      "2.12"
+    ],
+    "supporting_controls": [
+      "1.6"
+    ],
+    "regulations": [
+      "GLBA 501(b)",
+      "SEC Reg S-P",
+      "FINRA 4511",
+      "FFIEC IT Handbook"
+    ],
+    "summary": "Detects overshared SharePoint, Teams, and OneDrive content that could widen Copilot grounding beyond intended audiences.",
+    "evidence_outputs": [
+      "oversharing-findings",
+      "remediation-queue",
+      "site-owner-attestations"
+    ],
+    "dependencies": [
+      "01-copilot-readiness-scanner"
+    ],
+    "controls": [
+      "1.2",
+      "1.3",
+      "1.4",
+      "1.6",
+      "2.5",
+      "2.12"
+    ],
+    "control_count": 6,
+    "code": "ORA",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "03",
+    "slug": "03-sensitivity-label-auditor",
+    "display_name": "Sensitivity Label Coverage Auditor",
+    "track": "A",
+    "domain": "readiness-data",
+    "priority": "P1",
+    "phase": 2,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "1.5",
+      "2.2",
+      "3.11",
+      "3.12"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "FINRA 4511",
+      "SEC 17a-4",
+      "GDPR",
+      "GLBA 501(b)"
+    ],
+    "summary": "Measures label coverage across in-scope workloads and identifies unlabeled content that weakens Copilot data protection controls.",
+    "evidence_outputs": [
+      "label-coverage-report",
+      "label-gap-findings",
+      "remediation-manifest"
+    ],
+    "dependencies": [
+      "01-copilot-readiness-scanner",
+      "02-oversharing-risk-assessment"
+    ],
+    "controls": [
+      "1.5",
+      "2.2",
+      "3.11",
+      "3.12"
+    ],
+    "control_count": 4,
+    "code": "SLA",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "04",
+    "slug": "04-finra-supervision-workflow",
+    "display_name": "FINRA Supervision Workflow for Copilot",
+    "track": "B",
+    "domain": "security-compliance",
+    "priority": "P0",
+    "phase": 1,
+    "version": "v0.1.0",
+    "solution_type": [
+      "Power Automate",
+      "Dataverse"
+    ],
+    "primary_controls": [
+      "3.4",
+      "3.5",
+      "3.6"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "FINRA 3110",
+      "FINRA 2210",
+      "SEC Reg BI"
+    ],
+    "summary": "Routes flagged Copilot-assisted communications into a reviewer queue with sampling, escalation, and exception tracking.",
+    "evidence_outputs": [
+      "supervision-queue-snapshot",
+      "review-disposition-log",
+      "sampling-summary"
+    ],
+    "dependencies": [],
+    "controls": [
+      "3.4",
+      "3.5",
+      "3.6"
+    ],
+    "control_count": 3,
+    "code": "FSW",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "05",
+    "slug": "05-dlp-policy-governance",
+    "display_name": "DLP Policy Governance for Copilot",
+    "track": "B",
+    "domain": "security-compliance",
+    "priority": "P1",
+    "phase": 2,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "2.1",
+      "3.10",
+      "3.12"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "GLBA 501(b)",
+      "SEC Reg S-P",
+      "DORA",
+      "GDPR"
+    ],
+    "summary": "Deploys, baselines, and monitors DLP policies that target Copilot prompts, responses, and grounded content access patterns.",
+    "evidence_outputs": [
+      "dlp-policy-baseline",
+      "policy-drift-findings",
+      "exception-attestations"
+    ],
+    "dependencies": [
+      "03-sensitivity-label-auditor"
+    ],
+    "controls": [
+      "2.1",
+      "3.10",
+      "3.12"
+    ],
+    "control_count": 3,
+    "code": "DPG",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "06",
+    "slug": "06-audit-trail-manager",
+    "display_name": "Copilot Interaction Audit Trail Manager",
+    "track": "B",
+    "domain": "security-compliance",
+    "priority": "P0",
+    "phase": 1,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate",
+      "Power BI"
+    ],
+    "primary_controls": [
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.11",
+      "3.12"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "SEC 17a-3",
+      "SEC 17a-4",
+      "FINRA 4511",
+      "CFTC 1.31",
+      "SOX 404"
+    ],
+    "summary": "Configures retention, validates Copilot audit completeness, and packages evidence for books-and-records examinations.",
+    "evidence_outputs": [
+      "audit-log-completeness",
+      "retention-policy-state",
+      "ediscovery-readiness-package"
+    ],
+    "dependencies": [],
+    "controls": [
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.11",
+      "3.12"
+    ],
+    "control_count": 5,
+    "code": "ATM",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "07",
+    "slug": "07-conditional-access-automation",
+    "display_name": "Conditional Access Policy Automation for Copilot",
+    "track": "B",
+    "domain": "security-compliance",
+    "priority": "P1",
+    "phase": 2,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "2.3",
+      "2.9"
+    ],
+    "supporting_controls": [
+      "2.6"
+    ],
+    "regulations": [
+      "OCC 2011-12",
+      "FINRA 3110",
+      "DORA"
+    ],
+    "summary": "Deploys Conditional Access patterns for Copilot users and watches for policy drift across risk tiers and device states.",
+    "evidence_outputs": [
+      "ca-policy-state",
+      "drift-alert-summary",
+      "access-exception-register"
+    ],
+    "dependencies": [
+      "05-dlp-policy-governance"
+    ],
+    "controls": [
+      "2.3",
+      "2.6",
+      "2.9"
+    ],
+    "control_count": 3,
+    "code": "CAA",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "08",
+    "slug": "08-license-governance-roi",
+    "display_name": "License Governance and ROI Tracker",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P1",
+    "phase": 2,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power BI"
+    ],
+    "primary_controls": [
+      "1.9",
+      "4.5",
+      "4.6",
+      "4.8"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "OCC 2011-12",
+      "SOX 404"
+    ],
+    "summary": "Tracks license usage, inactivity, business-value signals, and reallocation opportunities for Copilot subscriptions.",
+    "evidence_outputs": [
+      "license-utilization-report",
+      "roi-scorecard",
+      "reallocation-recommendations"
+    ],
+    "dependencies": [
+      "11-risk-tiered-rollout"
+    ],
+    "controls": [
+      "1.9",
+      "4.5",
+      "4.6",
+      "4.8"
+    ],
+    "control_count": 4,
+    "code": "LGR",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "09",
+    "slug": "09-feature-management-controller",
+    "display_name": "Copilot Feature Management Controller",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P1",
+    "phase": 2,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "4.1",
+      "4.2",
+      "4.3",
+      "4.4",
+      "4.12",
+      "4.13"
+    ],
+    "supporting_controls": [
+      "2.6"
+    ],
+    "regulations": [
+      "SEC Reg FD",
+      "FINRA 3110"
+    ],
+    "summary": "Centralizes Copilot feature toggles, rollout rings, and drift monitoring across applications and user cohorts.",
+    "evidence_outputs": [
+      "feature-state-baseline",
+      "rollout-ring-history",
+      "drift-findings"
+    ],
+    "dependencies": [],
+    "controls": [
+      "2.6",
+      "4.1",
+      "4.2",
+      "4.3",
+      "4.4",
+      "4.12",
+      "4.13"
+    ],
+    "control_count": 7,
+    "code": "FMC",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "10",
+    "slug": "10-connector-plugin-governance",
+    "display_name": "Copilot Connector and Plugin Governance",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate",
+      "Dataverse"
+    ],
+    "primary_controls": [
+      "1.13",
+      "2.13",
+      "2.14",
+      "4.13"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "FINRA 3110",
+      "OCC 2011-12",
+      "DORA"
+    ],
+    "summary": "Inventories connectors and plugins, routes approval requests, and records data-flow decisions for extensibility scenarios.",
+    "evidence_outputs": [
+      "connector-inventory",
+      "approval-register",
+      "data-flow-attestations"
+    ],
+    "dependencies": [
+      "09-feature-management-controller"
+    ],
+    "controls": [
+      "1.13",
+      "2.13",
+      "2.14",
+      "4.13"
+    ],
+    "control_count": 4,
+    "code": "CPG",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "11",
+    "slug": "11-risk-tiered-rollout",
+    "display_name": "Risk-Tiered Rollout Automation",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P0",
+    "phase": 1,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate",
+      "Power BI"
+    ],
+    "primary_controls": [
+      "1.9",
+      "1.11",
+      "1.12",
+      "4.12"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "OCC 2011-12",
+      "FINRA 3110",
+      "DORA"
+    ],
+    "summary": "Sequences Copilot license assignment, prerequisite checks, pilot waves, and expansion gates by risk tier.",
+    "evidence_outputs": [
+      "wave-readiness-log",
+      "approval-history",
+      "rollout-health-dashboard"
+    ],
+    "dependencies": [
+      "01-copilot-readiness-scanner"
+    ],
+    "controls": [
+      "1.9",
+      "1.11",
+      "1.12",
+      "4.12"
+    ],
+    "control_count": 4,
+    "code": "RTR",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "12",
+    "slug": "12-regulatory-compliance-dashboard",
+    "display_name": "Regulatory Compliance Dashboard",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P0",
+    "phase": 1,
+    "version": "v0.1.0",
+    "solution_type": [
+      "Power BI",
+      "Dataverse",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "3.7",
+      "3.8",
+      "3.12",
+      "3.13",
+      "4.5",
+      "4.7"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "FINRA 4511",
+      "FINRA 3110",
+      "SEC 17a-4",
+      "OCC 2011-12",
+      "DORA",
+      "GLBA 501(b)"
+    ],
+    "summary": "Aggregates solution outputs into a control-centric dashboard that highlights implementation state, evidence freshness, and regulatory coverage.",
+    "evidence_outputs": [
+      "control-status-snapshot",
+      "framework-coverage-matrix",
+      "dashboard-export"
+    ],
+    "dependencies": [
+      "06-audit-trail-manager",
+      "11-risk-tiered-rollout"
+    ],
+    "controls": [
+      "3.7",
+      "3.8",
+      "3.12",
+      "3.13",
+      "4.5",
+      "4.7"
+    ],
+    "control_count": 6,
+    "code": "RCD",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "13",
+    "slug": "13-dora-resilience-monitor",
+    "display_name": "DORA Operational Resilience Monitor",
+    "track": "D",
+    "domain": "regulatory-resilience",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "2.7",
+      "4.9",
+      "4.10",
+      "4.11"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "DORA",
+      "OCC 2011-12",
+      "FFIEC IT Handbook"
+    ],
+    "summary": "Monitors Copilot service health, incident classification, resilience evidence, and operational-risk reporting for regulated environments.",
+    "evidence_outputs": [
+      "service-health-log",
+      "incident-register",
+      "resilience-test-results"
+    ],
+    "dependencies": [
+      "12-regulatory-compliance-dashboard"
+    ],
+    "controls": [
+      "2.7",
+      "4.9",
+      "4.10",
+      "4.11"
+    ],
+    "control_count": 4,
+    "code": "DRM",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "14",
+    "slug": "14-communication-compliance-config",
+    "display_name": "Communication Compliance Configurator",
+    "track": "D",
+    "domain": "regulatory-resilience",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "2.10",
+      "3.4",
+      "3.5",
+      "3.6",
+      "3.9"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "FINRA 2210",
+      "FINRA 3110",
+      "SEC Reg BI",
+      "FCA SYSC 10"
+    ],
+    "summary": "Publishes communication compliance policy patterns for Copilot-assisted content and tracks reviewer workflows and escalations.",
+    "evidence_outputs": [
+      "policy-template-export",
+      "reviewer-queue-metrics",
+      "lexicon-update-log"
+    ],
+    "dependencies": [
+      "04-finra-supervision-workflow"
+    ],
+    "controls": [
+      "2.10",
+      "3.4",
+      "3.5",
+      "3.6",
+      "3.9"
+    ],
+    "control_count": 5,
+    "code": "CCC",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "15",
+    "slug": "15-pages-notebooks-gap-monitor",
+    "display_name": "Copilot Pages and Notebooks Compliance Gap Monitor",
+    "track": "D",
+    "domain": "regulatory-resilience",
+    "priority": "P2",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell",
+      "Power Automate"
+    ],
+    "primary_controls": [
+      "2.11",
+      "3.2",
+      "3.3",
+      "3.11"
+    ],
+    "supporting_controls": [],
+    "regulations": [
+      "SEC 17a-4",
+      "FINRA 4511",
+      "SOX 404"
+    ],
+    "summary": "Surfaces known compliance gaps in Copilot Pages and Notebooks and documents compensating controls until platform coverage improves.",
+    "evidence_outputs": [
+      "gap-findings",
+      "compensating-control-log",
+      "preservation-exception-register"
+    ],
+    "dependencies": [
+      "06-audit-trail-manager"
+    ],
+    "controls": [
+      "2.11",
+      "3.2",
+      "3.3",
+      "3.11"
+    ],
+    "control_count": 4,
+    "code": "PNGM",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "solution": "11-risk-tiered-rollout",
+  "displayName": "Risk-Tiered Rollout Automation",
+  "version": "v0.1.0",
+  "controls": [
+    "1.9",
+    "1.11",
+    "1.12",
+    "4.12"
+  ],
+  "track": "C",
+  "priority": "P0",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\11-risk-tiered-rollout",
+    "notificationChannel": "RTR-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

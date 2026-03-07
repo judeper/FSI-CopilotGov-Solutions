@@ -1,0 +1,17 @@
+{
+  "id": "gdpr",
+  "title": "GDPR",
+  "issuer": "European Union",
+  "category": "privacy",
+  "keywords": [
+    "gdpr"
+  ],
+  "controls": [
+    "2.7"
+  ],
+  "solutions": [
+    "03-sensitivity-label-auditor",
+    "05-dlp-policy-governance",
+    "13-dora-resilience-monitor"
+  ]
+}

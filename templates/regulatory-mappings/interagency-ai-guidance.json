@@ -1,0 +1,20 @@
+{
+  "id": "interagency-ai-guidance",
+  "title": "Interagency AI Guidance (2023)",
+  "issuer": "OCC / Federal Reserve / FDIC",
+  "category": "risk-management",
+  "keywords": [
+    "interagency ai guidance"
+  ],
+  "controls": [
+    "1.1",
+    "1.11",
+    "1.12",
+    "1.13"
+  ],
+  "solutions": [
+    "01-copilot-readiness-scanner",
+    "10-connector-plugin-governance",
+    "11-risk-tiered-rollout"
+  ]
+}

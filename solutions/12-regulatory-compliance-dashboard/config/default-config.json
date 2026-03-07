@@ -1,0 +1,20 @@
+{
+  "solution": "12-regulatory-compliance-dashboard",
+  "displayName": "Regulatory Compliance Dashboard",
+  "version": "v0.1.0",
+  "controls": [
+    "3.7",
+    "3.8",
+    "3.12",
+    "3.13",
+    "4.5",
+    "4.7"
+  ],
+  "track": "C",
+  "priority": "P0",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\12-regulatory-compliance-dashboard",
+    "notificationChannel": "RCD-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

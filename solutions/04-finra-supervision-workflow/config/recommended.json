@@ -1,0 +1,11 @@
+{
+  "solution": "04-finra-supervision-workflow",
+  "tier": "recommended",
+  "controls": [
+    "3.4",
+    "3.5",
+    "3.6"
+  ],
+  "evidenceRetentionDays": 90,
+  "notificationMode": "standard"
+}

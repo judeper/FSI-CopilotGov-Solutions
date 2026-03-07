@@ -1,0 +1,17 @@
+{
+  "solution": "07-conditional-access-automation",
+  "displayName": "Conditional Access Policy Automation for Copilot",
+  "version": "v0.1.0",
+  "controls": [
+    "2.3",
+    "2.6",
+    "2.9"
+  ],
+  "track": "B",
+  "priority": "P1",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\07-conditional-access-automation",
+    "notificationChannel": "CAA-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}

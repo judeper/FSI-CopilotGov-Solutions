@@ -1,0 +1,19 @@
+{
+  "solution": "01-copilot-readiness-scanner",
+  "displayName": "Copilot Readiness Assessment Scanner",
+  "version": "v0.1.0",
+  "controls": [
+    "1.1",
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.9"
+  ],
+  "track": "A",
+  "priority": "P0",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\01-copilot-readiness-scanner",
+    "notificationChannel": "CRS-governance-alerts",
+    "dashboardFeedEnabled": true
+  }
+}
