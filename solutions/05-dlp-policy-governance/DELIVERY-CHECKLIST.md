@@ -1,36 +1,38 @@
-# DLP Policy Governance for Copilot Delivery Checklist
+# Delivery Checklist
 
-## Delivery Summary
+Use this checklist before declaring DLP Policy Governance for Copilot ready for production operations.
 
-- Solution: DLP Policy Governance for Copilot
-- Version: v0.1.0
-- Track: B
-- Priority: P1
+## Dependency readiness
 
-## Files to Include
+- [ ] Confirm `03-sensitivity-label-auditor` completed successfully and the latest label inventory is available for review.
+- [ ] Verify the Copilot label set includes the NPI and PII labels referenced by this solution.
 
-- README.md
-- CHANGELOG.md
-- DELIVERY-CHECKLIST.md
-- docs/*.md
-- scripts/*.ps1
-- config/*.json
-- tests/05-dlp-policy-governance.Tests.ps1
+## Policy readiness
 
-## Pre-Delivery Validation
+- [ ] Complete the DLP policy inventory for all intended Copilot workloads.
+- [ ] Confirm the selected governance tier matches the target operating model.
+- [ ] Validate included and excluded user group scope for Copilot DLP policies.
 
-- [ ] `python scripts/validate-contracts.py`
-- [ ] `python scripts/validate-solutions.py`
-- [ ] PowerShell syntax validation completed
-- [ ] Evidence export verified with a companion hash file
+## Baseline readiness
 
-## Customer Validation
+- [ ] Run `scripts\Deploy-Solution.ps1` and capture the first approved `dlp-policy-baseline.json` snapshot.
+- [ ] Store the approved baseline in the designated evidence retention location.
+- [ ] Review the generated deployment manifest and connection stubs with the compliance team.
 
-- [ ] Review prerequisites and mapped controls
-- [ ] Confirm chosen governance tier
-- [ ] Run the scaffold deployment script in a non-production tenant first
-- [ ] Review evidence export output and dashboard feed requirements
+## Exception workflow readiness
 
-## Communication Template
+- [ ] Deploy the documented Power Automate exception approval flow.
+- [ ] Confirm approver routing matches the selected tier.
+- [ ] Validate the exception attestation log captures attestor, approval date, justification, and expiry.
 
-Share the README, delivery checklist, mapped controls, prerequisites, and evidence expectations with the implementation team before customization begins.
+## Monitoring readiness
+
+- [ ] Configure the drift monitoring schedule using `scripts\Monitor-Compliance.ps1`.
+- [ ] Confirm notifications route to the expected operations and compliance contacts.
+- [ ] Review drift thresholds and escalation expectations for the selected tier.
+
+## Evidence readiness
+
+- [ ] Run `scripts\Export-Evidence.ps1` for a test reporting window.
+- [ ] Validate `dlp-policy-baseline`, `policy-drift-findings`, and `exception-attestations` outputs.
+- [ ] Confirm `.sha256` companion files are present and match the exported artifacts.

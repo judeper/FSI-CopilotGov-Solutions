@@ -1,67 +1,123 @@
 # FINRA Supervision Workflow for Copilot
 
-> **Status:** Scaffolded | **Version:** v0.1.0 | **Priority:** P0 | **Track:** B
+![Status: implemented](https://img.shields.io/badge/status-implemented-brightgreen)
 
-## Overview
+## Solution summary
 
-Routes flagged Copilot-assisted communications into a reviewer queue with sampling, escalation, and exception tracking. This scaffold establishes the required documentation, scripts, config files, and evidence-export pattern for later implementation work.
+| Field | Value |
+| --- | --- |
+| Solution code | FSW |
+| Track | B |
+| Priority | P0 |
+| Solution type | Power Automate, Dataverse |
+| Primary controls | 3.4, 3.5, 3.6 |
+| Regulations | FINRA 3110, FINRA 2210, SEC Reg BI |
+| Evidence outputs | supervision-queue-snapshot, review-disposition-log, sampling-summary |
 
-## Features
+## What this solution does
 
-- Maps to the following controls: 3.4, 3.5, 3.6
-- Supports the `baseline`, `recommended`, and `regulated` configuration tiers
-- Reuses the shared modules under `../../scripts/common/`
-- Publishes evidence with the shared JSON and SHA-256 packaging pattern
+This solution routes Copilot-assisted communications that were flagged by Microsoft Purview Communication Compliance into a supervisory review queue. It supports compliance with FINRA supervision obligations by assigning reviewers based on zone and governance tier, applying configurable sampling rates, enforcing review SLAs, and recording review actions in an append-only log.
 
-## Architecture
+The solution is documentation-first. Dataverse tables, Power Automate flows, connection references, and environment variables are described here and in the docs folder so that regulated teams can deploy them manually in a controlled Power Platform environment.
 
-The scaffold uses a documentation-first pattern for Power Automate and Power BI assets, a PowerShell entry point for deployment and monitoring, and configuration files that align to the repository-wide contract.
+## Regulatory context
 
-## Quick Start
+- FINRA 3110: supports supervisory review, escalation, and evidence retention for sampled and mandatory communications review.
+- FINRA 2210: supports review of communications before or after use based on risk classification and supervisory workflow.
+- SEC Reg BI: supports documentation of review outcomes, exception handling, and supervisory accountability.
 
-1. Review [Prerequisites](./docs/prerequisites.md).
-2. Review [Deployment Guide](./docs/deployment-guide.md).
-3. Validate the scaffold with `python scripts/validate-solutions.py` from the repository root.
-4. Add workload-specific implementation logic in this solution track after shared contracts are frozen.
-
-## Solution Components
-
-| Path | Purpose |
-|------|---------|
-| `scripts/Deploy-Solution.ps1` | Tier-aware deployment entry point for the solution scaffold |
-| `scripts/Monitor-Compliance.ps1` | Control-status snapshot and monitoring placeholder |
-| `scripts/Export-Evidence.ps1` | Evidence export entry point aligned to the shared schema |
-| `config/*.json` | Default, baseline, recommended, and regulated settings |
-| `docs/*.md` | Architecture, prerequisites, deployment, evidence, and troubleshooting guidance |
-| `tests/*.Tests.ps1` | Pester placeholder coverage for the scaffold |
-
-## Deployment
-
-Use `scripts/Deploy-Solution.ps1` for tier-aware deployment manifests and `scripts/Monitor-Compliance.ps1` for scaffolded status output.
+Use this solution as a control implementation pattern that supports compliance with firm policy and regulatory obligations. It does not replace legal review, records management, or principal sign-off requirements.
 
 ## Prerequisites
 
-- Microsoft 365 and workload permissions appropriate for the mapped controls
-- Shared contract files under `data/` and `scripts/common/`
-- A chosen governance tier for the target deployment
+See [docs\prerequisites.md](docs/prerequisites.md) for the full list. Minimum prerequisites are:
 
-## Related Controls
+- Power Apps Premium and Power Automate Premium for Dataverse tables and cloud flows.
+- Microsoft 365 E5 Compliance for Purview Communication Compliance signals.
+- Power Platform Admin, Purview Compliance Admin, and Global Reader access for deployment validation.
+- Azure AD groups for supervisory principals, escalation recipients, and service identities.
+- PowerShell 7 or later for deployment, monitoring, and evidence export scripts.
 
-| Control | Title | Playbooks |
-|---------|-------|-----------|
-| 3.4 | Communication Compliance Monitoring | [Portal Walkthrough](docs/playbooks/control-implementations/3.4/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.4/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.4/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.4/troubleshooting.md) |
-| 3.5 | FINRA Rule 2210 Compliance for Copilot-Drafted Communications | [Portal Walkthrough](docs/playbooks/control-implementations/3.5/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.5/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.5/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.5/troubleshooting.md) |
-| 3.6 | Supervision and Oversight (FINRA Rule 3110 / SEC Reg BI) | [Portal Walkthrough](docs/playbooks/control-implementations/3.6/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.6/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.6/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.6/troubleshooting.md) |
+## Data model
 
-## Regulatory Alignment
+The solution uses three Dataverse tables following the shared contract `fsi_cg_{solution}_{purpose}`.
 
-This solution supports compliance with: FINRA 3110, FINRA 2210, SEC Reg BI.
+| Display name | Logical name | Purpose | Key columns |
+| --- | --- | --- | --- |
+| SupervisionQueue | fsi_cg_fsw_queue | Stores flagged communications awaiting or completing review. | fsi_queuenumber, fsi_sourcetype, fsi_sourceid, fsi_agentid, fsi_zone, fsi_tier, fsi_state, fsi_assignedprincipal, fsi_sladue, fsi_reviewoutcome, fsi_reviewnotes |
+| SupervisionLog | fsi_cg_fsw_log | Maintains append-only review actions for queue items. | fsi_lognumber, fsi_queueitem, fsi_action, fsi_actor, fsi_timestamp |
+| SupervisionConfig | fsi_cg_fsw_config | Stores zone and tier sampling and SLA settings. | fsi_zone, fsi_tier, fsi_slahours, fsi_reviewpercent |
 
-## Evidence Export
+Recommended Dataverse ownership model:
 
-The solution is expected to publish: supervision-queue-snapshot, review-disposition-log, sampling-summary. Evidence packages must align to `../../data/evidence-schema.json`.
+- Queue items: organization-owned so supervisory teams can reassign work during outages or staff changes.
+- Log items: create-only for service accounts and reviewer flows to support an immutable log pattern.
+- Config items: restricted write access to governance administrators.
 
-## Known Limitations
+## Power Automate flows
 
-- This scaffold does not yet include tenant-specific implementation logic.
-- Power Automate and Power BI artifacts remain documentation-led until the implementation track fills in workload details.
+The implementation uses four manual Power Automate cloud flows:
+
+1. Ingest Flagged Items
+   - Trigger: scheduled poll or event-driven connector action that reads flagged Copilot prompt and response items from Purview Communication Compliance.
+   - Actions: normalize source metadata, classify zone and tier, create a SupervisionQueue row, and append a SupervisionLog action of `ingested`.
+
+2. Assignment Flow
+   - Trigger: when a new SupervisionQueue row is created.
+   - Actions: look up the supervisory principal for the item's zone and tier, set `fsi_assignedprincipal`, calculate `fsi_sladue`, and append an `assigned` log entry.
+
+3. Escalation Flow
+   - Trigger: scheduled flow that scans open queue items nearing or breaching SLA.
+   - Actions: notify escalation recipients, update exception tracking fields, and append `sla-warning` or `sla-breached` log entries.
+
+4. Review Complete Flow
+   - Trigger: when a reviewer updates review outcome fields or completes a review form.
+   - Actions: validate disposition, mark queue state, append a `review-complete` or `exception-granted` log entry, and preserve reviewer notes.
+
+See [docs\architecture.md](docs/architecture.md) and [docs\deployment-guide.md](docs/deployment-guide.md) for manual build steps.
+
+## Deployment steps
+
+1. Review [docs\prerequisites.md](docs/prerequisites.md) and confirm licensing, roles, network access, and Azure AD group membership.
+2. Create Dataverse tables and columns in the target environment as described in [docs\deployment-guide.md](docs/deployment-guide.md).
+3. Create connection references named `fsi_cr_fsw_purview` and `fsi_cr_fsw_dataverse`.
+4. Set environment variables such as `fsi_ev_fsw_purviewpolicyid` and `fsi_ev_fsw_environmenturl`.
+5. Run `scripts\Deploy-Solution.ps1` to generate the deployment manifest and configuration stubs for the chosen tier.
+6. Build the four Power Automate flows manually and test queue routing, review completion, and escalation behavior.
+7. Run `scripts\Monitor-Compliance.ps1` and `scripts\Export-Evidence.ps1` to validate readiness and produce evidence artifacts.
+
+## Evidence collection
+
+Run the export script after configuration changes and at the end of each review period.
+
+```powershell
+.\scripts\Export-Evidence.ps1 `
+  -ConfigurationTier regulated `
+  -OutputPath .\artifacts\evidence `
+  -PeriodStart 2026-01-01 `
+  -PeriodEnd 2026-01-31
+```
+
+Evidence artifacts follow `data\evidence-schema.json` and include:
+
+- `supervision-queue-snapshot`
+- `review-disposition-log`
+- `sampling-summary`
+
+Each export writes a `.sha256` companion file so reviewers can verify package integrity before filing evidence in the firm's records repository.
+
+## Regulatory alignment
+
+| Control | Supervisory objective | Solution capability | Evidence output |
+| --- | --- | --- | --- |
+| 3.4 | Coverage of flagged Copilot-assisted communications | Zone and tier sampling, mandatory review routing, and SLA assignment | supervision-queue-snapshot, sampling-summary |
+| 3.5 | Review disposition accountability | Reviewer outcome capture, principal assignment, and append-only action log | review-disposition-log |
+| 3.6 | Exception and escalation tracking | SLA breach detection, escalation recipients, and exception reason capture | supervision-queue-snapshot, review-disposition-log, sampling-summary |
+
+## Known limitations
+
+- Power Automate flows and Dataverse tables are documented, not deployed as code, because this solution avoids a hard dependency on Power Platform CLI.
+- Purview Communication Compliance signal availability depends on upstream policy configuration and service latency.
+- Live evidence export requires Dataverse API connectivity and an access token supplied through the deployment environment.
+- Sampling configuration supports compliance with supervisory review design, but firms still need written supervisory procedures that define exception handling and sign-off authority.
+

@@ -1,11 +1,40 @@
 {
   "solution": "05-dlp-policy-governance",
+  "solutionCode": "DPG",
   "tier": "regulated",
-  "controls": [
-    "2.1",
-    "3.10",
-    "3.12"
+  "status": "implemented",
+  "copilotWorkloads": [
+    "Teams",
+    "SharePoint",
+    "OneDrive",
+    "Exchange"
   ],
+  "policyModes": {
+    "default": "Audit",
+    "highSensitivity": "Block",
+    "npi": "Block",
+    "pii": "Block"
+  },
+  "sensitivityConditions": {
+    "standard": [
+      "Confidential"
+    ],
+    "highSensitivity": [
+      "NPI",
+      "PII",
+      "Highly Confidential"
+    ]
+  },
   "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "driftCheckFrequency": "real-time",
+  "driftThreshold": 5,
+  "notificationProfile": "strict",
+  "summaryNotifications": false,
+  "exceptionApprovalRequired": true,
+  "exceptionAttestationRequired": true,
+  "exceptionApproverRole": "Senior Compliance Officer",
+  "policyChangeApproval": "CCO",
+  "seniorComplianceSignOffRequired": true,
+  "mandatoryAttestation": true,
+  "notes": "Supports GLBA, SEC Reg S-P, DORA, and GDPR review needs with block actions for NPI and PII labels in Copilot."
 }

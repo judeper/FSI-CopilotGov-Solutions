@@ -1,11 +1,65 @@
 {
   "solution": "07-conditional-access-automation",
   "tier": "regulated",
+  "status": "implemented",
   "controls": [
     "2.3",
     "2.6",
     "2.9"
   ],
+  "copilotAppIds": [
+    "2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4",
+    "7df0a125-d3be-4c96-aa54-591f83ff541c"
+  ],
+  "riskTiers": {
+    "low": {
+      "mfaRequired": true,
+      "compliantDevice": true,
+      "namedLocationRequired": true,
+      "namedLocations": [
+        "Copilot-Regulated-Zone"
+      ]
+    },
+    "medium": {
+      "mfaRequired": true,
+      "compliantDevice": true,
+      "namedLocationRequired": true,
+      "namedLocations": [
+        "Copilot-Regulated-Zone"
+      ]
+    },
+    "high": {
+      "mfaRequired": true,
+      "compliantDevice": true,
+      "namedLocationRequired": true,
+      "namedLocations": [
+        "Copilot-Regulated-Zone"
+      ]
+    }
+  },
+  "driftDetectionEnabled": true,
+  "driftCheckFrequency": "real-time",
+  "notificationMode": "strict",
   "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "exceptionApproval": {
+    "mode": "mandatory",
+    "required": true,
+    "approverRole": "Chief Compliance Officer",
+    "maxDurationDays": 7,
+    "reviewCadence": "per-request"
+  },
+  "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
+  "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
+  "namedLocations": [
+    "Copilot-Regulated-Zone"
+  ],
+  "blockLegacyAuth": true,
+  "blockUnknownDeviceStates": true,
+  "realTimeDriftAlerts": true,
+  "doraAlignmentDocumented": true,
+  "regulatoryNotes": [
+    "Supports compliance with OCC 2011-12 access control and change management expectations for regulated Copilot access.",
+    "Supports compliance with FINRA 3110 by requiring strict supervisory approval for access exceptions.",
+    "Supports compliance with DORA Article 9 ICT security and access-control requirements with named-location and device-state enforcement."
+  ]
 }

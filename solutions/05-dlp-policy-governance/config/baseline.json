@@ -1,11 +1,33 @@
 {
   "solution": "05-dlp-policy-governance",
+  "solutionCode": "DPG",
   "tier": "baseline",
-  "controls": [
-    "2.1",
-    "3.10",
-    "3.12"
+  "status": "monitor-only",
+  "copilotWorkloads": [
+    "Teams",
+    "SharePoint"
   ],
+  "policyModes": {
+    "default": "Audit",
+    "highSensitivity": "Audit"
+  },
+  "sensitivityConditions": {
+    "standard": [
+      "Confidential"
+    ],
+    "highSensitivity": [
+      "NPI",
+      "PII"
+    ]
+  },
   "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "driftCheckFrequency": "weekly",
+  "driftThreshold": 25,
+  "notificationProfile": "summary",
+  "summaryNotifications": true,
+  "exceptionApprovalRequired": false,
+  "exceptionAttestationRequired": false,
+  "exceptionApproverRole": "Service Owner",
+  "policyChangeApproval": "Service Owner",
+  "notes": "Supports early rollout visibility with audit-only DLP validation for Copilot workloads."
 }

@@ -1,11 +1,52 @@
 {
   "solution": "07-conditional-access-automation",
   "tier": "baseline",
+  "status": "implemented",
   "controls": [
     "2.3",
     "2.6",
     "2.9"
   ],
+  "copilotAppIds": [
+    "2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4",
+    "7df0a125-d3be-4c96-aa54-591f83ff541c"
+  ],
+  "riskTiers": {
+    "low": {
+      "mfaRequired": true,
+      "compliantDevice": false,
+      "namedLocationRequired": false,
+      "namedLocations": []
+    },
+    "medium": {
+      "mfaRequired": true,
+      "compliantDevice": false,
+      "namedLocationRequired": false,
+      "namedLocations": []
+    },
+    "high": {
+      "mfaRequired": true,
+      "compliantDevice": false,
+      "namedLocationRequired": false,
+      "namedLocations": []
+    }
+  },
+  "driftDetectionEnabled": true,
+  "driftCheckFrequency": "weekly",
+  "notificationMode": "summary",
   "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "exceptionApproval": {
+    "mode": "recommended",
+    "required": false,
+    "approverRole": "Security Operations Manager",
+    "maxDurationDays": 90
+  },
+  "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
+  "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
+  "namedLocations": [],
+  "regulatoryNotes": [
+    "Supports compliance with OCC 2011-12 access control expectations.",
+    "Supports compliance with FINRA 3110 supervisory review of Copilot access changes.",
+    "Supports compliance with DORA Article 9 ICT security access-control planning."
+  ]
 }

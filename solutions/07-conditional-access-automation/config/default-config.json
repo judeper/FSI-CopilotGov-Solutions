@@ -1,17 +1,73 @@
 {
   "solution": "07-conditional-access-automation",
   "displayName": "Conditional Access Policy Automation for Copilot",
-  "version": "v0.1.0",
+  "solutionCode": "CAA",
+  "version": "0.2.0",
+  "track": "B",
+  "priority": "P1",
+  "status": "implemented",
   "controls": [
     "2.3",
     "2.6",
     "2.9"
   ],
-  "track": "B",
-  "priority": "P1",
+  "primaryControls": [
+    "2.3",
+    "2.9"
+  ],
+  "supportingControls": [
+    "2.6"
+  ],
+  "regulations": [
+    "OCC 2011-12",
+    "FINRA 3110",
+    "DORA Article 9"
+  ],
+  "dependencies": [
+    "05-dlp-policy-governance"
+  ],
+  "evidenceOutputs": [
+    "ca-policy-state",
+    "drift-alert-summary",
+    "access-exception-register"
+  ],
   "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\07-conditional-access-automation",
-    "notificationChannel": "CAA-governance-alerts",
-    "dashboardFeedEnabled": true
+    "copilotAppIds": [
+      "2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4",
+      "7df0a125-d3be-4c96-aa54-591f83ff541c"
+    ],
+    "riskTiers": {
+      "low": {
+        "mfaRequired": false,
+        "compliantDevice": false,
+        "namedLocationRequired": false
+      },
+      "medium": {
+        "mfaRequired": true,
+        "compliantDevice": false,
+        "namedLocationRequired": false
+      },
+      "high": {
+        "mfaRequired": true,
+        "compliantDevice": true,
+        "namedLocationRequired": true
+      }
+    },
+    "driftDetectionEnabled": true,
+    "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
+    "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
+    "policyNamingConvention": "FSI-CAA-Copilot-{Tier}-{Purpose}",
+    "dataverseTables": {
+      "baseline": "fsi_cg_caa_baseline",
+      "assessmentHistory": "fsi_cg_caa_assessmenthistory",
+      "finding": "fsi_cg_caa_finding",
+      "evidence": "fsi_cg_caa_evidence"
+    },
+    "environmentVariables": {
+      "tenantId": "fsi_ev_caa_tenantid",
+      "exceptionRegisterPath": "fsi_ev_caa_exceptionregisterpath",
+      "baselineStoragePath": "fsi_ev_caa_baselinestoragepath",
+      "driftSchedule": "fsi_ev_caa_driftschedule"
+    }
   }
 }

@@ -1,7 +1,16 @@
 {
   "solution": "06-audit-trail-manager",
+  "solutionCode": "ATM",
   "displayName": "Copilot Interaction Audit Trail Manager",
-  "version": "v0.1.0",
+  "version": "0.2.0",
+  "status": "implemented",
+  "track": "B",
+  "priority": "P0",
+  "solutionType": [
+    "PowerShell",
+    "Power Automate",
+    "Power BI"
+  ],
   "controls": [
     "3.1",
     "3.2",
@@ -9,11 +18,51 @@
     "3.11",
     "3.12"
   ],
-  "track": "B",
-  "priority": "P0",
+  "regulations": [
+    "SEC 17a-3",
+    "SEC 17a-4",
+    "FINRA 4511",
+    "CFTC 1.31",
+    "SOX 404"
+  ],
   "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\06-audit-trail-manager",
-    "notificationChannel": "ATM-governance-alerts",
-    "dashboardFeedEnabled": true
+    "auditEventTypes": [
+      "CopilotInteraction",
+      "AIInteraction",
+      "SharePointFileAccess"
+    ],
+    "retentionPeriods": {
+      "unit": "days",
+      "byRegulation": {
+        "SEC_17a4": 2190,
+        "FINRA_4511": 1095,
+        "CFTC_1_31": 1825,
+        "SOX_404": 2555
+      }
+    },
+    "auditLevelRequired": [
+      "Standard",
+      "Advanced"
+    ],
+    "ediscoveryHoldRequired": true,
+    "uniifiedAuditLogEnabled": "check",
+    "unifiedAuditLogEnabled": "check",
+    "evidenceOutputs": [
+      "audit-log-completeness",
+      "retention-policy-state",
+      "ediscovery-readiness-package"
+    ],
+    "graphPermissions": [
+      "AuditLog.Read.All",
+      "RecordsManagement.Read.All"
+    ],
+    "notificationChannel": "atm-governance-alerts",
+    "evidenceOutputPath": ".\\artifacts\\atm",
+    "dataverseTables": {
+      "baseline": "fsi_cg_atm_baseline",
+      "assessmentHistory": "fsi_cg_atm_assessmenthistory",
+      "finding": "fsi_cg_atm_finding",
+      "evidence": "fsi_cg_atm_evidence"
+    }
   }
 }

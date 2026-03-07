@@ -1,36 +1,38 @@
-# Copilot Interaction Audit Trail Manager Delivery Checklist
+# Delivery Checklist
 
-## Delivery Summary
+Use this checklist before handing the Copilot Interaction Audit Trail Manager solution to deployment or examination support teams.
 
-- Solution: Copilot Interaction Audit Trail Manager
-- Version: v0.1.0
-- Track: B
-- Priority: P0
+## Audit readiness
 
-## Files to Include
+- [ ] Unified Audit Log is enabled in the Microsoft 365 tenant.
+- [ ] `CopilotInteraction` and `AIInteraction` events are confirmed in the validation window.
+- [ ] Required supporting events such as `SharePointFileAccess` are included in the monitoring scope.
+- [ ] Audit level for the selected tier is documented as Standard or Advanced as required.
 
-- README.md
-- CHANGELOG.md
-- DELIVERY-CHECKLIST.md
-- docs/*.md
-- scripts/*.ps1
-- config/*.json
-- tests/06-audit-trail-manager.Tests.ps1
+## Retention readiness
 
-## Pre-Delivery Validation
+- [ ] Purview retention policies are applied for Copilot interaction artifacts.
+- [ ] Retention labels are scoped to the intended Copilot records and supporting evidence artifacts.
+- [ ] Retention schedule is documented for SEC 17a-4, FINRA 4511, CFTC 1.31, and SOX 404.
+- [ ] WORM or immutable storage documentation is attached for regulated deployments.
 
-- [ ] `python scripts/validate-contracts.py`
-- [ ] `python scripts/validate-solutions.py`
-- [ ] PowerShell syntax validation completed
-- [ ] Evidence export verified with a companion hash file
+## eDiscovery readiness
 
-## Customer Validation
+- [ ] eDiscovery cases are created or referenced for the selected tier.
+- [ ] Holds are configured for required custodians or record locations.
+- [ ] Preservation status, hold counts, and custodian counts are documented.
+- [ ] Legal hold owners and examination response contacts are recorded.
 
-- [ ] Review prerequisites and mapped controls
-- [ ] Confirm chosen governance tier
-- [ ] Run the scaffold deployment script in a non-production tenant first
-- [ ] Review evidence export output and dashboard feed requirements
+## Reporting and alerting readiness
 
-## Communication Template
+- [ ] Power BI dashboard is operational and refresh ownership is assigned.
+- [ ] Power Automate retention exception alerts are configured and tested.
+- [ ] Compliance findings are reviewed and open exceptions are documented.
 
-Share the README, delivery checklist, mapped controls, prerequisites, and evidence expectations with the implementation team before customization begins.
+## Evidence readiness
+
+- [ ] `audit-log-completeness.json` is generated and reviewed.
+- [ ] `retention-policy-state.json` is generated and reviewed.
+- [ ] `ediscovery-readiness-package.json` is generated and reviewed.
+- [ ] SHA-256 companion files validate successfully.
+- [ ] The full evidence package is archived with the deployment record.

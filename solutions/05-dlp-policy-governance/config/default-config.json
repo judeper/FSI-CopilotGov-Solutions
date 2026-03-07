@@ -1,17 +1,82 @@
 {
   "solution": "05-dlp-policy-governance",
+  "solutionCode": "DPG",
   "displayName": "DLP Policy Governance for Copilot",
-  "version": "v0.1.0",
+  "track": "B",
+  "priority": "P1",
+  "status": "implemented",
+  "solutionType": [
+    "PowerShell",
+    "Power Automate"
+  ],
   "controls": [
     "2.1",
     "3.10",
     "3.12"
   ],
-  "track": "B",
-  "priority": "P1",
+  "regulations": [
+    "GLBA 501(b)",
+    "SEC Reg S-P",
+    "DORA Article 9",
+    "GDPR"
+  ],
+  "dependencies": [
+    "03-sensitivity-label-auditor"
+  ],
+  "evidenceOutputs": [
+    "dlp-policy-baseline",
+    "policy-drift-findings",
+    "exception-attestations"
+  ],
+  "dataverse": {
+    "baselineTable": "fsi_cg_dpg_baseline",
+    "findingTable": "fsi_cg_dpg_finding",
+    "evidenceTable": "fsi_cg_dpg_evidence"
+  },
   "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\05-dlp-policy-governance",
-    "notificationChannel": "DPG-governance-alerts",
-    "dashboardFeedEnabled": true
+    "copilotWorkloads": [
+      "Teams",
+      "SharePoint",
+      "OneDrive",
+      "Exchange"
+    ],
+    "copilotSignals": [
+      "CopilotPrompt",
+      "CopilotResponse",
+      "GroundedContentAccess"
+    ],
+    "baselineStoragePath": ".\\artifacts\\dlp-policy-baseline.json",
+    "driftThreshold": 10,
+    "exceptionApprovalRequired": true,
+    "policyModes": {
+      "baseline": {
+        "default": "Audit",
+        "highSensitivity": "Audit"
+      },
+      "recommended": {
+        "default": "Audit",
+        "highSensitivity": "Block"
+      },
+      "regulated": {
+        "default": "Audit",
+        "highSensitivity": "Block",
+        "npi": "Block",
+        "pii": "Block"
+      }
+    },
+    "policyScope": {
+      "includedGroups": [
+        "All Copilot Licensed Users"
+      ],
+      "excludedGroups": [
+        "Break Glass Accounts"
+      ]
+    },
+    "sensitivityConditions": [
+      "Confidential",
+      "Highly Confidential",
+      "NPI",
+      "PII"
+    ]
   }
 }

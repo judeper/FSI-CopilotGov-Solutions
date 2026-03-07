@@ -1,17 +1,121 @@
 {
-  "solution": "04-finra-supervision-workflow",
-  "displayName": "FINRA Supervision Workflow for Copilot",
-  "version": "v0.1.0",
+  "solution": {
+    "slug": "04-finra-supervision-workflow",
+    "code": "FSW",
+    "name": "FINRA Supervision Workflow for Copilot",
+    "status": "implemented",
+    "track": "B",
+    "priority": "P0",
+    "type": "Power Automate, Dataverse"
+  },
   "controls": [
     "3.4",
     "3.5",
     "3.6"
   ],
-  "track": "B",
-  "priority": "P0",
+  "regulations": [
+    "FINRA 3110",
+    "FINRA 2210",
+    "SEC Reg BI"
+  ],
+  "evidenceOutputs": [
+    "supervision-queue-snapshot",
+    "review-disposition-log",
+    "sampling-summary"
+  ],
+  "connectionReferences": [
+    {
+      "name": "fsi_cr_fsw_purview",
+      "service": "purview-communication-compliance",
+      "required": true
+    },
+    {
+      "name": "fsi_cr_fsw_dataverse",
+      "service": "dataverse",
+      "required": true
+    }
+  ],
+  "environmentVariables": [
+    {
+      "name": "fsi_ev_fsw_purviewpolicyid",
+      "purpose": "Stores the Purview Communication Compliance policy ID."
+    },
+    {
+      "name": "fsi_ev_fsw_environmenturl",
+      "purpose": "Stores the Dataverse environment URL."
+    },
+    {
+      "name": "fsi_ev_fsw_escalationenabled",
+      "purpose": "Controls whether SLA breach escalation notifications run."
+    },
+    {
+      "name": "fsi_ev_fsw_defaulttier",
+      "purpose": "Stores the active governance tier."
+    }
+  ],
+  "dataverseTables": [
+    {
+      "displayName": "SupervisionQueue",
+      "logicalName": "fsi_cg_fsw_queue",
+      "purpose": "Flagged communication review queue."
+    },
+    {
+      "displayName": "SupervisionLog",
+      "logicalName": "fsi_cg_fsw_log",
+      "purpose": "Append-only reviewer action log."
+    },
+    {
+      "displayName": "SupervisionConfig",
+      "logicalName": "fsi_cg_fsw_config",
+      "purpose": "Zone and tier review configuration."
+    }
+  ],
+  "powerAutomateFlows": [
+    {
+      "name": "Ingest Flagged Items",
+      "purpose": "Collect flagged Copilot communications from Purview."
+    },
+    {
+      "name": "Assignment Flow",
+      "purpose": "Assign supervisory principals and calculate SLA due dates."
+    },
+    {
+      "name": "Escalation Flow",
+      "purpose": "Detect nearing or breached review SLAs and notify supervisors."
+    },
+    {
+      "name": "Review Complete Flow",
+      "purpose": "Validate review dispositions and append immutable log rows."
+    }
+  ],
   "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\04-finra-supervision-workflow",
-    "notificationChannel": "FSW-governance-alerts",
-    "dashboardFeedEnabled": true
+    "tier": "recommended",
+    "samplingRates": {
+      "Zone1": {
+        "baseline": 25,
+        "recommended": 25,
+        "regulated": 25
+      },
+      "Zone2": {
+        "baseline": 0,
+        "recommended": 35,
+        "regulated": 50
+      },
+      "Zone3": {
+        "baseline": 0,
+        "recommended": 0,
+        "regulated": 100
+      }
+    },
+    "slaHoursByZone": {
+      "Zone1": 48,
+      "Zone2": 24,
+      "Zone3": 4
+    },
+    "escalationEnabled": true,
+    "purviewPolicyId": "00000000-0000-0000-0000-000000000000",
+    "dataverseEnvironmentUrl": "https://contoso.crm.dynamics.com",
+    "datverseEnvironmentUrl": "https://contoso.crm.dynamics.com",
+    "evidenceRetentionDays": 2555
   }
 }

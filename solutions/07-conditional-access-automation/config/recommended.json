@@ -1,11 +1,61 @@
 {
   "solution": "07-conditional-access-automation",
   "tier": "recommended",
+  "status": "implemented",
   "controls": [
     "2.3",
     "2.6",
     "2.9"
   ],
+  "copilotAppIds": [
+    "2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4",
+    "7df0a125-d3be-4c96-aa54-591f83ff541c"
+  ],
+  "riskTiers": {
+    "low": {
+      "mfaRequired": true,
+      "compliantDevice": false,
+      "namedLocationRequired": false,
+      "namedLocations": []
+    },
+    "medium": {
+      "mfaRequired": true,
+      "compliantDevice": true,
+      "namedLocationRequired": true,
+      "namedLocations": [
+        "Copilot-Zone-2"
+      ]
+    },
+    "high": {
+      "mfaRequired": true,
+      "compliantDevice": true,
+      "namedLocationRequired": true,
+      "namedLocations": [
+        "Copilot-Zone-2",
+        "Copilot-Zone-3"
+      ]
+    }
+  },
+  "driftDetectionEnabled": true,
+  "driftCheckFrequency": "daily",
+  "notificationMode": "standard",
   "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "exceptionApproval": {
+    "mode": "required",
+    "required": true,
+    "approverRole": "Information Security Manager",
+    "maxDurationDays": 30
+  },
+  "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
+  "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
+  "namedLocations": [
+    "Copilot-Zone-2",
+    "Copilot-Zone-3"
+  ],
+  "locationRestrictionMode": "named-location",
+  "regulatoryNotes": [
+    "Supports compliance with OCC 2011-12 by pairing MFA with device-based access assurance for elevated Copilot use.",
+    "Supports compliance with FINRA 3110 through stronger supervisory control over medium and high risk access.",
+    "Supports compliance with DORA Article 9 by documenting named-location restrictions for higher-risk populations."
+  ]
 }

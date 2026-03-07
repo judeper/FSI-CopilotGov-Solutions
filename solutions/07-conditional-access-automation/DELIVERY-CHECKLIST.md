@@ -1,36 +1,32 @@
-# Conditional Access Policy Automation for Copilot Delivery Checklist
+# Delivery Checklist
 
-## Delivery Summary
+Use this checklist before promoting the solution into an operational tenant.
 
-- Solution: Conditional Access Policy Automation for Copilot
-- Version: v0.1.0
-- Track: B
-- Priority: P1
+## Dependency and readiness
 
-## Files to Include
+- [ ] `05-dlp-policy-governance` is complete and validated for the target tenant.
+- [ ] Azure AD P1 or P2 licensing is confirmed for all scoped Copilot users.
+- [ ] Required administrator roles are assigned and time-bounded.
+- [ ] Copilot app IDs are verified for Microsoft Copilot for M365 and Copilot Studio.
 
-- README.md
-- CHANGELOG.md
-- DELIVERY-CHECKLIST.md
-- docs/*.md
-- scripts/*.ps1
-- config/*.json
-- tests/07-conditional-access-automation.Tests.ps1
+## Policy deployment
 
-## Pre-Delivery Validation
+- [ ] Conditional Access policies are created for the selected governance tier.
+- [ ] MFA requirements align with the selected baseline, recommended, or regulated tier.
+- [ ] Compliant-device requirements are configured where the tier requires them.
+- [ ] Named-location restrictions are configured for the required risk tiers.
+- [ ] Break-glass and emergency access exclusions are reviewed and approved.
 
-- [ ] `python scripts/validate-contracts.py`
-- [ ] `python scripts/validate-solutions.py`
-- [ ] PowerShell syntax validation completed
-- [ ] Evidence export verified with a companion hash file
+## Monitoring and exception handling
 
-## Customer Validation
+- [ ] Baseline snapshot is taken and stored in the approved repository or artifact path.
+- [ ] Drift monitor is scheduled using the required cadence for the selected tier.
+- [ ] Exception register is initialized and protected against unauthorized edits.
+- [ ] Power Automate or ticket-based approval workflow is mapped to exception handling.
 
-- [ ] Review prerequisites and mapped controls
-- [ ] Confirm chosen governance tier
-- [ ] Run the scaffold deployment script in a non-production tenant first
-- [ ] Review evidence export output and dashboard feed requirements
+## Validation and evidence
 
-## Communication Template
-
-Share the README, delivery checklist, mapped controls, prerequisites, and evidence expectations with the implementation team before customization begins.
+- [ ] `scripts\Monitor-Compliance.ps1` completes without unresolved high-severity findings.
+- [ ] `scripts\Export-Evidence.ps1` exports `ca-policy-state.json`, `drift-alert-summary.json`, and `access-exception-register.json`.
+- [ ] Evidence files include SHA-256 companions and align to `data\evidence-schema.json`.
+- [ ] Regulatory notes and control mappings are reviewed for OCC 2011-12, FINRA 3110, and DORA.

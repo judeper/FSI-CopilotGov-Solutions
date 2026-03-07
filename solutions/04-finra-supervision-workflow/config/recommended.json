@@ -1,11 +1,47 @@
 {
-  "solution": "04-finra-supervision-workflow",
-  "tier": "recommended",
-  "controls": [
-    "3.4",
-    "3.5",
-    "3.6"
+  "solution": {
+    "slug": "04-finra-supervision-workflow",
+    "code": "FSW",
+    "name": "FINRA Supervision Workflow for Copilot",
+    "tier": "recommended",
+    "status": "implemented"
+  },
+  "supportedZones": [
+    "Zone1",
+    "Zone2"
   ],
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "samplingRates": {
+    "Zone1": 25,
+    "Zone2": 35
+  },
+  "slaHoursByZone": {
+    "Zone1": 48,
+    "Zone2": 24
+  },
+  "escalationEnabled": true,
+  "notifications": {
+    "mode": "standard",
+    "digestFrequency": "daily",
+    "summaryRecipients": [
+      "supervisoryops@contoso.com"
+    ],
+    "breachRecipients": [
+      "principalalerts@contoso.com"
+    ]
+  },
+  "reviewDispositionValues": [
+    "approved",
+    "rejected",
+    "escalated",
+    "needs-more-info",
+    "exception-granted"
+  ],
+  "exceptionTracking": {
+    "enabled": true,
+    "reasonCodesRequired": true,
+    "manualExceptionRegister": true,
+    "slaBreachLogEnabled": true
+  },
+  "immutableLogRequired": false,
+  "evidenceRetentionDays": 1095
 }

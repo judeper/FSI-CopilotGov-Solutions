@@ -1,11 +1,36 @@
 {
   "solution": "05-dlp-policy-governance",
+  "solutionCode": "DPG",
   "tier": "recommended",
-  "controls": [
-    "2.1",
-    "3.10",
-    "3.12"
+  "status": "implemented",
+  "copilotWorkloads": [
+    "Teams",
+    "SharePoint",
+    "OneDrive",
+    "Exchange"
   ],
+  "policyModes": {
+    "default": "Audit",
+    "highSensitivity": "Block"
+  },
+  "sensitivityConditions": {
+    "standard": [
+      "Confidential"
+    ],
+    "highSensitivity": [
+      "NPI",
+      "PII",
+      "Highly Confidential"
+    ]
+  },
   "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "driftCheckFrequency": "daily",
+  "driftThreshold": 10,
+  "notificationProfile": "standard",
+  "summaryNotifications": false,
+  "exceptionApprovalRequired": true,
+  "exceptionAttestationRequired": true,
+  "exceptionApproverRole": "Compliance Administrator",
+  "policyChangeApproval": "Compliance Administrator",
+  "notes": "Supports stronger production governance with block actions for high-sensitivity labels across all Copilot workloads."
 }

@@ -1,36 +1,57 @@
-# FINRA Supervision Workflow for Copilot Delivery Checklist
+# Delivery Checklist
 
-## Delivery Summary
+Use this checklist before promoting the FINRA Supervision Workflow for Copilot solution into a managed Power Platform environment.
 
-- Solution: FINRA Supervision Workflow for Copilot
-- Version: v0.1.0
-- Track: B
-- Priority: P0
+## 1. Prerequisites and access
 
-## Files to Include
+- [ ] Confirm Power Apps Premium, Power Automate Premium, and Microsoft 365 E5 Compliance licenses are assigned.
+- [ ] Confirm Power Platform Admin, Purview Compliance Admin, and Global Reader roles are available to the deployment team.
+- [ ] Confirm Azure AD groups exist for supervisory principals, escalation recipients, and service accounts.
+- [ ] Confirm the target Dataverse environment URL is known and approved for use.
+- [ ] Confirm PowerShell 7 or later is installed on the admin workstation.
+- [ ] Confirm Graph and Purview API access is approved for any live export or validation workflow.
 
-- README.md
-- CHANGELOG.md
-- DELIVERY-CHECKLIST.md
-- docs/*.md
-- scripts/*.ps1
-- config/*.json
-- tests/04-finra-supervision-workflow.Tests.ps1
+## 2. Configuration files
 
-## Pre-Delivery Validation
+- [ ] Review `config\default-config.json` for solution metadata, evidence outputs, and connection reference naming.
+- [ ] Select the appropriate tier file: `baseline.json`, `recommended.json`, or `regulated.json`.
+- [ ] Verify sampling rates align to supervisory policy for each enabled zone.
+- [ ] Verify SLA hours align to written supervisory procedures.
+- [ ] Verify evidence retention days align to records retention requirements.
+- [ ] Replace placeholder values for Purview policy ID and Dataverse environment URL before production use.
 
-- [ ] `python scripts/validate-contracts.py`
-- [ ] `python scripts/validate-solutions.py`
-- [ ] PowerShell syntax validation completed
-- [ ] Evidence export verified with a companion hash file
+## 3. Dataverse setup
 
-## Customer Validation
+- [ ] Create the `fsi_cg_fsw_queue` table with the required queue fields.
+- [ ] Create the `fsi_cg_fsw_log` table with append-only action logging fields.
+- [ ] Create the `fsi_cg_fsw_config` table with zone, tier, SLA, and sampling columns.
+- [ ] Configure alternate keys or duplicate detection for queue and log numbers.
+- [ ] Configure column security or role restrictions for review notes and exception details.
+- [ ] Seed configuration rows for each supported zone and tier.
 
-- [ ] Review prerequisites and mapped controls
-- [ ] Confirm chosen governance tier
-- [ ] Run the scaffold deployment script in a non-production tenant first
-- [ ] Review evidence export output and dashboard feed requirements
+## 4. Power Automate flows
 
-## Communication Template
+- [ ] Create the Ingest Flagged Items flow and validate Purview signal ingestion.
+- [ ] Create the Assignment Flow and validate principal routing by zone and tier.
+- [ ] Create the Escalation Flow and validate warning and breach notifications.
+- [ ] Create the Review Complete Flow and validate disposition logging.
+- [ ] Create connection references `fsi_cr_fsw_purview` and `fsi_cr_fsw_dataverse`.
+- [ ] Create environment variables `fsi_ev_fsw_purviewpolicyid`, `fsi_ev_fsw_environmenturl`, `fsi_ev_fsw_escalationenabled`, and `fsi_ev_fsw_defaulttier`.
 
-Share the README, delivery checklist, mapped controls, prerequisites, and evidence expectations with the implementation team before customization begins.
+## 5. Validation and evidence
+
+- [ ] Run `scripts\Deploy-Solution.ps1` for the chosen tier and archive the deployment manifest.
+- [ ] Run `scripts\Monitor-Compliance.ps1` and review any drift or partial control status findings.
+- [ ] Run `scripts\Export-Evidence.ps1` for the current reporting period.
+- [ ] Verify the evidence package contains `supervision-queue-snapshot`, `review-disposition-log`, and `sampling-summary`.
+- [ ] Verify each evidence file has a matching `.sha256` companion file.
+- [ ] Verify the final evidence package conforms to `data\evidence-schema.json`.
+
+## 6. Sign-off
+
+- [ ] Supervisory principal has reviewed queue routing, SLAs, and sampling thresholds.
+- [ ] Compliance operations has approved the Purview policy scope and reviewer assignments.
+- [ ] Power Platform administrator has approved Dataverse security roles and environment variables.
+- [ ] Records management has approved the retention period for evidence artifacts.
+- [ ] Project owner has recorded final deployment date, tier, and evidence package location.
+
