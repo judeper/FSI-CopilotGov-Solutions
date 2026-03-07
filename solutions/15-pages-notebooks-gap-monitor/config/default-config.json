@@ -1,6 +1,7 @@
 {
   "solution": "15-pages-notebooks-gap-monitor",
   "displayName": "Copilot Pages and Notebooks Compliance Gap Monitor",
+  "solutionCode": "PNGM",
   "version": "v0.1.0",
   "controls": [
     "2.11",
@@ -10,6 +11,28 @@
   ],
   "track": "D",
   "priority": "P2",
+  "phase": 3,
+  "regulations": [
+    "SEC 17a-4",
+    "FINRA 4511",
+    "SOX 404"
+  ],
+  "evidenceOutputs": [
+    "gap-findings",
+    "compensating-control-log",
+    "preservation-exception-register"
+  ],
+  "dependencies": [
+    "06-audit-trail-manager"
+  ],
+  "knownGapCategories": [
+    "pages-sharing-controls",
+    "pages-retention-coverage",
+    "loop-ediscovery-coverage",
+    "notebooks-preservation-verification",
+    "books-and-records-exceptions"
+  ],
+  "gapReviewFrequencyDays": 30,
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\15-pages-notebooks-gap-monitor",
     "notificationChannel": "PNGM-governance-alerts",

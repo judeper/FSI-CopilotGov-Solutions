@@ -8,5 +8,18 @@
     "3.11"
   ],
   "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "notificationMode": "strict",
+  "gapDiscovery": {
+    "enabledCapabilities": [
+      "Pages",
+      "Notebooks"
+    ]
+  },
+  "compensatingControlsRequired": true,
+  "preservationExceptionTracking": true,
+  "requireLegalSignOff": true,
+  "platformUpdateCheckFrequencyDays": 7,
+  "escalateOpenGapsDays": 30,
+  "requireQuarterlyReview": true,
+  "sec17a4ExceptionApprovalChain": true
 }

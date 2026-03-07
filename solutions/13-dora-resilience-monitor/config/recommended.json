@@ -1,12 +1,36 @@
 {
   "solution": "13-dora-resilience-monitor",
   "tier": "recommended",
-  "controls": [
-    "2.7",
-    "4.9",
-    "4.10",
-    "4.11"
-  ],
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "controls": ["2.7", "4.9", "4.10", "4.11"],
+  "evidenceRetentionDays": 365,
+  "notificationMode": "standard",
+  "serviceHealthPollingIntervalMinutes": 15,
+  "incidentClassification": {
+    "enabled": true,
+    "doraAligned": true,
+    "severityThresholds": {
+      "major": { "downtimeMinutes": 60, "affectedUserPct": 20 },
+      "significant": { "downtimeMinutes": 15, "affectedUserPct": 10 },
+      "minor": { "downtimeMinutes": 1, "affectedUserPct": 1 }
+    },
+    "autoRegisterToIncidentLog": true
+  },
+  "resilienceTestTracking": {
+    "enabled": true,
+    "annualTestRequiredByDORA": true,
+    "reminderDaysBeforeDue": 30,
+    "rtoTargetHours": { "critical": 4, "important": 8, "standard": 24 },
+    "rpoTargetHours": { "critical": 1, "important": 4, "standard": 24 }
+  },
+  "sentinelIntegration": {
+    "enabled": false,
+    "workspaceIdEnvVar": "SENTINEL_WORKSPACE_ID",
+    "copilotActivityTableName": "CopilotActivity_CL"
+  },
+  "powerAutomateFlow": {
+    "description": "Service health alert and incident register flow - documentation-first",
+    "triggerType": "scheduled",
+    "scheduleIntervalMinutes": 15,
+    "includesIncidentRegister": true
+  }
 }

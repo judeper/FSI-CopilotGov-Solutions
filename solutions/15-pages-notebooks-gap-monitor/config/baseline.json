@@ -8,5 +8,14 @@
     "3.11"
   ],
   "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "notificationMode": "summary",
+  "gapDiscovery": {
+    "enabledCapabilities": [
+      "Pages",
+      "Notebooks"
+    ]
+  },
+  "compensatingControlsRequired": false,
+  "preservationExceptionTracking": false,
+  "platformUpdateCheckFrequencyDays": 30
 }

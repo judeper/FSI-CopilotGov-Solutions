@@ -1,12 +1,57 @@
 {
   "solution": "13-dora-resilience-monitor",
   "tier": "regulated",
-  "controls": [
-    "2.7",
-    "4.9",
-    "4.10",
-    "4.11"
-  ],
-  "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "controls": ["2.7", "4.9", "4.10", "4.11"],
+  "evidenceRetentionDays": 1825,
+  "notificationMode": "strict",
+  "serviceHealthPollingIntervalMinutes": 5,
+  "incidentClassification": {
+    "enabled": true,
+    "doraAligned": true,
+    "doraArticle17Reporting": true,
+    "regulatoryNotificationThreshold": "major",
+    "notificationWindowHours": 4,
+    "severityThresholds": {
+      "major": { "downtimeMinutes": 60, "affectedUserPct": 10 },
+      "significant": { "downtimeMinutes": 10, "affectedUserPct": 5 },
+      "minor": { "downtimeMinutes": 1, "affectedUserPct": 1 }
+    },
+    "autoRegisterToIncidentLog": true,
+    "requireRootCauseAnalysis": true,
+    "rcaWindowDays": 30
+  },
+  "resilienceTestTracking": {
+    "enabled": true,
+    "annualTestRequiredByDORA": true,
+    "tlptRequired": true,
+    "reminderDaysBeforeDue": 60,
+    "rtoTargetHours": { "critical": 2, "important": 4, "standard": 8 },
+    "rpoTargetHours": { "critical": 0.5, "important": 1, "standard": 4 },
+    "requireExternalValidator": false
+  },
+  "sentinelIntegration": {
+    "enabled": true,
+    "workspaceIdEnvVar": "SENTINEL_WORKSPACE_ID",
+    "copilotActivityTableName": "CopilotActivity_CL",
+    "alertRules": ["DORACopilotOutage", "CopilotResilienceFailure"]
+  },
+  "dataResidency": {
+    "monitorCrossRegionTraffic": true,
+    "allowedRegions": ["EU", "US"],
+    "alertOnViolation": true
+  },
+  "powerAutomateFlow": {
+    "description": "Full DORA incident reporting and resilience test tracking flow - documentation-first",
+    "triggerType": "scheduled",
+    "scheduleIntervalMinutes": 5,
+    "includesIncidentRegister": true,
+    "includesRegulatoryNotification": true,
+    "includesRCATracking": true
+  },
+  "evidenceImmutability": {
+    "enabled": true,
+    "storageAccountEnvVar": "IMMUTABLE_STORAGE_ACCOUNT",
+    "containerName": "drm-evidence",
+    "retentionPolicyDays": 1825
+  }
 }

@@ -1,18 +1,25 @@
 {
   "solution": "13-dora-resilience-monitor",
   "displayName": "DORA Operational Resilience Monitor",
+  "solutionCode": "DRM",
   "version": "v0.1.0",
-  "controls": [
-    "2.7",
-    "4.9",
-    "4.10",
-    "4.11"
-  ],
+  "controls": ["2.7", "4.9", "4.10", "4.11"],
   "track": "D",
   "priority": "P1",
+  "regulations": ["DORA", "OCC 2011-12", "FFIEC IT Handbook"],
   "defaults": {
     "evidenceOutputPath": ".\\artifacts\\13-dora-resilience-monitor",
     "notificationChannel": "DRM-governance-alerts",
-    "dashboardFeedEnabled": true
+    "dashboardFeedEnabled": true,
+    "monitoredServices": [
+      "Exchange Online",
+      "SharePoint Online",
+      "Microsoft Teams",
+      "Microsoft Graph",
+      "Microsoft 365 Apps",
+      "Microsoft Copilot"
+    ],
+    "healthPollingIntervalMinutes": 15,
+    "incidentRetentionDays": 365
   }
 }

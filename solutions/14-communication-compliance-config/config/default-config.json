@@ -1,7 +1,12 @@
 {
   "solution": "14-communication-compliance-config",
+  "solutionCode": "CCC",
   "displayName": "Communication Compliance Configurator",
-  "version": "v0.1.0",
+  "version": "0.1.0",
+  "status": "Active",
+  "track": "D",
+  "priority": "P1",
+  "phase": 3,
   "controls": [
     "2.10",
     "3.4",
@@ -9,11 +14,63 @@
     "3.6",
     "3.9"
   ],
-  "track": "D",
-  "priority": "P1",
-  "defaults": {
-    "evidenceOutputPath": ".\\artifacts\\14-communication-compliance-config",
-    "notificationChannel": "CCC-governance-alerts",
-    "dashboardFeedEnabled": true
-  }
+  "regulations": [
+    "FINRA 2210",
+    "FINRA 3110",
+    "SEC Reg BI",
+    "FCA SYSC 10"
+  ],
+  "dependencies": [
+    "04-finra-supervision-workflow"
+  ],
+  "evidenceOutputs": [
+    "policy-template-export",
+    "reviewer-queue-metrics",
+    "lexicon-update-log"
+  ],
+  "supervisedCommunicationTypes": [
+    "Exchange email",
+    "Microsoft Teams chat",
+    "Microsoft Teams channel message",
+    "Copilot-assisted draft",
+    "Copilot-generated response"
+  ],
+  "reviewerWorkflowDefaults": {
+    "defaultReviewerGroup": "Communication Compliance Reviewers",
+    "escalationReviewerGroup": "Market Supervision Escalations",
+    "legalReviewGroup": "Legal and Compliance Counsel",
+    "dispositions": [
+      "no-issue",
+      "coach",
+      "escalate",
+      "retain-for-exam"
+    ],
+    "escalationTriggers": [
+      "FINRA 2210 promotional claim",
+      "best interest disclosure gap",
+      "conflict of interest indicator",
+      "potential insider risk pattern"
+    ]
+  },
+  "dataverseTables": {
+    "baseline": "fsi_cg_comm_compliance_config_baseline",
+    "finding": "fsi_cg_comm_compliance_config_finding",
+    "evidence": "fsi_cg_comm_compliance_config_evidence"
+  },
+  "connectionReferences": {
+    "purview": "fsi_cr_comm_compliance_config_purview",
+    "dataverse": "fsi_cr_comm_compliance_config_dataverse",
+    "powerAutomate": "fsi_cr_comm_compliance_config_powerautomate"
+  },
+  "environmentVariables": {
+    "defaultReviewerGroup": "fsi_ev_comm_compliance_config_default_reviewer_group",
+    "escalationMailbox": "fsi_ev_comm_compliance_config_escalation_mailbox",
+    "lexiconOwner": "fsi_ev_comm_compliance_config_lexicon_owner"
+  },
+  "queueHealthThresholds": {
+    "maxAverageAgeHours": 24,
+    "maxP90AgeHours": 72,
+    "maxOverdueCount": 5
+  },
+  "manualPortalDeploymentRequired": true
 }
