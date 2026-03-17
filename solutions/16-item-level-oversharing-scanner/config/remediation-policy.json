@@ -1,0 +1,7 @@
+{
+  "HIGH": { "mode": "approval-gate" },
+  "MEDIUM": { "mode": "approval-gate" },
+  "LOW": { "mode": "approval-gate" },
+  "autoRemediationEnabled": false,
+  "note": "Auto-remediation disabled by default. FSI content requires legal/compliance review before permissions change."
+}

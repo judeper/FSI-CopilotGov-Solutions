@@ -1,0 +1,14 @@
+{
+  "contentTypeWeights": {
+    "customerPII": { "keywords": ["SSN","account number","customer","KYC"], "weight": 1.5 },
+    "tradingData": { "keywords": ["MNPI","trade","position","portfolio"], "weight": 1.5 },
+    "legalDocuments": { "keywords": ["legal","litigation","privileged","contract"], "weight": 1.3 },
+    "regulatoryFiling": { "keywords": ["SEC","FINRA","FFIEC","examination"], "weight": 1.4 }
+  },
+  "baseRiskScores": {
+    "AnyoneLink": 90,
+    "ExternalUser": 70,
+    "OrgLinkEdit": 50,
+    "BroadGroup": 30
+  }
+}

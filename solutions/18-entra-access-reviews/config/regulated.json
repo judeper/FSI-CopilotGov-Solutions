@@ -1,0 +1,22 @@
+{
+  "solution": "18-entra-access-reviews",
+  "tier": "regulated",
+  "controls": [
+    "1.2",
+    "1.6",
+    "2.5",
+    "2.12"
+  ],
+  "evidenceOutputs": [
+    "access-review-definitions",
+    "review-decisions",
+    "applied-actions"
+  ],
+  "evidenceRetentionDays": 2555,
+  "maxSitesPerRun": -1,
+  "autoApplyDecisions": true,
+  "enableEscalation": true,
+  "escalationThresholdHours": 24,
+  "requireOwnerAttestation": true,
+  "requireExaminerReadyEvidence": true
+}

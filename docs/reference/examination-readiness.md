@@ -19,6 +19,9 @@ Each solution ships an evidence-export pattern that supports consistent examinat
 | DORA Operational Resilience Monitor | service-health-log, incident-register, resilience-test-results | DORA, OCC 2011-12, FFIEC IT Handbook | glba-501b, sox-302-404, occ-2011-12, ffiec-it-handbook, dora, gdpr |
 | Communication Compliance Configurator | policy-template-export, reviewer-queue-metrics, lexicon-update-log | FINRA 2210, FINRA 3110, SEC Reg BI, FCA SYSC 10 | finra-2210, finra-3110, sec-reg-bi, fca-sysc-10, glba-501b, sox-302-404 |
 | Copilot Pages and Notebooks Compliance Gap Monitor | gap-findings, compensating-control-log, preservation-exception-register | SEC 17a-4, FINRA 4511, SOX 404 | finra-4511, sec-17a3, sec-17a4, glba-501b, sox-302-404 |
+| Item-Level Oversharing Scanner | item-oversharing-findings, risk-scored-report, remediation-actions | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
+| SharePoint Permissions Drift Detection | drift-report, baseline-snapshot, reversion-log | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
+| Entra Access Reviews Automation | access-review-definitions, review-decisions, applied-actions | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
 
 Unified evidence export is orchestrated through `scripts/deployment/Export-CopilotGovernanceEvidence.ps1` and validated with `scripts/deployment/Test-EvidenceIntegrity.ps1`.
 

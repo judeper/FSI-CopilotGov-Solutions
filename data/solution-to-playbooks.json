@@ -1953,5 +1953,382 @@
         ]
       }
     ]
+  },
+  {
+    "solution": "16-item-level-oversharing-scanner",
+    "display_name": "Item-Level Oversharing Scanner",
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
+    "controls": [
+      {
+        "control_id": "1.2",
+        "title": "SharePoint Oversharing Detection and Remediation (DSPM for AI)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.2/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.2/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.2/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.2/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "1.3",
+        "title": "Restricted SharePoint Search Configuration",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.3/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.3/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.3/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.3/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "1.4",
+        "title": "Semantic Index Governance and Scope Control",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.4/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.4/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.4/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.4/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "1.6",
+        "title": "Permission Model Audit (SharePoint, OneDrive, Exchange, Teams, Graph)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.6/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.6/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.6/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.6/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "2.5",
+        "title": "Data Minimization and Grounding Scope",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/2.5/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/2.5/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/2.5/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/2.5/troubleshooting.md"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "solution": "17-sharepoint-permissions-drift",
+    "display_name": "SharePoint Permissions Drift Detection",
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
+    "controls": [
+      {
+        "control_id": "1.2",
+        "title": "SharePoint Oversharing Detection and Remediation (DSPM for AI)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.2/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.2/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.2/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.2/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "1.4",
+        "title": "Semantic Index Governance and Scope Control",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.4/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.4/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.4/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.4/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "1.6",
+        "title": "Permission Model Audit (SharePoint, OneDrive, Exchange, Teams, Graph)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.6/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.6/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.6/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.6/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "2.5",
+        "title": "Data Minimization and Grounding Scope",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/2.5/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/2.5/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/2.5/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/2.5/troubleshooting.md"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "solution": "18-entra-access-reviews",
+    "display_name": "Entra Access Reviews Automation",
+    "framework_ids": [
+      "finra-4511",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
+    "controls": [
+      {
+        "control_id": "1.2",
+        "title": "SharePoint Oversharing Detection and Remediation (DSPM for AI)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.2/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.2/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.2/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.2/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "1.6",
+        "title": "Permission Model Audit (SharePoint, OneDrive, Exchange, Teams, Graph)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.6/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.6/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.6/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.6/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "2.5",
+        "title": "Data Minimization and Grounding Scope",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/2.5/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/2.5/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/2.5/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/2.5/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "2.12",
+        "title": "External Sharing and Guest Access Governance",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/2.12/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/2.12/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/2.12/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/2.12/troubleshooting.md"
+          }
+        ]
+      }
+    ]
   }
 ]

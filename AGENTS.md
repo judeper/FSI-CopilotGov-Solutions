@@ -33,6 +33,9 @@ This repository contains documentation-first governance solution scaffolds for M
 | 13 | DORA Operational Resilience Monitor | P1 | D | 2.7, 4.9, 4.10, 4.11 |
 | 14 | Communication Compliance Configurator | P1 | D | 2.10, 3.4, 3.5, 3.6, 3.9 |
 | 15 | Copilot Pages and Notebooks Compliance Gap Monitor | P2 | D | 2.11, 3.2, 3.3, 3.11 |
+| 16 | Item-Level Oversharing Scanner | P1 | A | 1.2, 1.3, 1.4, 1.6, 2.5 |
+| 17 | SharePoint Permissions Drift Detection | P1 | A | 1.2, 1.4, 1.6, 2.5 |
+| 18 | Entra Access Reviews Automation | P1 | A | 1.2, 1.6, 2.5, 2.12 |
 
 ## Directory Structure
 
@@ -41,7 +44,7 @@ FSI-CopilotGov-Solutions/
 |-- docs/                     # Source documentation for the public site
 |-- data/                     # Machine-readable control, solution, and evidence metadata
 |-- scripts/                  # Build, validation, shared modules, and deployment utilities
-|-- solutions/                # Fifteen Copilot governance solution folders
+|-- solutions/                # Eighteen Copilot governance solution folders
 |-- templates/                # Policy templates, dashboard feed schema, and regulatory mapping assets
 |-- site-docs/                # Generated MkDocs input built from docs/ and solution READMEs
 ```

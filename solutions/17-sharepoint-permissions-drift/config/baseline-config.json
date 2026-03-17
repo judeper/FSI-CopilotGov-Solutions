@@ -1,0 +1,11 @@
+{
+  "scope": {
+    "includeSiteTypes": ["TeamSite", "CommunicationSite", "OneDriveSite"],
+    "excludeSiteUrls": [],
+    "includeLists": true,
+    "includeLibraries": true,
+    "maxSitesPerRun": 500
+  },
+  "baselineRetentionDays": 90,
+  "scanFrequencyHours": 24
+}

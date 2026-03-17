@@ -17,7 +17,7 @@ Machine-readable JSON files that define the shared contract for controls, framew
 
 ### Shared Modules Layer (`scripts/common/`)
 
-Seven PowerShell modules provide reusable functions across all 15 solutions:
+Seven PowerShell modules provide reusable functions across all 18 solutions:
 
 | Module | Purpose | Implementation Scope |
 |--------|---------|---------------------|
@@ -33,7 +33,7 @@ All modules except EvidenceExport and IntegrationConfig are documentation-first 
 
 ### Solutions Layer (`solutions/`)
 
-Fifteen solution folders, each containing a consistent structure:
+Eighteen solution folders, each containing a consistent structure:
 
 - `README.md` — Solution overview, features, scope boundaries, and regulatory alignment
 - `CHANGELOG.md` — Version history

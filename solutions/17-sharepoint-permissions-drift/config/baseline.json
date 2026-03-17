@@ -1,0 +1,11 @@
+{
+  "tier": "baseline",
+  "controls": ["1.2", "1.4", "1.6", "2.5"],
+  "evidenceOutputs": ["drift-report", "baseline-snapshot"],
+  "evidenceRetentionDays": 365,
+  "maxSitesPerRun": 100,
+  "scanFrequencyHours": 48,
+  "enableAlertNotifications": false,
+  "enableAutoReversion": false,
+  "baselineRetentionDays": 60
+}

@@ -1,0 +1,41 @@
+{
+  "solution": "18-entra-access-reviews",
+  "displayName": "Entra Access Reviews Automation",
+  "version": "v0.1.0",
+  "solutionCode": "EAR",
+  "track": "A",
+  "priority": "P1",
+  "phase": 1,
+  "controls": [
+    "1.2",
+    "1.6",
+    "2.5",
+    "2.12"
+  ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-reg-sp",
+    "glba-501b",
+    "sox-302-404",
+    "ffiec-it-handbook"
+  ],
+  "evidenceOutputs": [
+    "access-review-definitions",
+    "review-decisions",
+    "applied-actions"
+  ],
+  "upstreamDependency": "02-oversharing-risk-assessment",
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\18-entra-access-reviews",
+    "notificationChannel": "EAR-governance-alerts",
+    "dashboardFeedEnabled": true
+  },
+  "reviewScope": "site-members-and-guests",
+  "autoApplyDecisions": false,
+  "enableEscalation": true,
+  "escalationThresholdHours": 48,
+  "evidenceRetentionDays": 90,
+  "maxSitesPerRun": 500,
+  "requireOwnerAttestation": false,
+  "requireExaminerReadyEvidence": false
+}

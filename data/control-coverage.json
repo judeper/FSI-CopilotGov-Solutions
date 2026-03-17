@@ -42,7 +42,10 @@
     "pillar": "Readiness & Assessment",
     "coverage": "automated",
     "solutions": [
-      "02-oversharing-risk-assessment"
+      "02-oversharing-risk-assessment",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ],
     "framework_ids": [
       "sec-reg-sp",
@@ -79,7 +82,8 @@
     "pillar": "Readiness & Assessment",
     "coverage": "partially-automated",
     "solutions": [
-      "02-oversharing-risk-assessment"
+      "02-oversharing-risk-assessment",
+      "16-item-level-oversharing-scanner"
     ],
     "framework_ids": [
       "glba-501b",
@@ -115,7 +119,9 @@
     "pillar": "Readiness & Assessment",
     "coverage": "partially-automated",
     "solutions": [
-      "02-oversharing-risk-assessment"
+      "02-oversharing-risk-assessment",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift"
     ],
     "framework_ids": [
       "glba-501b",
@@ -192,7 +198,10 @@
     "coverage": "automated",
     "solutions": [
       "01-copilot-readiness-scanner",
-      "02-oversharing-risk-assessment"
+      "02-oversharing-risk-assessment",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ],
     "framework_ids": [
       "sec-reg-sp",
@@ -635,7 +644,10 @@
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
-      "02-oversharing-risk-assessment"
+      "02-oversharing-risk-assessment",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ],
     "framework_ids": [
       "glba-501b"
@@ -891,7 +903,8 @@
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
-      "02-oversharing-risk-assessment"
+      "02-oversharing-risk-assessment",
+      "18-entra-access-reviews"
     ],
     "framework_ids": [
       "sec-reg-sp",

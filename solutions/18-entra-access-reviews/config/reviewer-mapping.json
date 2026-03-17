@@ -1,0 +1,8 @@
+{
+  "siteTypeReviewers": {
+    "HIGH_sensitivity": ["site-owner", "compliance-officer"],
+    "MEDIUM_sensitivity": ["site-owner"],
+    "LOW_sensitivity": ["site-owner"]
+  },
+  "escalationChain": ["compliance-officer", "CISO"]
+}

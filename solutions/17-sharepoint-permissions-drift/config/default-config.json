@@ -1,0 +1,52 @@
+{
+  "solution": "17-sharepoint-permissions-drift",
+  "displayName": "SharePoint Permissions Drift Detection",
+  "version": "v0.1.0",
+  "solutionCode": "SPD",
+  "track": "A",
+  "priority": "P1",
+  "phase": "scaffold",
+  "controls": [
+    "1.2",
+    "1.4",
+    "1.6",
+    "2.5"
+  ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-reg-sp",
+    "glba-501b",
+    "sox-302-404",
+    "ffiec-it-handbook"
+  ],
+  "evidenceOutputs": [
+    "drift-report",
+    "baseline-snapshot",
+    "reversion-log"
+  ],
+  "upstreamDependency": "02-oversharing-risk-assessment",
+  "defaults": {
+    "baselinePath": "./baselines",
+    "reportPath": "./reports",
+    "evidencePath": "./evidence",
+    "notificationChannel": "email",
+    "dashboardFeed": "drift-summary"
+  },
+  "riskThresholds": {
+    "high": 70,
+    "medium": 40,
+    "low": 0
+  },
+  "driftTypeWeights": {
+    "anonymousSharingAdded": 40,
+    "externalUserAdded": 30,
+    "orgWideSharingExpanded": 20,
+    "permissionLevelElevated": 15,
+    "fsiDataClassifierMatch": 15,
+    "multipleConcurrentDrifts": 10
+  },
+  "scanWorkloads": [
+    "sharePoint"
+  ],
+  "remediationMode": "approval-gate"
+}

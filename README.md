@@ -8,7 +8,7 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 
 - A shared contract layer for governance tiers, solution naming, evidence export, and dashboard integration
 - Root deployment utilities, documentation-build automation, and validation workflows
-- Fifteen solution folders aligned to the solution backlog identified in the planning report
+- Eighteen solution folders aligned to the solution backlog identified in the planning report
 - Machine-readable mappings that connect solutions back to FSI-CopilotGov controls, playbooks, and regulations
 
 ## Solution Catalog
@@ -30,6 +30,9 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 | 13 | [DORA Operational Resilience Monitor](./solutions/13-dora-resilience-monitor/README.md) | P1 | D | 2.7, 4.9, 4.10, 4.11 |
 | 14 | [Communication Compliance Configurator](./solutions/14-communication-compliance-config/README.md) | P1 | D | 2.10, 3.4, 3.5, 3.6, 3.9 |
 | 15 | [Copilot Pages and Notebooks Compliance Gap Monitor](./solutions/15-pages-notebooks-gap-monitor/README.md) | P2 | D | 2.11, 3.2, 3.3, 3.11 |
+| 16 | [Item-Level Oversharing Scanner](./solutions/16-item-level-oversharing-scanner/README.md) | P1 | A | 1.2, 1.3, 1.4, 1.6, 2.5 |
+| 17 | [SharePoint Permissions Drift Detection](./solutions/17-sharepoint-permissions-drift/README.md) | P1 | A | 1.2, 1.4, 1.6, 2.5 |
+| 18 | [Entra Access Reviews Automation](./solutions/18-entra-access-reviews/README.md) | P1 | A | 1.2, 1.6, 2.5, 2.12 |
 
 ## Implementation Depth
 
@@ -55,6 +58,9 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 | 13 | DORA Resilience Monitor | ✅ | ❌ | Local stub sample data | Graph (service health), Sentinel |
 | 14 | Communication Compliance Config | ✅ | ❌ | Policy template generation | Purview Communication Compliance |
 | 15 | Pages Notebooks Gap Monitor | ✅ | ❌ | Representative sample data | Audit, eDiscovery |
+| 16 | Item-Level Oversharing Scanner | ✅ | ❌ | Representative sample data | PnP PowerShell, SharePoint |
+| 17 | SharePoint Permissions Drift | ✅ | ❌ | Representative sample data | PnP PowerShell, Graph |
+| 18 | Entra Access Reviews Automation | ✅ | ❌ | Representative sample data | Graph, Entra ID |
 
 ## Connectivity Readiness
 
@@ -77,12 +83,15 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 | 13 | ✅ | ✅ | ✅ | ✅ | — | — | Sentinel |
 | 14 | — | ✅ | ✅ | ✅ | ✅ | — | — |
 | 15 | — | ✅ | ✅ | ✅ | ✅ | — | eDiscovery |
+| 16 | ✅ | — | — | — | — | — | SharePoint (PnP) |
+| 17 | ✅ | — | — | — | — | — | SharePoint (PnP) |
+| 18 | ✅ | — | — | — | — | ✅ | SharePoint |
 
 ## Delivery Model
 
 1. **Preflight contract gate** — freeze templates, shared contracts, mappings, and validation rules.
 2. **Repository foundation** — bootstrap docs, site generation, workflows, and reusable modules.
-3. **Full solution scaffold** — create all 15 solution folders with consistent placeholders and delivery checklists.
+3. **Full solution scaffold** — create all 18 solution folders with consistent placeholders and delivery checklists.
 4. **Fleet execution** — implement track-specific logic only after the shared contracts are stable.
 5. **Integration and publication** — aggregate evidence, validate docs, and publish the site.
 

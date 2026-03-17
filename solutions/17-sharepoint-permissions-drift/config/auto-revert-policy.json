@@ -1,0 +1,15 @@
+{
+  "reversionMode": "approval-gate",
+  "autoRevertEnabled": false,
+  "autoRevertScopes": {
+    "HIGH": false,
+    "MEDIUM": false,
+    "LOW": false
+  },
+  "approvalGate": {
+    "notifyVia": "email",
+    "approvers": ["site-owner", "compliance-officer"],
+    "approvalWindowHours": 48,
+    "onTimeout": "escalate"
+  }
+}

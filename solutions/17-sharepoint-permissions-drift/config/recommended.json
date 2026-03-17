@@ -1,0 +1,12 @@
+{
+  "tier": "recommended",
+  "controls": ["1.2", "1.4", "1.6", "2.5"],
+  "evidenceOutputs": ["drift-report", "baseline-snapshot", "reversion-log"],
+  "evidenceRetentionDays": 730,
+  "maxSitesPerRun": 500,
+  "scanFrequencyHours": 24,
+  "enableAlertNotifications": true,
+  "enableAutoReversion": false,
+  "baselineRetentionDays": 90,
+  "enableSiteOwnerNotifications": true
+}

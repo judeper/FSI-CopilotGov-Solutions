@@ -83,7 +83,10 @@
       "06-audit-trail-manager",
       "09-feature-management-controller",
       "12-regulatory-compliance-dashboard",
-      "15-pages-notebooks-gap-monitor"
+      "15-pages-notebooks-gap-monitor",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -165,7 +168,10 @@
       "03-sensitivity-label-auditor",
       "05-dlp-policy-governance",
       "09-feature-management-controller",
-      "12-regulatory-compliance-dashboard"
+      "12-regulatory-compliance-dashboard",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -305,7 +311,10 @@
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor",
       "14-communication-compliance-config",
-      "15-pages-notebooks-gap-monitor"
+      "15-pages-notebooks-gap-monitor",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -362,7 +371,10 @@
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor",
       "14-communication-compliance-config",
-      "15-pages-notebooks-gap-monitor"
+      "15-pages-notebooks-gap-monitor",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -484,7 +496,10 @@
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
-      "13-dora-resilience-monitor"
+      "13-dora-resilience-monitor",
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift",
+      "18-entra-access-reviews"
     ]
   },
   {

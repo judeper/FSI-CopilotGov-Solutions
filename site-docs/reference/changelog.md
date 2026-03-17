@@ -3,6 +3,19 @@
 All notable changes to FSI-CopilotGov-Solutions are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## v0.3.0
+
+### Added
+- Solution 16: Item-Level Oversharing Scanner — scans individual SharePoint files and folders for overshared permissions, applies FSI risk scoring, and provides approval-gated remediation.
+- Solution 17: SharePoint Permissions Drift Detection — captures baseline permissions, detects drift over time, and supports approval-gated reversion with examiner-ready evidence export.
+- Solution 18: Entra Access Reviews Automation — automates Entra ID Access Reviews prioritized by risk tier from Solutions 02 and 16.
+- Upgraded `scripts/common/GraphAuth.psm1` from placeholder stub to live authentication module with `Connect-CopilotGovGraph` (app-only and delegated auth) and `Invoke-CopilotGovGraphRequest` (retry, throttle handling, paging).
+
+### Changed
+- Solution 02 `Monitor-Compliance.ps1` refactored to use live Microsoft Graph API calls when authentication parameters are supplied; falls back to representative sample data when no auth is provided.
+- Updated repository metadata for 18 solutions: `solution-config.yml`, `solution-catalog.json`, `solution-to-playbooks.json`, `frameworks-master.json`, `control-coverage.json`, `examination-readiness.md`.
+- Updated AGENTS.md, README.md, and architecture documentation to reflect 18 solutions.
+
 ## v0.2.1
 
 ### Changed
