@@ -185,19 +185,22 @@ function Get-LabelTaxonomySnapshot {
 
 function Test-UpstreamDependencies {
     $solutionRoot = Get-SolutionRoot
+    $dep01Path = Resolve-OptionalPath -Path (Join-Path $solutionRoot '..\01-copilot-readiness-scanner')
+    $dep02Path = Resolve-OptionalPath -Path (Join-Path $solutionRoot '..\02-oversharing-risk-assessment')
+
     $dependencies = @(
         [pscustomobject]@{
             solution = '01-copilot-readiness-scanner'
             requiredState = 'baseline complete'
-            location = Resolve-OptionalPath -Path (Join-Path $solutionRoot '..\01-copilot-readiness-scanner')
-            status = 'detected'
+            location = $dep01Path
+            status = if (Test-Path -Path $dep01Path) { 'detected' } else { 'not-found' }
             notes = 'Review readiness scope before enabling workload scans.'
         },
         [pscustomobject]@{
             solution = '02-oversharing-risk-assessment'
             requiredState = 'initial scan complete'
-            location = Resolve-OptionalPath -Path (Join-Path $solutionRoot '..\02-oversharing-risk-assessment')
-            status = 'detected'
+            location = $dep02Path
+            status = if (Test-Path -Path $dep02Path) { 'detected' } else { 'not-found' }
             notes = 'Use oversharing findings to raise the priority of unlabeled regulated repositories.'
         }
     )

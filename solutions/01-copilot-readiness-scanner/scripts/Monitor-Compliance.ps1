@@ -32,7 +32,7 @@ PS> .\Monitor-Compliance.ps1 -ConfigurationTier baseline -TenantId 'contoso.onmi
 
 Runs a targeted baseline scan for the selected domains.
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -52,96 +52,11 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+Import-Module (Join-Path $PSScriptRoot 'CRS-Common.psm1') -Force
+
 $script:RuntimeMode = 'documentation-first'
 $script:DataSourceMode = 'simulated-baseline'
 $script:SimulationWarning = 'Representative sample readiness scores were emitted; no live Microsoft Graph, Purview, SharePoint, or Power Platform calls were performed.'
-
-function Get-RepositoryRoot {
-    [CmdletBinding()]
-    param()
-
-    return (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
-}
-
-function Get-SolutionRoot {
-    [CmdletBinding()]
-    param()
-
-    return (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-}
-
-function Import-SharedModule {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$ModuleName
-    )
-
-    $modulePath = Join-Path (Join-Path (Get-RepositoryRoot) 'scripts\common') $ModuleName
-    if (-not (Test-Path -Path $modulePath)) {
-        throw "Shared module not found: $modulePath"
-    }
-
-    Import-Module $modulePath -Force
-}
-
-function Merge-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$Base,
-
-        [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$Overlay
-    )
-
-    $merged = [ordered]@{}
-
-    foreach ($key in $Base.Keys) {
-        $merged[$key] = $Base[$key]
-    }
-
-    foreach ($key in $Overlay.Keys) {
-        if (
-            $merged.Contains($key) -and
-            ($merged[$key] -is [System.Collections.IDictionary]) -and
-            ($Overlay[$key] -is [System.Collections.IDictionary])
-        ) {
-            $merged[$key] = Merge-Hashtable -Base $merged[$key] -Overlay $Overlay[$key]
-        }
-        else {
-            $merged[$key] = $Overlay[$key]
-        }
-    }
-
-    return $merged
-}
-
-function Get-SolutionConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $solutionRoot = Get-SolutionRoot
-    $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
-    $tierConfigPath = Join-Path $solutionRoot ("config\{0}.json" -f $Tier)
-
-    if (-not (Test-Path -Path $defaultConfigPath)) {
-        throw "Default configuration file not found: $defaultConfigPath"
-    }
-
-    if (-not (Test-Path -Path $tierConfigPath)) {
-        throw "Tier configuration file not found: $tierConfigPath"
-    }
-
-    $defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
-    $tierConfig = Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json -AsHashtable
-
-    return (Merge-Hashtable -Base $defaultConfig -Overlay $tierConfig)
-}
 
 function Get-TierModifier {
     [CmdletBinding()]
@@ -388,12 +303,15 @@ try {
     }
 
     $resolvedExportPath = [System.IO.Path]::GetFullPath($ExportPath)
-    $null = New-Item -ItemType Directory -Path $resolvedExportPath -Force
     $exportFileName = "CRS-monitoring-baseline-{0}-{1}.json" -f $ConfigurationTier, (Get-Date -Format 'yyyyMMddHHmmss')
     $exportFilePath = Join-Path $resolvedExportPath $exportFileName
-    $scanResults | ConvertTo-Json -Depth 6 | Set-Content -Path $exportFilePath -Encoding utf8
 
-    Write-Information "Simulated monitoring baseline exported to $exportFilePath"
+    if ($PSCmdlet.ShouldProcess($resolvedExportPath, 'Write monitoring baseline export')) {
+        $null = New-Item -ItemType Directory -Path $resolvedExportPath -Force
+        $scanResults | ConvertTo-Json -Depth 6 | Set-Content -Path $exportFilePath -Encoding utf8
+        Write-Information "Simulated monitoring baseline exported to $exportFilePath"
+    }
+
     $scanResults
 }
 catch {

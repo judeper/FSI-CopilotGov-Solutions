@@ -90,12 +90,12 @@ Deployment is intentionally staged:
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|
-| 3.7 | Compliance Posture Reporting and Executive Dashboards | [Portal Walkthrough](docs/playbooks/control-implementations/3.7/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.7/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.7/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.7/troubleshooting.md) |
-| 3.8 | Regulatory Examination Readiness Reporting | [Portal Walkthrough](docs/playbooks/control-implementations/3.8/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.8/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.8/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.8/troubleshooting.md) |
-| 3.12 | Evidence Collection and Audit Attestation | [Portal Walkthrough](docs/playbooks/control-implementations/3.12/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.12/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.12/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.12/troubleshooting.md) |
-| 3.13 | Third-Party Audit and Regulatory Reporting | [Portal Walkthrough](docs/playbooks/control-implementations/3.13/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/3.13/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/3.13/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/3.13/troubleshooting.md) |
-| 4.5 | Copilot Usage Analytics and Adoption Reporting | [Portal Walkthrough](docs/playbooks/control-implementations/4.5/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/4.5/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/4.5/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/4.5/troubleshooting.md) |
-| 4.7 | Governance Maturity Scoring and Benchmarking | [Portal Walkthrough](docs/playbooks/control-implementations/4.7/portal-walkthrough.md) / [PowerShell Setup](docs/playbooks/control-implementations/4.7/powershell-setup.md) / [Verification and Testing](docs/playbooks/control-implementations/4.7/verification-testing.md) / [Troubleshooting](docs/playbooks/control-implementations/4.7/troubleshooting.md) |
+| 3.7 | Compliance Posture Reporting and Executive Dashboards | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 3.8 | Regulatory Examination Readiness Reporting | [Evidence Export](docs/evidence-export.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 3.12 | Evidence Collection and Audit Attestation | [Evidence Export](docs/evidence-export.md) / [Architecture](docs/architecture.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 3.13 | Third-Party Audit and Regulatory Reporting | [Architecture](docs/architecture.md) / [Evidence Export](docs/evidence-export.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 4.5 | Copilot Usage Analytics and Adoption Reporting | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 4.7 | Governance Maturity Scoring and Benchmarking | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
 
 ## Regulatory Alignment
 

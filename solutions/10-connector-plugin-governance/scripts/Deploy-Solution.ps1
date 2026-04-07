@@ -50,15 +50,19 @@ param(
     [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts'),
 
     [Parameter(Mandatory)]
+    [ValidatePattern('^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')]
     [string]$TenantId,
 
     [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
     [string]$Environment,
 
     [Parameter(Mandatory)]
+    [ValidatePattern('^https://[\w\-\.]+\.dynamics\.com/?$')]
     [string]$DataverseUrl,
 
     [Parameter(Mandatory)]
+    [ValidatePattern('^[^@\s]+@[^@\s]+\.[^@\s]+$')]
     [string]$ApproverEmail,
 
     [Parameter()]
@@ -403,14 +407,14 @@ try {
     }
 
     $connectorInventory = Get-ConnectorInventory -TenantId $TenantId -Environment $Environment
-    $connectorAssessments = foreach ($connector in $connectorInventory) {
+    $connectorAssessments = @(foreach ($connector in $connectorInventory) {
         Set-ConnectorRiskClassification `
             -Connector $connector `
             -ConfigurationTier $ConfigurationTier `
             -DefaultConfig $config.Default `
             -TierConfig $config.Tier `
             -BaselineApprovedConnectorIds $baselineApprovedConnectorIds
-    }
+    })
 
     $approvalRequests = @(
         $connectorAssessments |
@@ -418,7 +422,7 @@ try {
             Where-Object { $null -ne $_ }
     )
 
-    $dataFlowAttestations = foreach ($assessment in $connectorAssessments | Where-Object { $_.requiresDataFlowAttestation }) {
+    $dataFlowAttestations = @(foreach ($assessment in $connectorAssessments | Where-Object { $_.requiresDataFlowAttestation }) {
         [pscustomobject]@{
             attestationId = ('ATTEST-{0}' -f ([guid]::NewGuid().ToString('N').Substring(0, 10).ToUpperInvariant()))
             connectorId = $assessment.connectorId
@@ -431,7 +435,7 @@ try {
             expirationDate = if ($ConfigurationTier -eq 'regulated') { (Get-Date).AddDays(365).ToString('o') } else { (Get-Date).AddDays(180).ToString('o') }
             status = if ($assessment.approvalStatus -eq 'approved') { 'approved' } elseif ($assessment.approvalStatus -eq 'blocked') { 'exception' } else { 'pending' }
         }
-    }
+    })
 
     $proposedBlocks = @()
     if ($BlockHighRiskConnectors.IsPresent) {
@@ -449,7 +453,7 @@ try {
 
     $tableContracts = @(
         New-DataverseTableContract -SchemaName (New-CopilotGovTableName -SolutionSlug 'cpg' -Purpose 'baseline') -Columns @('connectorId', 'displayName', 'publisher', 'riskLevel', 'approvalStatus', 'dataFlowBoundaries', 'lastReviewedOn')
-        New-DataverseTableContract -SchemaName (New-CopilotGovTableName -SolutionSlug 'cpg' -Purpose 'finding') -Columns @('connectorId', 'findingType', 'riskLevel', 'approvalStatus', 'owner', 'openedOn', 'dueOn')
+        New-DataverseTableContract -SchemaName (New-CopilotGovTableName -SolutionSlug 'cpg' -Purpose 'finding') -Columns @('connectorId', 'findingType', 'riskLevel', 'remediationStatus', 'owner', 'openedOn', 'dueOn')
         New-DataverseTableContract -SchemaName (New-CopilotGovTableName -SolutionSlug 'cpg' -Purpose 'evidence') -Columns @('artifactType', 'connectorId', 'attestedBy', 'attestedOn', 'retentionDays', 'exportPath')
     )
 

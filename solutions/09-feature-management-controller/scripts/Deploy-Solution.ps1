@@ -345,6 +345,8 @@ try {
         $summaryPath = Join-Path $OutputPath 'fmc-deployment-summary.json'
 
         $baseline | ConvertTo-Json -Depth 10 | Set-Content -Path $baselinePath -Encoding utf8
+        $baselineHash = (Get-FileHash -Path $baselinePath -Algorithm SHA256).Hash
+        "$baselineHash  $(Split-Path -Leaf $baselinePath)" | Set-Content -Path "$baselinePath.sha256" -Encoding utf8
         $deploymentSummary | ConvertTo-Json -Depth 10 | Set-Content -Path $summaryPath -Encoding utf8
     }
 

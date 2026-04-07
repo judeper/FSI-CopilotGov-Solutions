@@ -42,6 +42,6 @@
     "manualExceptionRegister": true,
     "slaBreachLogEnabled": true
   },
-  "immutableLogRequired": false,
+  "immutableLogRequired": true,
   "evidenceRetentionDays": 1095
 }

@@ -5,7 +5,7 @@ Deploys Copilot Interaction Audit Trail Manager configuration.
 
 .DESCRIPTION
 Validates Unified Audit Log expectations, generates a retention policy configuration manifest,
-prepares eDiscovery readiness stubs, and creates a deployment manifest. The script does not
+prepares Microsoft Purview eDiscovery readiness stubs, and creates a deployment manifest. The script does not
 modify retention policies directly; it outputs configuration for Purview portal application.
 
 .PARAMETER ConfigurationTier
@@ -40,48 +40,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Resolve-AtmOutputPath {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if ([IO.Path]::IsPathRooted($Path)) {
-        return $Path
-    }
-
-    return [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $Path))
-}
-
-function Read-AtmJsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    return Get-Content -Path $Path -Raw | ConvertFrom-Json -Depth 20
-}
-
-function Write-AtmJsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path,
-
-        [Parameter(Mandatory)]
-        [object]$InputObject
-    )
-
-    $directory = Split-Path -Path $Path -Parent
-    if (-not (Test-Path -Path $directory)) {
-        New-Item -ItemType Directory -Path $directory -Force | Out-Null
-    }
-
-    $InputObject | ConvertTo-Json -Depth 20 | Set-Content -Path $Path -Encoding utf8
-    return $Path
-}
+Import-Module (Join-Path $PSScriptRoot 'AtmShared.psm1') -Force
 
 $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
@@ -93,7 +52,7 @@ $tierConfig = Read-AtmJsonFile -Path (Join-Path $solutionRoot ("config\{0}.json"
 $ualStatusFlag = if ($defaultConfig.defaults.PSObject.Properties.Name -contains 'unifiedAuditLogEnabled') {
     $defaultConfig.defaults.unifiedAuditLogEnabled
 } else {
-    $defaultConfig.defaults.unifiedAuditLogEnabled
+    'check'
 }
 
 if ([string]::IsNullOrWhiteSpace([string]$ualStatusFlag)) {
@@ -115,6 +74,10 @@ $retentionPolicies = foreach ($property in $defaultConfig.defaults.retentionPeri
     $regKey = $property.Name
     $minimumDays = [int]$property.Value
     $configuredDays = [int]$tierConfig.retentionPeriods.byRegulation.$regKey
+
+    if ($configuredDays -lt $minimumDays) {
+        Write-Warning ("Tier '{0}' retention for {1} is {2} days, below the {3}-day regulatory minimum." -f $ConfigurationTier, $regKey, $configuredDays, $minimumDays)
+    }
 
     [ordered]@{
         policyName = "ATM-$ConfigurationTier-$regKey"
@@ -197,7 +160,7 @@ $deploymentManifest = [ordered]@{
     nextSteps = @(
         'Review retention-policy-manifest.json and apply policies through Microsoft Purview.',
         'Run Check-AuditLogCompleteness after audit settings propagation.',
-        'Confirm eDiscovery cases, holds, and custodians match the selected tier.',
+        'Confirm Microsoft Purview eDiscovery cases, holds, and custodians match the selected tier.',
         'Document Power BI dashboard refresh ownership and Power Automate alert ownership.',
         'Run Export-Evidence.ps1 after baseline validation to capture evidence.'
     )

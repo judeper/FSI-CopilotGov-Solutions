@@ -17,10 +17,10 @@
     Path for compliance snapshots and monitoring artifacts.
 
 .PARAMETER TenantId
-    Azure AD tenant ID. Defaults to AZURE_TENANT_ID.
+    Microsoft Entra ID tenant ID. Defaults to AZURE_TENANT_ID.
 
 .PARAMETER ClientId
-    Azure AD application ID. Defaults to AZURE_CLIENT_ID.
+    Microsoft Entra ID application ID. Defaults to AZURE_CLIENT_ID.
 
 .PARAMETER ClientSecret
     SecureString client secret used for Graph authentication when a live implementation is added.
@@ -65,83 +65,9 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'DrmConfig.psm1') -Force
 $script:StubWarning = 'Service health output came from the local Graph stub and does not confirm live Microsoft 365 polling.'
 $script:SampleWarning = 'Service health output came from DRM_SERVICE_HEALTH_SAMPLE_JSON and does not confirm live Microsoft Graph polling.'
-
-function Get-DrmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $configRoot = Join-Path $PSScriptRoot '..\config'
-    $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-    $tierConfigPath = Join-Path $configRoot ("{0}.json" -f $Tier)
-
-    foreach ($pathToCheck in @($defaultConfigPath, $tierConfigPath)) {
-        if (-not (Test-Path -Path $pathToCheck)) {
-            throw "Configuration file not found: $pathToCheck"
-        }
-    }
-
-    $defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
-    $tierConfig = Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json -AsHashtable
-
-    return [ordered]@{
-        solution = $defaultConfig.solution
-        displayName = $defaultConfig.displayName
-        solutionCode = $defaultConfig.solutionCode
-        version = $defaultConfig.version
-        defaults = $defaultConfig.defaults
-        tier = $tierConfig.tier
-        controls = $tierConfig.controls
-        evidenceRetentionDays = $tierConfig.evidenceRetentionDays
-        notificationMode = $tierConfig.notificationMode
-        serviceHealthPollingIntervalMinutes = $tierConfig.serviceHealthPollingIntervalMinutes
-        incidentClassification = $tierConfig.incidentClassification
-        resilienceTestTracking = $tierConfig.resilienceTestTracking
-        sentinelIntegration = $tierConfig.sentinelIntegration
-        powerAutomateFlow = $tierConfig.powerAutomateFlow
-    }
-}
-
-function Test-DrmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [hashtable]$Configuration
-    )
-
-    $requiredFields = @(
-        'solution',
-        'displayName',
-        'solutionCode',
-        'version',
-        'defaults',
-        'tier',
-        'controls',
-        'evidenceRetentionDays',
-        'notificationMode',
-        'serviceHealthPollingIntervalMinutes',
-        'incidentClassification',
-        'resilienceTestTracking',
-        'sentinelIntegration',
-        'powerAutomateFlow'
-    )
-
-    $missingFields = @()
-    foreach ($field in $requiredFields) {
-        if (-not $Configuration.Contains($field) -or $null -eq $Configuration[$field]) {
-            $missingFields += $field
-        }
-    }
-
-    if ($missingFields.Count -gt 0) {
-        throw "DRM configuration is missing required fields: $($missingFields -join ', ')"
-    }
-}
 
 function Resolve-DrmClientSecret {
     [CmdletBinding()]
@@ -297,13 +223,19 @@ function Invoke-DoraSeverityClassification {
         $severity = 'major'
         $classificationNote = 'Critical service user impact exceeded the major threshold.'
     }
-    elseif ([double]$HealthRecord.DowntimeMinutes -ge [double]$significantThreshold.downtimeMinutes -or [double]$HealthRecord.AffectedUserPct -ge [double]$significantThreshold.affectedUserPct -or [string]$HealthRecord.Status -match 'Degraded|Advisory|Interruption|Investigating') {
+    elseif ([double]$HealthRecord.DowntimeMinutes -ge [double]$significantThreshold.downtimeMinutes -or [double]$HealthRecord.AffectedUserPct -ge [double]$significantThreshold.affectedUserPct) {
         $severity = 'significant'
         $classificationNote = 'Partial degradation or sustained impact met the significant threshold.'
     }
     elseif ([double]$HealthRecord.DowntimeMinutes -ge [double]$minorThreshold.downtimeMinutes -or [double]$HealthRecord.AffectedUserPct -ge [double]$minorThreshold.affectedUserPct) {
-        $severity = 'minor'
-        $classificationNote = 'Short-duration or low-impact issue met the minor threshold.'
+        if ([string]$HealthRecord.Status -match 'Degraded|Advisory|Interruption|Investigating') {
+            $severity = 'significant'
+            $classificationNote = 'Status indicates degradation and at least one minor numeric threshold was met; upgraded to significant.'
+        }
+        else {
+            $severity = 'minor'
+            $classificationNote = 'Short-duration or low-impact issue met the minor threshold.'
+        }
     }
 
     $incidentIdentifier = if ($HealthRecord.IncidentId) {

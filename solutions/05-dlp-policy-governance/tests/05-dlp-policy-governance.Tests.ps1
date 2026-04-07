@@ -5,6 +5,7 @@ Describe 'DLP Policy Governance for Copilot solution' {
         $docsRoot = Join-Path $solutionRoot 'docs'
         $scriptsRoot = Join-Path $solutionRoot 'scripts'
         $testFiles = @(
+            (Join-Path $scriptsRoot 'Common-Functions.ps1'),
             (Join-Path $scriptsRoot 'Deploy-Solution.ps1'),
             (Join-Path $scriptsRoot 'Monitor-Compliance.ps1'),
             (Join-Path $scriptsRoot 'Export-Evidence.ps1')

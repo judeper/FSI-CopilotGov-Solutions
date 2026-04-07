@@ -36,7 +36,7 @@ Control status mapping:
 - 3.11 partial
 - 3.12 monitor-only
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -58,7 +58,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
@@ -110,7 +110,9 @@ function Write-JsonFile {
         [object]$Content
     )
 
-    $Content | ConvertTo-Json -Depth 30 | Set-Content -Path $Path -Encoding utf8
+    if ($PSCmdlet.ShouldProcess($Path, 'Write evidence artifact')) {
+        $Content | ConvertTo-Json -Depth 30 | Set-Content -Path $Path -Encoding utf8
+    }
 }
 
 function Write-Sha256CompanionFile {
@@ -119,7 +121,9 @@ function Write-Sha256CompanionFile {
         [string]$Path
     )
 
-    return (Write-CopilotGovSha256File -Path $Path)
+    if ($PSCmdlet.ShouldProcess($Path, 'Write SHA-256 companion file')) {
+        return (Write-CopilotGovSha256File -Path $Path)
+    }
 }
 
 function New-ArtifactRecord {

@@ -42,7 +42,7 @@
 ## Feature Management Validation
 
 - [ ] Confirm Microsoft Graph beta rollout policy access to `/policies/featureRolloutPolicies`.
-- [ ] Confirm Teams Admin Center policy ownership and export path for Teams Copilot settings.
+- [ ] Confirm Teams admin center policy ownership and export path for Teams Copilot settings.
 - [ ] Confirm Power Platform Admin coverage for Copilot in Power Apps and Power Automate.
 - [ ] Validate Preview Ring is limited to 5 percent of approved users.
 - [ ] Validate Early Adopters ring is limited to 15 percent of approved users.

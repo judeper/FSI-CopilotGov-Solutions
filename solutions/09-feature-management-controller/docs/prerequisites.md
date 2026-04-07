@@ -26,7 +26,7 @@ FMC assumes access to the following sources:
 
 - Microsoft 365 Admin Center feature and app policy settings
 - Microsoft Graph beta endpoint `/policies/featureRolloutPolicies`
-- Teams Admin Center policy views or exports for Copilot-related settings
+- Teams admin center policy views or exports for Copilot-related settings
 - Power Platform Admin API or administrative exports for Copilot in Power Apps and Power Automate
 
 ## Platform and Tooling Requirements

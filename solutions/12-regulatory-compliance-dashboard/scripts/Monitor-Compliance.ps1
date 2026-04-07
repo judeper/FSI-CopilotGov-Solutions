@@ -69,7 +69,7 @@ function Get-ControlStatusSnapshot {
                 controlTitle = 'Compliance Posture Reporting and Executive Dashboards'
                 status = 'partial'
                 score = [int](Get-CopilotGovStatusScore -Status 'partial')
-                lastEvidenceDate = (Get-Date).AddHours(-6).ToString('o')
+                lastEvidenceDate = $null
                 solutionSlug = $script:SolutionCode
                 tier = $Tier
                 notes = 'Fallback snapshot entry used when no Dataverse seed file is available; the repository does not expose a live dashboard aggregator by default.'
@@ -79,7 +79,7 @@ function Get-ControlStatusSnapshot {
             controlTitle = 'Regulatory Examination Readiness Reporting'
             status = 'partial'
             score = [int](Get-CopilotGovStatusScore -Status 'partial')
-            lastEvidenceDate = (Get-Date).AddHours(-28).ToString('o')
+            lastEvidenceDate = $null
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -89,7 +89,7 @@ function Get-ControlStatusSnapshot {
             controlTitle = 'Evidence Collection and Audit Attestation'
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
-            lastEvidenceDate = (Get-Date).AddHours(-31).ToString('o')
+            lastEvidenceDate = $null
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -99,7 +99,7 @@ function Get-ControlStatusSnapshot {
             controlTitle = 'Third-Party Audit and Regulatory Reporting'
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
-            lastEvidenceDate = (Get-Date).AddHours(-42).ToString('o')
+            lastEvidenceDate = $null
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -109,7 +109,7 @@ function Get-ControlStatusSnapshot {
             controlTitle = 'Copilot Usage Analytics and Adoption Reporting'
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
-            lastEvidenceDate = (Get-Date).AddHours(-14).ToString('o')
+            lastEvidenceDate = $null
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -119,7 +119,7 @@ function Get-ControlStatusSnapshot {
             controlTitle = 'Governance Maturity Scoring and Benchmarking'
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
-            lastEvidenceDate = (Get-Date).AddHours(-18).ToString('o')
+            lastEvidenceDate = $null
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'

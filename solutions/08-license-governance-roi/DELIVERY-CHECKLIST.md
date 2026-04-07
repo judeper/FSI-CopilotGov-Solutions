@@ -22,6 +22,7 @@
 - scripts\Deploy-Solution.ps1
 - scripts\Monitor-Compliance.ps1
 - scripts\Export-Evidence.ps1
+- scripts\SolutionConfig.ps1
 - config\default-config.json
 - config\baseline.json
 - config\recommended.json
@@ -43,7 +44,7 @@
 
 ## Customer Validation
 
-- [ ] Confirm Copilot for Microsoft 365 licenses exist for the intended population and that seat counts align to finance-approved budgets.
+- [ ] Confirm Microsoft 365 Copilot licenses exist for the intended population and that seat counts align to finance-approved budgets.
 - [ ] Confirm Viva Insights data is licensed and available if the customer wants the ROI scorecard populated beyond Microsoft 365 usage signals.
 - [ ] Confirm Graph permissions `Reports.Read.All`, `Directory.Read.All`, and `User.Read.All` have tenant admin consent.
 - [ ] Confirm the selected governance tier matches the customer operating model for inactivity thresholds and notification strictness.

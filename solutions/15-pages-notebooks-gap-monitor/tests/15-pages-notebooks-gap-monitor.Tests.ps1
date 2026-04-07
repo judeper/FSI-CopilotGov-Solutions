@@ -19,7 +19,8 @@ BeforeAll {
         'docs\troubleshooting.md',
         'scripts\Deploy-Solution.ps1',
         'scripts\Monitor-Compliance.ps1',
-        'scripts\Export-Evidence.ps1'
+        'scripts\Export-Evidence.ps1',
+        'scripts\PngmShared.psm1'
     )
 
     $defaultConfig = Get-Content (Join-Path $configRoot 'default-config.json') -Raw | ConvertFrom-Json

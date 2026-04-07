@@ -3,7 +3,7 @@
 ## Before you begin
 
 1. Verify that `05-dlp-policy-governance` is complete for the target tenant.
-2. Confirm Azure AD P1 or P2 licensing and the Copilot service entitlement for the scoped population.
+2. Confirm Microsoft Entra ID P1 or P2 licensing and the Copilot service entitlement for the scoped population.
 3. Confirm that the operator has Conditional Access Administrator or Global Administrator permissions.
 
 ## Step 1: Select a governance tier
@@ -60,6 +60,8 @@ Graph path:
 - Review `graph-api-commands.ps1`.
 - Connect with `Policy.Read.All` and `Policy.ReadWrite.ConditionalAccess`.
 - Run commands only after change approval is recorded.
+
+> **Security note:** These Graph permissions are tenant-wide and grant access to all Conditional Access policies, not just Copilot-targeting ones. Restrict usage to approved Conditional Access Administrators and audit all Graph API calls. See `docs\prerequisites.md` for mitigation guidance.
 
 ## Step 5: Validate policy posture
 

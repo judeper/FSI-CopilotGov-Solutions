@@ -39,38 +39,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
-function Get-SolutionConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $defaultConfigPath = Join-Path $PSScriptRoot '..\config\default-config.json'
-    $tierConfigPath = Join-Path $PSScriptRoot ("..\config\{0}.json" -f $Tier)
-
-    $defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
-    $tierConfig = Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json -AsHashtable
-
-    $mergedConfig = [ordered]@{}
-    foreach ($key in $defaultConfig.Keys) {
-        if ($key -ne 'defaults') {
-            $mergedConfig[$key] = $defaultConfig[$key]
-        }
-    }
-
-    $mergedConfig['defaults'] = [ordered]@{}
-    foreach ($key in $defaultConfig.defaults.Keys) {
-        $mergedConfig.defaults[$key] = $defaultConfig.defaults[$key]
-    }
-
-    foreach ($key in $tierConfig.Keys) {
-        $mergedConfig[$key] = $tierConfig[$key]
-    }
-
-    return $mergedConfig
-}
+. (Join-Path $PSScriptRoot 'SolutionConfig.ps1')
 
 function New-ArtifactFile {
     [CmdletBinding()]
@@ -143,7 +112,7 @@ try {
     $licenseUtilizationReport = [ordered]@{
         reportingPeriodStart = $periodStart.ToString('yyyy-MM-dd')
         reportingPeriodEnd = $periodEnd.ToString('yyyy-MM-dd')
-        skuName = 'Copilot for Microsoft 365'
+        skuName = 'Microsoft 365 Copilot'
         totalAssignedSeats = 60
         activeSeats = 41
         inactiveSeats = 19
@@ -176,10 +145,12 @@ try {
         )
     }
 
+    $annualizedCost = [int]$configuration.defaults.annualizedCostPerSeatUsd
+
     $reallocationRecommendations = @(
-        [pscustomobject]@{ userPrincipalName = 'pat.owens@contoso.com'; department = 'Finance'; riskTier = 'medium'; lastActivityDate = $periodEnd.AddDays(-31).ToString('yyyy-MM-dd'); utilizationPct = 18.0; recommendedAction = 'Reallocate after manager approval'; annualizedRecoverableCostUsd = 3600; managerApprovalRequired = $true; reviewDueDate = $periodEnd.AddDays(7).ToString('yyyy-MM-dd') }
-        [pscustomobject]@{ userPrincipalName = 'chris.evans@contoso.com'; department = 'Internal Audit'; riskTier = 'high'; lastActivityDate = $periodEnd.AddDays(-45).ToString('yyyy-MM-dd'); utilizationPct = 5.0; recommendedAction = 'Hold for control-owner exception review'; annualizedRecoverableCostUsd = 3600; managerApprovalRequired = $true; reviewDueDate = $periodEnd.AddDays(7).ToString('yyyy-MM-dd') }
-        [pscustomobject]@{ userPrincipalName = 'samir.patel@contoso.com'; department = 'Wealth Management'; riskTier = 'low'; lastActivityDate = $periodEnd.AddDays(-61).ToString('yyyy-MM-dd'); utilizationPct = 8.0; recommendedAction = 'Reallocate after manager approval'; annualizedRecoverableCostUsd = 3600; managerApprovalRequired = $true; reviewDueDate = $periodEnd.AddDays(7).ToString('yyyy-MM-dd') }
+        [pscustomobject]@{ userPrincipalName = 'pat.owens@contoso.com'; department = 'Finance'; riskTier = 'medium'; lastActivityDate = $periodEnd.AddDays(-31).ToString('yyyy-MM-dd'); utilizationPct = 18.0; recommendedAction = 'Reallocate after manager approval'; annualizedRecoverableCostUsd = $annualizedCost; managerApprovalRequired = $true; reviewDueDate = $periodEnd.AddDays(7).ToString('yyyy-MM-dd') }
+        [pscustomobject]@{ userPrincipalName = 'chris.evans@contoso.com'; department = 'Internal Audit'; riskTier = 'high'; lastActivityDate = $periodEnd.AddDays(-45).ToString('yyyy-MM-dd'); utilizationPct = 5.0; recommendedAction = 'Hold for control-owner exception review'; annualizedRecoverableCostUsd = $annualizedCost; managerApprovalRequired = $true; reviewDueDate = $periodEnd.AddDays(7).ToString('yyyy-MM-dd') }
+        [pscustomobject]@{ userPrincipalName = 'samir.patel@contoso.com'; department = 'Wealth Management'; riskTier = 'low'; lastActivityDate = $periodEnd.AddDays(-61).ToString('yyyy-MM-dd'); utilizationPct = 8.0; recommendedAction = 'Reallocate after manager approval'; annualizedRecoverableCostUsd = $annualizedCost; managerApprovalRequired = $true; reviewDueDate = $periodEnd.AddDays(7).ToString('yyyy-MM-dd') }
     )
 
     $artifacts = @(

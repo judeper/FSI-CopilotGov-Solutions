@@ -111,6 +111,8 @@ function Write-ArtifactDocument {
     }
 }
 
+try {
+
 $config = Get-RcdConfiguration -Tier $ConfigurationTier
 $resolvedOutputPath = [IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
@@ -197,6 +199,8 @@ $dashboardExport = [ordered]@{
             [ordered]@{
                 solution = $dependency
                 packagePath = ('solutions\{0}\artifacts\{0}-evidence.json' -f $dependency)
+                # Sibling evidence packages must be exported at runtime before hashes can be computed;
+                # this placeholder is resolved by the RCD-EvidenceAggregator flow in the customer environment.
                 hash = 'pending-runtime-resolution'
                 freshnessStatus = if ([int]$config.freshnessThresholdHours -le 25) { 'current' } else { 'review-needed' }
             }
@@ -225,7 +229,7 @@ $package = Export-SolutionEvidencePackage `
         overallStatus = 'partial'
         recordCount = ($controlStatusSnapshot.Count + $frameworkCoverageMatrix.Count + @($dashboardExport.referencedEvidencePackages).Count)
         findingCount = @($controls | Where-Object { $_.status -ne 'implemented' }).Count
-        exceptionCount = 0
+        exceptionCount = @($controls | Where-Object { $_.status -eq 'monitor-only' }).Count
     } `
     -Controls $controls `
     -Artifacts $artifacts `
@@ -241,4 +245,10 @@ $package = Export-SolutionEvidencePackage `
     Controls = $controls
     Artifacts = $artifacts
     RuntimeMode = $script:RuntimeMode
+}
+
+}
+catch {
+    Write-Error -Message ('Evidence export failed: {0}' -f $_.Exception.Message)
+    throw
 }

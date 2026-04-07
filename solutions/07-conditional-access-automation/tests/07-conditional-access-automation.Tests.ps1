@@ -3,6 +3,7 @@ Describe 'Conditional Access Policy Automation for Copilot' {
         $solutionRoot = Split-Path $PSScriptRoot -Parent
         $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
         $regulatedConfigPath = Join-Path $solutionRoot 'config\regulated.json'
+        $baselineConfigPath = Join-Path $solutionRoot 'config\baseline.json'
         $deployScriptPath = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
         $monitorScriptPath = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
         $exportScriptPath = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
@@ -45,6 +46,13 @@ Describe 'Conditional Access Policy Automation for Copilot' {
         $config.defaults.copilotAppIds | Should -Contain '2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4'
     }
 
+    It 'default-config.json requires MFA for all risk tiers' {
+        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        foreach ($tier in @('low', 'medium', 'high')) {
+            $config.defaults.riskTiers[$tier].mfaRequired | Should -BeTrue -Because "MFA should be required for the '$tier' risk tier"
+        }
+    }
+
     It 'regulated.json keeps evidence retention at or above 365 days' {
         $regulated = Get-Content -Path $regulatedConfigPath -Raw | ConvertFrom-Json -AsHashtable
         ($regulated.evidenceRetentionDays -ge 365) | Should -BeTrue
@@ -77,5 +85,42 @@ Describe 'Conditional Access Policy Automation for Copilot' {
 
     It 'Deploy-Solution.ps1 references Copilot configuration' {
         (Get-Content -Path $deployScriptPath -Raw) | Should -Match '(?i)copilotappids|copilot'
+    }
+
+    It 'Deploy-Solution.ps1 New-PolicyTemplate uses correct sessionControls schema' {
+        $content = Get-Content -Path $deployScriptPath -Raw
+        $content | Should -Match 'persistentBrowser\s*=\s*\[ordered\]@\{'
+        $content | Should -Match "mode\s*=\s*'never'"
+        $content | Should -Match 'isEnabled\s*=\s*\$true'
+        $content | Should -Match 'signInFrequency\s*=\s*\[ordered\]@\{'
+        $content | Should -Match "type\s*=\s*'hours'"
+        $content | Should -Not -Match 'signInFrequencyHours'
+    }
+
+    It 'Deploy-Solution.ps1 Get-PolicyRequestBody defaults to report-only mode' {
+        $content = Get-Content -Path $deployScriptPath -Raw
+        $content | Should -Match 'enabledForReportingButNotEnforced'
+    }
+
+    It 'Deploy-Solution.ps1 -Execute path includes error handling' {
+        $content = Get-Content -Path $deployScriptPath -Raw
+        $content | Should -Match 'try\s*\{'
+        $content | Should -Match 'catch\s*\{'
+    }
+
+    It 'all three scripts contain sessionControls with correct Graph API format' {
+        foreach ($scriptPath in @($deployScriptPath, $monitorScriptPath, $exportScriptPath)) {
+            $content = Get-Content -Path $scriptPath -Raw
+            $content | Should -Match 'sessionControls' -Because (Split-Path $scriptPath -Leaf)
+            $content | Should -Match 'persistentBrowser' -Because (Split-Path $scriptPath -Leaf)
+            $content | Should -Match 'signInFrequency' -Because (Split-Path $scriptPath -Leaf)
+        }
+    }
+
+    It 'all three scripts document duplicated utility functions' {
+        foreach ($scriptPath in @($deployScriptPath, $monitorScriptPath, $exportScriptPath)) {
+            $content = Get-Content -Path $scriptPath -Raw
+            $content | Should -Match 'duplicated across' -Because (Split-Path $scriptPath -Leaf)
+        }
     }
 }

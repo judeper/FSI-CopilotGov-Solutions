@@ -17,8 +17,10 @@
   "regulations": [
     "GLBA 501(b)",
     "SEC Reg S-P",
-    "DORA",
-    "GDPR"
+    "DORA Article 9",
+    "GDPR",
+    "FINRA 4511",
+    "SOX 302/404"
   ],
   "framework_ids": [
     "finra-4511",

@@ -50,9 +50,9 @@ Use this solution as a control implementation pattern that supports compliance w
 See [docs\prerequisites.md](docs/prerequisites.md) for the full list. Minimum prerequisites are:
 
 - Power Apps Premium and Power Automate Premium for Dataverse tables and cloud flows.
-- Microsoft 365 E5 Compliance for Purview Communication Compliance signals.
+- Microsoft 365 E5 Compliance for Microsoft Purview Communication Compliance signals.
 - Power Platform Admin, Purview Compliance Admin, and Global Reader access for deployment validation.
-- Azure AD groups for supervisory principals, escalation recipients, and service identities.
+- Microsoft Entra ID groups for supervisory principals, escalation recipients, and service identities.
 - PowerShell 7 or later for deployment, monitoring, and evidence export scripts.
 
 ## Data model
@@ -76,7 +76,7 @@ Recommended Dataverse ownership model:
 The implementation uses four manual Power Automate cloud flows:
 
 1. Ingest Flagged Items
-   - Trigger: scheduled poll or event-driven connector action that reads flagged Copilot prompt and response items from Purview Communication Compliance.
+   - Trigger: scheduled poll or event-driven connector action that reads flagged Copilot prompt and response items from Microsoft Purview Communication Compliance.
    - Actions: normalize source metadata, classify zone and tier, create a SupervisionQueue row, and append a SupervisionLog action of `ingested`.
 
 2. Assignment Flow
@@ -95,7 +95,7 @@ See [docs\architecture.md](docs/architecture.md) and [docs\deployment-guide.md](
 
 ## Deployment steps
 
-1. Review [docs\prerequisites.md](docs/prerequisites.md) and confirm licensing, roles, network access, and Azure AD group membership.
+1. Review [docs\prerequisites.md](docs/prerequisites.md) and confirm licensing, roles, network access, and Microsoft Entra ID group membership.
 2. Create Dataverse tables and columns in the target environment as described in [docs\deployment-guide.md](docs/deployment-guide.md).
 3. Create connection references named `fsi_cr_fsw_purview` and `fsi_cr_fsw_dataverse`.
 4. Set environment variables such as `fsi_ev_fsw_purviewpolicyid` and `fsi_ev_fsw_environmenturl`.
@@ -115,7 +115,7 @@ Run the export script after configuration changes and at the end of each review 
   -PeriodEnd 2026-01-31
 ```
 
-Evidence artifacts follow `data\evidence-schema.json` and include:
+Evidence artifacts follow `config\evidence-schema.json` and include:
 
 - `supervision-queue-snapshot`
 - `review-disposition-log`
@@ -138,7 +138,7 @@ This solution supports compliance with FINRA 3110, FINRA 2210, and SEC Reg BI by
 ## Known limitations
 
 - Power Automate flows and Dataverse tables are documented, not deployed as code, because this solution avoids a hard dependency on Power Platform CLI.
-- Purview Communication Compliance signal availability depends on upstream policy configuration and service latency.
+- Microsoft Purview Communication Compliance signal availability depends on upstream policy configuration and service latency.
 - Live evidence export requires Dataverse API connectivity and an access token supplied through the deployment environment.
 - Sampling configuration supports compliance with supervisory review design, but firms still need written supervisory procedures that define exception handling and sign-off authority.
 

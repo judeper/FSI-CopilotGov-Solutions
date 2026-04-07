@@ -49,8 +49,14 @@ if ($PSBoundParameters.ContainsKey('PeriodStart') -and $PSBoundParameters.Contai
 
 $solutionRoot = Split-Path $PSScriptRoot -Parent
 $repoRoot = Resolve-Path (Join-Path $solutionRoot '..\..')
+# NOTE: The external module import below requires the parent repository structure to be
+# intact. See docs\prerequisites.md for details on this dependency.
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
+# NOTE: Read-JsonFile, Resolve-ConfiguredPath, Merge-Configuration, and New-PolicyTemplate
+# are duplicated across Deploy-Solution.ps1, Monitor-Compliance.ps1, and Export-Evidence.ps1.
+# Changes to shared logic must be applied to all three files.
+# See docs\architecture.md for details on this acknowledged tech debt.
 function Read-JsonFile {
     [CmdletBinding()]
     param(
@@ -207,7 +213,7 @@ function New-PolicyTemplate {
         else {
             @('all')
         }
-        signInRiskLevels = @($RiskTierName)
+        signInRiskLevels = @()
         locations = [ordered]@{
             includeLocations = if ($RiskTierSettings.namedLocationRequired) { $namedLocations } else { @('All') }
             excludeLocations = if ($RiskTierSettings.namedLocationRequired) { @('AllTrusted') } else { @() }
@@ -215,9 +221,16 @@ function New-PolicyTemplate {
     }
 
     if ($Configuration.blockUnknownDeviceStates -or $RiskTierSettings.compliantDevice) {
-        $conditions.deviceStates = [ordered]@{
-            includeStates = @('Compliant', 'HybridAzureADJoined')
-            excludeStates = if ($Configuration.blockUnknownDeviceStates) { @('Unknown') } else { @() }
+        $filterRule = if ($Configuration.blockUnknownDeviceStates) {
+            'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
+        } else {
+            'device.isCompliant -eq True'
+        }
+        $conditions.devices = [ordered]@{
+            deviceFilter = [ordered]@{
+                mode = 'include'
+                rule = $filterRule
+            }
         }
     }
 
@@ -231,6 +244,17 @@ function New-PolicyTemplate {
             builtInControls = @($grantControls)
         }
         conditions = $conditions
+        sessionControls = [ordered]@{
+            persistentBrowser = [ordered]@{
+                mode = 'never'
+                isEnabled = $true
+            }
+            signInFrequency = [ordered]@{
+                value = if ($Configuration.tier -eq 'regulated') { 4 } elseif ($RiskTierName -eq 'high') { 8 } else { 12 }
+                type = 'hours'
+                isEnabled = $true
+            }
+        }
     }
 }
 

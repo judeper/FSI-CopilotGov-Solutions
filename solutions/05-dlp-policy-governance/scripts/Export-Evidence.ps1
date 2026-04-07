@@ -42,137 +42,7 @@ $solutionRoot = (Resolve-Path (Split-Path $PSScriptRoot -Parent)).Path
 $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
-
-function Read-JsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path)) {
-        throw "JSON file not found: $Path"
-    }
-
-    $rawContent = Get-Content -Path $Path -Raw
-    if ([string]::IsNullOrWhiteSpace($rawContent)) {
-        throw "JSON file is empty: $Path"
-    }
-
-    return $rawContent | ConvertFrom-Json -Depth 32
-}
-
-function Read-JsonData {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path)) {
-        return $null
-    }
-
-    $rawContent = Get-Content -Path $Path -Raw
-    if ([string]::IsNullOrWhiteSpace($rawContent)) {
-        return $null
-    }
-
-    return $rawContent | ConvertFrom-Json -Depth 32
-}
-
-function ConvertTo-Array {
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        $InputObject
-    )
-
-    if ($null -eq $InputObject) {
-        Write-Output -NoEnumerate @()
-        return
-    }
-
-    if ($InputObject -is [System.Array]) {
-        Write-Output -NoEnumerate @($InputObject)
-        return
-    }
-
-    if ($InputObject -is [System.Collections.IEnumerable] -and -not ($InputObject -is [string])) {
-        Write-Output -NoEnumerate @($InputObject)
-        return
-    }
-
-    Write-Output -NoEnumerate @($InputObject)
-}
-
-function Get-PolicyModeValue {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$PolicyModes,
-
-        [Parameter(Mandatory)]
-        [string]$Name,
-
-        [Parameter()]
-        [string]$Fallback = 'Audit'
-    )
-
-    if ($null -ne $PolicyModes -and $PolicyModes.PSObject.Properties.Name -contains $Name) {
-        return [string]$PolicyModes.$Name
-    }
-
-    return $Fallback
-}
-
-function New-DlpPolicyTemplate {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$DefaultConfig,
-
-        [Parameter(Mandatory)]
-        [object]$TierConfig
-    )
-
-    $defaultMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'default' -Fallback 'Audit'
-    $highSensitivityMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'highSensitivity' -Fallback $defaultMode
-    $npiMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'npi' -Fallback $highSensitivityMode
-    $piiMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'pii' -Fallback $highSensitivityMode
-
-    $templates = foreach ($workload in @($TierConfig.copilotWorkloads)) {
-        [ordered]@{
-            policyName = "Copilot DLP - $workload - $($TierConfig.tier)"
-            workload = [string]$workload
-            mode = $defaultMode
-            highSensitivityMode = $highSensitivityMode
-            labelSpecificModes = [ordered]@{
-                NPI = $npiMode
-                PII = $piiMode
-            }
-            sensitivityConditions = [ordered]@{
-                standard = @($TierConfig.sensitivityConditions.standard)
-                highSensitivity = @($TierConfig.sensitivityConditions.highSensitivity)
-            }
-            scope = [ordered]@{
-                includedGroups = @($DefaultConfig.defaults.policyScope.includedGroups)
-                excludedGroups = @($DefaultConfig.defaults.policyScope.excludedGroups)
-            }
-            monitoredSignals = @($DefaultConfig.defaults.copilotSignals)
-            exceptionHandling = [ordered]@{
-                approvalRequired = [bool]$TierConfig.exceptionApprovalRequired
-                attestationRequired = [bool]$TierConfig.exceptionAttestationRequired
-                approverRole = [string]$TierConfig.exceptionApproverRole
-                policyChangeApproval = [string]$TierConfig.policyChangeApproval
-            }
-            evidenceRetentionDays = [int]$TierConfig.evidenceRetentionDays
-            driftCheckFrequency = [string]$TierConfig.driftCheckFrequency
-        }
-    }
-
-    return $templates
-}
+. (Join-Path $PSScriptRoot 'Common-Functions.ps1')
 
 function New-BaselineSnapshot {
     [CmdletBinding()]
@@ -201,7 +71,7 @@ function New-BaselineSnapshot {
         snapshotType = 'template'
         baselineSource = 'evidence-export'
         controls = @('2.1', '3.10', '3.12')
-        regulations = @('GLBA 501(b)', 'SEC Reg S-P', 'DORA Article 9', 'GDPR')
+        regulations = @('GLBA 501(b)', 'SEC Reg S-P', 'DORA Article 9', 'GDPR', 'FINRA 4511', 'SOX 302/404')
         copilotWorkloads = @($TierConfig.copilotWorkloads)
         monitoredSignals = @($DefaultConfig.defaults.copilotSignals)
         policyModes = [ordered]@{
@@ -215,6 +85,8 @@ function New-BaselineSnapshot {
             attestationRequired = [bool]$TierConfig.exceptionAttestationRequired
             approverRole = [string]$TierConfig.exceptionApproverRole
             policyChangeApproval = [string]$TierConfig.policyChangeApproval
+            seniorComplianceSignOffRequired = if ($TierConfig.PSObject.Properties.Name -contains 'seniorComplianceSignOffRequired') { [bool]$TierConfig.seniorComplianceSignOffRequired } else { $false }
+            mandatoryAttestation = if ($TierConfig.PSObject.Properties.Name -contains 'mandatoryAttestation') { [bool]$TierConfig.mandatoryAttestation } else { $false }
         }
         evidenceRetentionDays = [int]$TierConfig.evidenceRetentionDays
         driftCheckFrequency = [string]$TierConfig.driftCheckFrequency
@@ -271,7 +143,21 @@ if (-not (Test-Path -Path $exceptionArtifactPath)) {
 
 $baselineData = Read-JsonFile -Path $baselineArtifactPath
 $driftData = ConvertTo-Array -InputObject (Read-JsonData -Path $driftArtifactPath)
-$exceptionData = ConvertTo-Array -InputObject (Read-JsonData -Path $exceptionArtifactPath)
+$allExceptionData = ConvertTo-Array -InputObject (Read-JsonData -Path $exceptionArtifactPath)
+
+# Filter exception records to the specified reporting period
+$exceptionData = @($allExceptionData | Where-Object {
+    if ($_.PSObject.Properties.Name -contains 'approvedOn' -and -not [string]::IsNullOrWhiteSpace([string]$_.approvedOn)) {
+        try {
+            $approvedDate = [datetime]::Parse([string]$_.approvedOn)
+            $approvedDate.Date -ge $PeriodStart.Date -and $approvedDate.Date -le $PeriodEnd.Date
+        } catch {
+            $true  # Include records with unparseable dates so they surface in evidence
+        }
+    } else {
+        $true  # Include records without dates so they surface for review
+    }
+})
 $baselinePolicyCount = @($baselineData.policies).Count
 $workloadCount = @($baselineData.copilotWorkloads).Count
 

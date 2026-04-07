@@ -104,21 +104,44 @@ The following DAX measures should be implemented in the Power BI template:
 
 ```text
 GovernanceMaturityScore :=
+VAR _LatestDate = MAX(ImplementationStatus[SnapshotDate])
+RETURN
 DIVIDE(
-    SUMX(ImplementationStatus, ImplementationStatus[Score] * RELATED(ControlMaster[Weight])),
-    SUM(ControlMaster[Weight])
+    SUMX(
+        FILTER(ImplementationStatus, ImplementationStatus[SnapshotDate] = _LatestDate),
+        ImplementationStatus[Score] * RELATED(ControlMaster[Weight])
+    ),
+    SUMX(
+        FILTER(ImplementationStatus, ImplementationStatus[SnapshotDate] = _LatestDate),
+        RELATED(ControlMaster[Weight])
+    )
 )
 
 ControlsImplementedPct :=
+VAR _LatestDate = MAX(ImplementationStatus[SnapshotDate])
+RETURN
 DIVIDE(
-    CALCULATE(COUNTROWS(ImplementationStatus), ImplementationStatus[Status] = "implemented"),
+    CALCULATE(
+        COUNTROWS(ImplementationStatus),
+        ImplementationStatus[Status] = "implemented",
+        ImplementationStatus[SnapshotDate] = _LatestDate
+    ),
     DISTINCTCOUNT(ControlMaster[ControlId])
 )
 
 EvidenceFreshnessPct :=
+VAR _LatestDate = MAX(EvidenceLog[ExportedAt])
+RETURN
 DIVIDE(
-    CALCULATE(COUNTROWS(EvidenceLog), EvidenceLog[IsFresh] = TRUE()),
-    COUNTROWS(EvidenceLog)
+    CALCULATE(
+        COUNTROWS(EvidenceLog),
+        EvidenceLog[IsFresh] = TRUE(),
+        EvidenceLog[ExportedAt] = _LatestDate
+    ),
+    CALCULATE(
+        COUNTROWS(EvidenceLog),
+        EvidenceLog[ExportedAt] = _LatestDate
+    )
 )
 ```
 

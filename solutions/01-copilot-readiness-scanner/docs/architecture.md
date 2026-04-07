@@ -129,6 +129,18 @@ The solution integrates with shared repository modules to stay aligned with repo
 - `..\..\..\scripts\common\EvidenceExport.psm1` defines the repository-wide packaging and hashing pattern referenced by this solution.
 - Shared modules are treated as dependencies only; solution-specific logic and artifacts remain isolated inside this solution folder.
 
+## Evidence Integrity Considerations
+
+The `regulated.json` tier declares `"immutableEvidenceStorage": true` and `"requireExaminerReadyEvidence": true`. However, the current scripts write deployment logs, manifests, evidence artifacts, and `.sha256` sidecar files to mutable local storage. An actor with write access to the output path could tamper with artifacts and regenerate matching hashes.
+
+**This is a known architectural limitation.** Production deployments targeting SEC 17a-4 WORM requirements or FINRA 3110 examination-ready evidence should:
+
+- Store evidence artifacts in WORM-capable storage (e.g., Azure Immutable Blob Storage, Compliance-locked SharePoint libraries, or third-party archival services)
+- Use externally signed manifests or digital signatures to establish trust anchors independent of the artifact storage path
+- Implement access controls that prevent the scanner operator from modifying previously written evidence
+
+The `immutableEvidenceStorage` configuration flag signals the operational intent but does not enforce immutability at the storage layer. Enforcement must be provided by the target storage platform selected during deployment.
+
 ## Operational Notes
 
 - The current scripts are documentation-first monitoring stubs that provide credible flow, structure, and outputs without embedding tenant-specific secrets or claiming live tenant collection.

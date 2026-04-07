@@ -13,11 +13,11 @@
 
 ## Pre-Deployment
 
-- [ ] Compliance team briefed on current Copilot Pages and Notebooks retention, sharing, and eDiscovery gaps
+- [ ] Compliance team briefed on current Copilot Pages and Notebooks retention, sharing, and Microsoft Purview eDiscovery gaps
 - [ ] Legal team reviewed the preservation exception approach for SEC 17a-4 and FINRA 4511 scenarios
 - [ ] Dependency solution 06-audit-trail-manager deployed and validated
 - [ ] Tenant decision recorded for baseline, recommended, or regulated tier
-- [ ] Named owners assigned for records management, eDiscovery operations, and collaboration governance
+- [ ] Named owners assigned for records management, Microsoft Purview eDiscovery operations, and collaboration governance
 
 ## Configuration Review
 

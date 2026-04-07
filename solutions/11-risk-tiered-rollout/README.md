@@ -97,8 +97,8 @@ Detailed deployment steps, sample commands, and rollback actions are documented 
 ## Prerequisites Summary
 
 - `01-copilot-readiness-scanner` is deployed and has produced a recent readiness evidence package.
-- Microsoft 365 E3 or E5 licensing plus Copilot for Microsoft 365 licenses are available for the intended wave size.
-- Required Microsoft Graph permissions are approved: `User.ReadWrite.All`, `LicenseAssignment.ReadWrite.All`, and `Directory.Read.All`.
+- Microsoft 365 E3 or E5 licensing plus Microsoft 365 Copilot licenses are available for the intended wave size.
+- Required Microsoft Graph permissions are approved: `User.ReadWrite.All` and `Directory.Read.All`.
 - Power Automate Premium is licensed for approval and orchestration flows.
 - Dataverse capacity is available for `fsi_cg_rtr_baseline`, `fsi_cg_rtr_finding`, and `fsi_cg_rtr_evidence`.
 - A Change Advisory Board or equivalent change-governance body is defined for regulated wave approvals.

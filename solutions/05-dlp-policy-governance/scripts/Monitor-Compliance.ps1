@@ -37,89 +37,7 @@ $ErrorActionPreference = 'Stop'
 $solutionRoot = (Resolve-Path (Split-Path $PSScriptRoot -Parent)).Path
 $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
-
-function Read-JsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path)) {
-        throw "JSON file not found: $Path"
-    }
-
-    $rawContent = Get-Content -Path $Path -Raw
-    if ([string]::IsNullOrWhiteSpace($rawContent)) {
-        throw "JSON file is empty: $Path"
-    }
-
-    return $rawContent | ConvertFrom-Json -Depth 32
-}
-
-function Read-JsonData {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path)) {
-        return $null
-    }
-
-    $rawContent = Get-Content -Path $Path -Raw
-    if ([string]::IsNullOrWhiteSpace($rawContent)) {
-        return $null
-    }
-
-    return $rawContent | ConvertFrom-Json -Depth 32
-}
-
-function ConvertTo-Array {
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        $InputObject
-    )
-
-    if ($null -eq $InputObject) {
-        Write-Output -NoEnumerate @()
-        return
-    }
-
-    if ($InputObject -is [System.Array]) {
-        Write-Output -NoEnumerate @($InputObject)
-        return
-    }
-
-    if ($InputObject -is [System.Collections.IEnumerable] -and -not ($InputObject -is [string])) {
-        Write-Output -NoEnumerate @($InputObject)
-        return
-    }
-
-    Write-Output -NoEnumerate @($InputObject)
-}
-
-function Get-PolicyModeValue {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$PolicyModes,
-
-        [Parameter(Mandatory)]
-        [string]$Name,
-
-        [Parameter()]
-        [string]$Fallback = 'Audit'
-    )
-
-    if ($null -ne $PolicyModes -and $PolicyModes.PSObject.Properties.Name -contains $Name) {
-        return [string]$PolicyModes.$Name
-    }
-
-    return $Fallback
-}
+. (Join-Path $PSScriptRoot 'Common-Functions.ps1')
 
 function Get-NestedValue {
     [CmdletBinding()]
@@ -141,7 +59,7 @@ function Get-NestedValue {
     return $Fallback
 }
 
-function New-DlpPolicyTemplate {
+function New-DriftCheckTemplate {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -151,31 +69,8 @@ function New-DlpPolicyTemplate {
         [object]$TierConfig
     )
 
-    $defaultMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'default' -Fallback 'Audit'
-    $highSensitivityMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'highSensitivity' -Fallback $defaultMode
-    $npiMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'npi' -Fallback $highSensitivityMode
-    $piiMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'pii' -Fallback $highSensitivityMode
-
-    $templates = foreach ($workload in @($TierConfig.copilotWorkloads)) {
-        [ordered]@{
-            policyName = "Copilot DLP - $workload - $($TierConfig.tier)"
-            workload = [string]$workload
-            mode = $defaultMode
-            highSensitivityMode = $highSensitivityMode
-            labelSpecificModes = [ordered]@{
-                NPI = $npiMode
-                PII = $piiMode
-            }
-            exceptionHandling = [ordered]@{
-                approvalRequired = [bool]$TierConfig.exceptionApprovalRequired
-                attestationRequired = [bool]$TierConfig.exceptionAttestationRequired
-                approverRole = [string]$TierConfig.exceptionApproverRole
-                policyChangeApproval = [string]$TierConfig.policyChangeApproval
-            }
-        }
-    }
-
-    return $templates
+    # Use the shared New-DlpPolicyTemplate for consistent template generation
+    return New-DlpPolicyTemplate -DefaultConfig $DefaultConfig -TierConfig $TierConfig
 }
 
 $script:findings = [System.Collections.Generic.List[object]]::new()
@@ -225,7 +120,7 @@ function Add-Finding {
 
 $defaultConfig = Read-JsonFile -Path (Join-Path $solutionRoot 'config\default-config.json')
 $tierConfig = Read-JsonFile -Path (Join-Path $solutionRoot ("config\{0}.json" -f $ConfigurationTier))
-$expectedPolicies = New-DlpPolicyTemplate -DefaultConfig $defaultConfig -TierConfig $tierConfig
+$expectedPolicies = New-DriftCheckTemplate -DefaultConfig $defaultConfig -TierConfig $tierConfig
 $expectedWorkloads = @($tierConfig.copilotWorkloads)
 $threshold = if ($tierConfig.PSObject.Properties.Name -contains 'driftThreshold') { [double]$tierConfig.driftThreshold } else { [double]$defaultConfig.defaults.driftThreshold }
 $baseline = $null
@@ -310,6 +205,26 @@ if ($null -ne $baseline) {
     if ($baselineApproverRole -ne [string]$tierConfig.exceptionApproverRole) {
         Add-Finding -ControlId '3.12' -Category 'approverRole' -ChangeType 'modified' -Severity 'medium' -Message 'Baseline approver role does not match the selected tier.' -BaselineValue $baselineApproverRole -CurrentValue ([string]$tierConfig.exceptionApproverRole)
     }
+
+    # Validate seniorComplianceSignOffRequired when declared in tier config
+    if ($tierConfig.PSObject.Properties.Name -contains 'seniorComplianceSignOffRequired' -and [bool]$tierConfig.seniorComplianceSignOffRequired) {
+        $baselineSignOff = if ($null -ne $baseline.exceptionHandling -and $baseline.exceptionHandling.PSObject.Properties.Name -contains 'seniorComplianceSignOffRequired') {
+            [bool]$baseline.exceptionHandling.seniorComplianceSignOffRequired
+        } else { $false }
+        if (-not $baselineSignOff) {
+            Add-Finding -ControlId '3.12' -Category 'seniorSignOff' -ChangeType 'modified' -Severity 'high' -Message 'Regulated tier requires senior compliance sign-off but the baseline does not enforce it.' -BaselineValue $baselineSignOff -CurrentValue $true
+        }
+    }
+
+    # Validate mandatoryAttestation when declared in tier config
+    if ($tierConfig.PSObject.Properties.Name -contains 'mandatoryAttestation' -and [bool]$tierConfig.mandatoryAttestation) {
+        $baselineAttestation = if ($null -ne $baseline.exceptionHandling -and $baseline.exceptionHandling.PSObject.Properties.Name -contains 'mandatoryAttestation') {
+            [bool]$baseline.exceptionHandling.mandatoryAttestation
+        } else { $false }
+        if (-not $baselineAttestation) {
+            Add-Finding -ControlId '3.12' -Category 'mandatoryAttestation' -ChangeType 'modified' -Severity 'high' -Message 'Regulated tier requires mandatory attestation but the baseline does not enforce it.' -BaselineValue $baselineAttestation -CurrentValue $true
+        }
+    }
 }
 
 $exceptionLogPath = Join-Path $OutputPath 'exception-attestations.json'
@@ -339,8 +254,14 @@ foreach ($record in $exceptionRecords) {
 }
 
 $findingsArray = @($script:findings)
-$expectedPolicyCount = [math]::Max($expectedPolicies.Count, 1)
-$driftPercentage = [math]::Round(($findingsArray.Count / $expectedPolicyCount) * 100, 2)
+# Drift percentage: total check points = 4 mode checks per expected policy +
+# workload coverage checks + structural/exception checks for accurate ratio
+$matchedWorkloadCount = @($expectedWorkloads | Where-Object { $baselinePolicyMap.ContainsKey($_) }).Count
+$totalCheckPoints = [math]::Max(
+    ($matchedWorkloadCount * 4) + $expectedWorkloads.Count + $actualWorkloads.Count + 5 + $exceptionRecords.Count,
+    1
+)
+$driftPercentage = [math]::Round(($findingsArray.Count / $totalCheckPoints) * 100, 2)
 $alertRaised = $AlertOnDrift.IsPresent -and ($findingsArray.Count -gt 0) -and ($driftPercentage -ge $threshold)
 $null = New-Item -ItemType Directory -Path $OutputPath -Force
 $findingsPath = Join-Path $OutputPath 'policy-drift-findings.json'

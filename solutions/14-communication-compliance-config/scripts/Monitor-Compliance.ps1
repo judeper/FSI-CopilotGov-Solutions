@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Monitors the Communication Compliance Configurator deployment state.
+    Monitors the Microsoft Purview Communication Compliance Configurator deployment state.
 
 .DESCRIPTION
     Evaluates tier configuration, expected policy coverage, reviewer queue
-    collection readiness, and lexicon status for the Communication Compliance
+    collection readiness, and lexicon status for the Microsoft Purview Communication Compliance
     Configurator solution.
 
 .PARAMETER ConfigurationTier
@@ -14,7 +14,7 @@
     Path for monitoring artifacts.
 
 .PARAMETER TenantId
-    Azure AD tenant ID used for future API-based queue collection.
+    Microsoft Entra ID tenant ID used for future API-based queue collection.
 
 .PARAMETER ClientId
     Client ID used for future API-based queue collection.
@@ -70,105 +70,7 @@ $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $deploymentRoot = Join-Path $solutionRoot 'artifacts\deployment'
 
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
-
-function ConvertTo-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [AllowNull()]
-        [object]$InputObject
-    )
-
-    if ($null -eq $InputObject) {
-        return $null
-    }
-
-    if ($InputObject -is [System.Collections.IDictionary]) {
-        $dictionary = @{}
-        foreach ($key in $InputObject.Keys) {
-            $dictionary[$key] = ConvertTo-Hashtable -InputObject $InputObject[$key]
-        }
-
-        return $dictionary
-    }
-
-    if ($InputObject -is [pscustomobject]) {
-        $dictionary = @{}
-        foreach ($property in $InputObject.PSObject.Properties) {
-            $dictionary[$property.Name] = ConvertTo-Hashtable -InputObject $property.Value
-        }
-
-        return $dictionary
-    }
-
-    if (($InputObject -is [System.Collections.IEnumerable]) -and -not ($InputObject -is [string])) {
-        $items = @()
-        foreach ($item in $InputObject) {
-            $items += ,(ConvertTo-Hashtable -InputObject $item)
-        }
-
-        return $items
-    }
-
-    return $InputObject
-}
-
-function Merge-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [hashtable]$Base,
-
-        [Parameter(Mandatory)]
-        [hashtable]$Overlay
-    )
-
-    $merged = @{}
-    foreach ($key in $Base.Keys) {
-        $merged[$key] = $Base[$key]
-    }
-
-    foreach ($key in $Overlay.Keys) {
-        if ($merged.ContainsKey($key) -and ($merged[$key] -is [hashtable]) -and ($Overlay[$key] -is [hashtable])) {
-            $merged[$key] = Merge-Hashtable -Base $merged[$key] -Overlay $Overlay[$key]
-        }
-        else {
-            $merged[$key] = $Overlay[$key]
-        }
-    }
-
-    return $merged
-}
-
-function Get-SolutionConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$ConfigRoot,
-
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $defaultConfigPath = Join-Path $ConfigRoot 'default-config.json'
-    $tierConfigPath = Join-Path $ConfigRoot ('{0}.json' -f $Tier)
-
-    if (-not (Test-Path -Path $defaultConfigPath)) {
-        throw 'Default configuration file not found.'
-    }
-
-    if (-not (Test-Path -Path $tierConfigPath)) {
-        throw 'Configuration tier file not found.'
-    }
-
-    $defaultConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path $defaultConfigPath -Raw) | ConvertFrom-Json)
-    $tierConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path $tierConfigPath -Raw) | ConvertFrom-Json)
-    $mergedConfig = Merge-Hashtable -Base $defaultConfig -Overlay $tierConfig
-    $mergedConfig['tier'] = $Tier
-
-    return $mergedConfig
-}
+Import-Module (Join-Path $PSScriptRoot 'CCC-Common.psm1') -Force
 
 function Get-ReviewerQueueMetrics {
     [CmdletBinding()]

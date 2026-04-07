@@ -2,7 +2,7 @@
 
 ## Delivery Summary
 
-- Solution: Communication Compliance Configurator (`14-communication-compliance-config`)
+- Solution: Microsoft Purview Communication Compliance Configurator (`14-communication-compliance-config`)
 - Code: `CCC`
 - Version: `v0.1.0`
 - Track / Priority / Phase: `D / P1 / 3`
@@ -38,7 +38,7 @@
 
 ## Post-Deployment Validation
 
-- [ ] Confirm expected Communication Compliance policies are active in the Microsoft Purview portal.
+- [ ] Confirm expected Microsoft Purview Communication Compliance policies are active in the Microsoft Purview portal.
 - [ ] Confirm reviewer queue access is available to assigned reviewers.
 - [ ] Confirm escalation routing aligns to the supervision workflow dependency.
 - [ ] Confirm queue age and overdue counts are within the selected SLA threshold.

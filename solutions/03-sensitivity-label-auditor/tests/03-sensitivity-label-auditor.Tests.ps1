@@ -78,11 +78,9 @@ Describe 'Configuration content' {
 
 Describe 'Script syntax validation' {
     It 'parses <_>' -ForEach $scriptPaths {
-        param($scriptPath)
-
         $tokens = $null
         $errors = $null
-        $null = [System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$errors)
+        $null = [System.Management.Automation.Language.Parser]::ParseFile($_, [ref]$tokens, [ref]$errors)
 
         $errors | Should -BeNullOrEmpty
     }

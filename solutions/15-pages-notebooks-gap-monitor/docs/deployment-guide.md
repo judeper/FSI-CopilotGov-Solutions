@@ -9,7 +9,7 @@ This guide walks through the deployment sequence for Copilot Pages and Notebooks
 - Review [prerequisites](./prerequisites.md).
 - Confirm `06-audit-trail-manager` is deployed and baseline retention evidence has been reviewed.
 - Select the governance tier to use for the tenant: `baseline`, `recommended`, or `regulated`.
-- Identify compliance, legal, records management, and eDiscovery reviewers.
+- Identify compliance, legal, records management, and Microsoft Purview eDiscovery reviewers.
 
 ## Step 1: Run gap discovery to baseline current state
 
@@ -19,7 +19,7 @@ Run the monitoring script with the baseline tier to create an initial gap snapsh
 pwsh -File .\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath .\artifacts\baseline -PassThru
 ```
 
-Review the output for open gaps related to Pages retention coverage, Loop eDiscovery coverage, notebook preservation verification, and sharing controls.
+Review the output for open gaps related to Pages retention coverage, Loop Microsoft Purview eDiscovery coverage, notebook preservation verification, and sharing controls.
 
 ## Step 2: Review discovered gaps and classify severity
 
@@ -102,5 +102,5 @@ Add the solution to the compliance calendar with a recurring quarterly review. T
 ## Operational Notes
 
 - This solution supports compliance with regulatory review expectations by documenting gaps and manual controls.
-- It does not automatically change retention policies, legal holds, or eDiscovery scope.
+- It does not automatically change retention policies, legal holds, or Microsoft Purview eDiscovery scope.
 - Human review remains mandatory before any gap is marked mitigated or closed.

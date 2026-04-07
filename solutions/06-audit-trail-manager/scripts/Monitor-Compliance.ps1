@@ -5,7 +5,7 @@ Monitors Copilot Interaction Audit Trail Manager compliance posture.
 
 .DESCRIPTION
 Checks Unified Audit Log configuration expectations, validates retention periods against
-regulatory minimums, verifies eDiscovery readiness indicators, and returns structured
+regulatory minimums, verifies Microsoft Purview eDiscovery readiness indicators, and returns structured
 compliance findings for controls 3.1, 3.2, 3.3, 3.11, and 3.12.
 
 .PARAMETER ConfigurationTier
@@ -30,7 +30,7 @@ PS> .\Monitor-Compliance.ps1 -ConfigurationTier recommended -OutputPath .\artifa
 This script supports compliance with regulatory books-and-records monitoring by validating the
 solution configuration against documented retention and audit requirements.
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -52,48 +52,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Resolve-AtmOutputPath {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if ([IO.Path]::IsPathRooted($Path)) {
-        return $Path
-    }
-
-    return [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $Path))
-}
-
-function Read-AtmJsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    return Get-Content -Path $Path -Raw | ConvertFrom-Json -Depth 20
-}
-
-function Write-AtmJsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path,
-
-        [Parameter(Mandatory)]
-        [object]$InputObject
-    )
-
-    $directory = Split-Path -Path $Path -Parent
-    if (-not (Test-Path -Path $directory)) {
-        New-Item -ItemType Directory -Path $directory -Force | Out-Null
-    }
-
-    $InputObject | ConvertTo-Json -Depth 20 | Set-Content -Path $Path -Encoding utf8
-    return $Path
-}
+Import-Module (Join-Path $PSScriptRoot 'AtmShared.psm1') -Force
 
 function Get-AtmOverallStatus {
     [CmdletBinding()]
@@ -129,7 +88,7 @@ $timestamp = (Get-Date).ToString('o')
 $ualStatusFlag = if ($defaultConfig.defaults.PSObject.Properties.Name -contains 'unifiedAuditLogEnabled') {
     $defaultConfig.defaults.unifiedAuditLogEnabled
 } else {
-    $defaultConfig.defaults.unifiedAuditLogEnabled
+    'check'
 }
 
 $requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
@@ -266,7 +225,7 @@ $controls = @(
         controlId = '3.3'
         status = $control33Status
         dashboardScore = (Get-CopilotGovStatusScore -Status $control33Status)
-        notes = 'eDiscovery readiness tracks case templates, preservation expectations, and custodian scope.'
+        notes = 'Microsoft Purview eDiscovery readiness tracks case templates, preservation expectations, and custodian scope.'
     }
     [pscustomobject]@{
         controlId = '3.11'
@@ -312,11 +271,14 @@ $result = [ordered]@{
     dataverseTargets = [ordered]@{
         baseline = (New-CopilotGovTableName -SolutionSlug 'atm' -Purpose 'baseline')
         assessmentHistory = (New-CopilotGovTableName -SolutionSlug 'atm' -Purpose 'assessmenthistory')
+        finding = (New-CopilotGovTableName -SolutionSlug 'atm' -Purpose 'finding')
         evidence = (New-CopilotGovTableName -SolutionSlug 'atm' -Purpose 'evidence')
     }
 }
 
 $statusPath = Join-Path $outputFolder 'compliance-status.json'
-Write-AtmJsonFile -Path $statusPath -InputObject $result | Out-Null
+if ($PSCmdlet.ShouldProcess($statusPath, 'Write ATM compliance status')) {
+    Write-AtmJsonFile -Path $statusPath -InputObject $result | Out-Null
+}
 
 [pscustomobject]$result

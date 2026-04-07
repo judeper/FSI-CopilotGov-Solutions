@@ -6,9 +6,9 @@
 
 ## Overview
 
-DLP Policy Governance for Copilot deploys a read-only governance pattern for Microsoft 365 Copilot data loss prevention policy review. It snapshots Purview DLP policy settings that target Copilot prompts, Copilot responses, and grounded content access patterns, compares those settings to a stored baseline, routes approved exceptions through a Power Automate approval flow, and exports evidence for compliance review.
+DLP Policy Governance for Copilot deploys a read-only governance pattern for Microsoft Purview Data Loss Prevention policy review scoped to Microsoft 365 Copilot. It snapshots Purview DLP policy settings that target Copilot prompts, Copilot responses, and grounded content access patterns, compares those settings to a stored baseline, routes approved exceptions through a Power Automate approval flow, and exports evidence for compliance review.
 
-This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 ICT security expectations, and GDPR by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
+This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 ICT security expectations, GDPR, FINRA 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
 ## Related Controls
 
@@ -121,6 +121,8 @@ See [docs/evidence-export.md](docs/evidence-export.md) for package details.
 | SEC Reg S-P | Helps document whether privacy-related policy modes and scoping remain aligned to approved standards. | `policy-drift-findings`, `exception-attestations` |
 | DORA Article 9 | Helps operations teams review ICT security governance, policy changes, and exception approvals for Copilot-connected workloads. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
 | GDPR | Helps monitor whether personal data handling controls remain in approved DLP modes and scope definitions. | `policy-drift-findings`, `exception-attestations` |
+| FINRA 4511 | Helps preserve records of DLP policy configurations, exceptions, and attestations for Copilot-related communications. | `dlp-policy-baseline`, `exception-attestations` |
+| SOX 302/404 | Helps document internal controls over DLP governance and policy change approvals for Copilot workloads. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
 | Control 2.1 | Validates Copilot DLP coverage across in-scope workloads and sensitivity conditions. | `dlp-policy-baseline`, `policy-drift-findings` |
 | Control 3.10 | Tracks drift against an approved baseline and supports scheduled review. | `policy-drift-findings` |
 | Control 3.12 | Records and packages exception approvals and audit evidence. | `exception-attestations` |

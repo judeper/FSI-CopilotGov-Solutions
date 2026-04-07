@@ -4,7 +4,7 @@
     Exports FINRA Supervision Workflow evidence package.
 .DESCRIPTION
     Assembles supervision-queue-snapshot, review-disposition-log, and sampling-summary
-    evidence artifacts aligned to the evidence-schema.json contract.
+    evidence artifacts aligned to the config\evidence-schema.json contract.
     In documentation-first mode (default), generates configuration-based evidence.
     In -LiveExport mode, queries Dataverse for actual queue and log records.
 .PARAMETER ConfigurationTier
@@ -45,97 +45,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+. (Join-Path $PSScriptRoot 'Shared-Functions.ps1')
 
 $script:DocumentationFirstWarning = 'Documentation-first export emits configuration-based sample evidence. Use -LiveExport with Dataverse connectivity before treating supervisory controls as implemented.'
-
-function Read-JsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path -PathType Leaf)) {
-        throw "JSON file not found: $Path"
-    }
-
-    return Get-Content -Path $Path -Raw | ConvertFrom-Json -AsHashtable
-}
-
-function Get-ConfiguredEnvironmentUrl {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$DefaultConfig
-    )
-
-    $defaults = $DefaultConfig['defaults']
-    if ($defaults.Contains('dataverseEnvironmentUrl') -and -not [string]::IsNullOrWhiteSpace([string]$defaults['dataverseEnvironmentUrl'])) {
-        return [string]$defaults['dataverseEnvironmentUrl']
-    }
-
-    if ($defaults.Contains('datverseEnvironmentUrl') -and -not [string]::IsNullOrWhiteSpace([string]$defaults['datverseEnvironmentUrl'])) {
-        return [string]$defaults['datverseEnvironmentUrl']
-    }
-
-    return $null
-}
-
-function Get-EffectiveConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$SolutionRoot,
-
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        $Tier
-    )
-
-    $defaultConfig = Read-JsonFile -Path (Join-Path $SolutionRoot 'config\default-config.json')
-    $tierConfig = Read-JsonFile -Path (Join-Path $SolutionRoot ("config\{0}.json" -f $Tier))
-
-    $supportedZones = @($tierConfig['supportedZones'])
-    $effectiveSamplingRates = [ordered]@{}
-    $effectiveSlaHours = [ordered]@{}
-    $defaultSampling = $defaultConfig['defaults']['samplingRates']
-    $defaultSla = $defaultConfig['defaults']['slaHoursByZone']
-
-    foreach ($zone in $supportedZones) {
-        if ($tierConfig['samplingRates'].Contains($zone)) {
-            $effectiveSamplingRates[$zone] = [int]$tierConfig['samplingRates'][$zone]
-        }
-        elseif ($defaultSampling.Contains($zone) -and $defaultSampling[$zone].Contains($Tier)) {
-            $effectiveSamplingRates[$zone] = [int]$defaultSampling[$zone][$Tier]
-        }
-
-        if ($tierConfig['slaHoursByZone'].Contains($zone)) {
-            $effectiveSlaHours[$zone] = [int]$tierConfig['slaHoursByZone'][$zone]
-        }
-        elseif ($defaultSla.Contains($zone)) {
-            $effectiveSlaHours[$zone] = [int]$defaultSla[$zone]
-        }
-    }
-
-    return [ordered]@{
-        solution = $defaultConfig['solution']
-        tier = $Tier
-        controls = @($defaultConfig['controls'])
-        regulations = @($defaultConfig['regulations'])
-        evidenceOutputs = @($defaultConfig['evidenceOutputs'])
-        supportedZones = $supportedZones
-        samplingRates = $effectiveSamplingRates
-        slaHoursByZone = $effectiveSlaHours
-        escalationEnabled = [bool]$tierConfig['escalationEnabled']
-        notifications = $tierConfig['notifications']
-        reviewDispositionValues = @($tierConfig['reviewDispositionValues'])
-        exceptionTracking = $tierConfig['exceptionTracking']
-        immutableLogRequired = [bool]$tierConfig['immutableLogRequired']
-        evidenceRetentionDays = [int]$tierConfig['evidenceRetentionDays']
-        purviewPolicyId = [string]$defaultConfig['defaults']['purviewPolicyId']
-        dataverseEnvironmentUrl = Get-ConfiguredEnvironmentUrl -DefaultConfig $defaultConfig
-    }
-}
 
 function Get-PeriodBoundary {
     [CmdletBinding()]
@@ -350,8 +262,19 @@ function Invoke-DataverseTableQuery {
         throw 'DATAVERSE_ACCESS_TOKEN environment variable is required when -LiveExport is specified.'
     }
 
-    if ([string]::IsNullOrWhiteSpace($EnvironmentUrl) -or $EnvironmentUrl -like 'https://contoso.crm.dynamics.com') {
-        throw 'A non-placeholder Dataverse environment URL is required when -LiveExport is specified.'
+    if ([string]::IsNullOrWhiteSpace($EnvironmentUrl) -or $EnvironmentUrl -in @('https://contoso.crm.dynamics.com', 'https://REPLACE-ME.crm.dynamics.com')) {
+        throw 'A non-placeholder Dataverse environment URL is required when -LiveExport is specified. Update fsi_ev_fsw_environmenturl or config/default-config.json.'
+    }
+
+    $parsedUri = $null
+    if (-not [System.Uri]::TryCreate($EnvironmentUrl, [System.UriKind]::Absolute, [ref]$parsedUri)) {
+        throw "Invalid Dataverse environment URL: $EnvironmentUrl"
+    }
+    if ($parsedUri.Scheme -ne 'https') {
+        throw "Dataverse environment URL must use HTTPS. Got: $($parsedUri.Scheme)"
+    }
+    if ($parsedUri.Host -notmatch '\.crm\d*\.dynamics\.com$') {
+        throw "Dataverse environment URL host must match *.crm.dynamics.com or *.crm[N].dynamics.com. Got: $($parsedUri.Host)"
     }
 
     $uri = '{0}/api/data/v9.2/{1}?$select={2}' -f $EnvironmentUrl.TrimEnd('/'), $TableName, ($Select -join ',')
@@ -364,8 +287,51 @@ function Invoke-DataverseTableQuery {
         Accept = 'application/json'
     }
 
-    $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
-    return @($response.value)
+    $allResults = [System.Collections.Generic.List[object]]::new()
+    $currentUri = $uri
+    $maxPages = 1000
+    $pageCount = 0
+    $maxRetries = 3
+    do {
+        $pageCount++
+        if ($pageCount -gt $maxPages) {
+            throw "OData pagination exceeded $maxPages pages. Possible infinite loop — verify the query filter."
+        }
+
+        $retryCount = 0
+        $delaySeconds = 2
+        while ($true) {
+            try {
+                $response = Invoke-RestMethod -Uri $currentUri -Headers $headers -Method Get
+                break
+            }
+            catch {
+                $statusCode = $null
+                if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
+                    $statusCode = [int]$_.Exception.Response.StatusCode
+                }
+
+                if ($statusCode -in @(429, 503, 504) -and $retryCount -lt $maxRetries) {
+                    $retryCount++
+                    $retryAfter = try { $_.Exception.Response.Headers.GetValues('Retry-After') | Select-Object -First 1 } catch { $null }
+                    $waitSeconds = if ($retryAfter -and [int]::TryParse($retryAfter, [ref]$null)) { [int]$retryAfter } else { $delaySeconds }
+                    Write-Warning "Dataverse API returned HTTP $statusCode. Retry $retryCount of $maxRetries after ${waitSeconds}s."
+                    Start-Sleep -Seconds $waitSeconds
+                    $delaySeconds = $delaySeconds * 2
+                }
+                else {
+                    throw
+                }
+            }
+        }
+
+        if ($response.value) {
+            $allResults.AddRange(@($response.value))
+        }
+        $currentUri = $response.'@odata.nextLink'
+    } while ($currentUri)
+
+    return @($allResults)
 }
 
 function Get-LiveEvidenceData {
@@ -484,6 +450,13 @@ if ($endDate -lt $startDate) {
 
 $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $configuration = Get-EffectiveConfiguration -SolutionRoot $solutionRoot -Tier $ConfigurationTier
+if ($LiveExport) {
+    $defaultEvidencePath = (Resolve-Path (Join-Path $PSScriptRoot '..\artifacts\evidence') -ErrorAction SilentlyContinue).Path
+    $resolvedOutput = (Resolve-Path $OutputPath -ErrorAction SilentlyContinue).Path
+    if ($resolvedOutput -and $defaultEvidencePath -and $resolvedOutput -eq $defaultEvidencePath) {
+        Write-Warning 'Live export writes sensitive supervisory data (reviewer identities, review notes) to the default in-repository path. Use -OutputPath to write to a directory outside the repository, or add artifacts/evidence-live/ to .gitignore.'
+    }
+}
 $data = if ($LiveExport) {
     Get-LiveEvidenceData -Configuration $configuration -Tier $ConfigurationTier -StartDate $startDate -EndDate $endDate
 }

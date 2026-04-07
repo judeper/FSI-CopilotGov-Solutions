@@ -43,7 +43,7 @@
     Controls: 2.11, 3.2, 3.3, 3.11
     Overall status: monitor-only
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -69,23 +69,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
-function Get-PngmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $configRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'config'
-    $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-    $tierConfigPath = Join-Path $configRoot ('{0}.json' -f $Tier)
-
-    return [pscustomobject]@{
-        Default = (Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json)
-        Tier = (Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json)
-    }
-}
+Import-Module (Join-Path $PSScriptRoot 'PngmShared.psm1') -Force
 
 function Write-ArtifactFile {
     [CmdletBinding()]
@@ -131,8 +115,8 @@ $gapFindings = @(
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-002'
-        description = 'Loop workspace content referenced by Copilot Pages still requires tenant-specific eDiscovery verification.'
-        affectedCapability = 'Loop workspace eDiscovery scope'
+        description = 'Loop workspace content referenced by Copilot Pages still requires tenant-specific Microsoft Purview eDiscovery verification.'
+        affectedCapability = 'Loop workspace Microsoft Purview eDiscovery scope'
         affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
         severity = 'high'
         discoveredAt = $PeriodStart.AddDays(4).ToString('o')
@@ -159,6 +143,16 @@ $gapFindings = @(
         status = 'open'
         platformUpdateRequired = $false
     }
+    [pscustomobject]@{
+        gapId = 'PNGM-GAP-005'
+        description = 'Copilot Pages and Loop-backed content may not satisfy books-and-records preservation requirements natively, requiring formal exceptions with documented compensating controls.'
+        affectedCapability = 'Books-and-records preservation exceptions'
+        affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
+        severity = 'high'
+        discoveredAt = $PeriodStart.AddDays(3).ToString('o')
+        status = 'open'
+        platformUpdateRequired = $true
+    }
 )
 
 $compensatingControlLog = @(
@@ -176,10 +170,10 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-002'
         gapId = 'PNGM-GAP-002'
-        controlDescription = 'Investigation teams capture Loop workspace URLs, page owners, and exported evidence in the case file while native eDiscovery coverage is monitored.'
+        controlDescription = 'Investigation teams capture Loop workspace URLs, page owners, and exported evidence in the case file while native Microsoft Purview eDiscovery coverage is monitored.'
         controlType = 'ediscovery-workaround'
         implementedAt = $PeriodStart.AddDays(6).ToString('o')
-        implementedBy = 'eDiscovery Operations'
+        implementedBy = 'Microsoft Purview eDiscovery Operations'
         approvedBy = 'Deputy General Counsel'
         reviewDueDate = $PeriodEnd.AddDays(21).ToString('o')
         status = 'active'
@@ -193,6 +187,28 @@ $compensatingControlLog = @(
         implementedBy = 'Collaboration Governance'
         approvedBy = 'Information Security Manager'
         reviewDueDate = $PeriodEnd.AddDays(14).ToString('o')
+        status = 'active'
+    }
+    [pscustomobject]@{
+        controlId = 'PNGM-CC-004'
+        gapId = 'PNGM-GAP-003'
+        controlDescription = 'Compliance operations validates notebook storage location, retention label inheritance, and export steps during quarterly control reviews to confirm Copilot-generated notebook context is preserved.'
+        controlType = 'manual-export'
+        implementedAt = $PeriodStart.AddDays(10).ToString('o')
+        implementedBy = 'Compliance Operations'
+        approvedBy = 'Compliance Officer'
+        reviewDueDate = $PeriodEnd.AddDays(30).ToString('o')
+        status = 'active'
+    }
+    [pscustomobject]@{
+        controlId = 'PNGM-CC-005'
+        gapId = 'PNGM-GAP-005'
+        controlDescription = 'Records Management registers a formal preservation exception with legal sign-off and documents the interim manual export procedure for books-and-records compliance until native WORM-compliant preservation is available.'
+        controlType = 'preservation-exception'
+        implementedAt = $PeriodStart.AddDays(4).ToString('o')
+        implementedBy = 'Records Management'
+        approvedBy = 'Deputy General Counsel'
+        reviewDueDate = $PeriodEnd.AddDays(90).ToString('o')
         status = 'active'
     }
 )
@@ -211,6 +227,22 @@ $preservationExceptionRegister = @(
                 reviewedAt = $PeriodEnd.AddDays(-10).ToString('o')
                 reviewer = 'Records Management'
                 notes = 'Gap remains open. Continue manual export and supervisory review.'
+            }
+        )
+    }
+    [pscustomobject]@{
+        exceptionId = 'PNGM-EX-002'
+        gapId = 'PNGM-GAP-005'
+        regulation = 'SEC 17a-4'
+        exceptionRationale = 'Books-and-records preservation for Copilot Pages and Loop-backed content requires formal exception until native WORM-compliant preservation is confirmed by Microsoft.'
+        approvedBy = $(if ($tierConfig.preservationExceptionTracking) { 'Chief Compliance Officer' } else { 'Pending legal sign-off' })
+        approvalDate = $(if ($tierConfig.preservationExceptionTracking) { $PeriodEnd.AddDays(-3).ToString('o') } else { $null })
+        expiryDate = $PeriodEnd.AddDays(90).ToString('o')
+        reviewHistory = @(
+            [pscustomobject]@{
+                reviewedAt = $PeriodEnd.AddDays(-10).ToString('o')
+                reviewer = 'Records Management'
+                notes = 'Books-and-records preservation exception remains active. Continue interim manual export and quarterly review.'
             }
         )
     }
@@ -250,11 +282,6 @@ $exceptionRegisterArtifact = [ordered]@{
     records = $preservationExceptionRegister
 }
 
-$null = New-Item -ItemType Directory -Path $OutputPath -Force
-$gapFindingsFile = Write-ArtifactFile -Path $gapFindingsPath -Content $gapFindingsArtifact
-$compensatingControlFile = Write-ArtifactFile -Path $compensatingControlPath -Content $compensatingControlArtifact
-$exceptionRegisterFile = Write-ArtifactFile -Path $exceptionRegisterPath -Content $exceptionRegisterArtifact
-
 $controls = @(
     [pscustomobject]@{
         controlId = '2.11'
@@ -269,51 +296,82 @@ $controls = @(
     [pscustomobject]@{
         controlId = '3.3'
         status = 'partial'
-        notes = 'eDiscovery covers SharePoint-backed notebooks; Loop workspace coverage is still being monitored.'
+        notes = 'Microsoft Purview eDiscovery covers SharePoint-backed notebooks; Loop workspace coverage is still being monitored.'
     }
     [pscustomobject]@{
         controlId = '3.11'
-        status = 'playbook-only'
+        status = 'monitor-only'
         notes = 'Books-and-records requirements are documented as gaps until platform updates close the open preservation exceptions.'
     }
 )
 
-$artifacts = @(
-    [pscustomobject]@{
-        name = 'gap-findings'
-        type = 'gap-findings'
-        path = $gapFindingsFile.Path
-        hash = $gapFindingsFile.Hash
-    }
-    [pscustomobject]@{
-        name = 'compensating-control-log'
-        type = 'compensating-control-log'
-        path = $compensatingControlFile.Path
-        hash = $compensatingControlFile.Hash
-    }
-    [pscustomobject]@{
-        name = 'preservation-exception-register'
-        type = 'preservation-exception-register'
-        path = $exceptionRegisterFile.Path
-        hash = $exceptionRegisterFile.Hash
-    }
-)
-
+$hasActiveControls = ($compensatingControlLog | Where-Object { $_.status -eq 'active' }).Count -gt 0
 $summary = @{
-    overallStatus = 'monitor-only'
+    overallStatus = $(if ($hasActiveControls) { 'partial' } else { 'monitor-only' })
     recordCount = ($gapFindings.Count + $compensatingControlLog.Count + $preservationExceptionRegister.Count)
     findingCount = $gapFindings.Count
     exceptionCount = $preservationExceptionRegister.Count
 }
 
-$packageResult = Export-SolutionEvidencePackage `
-    -Solution $defaultConfig.solution `
-    -SolutionCode $defaultConfig.solutionCode `
-    -Tier $ConfigurationTier `
-    -OutputPath $OutputPath `
-    -Summary $summary `
-    -Controls $controls `
-    -Artifacts $artifacts
+$artifacts = @(
+    [pscustomobject]@{
+        name = 'gap-findings'
+        type = 'gap-findings'
+        path = $gapFindingsPath
+        hash = $null
+    }
+    [pscustomobject]@{
+        name = 'compensating-control-log'
+        type = 'compensating-control-log'
+        path = $compensatingControlPath
+        hash = $null
+    }
+    [pscustomobject]@{
+        name = 'preservation-exception-register'
+        type = 'preservation-exception-register'
+        path = $exceptionRegisterPath
+        hash = $null
+    }
+)
+
+$packageResult = @{ Path = $null; Hash = $null }
+
+if ($PSCmdlet.ShouldProcess($defaultConfig.displayName, "Export evidence package for tier $ConfigurationTier")) {
+    $null = New-Item -ItemType Directory -Path $OutputPath -Force
+    $gapFindingsFile = Write-ArtifactFile -Path $gapFindingsPath -Content $gapFindingsArtifact
+    $compensatingControlFile = Write-ArtifactFile -Path $compensatingControlPath -Content $compensatingControlArtifact
+    $exceptionRegisterFile = Write-ArtifactFile -Path $exceptionRegisterPath -Content $exceptionRegisterArtifact
+
+    $artifacts = @(
+        [pscustomobject]@{
+            name = 'gap-findings'
+            type = 'gap-findings'
+            path = $gapFindingsFile.Path
+            hash = $gapFindingsFile.Hash
+        }
+        [pscustomobject]@{
+            name = 'compensating-control-log'
+            type = 'compensating-control-log'
+            path = $compensatingControlFile.Path
+            hash = $compensatingControlFile.Hash
+        }
+        [pscustomobject]@{
+            name = 'preservation-exception-register'
+            type = 'preservation-exception-register'
+            path = $exceptionRegisterFile.Path
+            hash = $exceptionRegisterFile.Hash
+        }
+    )
+
+    $packageResult = Export-SolutionEvidencePackage `
+        -Solution $defaultConfig.solution `
+        -SolutionCode $defaultConfig.solutionCode `
+        -Tier $ConfigurationTier `
+        -OutputPath $OutputPath `
+        -Summary $summary `
+        -Controls $controls `
+        -Artifacts $artifacts
+}
 
 $exportResult = [ordered]@{
     solution = $defaultConfig.solution

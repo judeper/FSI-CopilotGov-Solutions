@@ -34,7 +34,7 @@ Directory where monitoring artifacts are written.
 This script reads prior oversharing assessment outputs from solution 02 when available so unlabeled
 content in high-risk locations can be escalated in the remediation list.
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -120,6 +120,9 @@ function New-LabelTierDistribution {
     )
 
     $ratios = @(0.08, 0.34, 0.30, 0.20, 0.08)
+    if ($Taxonomy.Count -ne $ratios.Count) {
+        throw "Label tier distribution requires exactly $($ratios.Count) taxonomy tiers but received $($Taxonomy.Count)."
+    }
     $remaining = $LabeledCount
     $distribution = @()
 
@@ -157,9 +160,12 @@ function Get-SuggestedLabel {
     )
 
     $targetTier = if ($RiskScore -ge 5) {
-        4
+        5
     }
     elseif ($RiskScore -ge 4) {
+        4
+    }
+    elseif ($RiskScore -ge 3) {
         3
     }
     else {
@@ -626,7 +632,7 @@ $coverageReportPath = Join-Path $resolvedOutputPath 'monitor-label-coverage-repo
 $gapFindingsPath = Join-Path $resolvedOutputPath 'monitor-label-gap-findings.json'
 $remediationManifestPath = Join-Path $resolvedOutputPath 'monitor-remediation-manifest.json'
 
-[pscustomobject]@{
+$coverageReportObj = [pscustomobject]@{
     metadata = [pscustomobject]@{
         solution = $configuration.solution
         solutionCode = $configuration.solutionCode
@@ -639,9 +645,13 @@ $remediationManifestPath = Join-Path $resolvedOutputPath 'monitor-remediation-ma
     workloads = $workloadResults
     thresholdStatus = $thresholdStatus
     oversharingContext = $oversharingContext
-} | ConvertTo-Json -Depth 20 | Set-Content -Path $coverageReportPath -Encoding utf8
+}
 
-[pscustomobject]@{
+if ($PSCmdlet.ShouldProcess($coverageReportPath, 'Write monitoring artifact')) {
+    $coverageReportObj | ConvertTo-Json -Depth 20 | Set-Content -Path $coverageReportPath -Encoding utf8
+}
+
+$gapFindingsObj = [pscustomobject]@{
     metadata = [pscustomobject]@{
         solution = $configuration.solution
         tenantId = $TenantId
@@ -649,9 +659,13 @@ $remediationManifestPath = Join-Path $resolvedOutputPath 'monitor-remediation-ma
         generatedAt = (Get-Date).ToString('s')
     }
     findings = $gapFindings
-} | ConvertTo-Json -Depth 20 | Set-Content -Path $gapFindingsPath -Encoding utf8
+}
 
-[pscustomobject]@{
+if ($PSCmdlet.ShouldProcess($gapFindingsPath, 'Write monitoring artifact')) {
+    $gapFindingsObj | ConvertTo-Json -Depth 20 | Set-Content -Path $gapFindingsPath -Encoding utf8
+}
+
+$remediationManifestObj = [pscustomobject]@{
     metadata = [pscustomobject]@{
         solution = $configuration.solution
         tenantId = $TenantId
@@ -659,7 +673,11 @@ $remediationManifestPath = Join-Path $resolvedOutputPath 'monitor-remediation-ma
         generatedAt = (Get-Date).ToString('s')
     }
     items = $remediationManifest
-} | ConvertTo-Json -Depth 20 | Set-Content -Path $remediationManifestPath -Encoding utf8
+}
+
+if ($PSCmdlet.ShouldProcess($remediationManifestPath, 'Write monitoring artifact')) {
+    $remediationManifestObj | ConvertTo-Json -Depth 20 | Set-Content -Path $remediationManifestPath -Encoding utf8
+}
 
 [pscustomobject]@{
     solution = $configuration.displayName

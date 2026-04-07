@@ -31,6 +31,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Shared-Functions.ps1')
 
 $script:RuntimeMode = 'documentation-first'
 $script:StatusWarning = 'Monitor-Compliance.ps1 validates configuration posture and an optional endpoint probe only; it does not confirm live queue processing or reviewer activity.'
@@ -49,91 +50,6 @@ function Resolve-DocumentationFirstStatus {
     return 'partial'
 }
 
-function Read-JsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path -PathType Leaf)) {
-        throw "JSON file not found: $Path"
-    }
-
-    return Get-Content -Path $Path -Raw | ConvertFrom-Json -AsHashtable
-}
-
-function Get-ConfiguredEnvironmentUrl {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$DefaultConfig
-    )
-
-    $defaults = $DefaultConfig['defaults']
-    if ($defaults.Contains('dataverseEnvironmentUrl') -and -not [string]::IsNullOrWhiteSpace([string]$defaults['dataverseEnvironmentUrl'])) {
-        return [string]$defaults['dataverseEnvironmentUrl']
-    }
-
-    if ($defaults.Contains('datverseEnvironmentUrl') -and -not [string]::IsNullOrWhiteSpace([string]$defaults['datverseEnvironmentUrl'])) {
-        return [string]$defaults['datverseEnvironmentUrl']
-    }
-
-    return $null
-}
-
-function Get-EffectiveConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$SolutionRoot,
-
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $defaultConfig = Read-JsonFile -Path (Join-Path $SolutionRoot 'config\default-config.json')
-    $tierConfig = Read-JsonFile -Path (Join-Path $SolutionRoot ("config\{0}.json" -f $Tier))
-
-    $supportedZones = @($tierConfig['supportedZones'])
-    $effectiveSamplingRates = [ordered]@{}
-    $effectiveSlaHours = [ordered]@{}
-    $defaultSampling = $defaultConfig['defaults']['samplingRates']
-    $defaultSla = $defaultConfig['defaults']['slaHoursByZone']
-
-    foreach ($zone in $supportedZones) {
-        if ($tierConfig['samplingRates'].Contains($zone)) {
-            $effectiveSamplingRates[$zone] = [int]$tierConfig['samplingRates'][$zone]
-        }
-        elseif ($defaultSampling.Contains($zone) -and $defaultSampling[$zone].Contains($Tier)) {
-            $effectiveSamplingRates[$zone] = [int]$defaultSampling[$zone][$Tier]
-        }
-
-        if ($tierConfig['slaHoursByZone'].Contains($zone)) {
-            $effectiveSlaHours[$zone] = [int]$tierConfig['slaHoursByZone'][$zone]
-        }
-        elseif ($defaultSla.Contains($zone)) {
-            $effectiveSlaHours[$zone] = [int]$defaultSla[$zone]
-        }
-    }
-
-    return [ordered]@{
-        solution = $defaultConfig['solution']
-        tier = $Tier
-        supportedZones = $supportedZones
-        samplingRates = $effectiveSamplingRates
-        slaHoursByZone = $effectiveSlaHours
-        escalationEnabled = [bool]$tierConfig['escalationEnabled']
-        notifications = $tierConfig['notifications']
-        reviewDispositionValues = @($tierConfig['reviewDispositionValues'])
-        exceptionTracking = $tierConfig['exceptionTracking']
-        immutableLogRequired = [bool]$tierConfig['immutableLogRequired']
-        evidenceRetentionDays = [int]$tierConfig['evidenceRetentionDays']
-        dataverseEnvironmentUrl = Get-ConfiguredEnvironmentUrl -DefaultConfig $defaultConfig
-    }
-}
-
 function Test-LiveDataverseEndpoint {
     [CmdletBinding()]
     param(
@@ -148,7 +64,7 @@ function Test-LiveDataverseEndpoint {
         notes = @()
     }
 
-    if ([string]::IsNullOrWhiteSpace($EnvironmentUrl) -or $EnvironmentUrl -like 'https://contoso.crm.dynamics.com') {
+    if ([string]::IsNullOrWhiteSpace($EnvironmentUrl) -or $EnvironmentUrl -in @('https://contoso.crm.dynamics.com', 'https://REPLACE-ME.crm.dynamics.com')) {
         $result['notes'] = @('Live Dataverse verification was requested, but the configured environment URL is still a placeholder.')
         return [pscustomobject]$result
     }

@@ -1,4 +1,4 @@
-# Communication Compliance Configurator
+# Microsoft Purview Communication Compliance Configurator
 
 > **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** D | **Solution Code:** CCC
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-Communication Compliance Configurator configures and monitors Microsoft Purview Communication Compliance policies for Copilot-assisted communications in financial services. It publishes policy templates targeting AI-generated content, configures reviewer workflows, manages supervised communication lexicons, and tracks escalation queues to support FINRA 3110 supervision requirements.
+Microsoft Purview Communication Compliance Configurator configures and monitors Microsoft Purview Communication Compliance policies for Copilot-assisted communications in financial services. It publishes policy templates targeting AI-generated content, configures reviewer workflows, manages supervised communication lexicons, and tracks escalation queues to support FINRA 3110 supervision requirements.
 
 This solution depends on `04-finra-supervision-workflow` for downstream review routing and escalation operating procedures. The solution is documentation-first for portal deployment because Microsoft Purview Communication Compliance policy publication still requires manual portal actions.
 
@@ -65,7 +65,7 @@ See [docs/architecture.md](./docs/architecture.md) for the detailed data flow an
 | `CHANGELOG.md` | Version history for the solution package |
 | `DELIVERY-CHECKLIST.md` | Deployment readiness, validation, and handover checklist |
 | `config\default-config.json` | Shared solution metadata, reviewer defaults, integration settings, and evidence outputs |
-| `config\baseline.json` | Baseline Communication Compliance monitoring settings |
+| `config\baseline.json` | Baseline Microsoft Purview Communication Compliance monitoring settings |
 | `config\recommended.json` | Recommended tier with escalations and insider risk correlation planning |
 | `config\regulated.json` | Regulated tier with FINRA 3110 supervision, SEC Reg BI, and FCA SYSC 10 flags |
 | `scripts\Deploy-Solution.ps1` | Tier-aware deployment manifest and policy template generator |
@@ -85,7 +85,7 @@ Deploy this solution by generating the tier-aware policy templates with `Deploy-
 ## Prerequisites
 
 - Microsoft Purview Communication Compliance licensing such as Microsoft 365 E5 Compliance or an equivalent add-on.
-- Reviewer and administrator roles for Communication Compliance, Compliance Administrator, and read-only auditors.
+- Reviewer and administrator roles for Microsoft Purview Communication Compliance, Compliance Administrator, and read-only auditors.
 - Legal and compliance review of supervised lexicon words before publication.
 - `04-finra-supervision-workflow` deployed first so escalation procedures are documented.
 - Access to repository shared modules under `scripts\common\`.
@@ -95,7 +95,7 @@ Deploy this solution by generating the tier-aware policy templates with `Deploy-
 | Control | Title | Solution Contribution |
 |---------|-------|-----------------------|
 | 2.10 | Insider Risk Detection for Copilot Usage Patterns | Defines insider risk correlation templates and reviewer escalation guidance for suspicious Copilot-assisted messaging patterns |
-| 3.4 | Communication Compliance Monitoring | Publishes Purview policy templates and queue metrics collection procedures for monitored communications |
+| 3.4 | Microsoft Purview Communication Compliance Monitoring | Publishes Purview policy templates and queue metrics collection procedures for monitored communications |
 | 3.5 | FINRA Rule 2210 Compliance for Copilot-Drafted Communications | Targets promotional language, financial advice phrasing, and disclosure review in customer-facing drafts |
 | 3.6 | Supervision and Oversight (FINRA Rule 3110 / SEC Reg BI) | Supports reviewer assignment, SLA tracking, escalation paths, and oversight evidence export |
 | 3.9 | AI Disclosure, Transparency, and SEC Marketing Rule | Configures AI disclosure lexicons and policy templates for Copilot-attributed content |
@@ -121,7 +121,7 @@ Evidence packages include shared schema metadata, summary, controls, and artifac
 
 ## Known Limitations
 
-- Communication Compliance policy deployment to Microsoft Purview requires manual portal steps; automation is partial.
+- Microsoft Purview Communication Compliance policy deployment requires manual portal steps; automation is partial.
 - Queue metrics collection is implemented as a stub until a supported Purview or Graph endpoint is available for tenant automation.
 - Lexicon changes require compliance-team review before production publication.
-- Insider risk correlation depends on additional Insider Risk Management integration that is outside this solution package.
+- Insider risk correlation depends on additional Microsoft Purview Insider Risk Management integration that is outside this solution package.

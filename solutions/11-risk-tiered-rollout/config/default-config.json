@@ -186,6 +186,5 @@
     "dashboard": "RTR Rollout Health Dashboard",
     "healthScoreWarningThreshold": 85
   },
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "evidenceRetentionDays": 90
 }

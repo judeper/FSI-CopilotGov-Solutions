@@ -8,7 +8,7 @@
 - The current deployment tier is set to baseline and no tenant identifiers were provided for an authenticated check.
 
 **Recommended actions**
-- Confirm the operator has Compliance Administrator, SharePoint Administrator, and eDiscovery Admin access as needed.
+- Confirm the operator has Compliance Administrator, SharePoint Administrator, and Microsoft Purview eDiscovery Admin access as needed.
 - Verify that Copilot Pages or Microsoft Loop are enabled in the tenant.
 - Re-run the monitoring script with the expected tenant context and confirm the output path is writable.
 
@@ -25,7 +25,7 @@
 - Record the issue in the preservation exception register if books-and-records impact exists.
 - Monitor Microsoft release notes for changes to Copilot Pages or Loop retention support.
 
-## eDiscovery Search Missing Loop Content
+## Microsoft Purview eDiscovery Search Missing Loop Content
 
 **Possible causes**
 - Loop workspace content is not yet surfaced consistently for the search workflow being used.
@@ -33,7 +33,7 @@
 - Legal hold procedures were designed around Exchange or Teams content and did not account for Loop-backed content.
 
 **Recommended actions**
-- Confirm the tenant configuration and case scope with the eDiscovery team.
+- Confirm the tenant configuration and case scope with the Microsoft Purview eDiscovery team.
 - Use manual exports and case-file documentation while native coverage is under review.
 - Update the gap status only after the tenant has been retested against the new platform behavior.
 
@@ -66,7 +66,7 @@
 **Clarification**
 - Copilot Pages is the user-facing collaboration experience.
 - Microsoft Loop provides the fluid content and workspace model used by many Pages scenarios.
-- A tenant may show different retention or eDiscovery behavior depending on whether the content is evaluated as a Page, a Loop component, or a SharePoint-backed artifact.
+- A tenant may show different retention or Microsoft Purview eDiscovery behavior depending on whether the content is evaluated as a Page, a Loop component, or a SharePoint-backed artifact.
 
 **Recommended actions**
 - Document the exact storage and discovery path being assessed.

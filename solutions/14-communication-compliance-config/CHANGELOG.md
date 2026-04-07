@@ -12,8 +12,8 @@
 ## v0.1.0 - 2025-01-15
 
 ### Added
-- Initial solution scaffold for Communication Compliance Configurator
-- Communication compliance policy template library for Copilot-assisted content:
+- Initial solution scaffold for Microsoft Purview Communication Compliance Configurator
+- Microsoft Purview Communication Compliance policy template library for Copilot-assisted content:
   - AI-generated financial advice detection pattern
   - FINRA 2210 promotional material detection
   - SEC Reg BI best-interest disclosure monitoring

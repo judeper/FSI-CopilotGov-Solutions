@@ -43,7 +43,7 @@
   "environmentVariables": [
     {
       "name": "fsi_ev_fsw_purviewpolicyid",
-      "purpose": "Stores the Purview Communication Compliance policy ID."
+      "purpose": "Stores the Microsoft Purview Communication Compliance policy ID."
     },
     {
       "name": "fsi_ev_fsw_environmenturl",
@@ -119,8 +119,7 @@
     },
     "escalationEnabled": true,
     "purviewPolicyId": "00000000-0000-0000-0000-000000000000",
-    "dataverseEnvironmentUrl": "https://contoso.crm.dynamics.com",
-    "datverseEnvironmentUrl": "https://contoso.crm.dynamics.com",
+    "dataverseEnvironmentUrl": "https://REPLACE-ME.crm.dynamics.com",
     "evidenceRetentionDays": 2555
   }
 }

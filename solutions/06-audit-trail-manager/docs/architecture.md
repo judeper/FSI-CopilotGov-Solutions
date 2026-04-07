@@ -16,7 +16,7 @@
 
 ### Reporting layer
 
-- Power BI dashboard for audit completeness, retention coverage, and eDiscovery readiness.
+- Power BI dashboard for audit completeness, retention coverage, and Microsoft Purview eDiscovery readiness.
 - JSON compliance outputs from `scripts\Monitor-Compliance.ps1` for downstream reporting.
 
 ### Integration layer
@@ -53,7 +53,7 @@
             |                              |
             v                              v
 +-----------------------+        +-----------------------+
-| eDiscovery cases,     |        | Power Automate        |
+| Purview eDiscovery    |        | Power Automate        |
 | holds, custodians     |        | retention exceptions  |
 +-----------+-----------+        +-----------------------+
             |
@@ -68,7 +68,7 @@
 | Examination evidence  |
 | audit completeness    |
 | retention coverage    |
-| eDiscovery readiness  |
+| Purview eDiscovery    |
 +-----------------------+
 ```
 
@@ -76,5 +76,5 @@
 
 - UAL is the source of audit completeness evidence for Copilot interaction events.
 - Purview retention policies and labels define the target preservation schedule.
-- eDiscovery readiness captures whether records can be preserved and produced quickly.
+- Microsoft Purview eDiscovery readiness captures whether records can be preserved and produced quickly.
 - Power BI and Power Automate are documented first so implementation teams can align tenant-specific assets to the same data contract.

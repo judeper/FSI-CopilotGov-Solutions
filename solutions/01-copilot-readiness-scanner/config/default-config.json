@@ -22,7 +22,7 @@
   "track": "A",
   "priority": "P0",
   "reportFormat": "powerbi-json",
-  "graphApiVersion": "beta",
+  "graphApiVersion": "v1.0",
   "scanDomains": [
     "licensing",
     "identity",

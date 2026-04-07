@@ -1,4 +1,4 @@
-Describe 'Communication Compliance Configurator' {
+Describe 'Microsoft Purview Communication Compliance Configurator' {
     BeforeAll {
         $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
         $requiredFiles = @(
@@ -10,6 +10,7 @@ Describe 'Communication Compliance Configurator' {
             'docs\evidence-export.md',
             'docs\prerequisites.md',
             'docs\troubleshooting.md',
+            'scripts\CCC-Common.psm1',
             'scripts\Deploy-Solution.ps1',
             'scripts\Monitor-Compliance.ps1',
             'scripts\Export-Evidence.ps1',
@@ -29,7 +30,8 @@ Describe 'Communication Compliance Configurator' {
         $scriptFiles = @(
             (Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'),
             (Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'),
-            (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1')
+            (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'),
+            (Join-Path $solutionRoot 'scripts\CCC-Common.psm1')
         )
     }
 
@@ -78,7 +80,9 @@ Describe 'Communication Compliance Configurator' {
                 $content = Get-Content -Path $scriptFile -Raw
                 $content | Should -Match '\.SYNOPSIS'
                 $content | Should -Match '\.DESCRIPTION'
-                $content | Should -Match '\.PARAMETER'
+                if ($scriptFile -like '*.ps1') {
+                    $content | Should -Match '\.PARAMETER'
+                }
             }
         }
     }
@@ -90,6 +94,94 @@ Describe 'Communication Compliance Configurator' {
 
         It 'references reviewer-queue-metrics in the evidence export guide' {
             $evidenceDocContent | Should -Match 'reviewer-queue-metrics'
+        }
+    }
+
+    Context 'CCC-Common module functional tests' {
+        BeforeAll {
+            Import-Module (Join-Path $solutionRoot 'scripts\CCC-Common.psm1') -Force
+        }
+
+        It 'ConvertTo-Hashtable returns null for null input' {
+            $result = ConvertTo-Hashtable -InputObject $null
+            $result | Should -BeNullOrEmpty
+        }
+
+        It 'ConvertTo-Hashtable converts PSCustomObject to hashtable' {
+            $obj = [pscustomobject]@{ Name = 'Test'; Value = 42 }
+            $result = ConvertTo-Hashtable -InputObject $obj
+            $result | Should -BeOfType [hashtable]
+            $result['Name'] | Should -Be 'Test'
+            $result['Value'] | Should -Be 42
+        }
+
+        It 'ConvertTo-Hashtable converts nested objects recursively' {
+            $obj = [pscustomobject]@{
+                Outer = [pscustomobject]@{ Inner = 'deep' }
+            }
+            $result = ConvertTo-Hashtable -InputObject $obj
+            $result['Outer'] | Should -BeOfType [hashtable]
+            $result['Outer']['Inner'] | Should -Be 'deep'
+        }
+
+        It 'ConvertTo-Hashtable preserves string values without wrapping' {
+            $result = ConvertTo-Hashtable -InputObject 'plain string'
+            $result | Should -Be 'plain string'
+        }
+
+        It 'ConvertTo-Hashtable converts arrays of objects' {
+            $arr = @(
+                [pscustomobject]@{ Id = 1 },
+                [pscustomobject]@{ Id = 2 }
+            )
+            $result = ConvertTo-Hashtable -InputObject $arr
+            $result.Count | Should -Be 2
+            $result[0]['Id'] | Should -Be 1
+            $result[1]['Id'] | Should -Be 2
+        }
+
+        It 'Merge-Hashtable overlays keys onto base' {
+            $base = @{ A = 1; B = 2 }
+            $overlay = @{ B = 99; C = 3 }
+            $result = Merge-Hashtable -Base $base -Overlay $overlay
+            $result['A'] | Should -Be 1
+            $result['B'] | Should -Be 99
+            $result['C'] | Should -Be 3
+        }
+
+        It 'Merge-Hashtable merges nested hashtables recursively' {
+            $base = @{ Nested = @{ X = 1; Y = 2 } }
+            $overlay = @{ Nested = @{ Y = 99; Z = 3 } }
+            $result = Merge-Hashtable -Base $base -Overlay $overlay
+            $result['Nested']['X'] | Should -Be 1
+            $result['Nested']['Y'] | Should -Be 99
+            $result['Nested']['Z'] | Should -Be 3
+        }
+
+        It 'Get-SolutionConfiguration loads and merges tier configs' {
+            $configRoot = Join-Path $solutionRoot 'config'
+            $result = Get-SolutionConfiguration -ConfigRoot $configRoot -Tier 'baseline'
+            $result | Should -BeOfType [hashtable]
+            $result['solutionCode'] | Should -Be 'CCC'
+            $result['tier'] | Should -Be 'baseline'
+        }
+
+        It 'Get-SolutionConfiguration throws for missing config root' {
+            { Get-SolutionConfiguration -ConfigRoot 'C:\nonexistent\path' -Tier 'baseline' } | Should -Throw
+        }
+
+        It 'Get-PolicyCatalogDefinitions returns expected template keys' {
+            $configRoot = Join-Path $solutionRoot 'config'
+            $config = Get-SolutionConfiguration -ConfigRoot $configRoot -Tier 'regulated'
+            $catalog = Get-PolicyCatalogDefinitions -Config $config
+            $catalog | Should -BeOfType [hashtable]
+            $catalog.ContainsKey('CopilotAIDisclosure') | Should -BeTrue
+            $catalog.ContainsKey('FinancialAdviceReview') | Should -BeTrue
+            $catalog.ContainsKey('DualReviewSupervision') | Should -BeTrue
+        }
+
+        AfterAll {
+            Remove-Module CCC-Common -ErrorAction SilentlyContinue
         }
     }
 }

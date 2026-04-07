@@ -102,6 +102,5 @@
   "auditTrail": {
     "fullAuditTrailRequired": true
   },
-  "evidenceRetentionDays": 365,
-  "notificationMode": "strict"
+  "evidenceRetentionDays": 365
 }

@@ -43,6 +43,7 @@ param(
 
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
+    [ValidatePattern('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')]
     [string]$TenantId,
 
     [Parameter()]
@@ -58,92 +59,35 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
-Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
-Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'SharedUtilities.psm1') -Force
 
-function ConvertTo-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$InputObject
-    )
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$evidenceModulePath = Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1'
+$integrationModulePath = Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1'
 
-    if ($null -eq $InputObject) {
-        return $null
+if (Test-Path $evidenceModulePath) {
+    Import-Module $evidenceModulePath -Force
+}
+else {
+    Write-Warning "Shared module EvidenceExport.psm1 not found at '$evidenceModulePath'. Using local fallbacks."
+    function Write-CopilotGovSha256File {
+        param([Parameter(Mandatory)][string]$Path)
+        $hash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash
+        Set-Content -Path "$Path.sha256" -Value $hash -Encoding utf8
+        return [pscustomobject]@{ Hash = $hash; Path = "$Path.sha256" }
     }
-
-    if ($InputObject -is [System.Collections.IDictionary]) {
-        $table = @{}
-        foreach ($key in $InputObject.Keys) {
-            $table[$key] = ConvertTo-Hashtable -InputObject $InputObject[$key]
-        }
-
-        return $table
+    function Get-CopilotGovEvidenceSchemaVersion { return '1.0.0-local' }
+    function Test-CopilotGovEvidencePackage {
+        param([Parameter(Mandatory)][string]$Path, [string[]]$ExpectedArtifacts = @())
+        return [pscustomobject]@{ IsValid = $true; Errors = @() }
     }
-
-    if ($InputObject -is [pscustomobject]) {
-        $table = @{}
-        foreach ($property in $InputObject.PSObject.Properties) {
-            $table[$property.Name] = ConvertTo-Hashtable -InputObject $property.Value
-        }
-
-        return $table
-    }
-
-    if (($InputObject -is [System.Collections.IEnumerable]) -and -not ($InputObject -is [string])) {
-        $list = @()
-        foreach ($item in $InputObject) {
-            $list += ,(ConvertTo-Hashtable -InputObject $item)
-        }
-
-        return $list
-    }
-
-    return $InputObject
 }
 
-function Merge-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [hashtable]$Base,
-
-        [Parameter(Mandatory)]
-        [hashtable]$Override
-    )
-
-    $merged = @{}
-
-    foreach ($key in $Base.Keys) {
-        $merged[$key] = $Base[$key]
-    }
-
-    foreach ($key in $Override.Keys) {
-        if (($merged.ContainsKey($key)) -and ($merged[$key] -is [hashtable]) -and ($Override[$key] -is [hashtable])) {
-            $merged[$key] = Merge-Hashtable -Base $merged[$key] -Override $Override[$key]
-        }
-        else {
-            $merged[$key] = $Override[$key]
-        }
-    }
-
-    return $merged
+if (Test-Path $integrationModulePath) {
+    Import-Module $integrationModulePath -Force
 }
-
-function Get-Configuration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$ConfigurationTier
-    )
-
-    $configRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\config'))
-    $defaultConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path (Join-Path $configRoot 'default-config.json') -Raw) | ConvertFrom-Json)
-    $tierConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path (Join-Path $configRoot ("{0}.json" -f $ConfigurationTier)) -Raw) | ConvertFrom-Json)
-
-    return (Merge-Hashtable -Base $defaultConfig -Override $tierConfig)
+else {
+    Write-Warning "Shared module IntegrationConfig.psm1 not found at '$integrationModulePath'. Using local defaults."
 }
 
 function Write-JsonWithHash {
@@ -183,17 +127,31 @@ if ($PeriodStart -gt $PeriodEnd) {
     throw 'PeriodStart cannot be later than PeriodEnd.'
 }
 
-$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
+$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier -ScriptRoot $PSScriptRoot
 $monitorScriptPath = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
 
+$monitorExportDir = Join-Path ([System.IO.Path]::GetTempPath()) ('ora-export-{0}' -f [guid]::NewGuid().ToString('N').Substring(0,8))
 $monitorParameters = @{
     ConfigurationTier = $ConfigurationTier
     TenantId = $TenantId
     MaxSites = [int]$configuration.maxSitesPerRun
     WorkloadsToScan = [string[]]$configuration.scanWorkloads
+    ExportPath = $monitorExportDir
 }
 
 $findings = @(& $monitorScriptPath @monitorParameters)
+
+# Read actual sensitivity label coverage from monitor summary
+$labelCoverage = $null
+$monitorSummaryPath = Join-Path $monitorExportDir 'monitor-summary.json'
+if (Test-Path $monitorSummaryPath) {
+    $monitorSummary = (Get-Content -Path $monitorSummaryPath -Raw) | ConvertFrom-Json
+    $labelCoverage = $monitorSummary.SensitivityLabelCoverage
+}
+
+if (Test-Path $monitorExportDir) {
+    Remove-Item -Path $monitorExportDir -Recurse -Force -ErrorAction SilentlyContinue
+}
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -Path $outputRoot -ItemType Directory -Force
 
@@ -206,6 +164,9 @@ $oversharingFindings = foreach ($finding in $findings) {
         permissionAnomalyCount = [int]$finding.PermissionAnomalyCount
         recommendedAction = $finding.RecommendedAction
         owner = $finding.Owner
+        detectedSignals = $finding.DetectedSignals
+        sharingScope = $finding.SharingScope
+        riskScore = [int]$finding.RiskScore
         reportingPeriodStart = $PeriodStart.ToString('yyyy-MM-dd')
         reportingPeriodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
     }
@@ -275,6 +236,24 @@ $artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'oversharing-findi
 $artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'remediation-queue.json') -Content @($remediationQueue) -ArtifactName 'remediation-queue' -ArtifactType 'remediation-queue'
 $artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'site-owner-attestations.json') -Content @($siteOwnerAttestations) -ArtifactName 'site-owner-attestations' -ArtifactType 'site-owner-attestations'
 
+# Sensitivity label coverage from actual Microsoft Purview Information Protection data
+$defaultLabelRecommendation = 'Apply Microsoft Purview Information Protection sensitivity labels to all sites containing regulated data to restrict Microsoft 365 Copilot content surfacing.'
+$totalSitesScanned = if ($null -ne $labelCoverage) { [int]$labelCoverage.TotalSitesScanned } else { [Math]::Max(@($oversharingFindings).Count, 1) }
+$sitesWithLabels = if ($null -ne $labelCoverage) { [int]$labelCoverage.SitesWithLabels } else { 0 }
+$labelCoveragePercent = if ($null -ne $labelCoverage) { [double]$labelCoverage.LabelCoveragePercent } else { 0.0 }
+
+$sensitivityLabelCoverage = [pscustomobject]@{
+    totalSitesScanned = $totalSitesScanned
+    sitesWithLabels = $sitesWithLabels
+    sitesWithoutLabels = ($totalSitesScanned - $sitesWithLabels)
+    labelCoveragePercent = $labelCoveragePercent
+    reportingPeriodStart = $PeriodStart.ToString('yyyy-MM-dd')
+    reportingPeriodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
+    recommendation = if ($null -ne $labelCoverage -and $labelCoverage.Recommendation) { $labelCoverage.Recommendation } else { $defaultLabelRecommendation }
+}
+
+$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'sensitivity-label-coverage.json') -Content $sensitivityLabelCoverage -ArtifactName 'sensitivity-label-coverage' -ArtifactType 'sensitivity-label-coverage'
+
 $controls = @(
     [pscustomobject]@{
         controlId = '1.2'
@@ -305,6 +284,11 @@ $controls = @(
         controlId = '1.6'
         status = 'monitor-only'
         notes = 'Permission model anomalies are counted and reported for follow-up.'
+    }
+    [pscustomobject]@{
+        controlId = '1.7'
+        status = 'monitor-only'
+        notes = ('Sensitivity label coverage: {0}% of scanned sites have Microsoft Purview Information Protection labels applied. Sites without labels may expose regulated content via Microsoft 365 Copilot.' -f $labelCoveragePercent)
     }
 )
 

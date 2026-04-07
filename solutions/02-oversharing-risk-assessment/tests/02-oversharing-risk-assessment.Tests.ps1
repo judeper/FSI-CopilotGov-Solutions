@@ -17,6 +17,7 @@ Describe 'Solution structure' {
             'scripts\Deploy-Solution.ps1',
             'scripts\Monitor-Compliance.ps1',
             'scripts\Export-Evidence.ps1',
+            'scripts\SharedUtilities.psm1',
             'tests\02-oversharing-risk-assessment.Tests.ps1'
         )
 
@@ -29,7 +30,7 @@ Describe 'Solution structure' {
 Describe 'Configuration content' {
     BeforeAll {
         $solutionRoot = Join-Path $PSScriptRoot '..'
-        $expectedControls = @('1.2', '1.3', '1.4', '1.6', '2.5', '2.12')
+        $expectedControls = @('1.2', '1.3', '1.4', '1.6', '1.7', '2.5', '2.12')
         $defaultConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\default-config.json') -Raw) | ConvertFrom-Json
         $baselineConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\baseline.json') -Raw) | ConvertFrom-Json
         $recommendedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\recommended.json') -Raw) | ConvertFrom-Json

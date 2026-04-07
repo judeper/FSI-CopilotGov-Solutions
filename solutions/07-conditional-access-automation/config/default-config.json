@@ -45,7 +45,7 @@
     ],
     "riskTiers": {
       "low": {
-        "mfaRequired": false,
+        "mfaRequired": true,
         "compliantDevice": false,
         "namedLocationRequired": false
       },

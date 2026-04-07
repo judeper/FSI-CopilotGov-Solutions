@@ -2,6 +2,7 @@
   "solution": "04-finra-supervision-workflow",
   "tier": "regulated",
   "mode": "documentation-first",
+  "warning": "Documentation-first export emits configuration-based sample evidence. Use -LiveExport with Dataverse connectivity before treating supervisory controls as implemented.",
   "periodStart": "2026-01-01",
   "periodEnd": "2026-01-31",
   "summary": {

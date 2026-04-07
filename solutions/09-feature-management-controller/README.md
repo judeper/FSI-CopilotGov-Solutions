@@ -16,7 +16,7 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 
 | Capability | What FMC does | Compliance value |
 |------------|---------------|------------------|
-| Feature registry | Provides structure to normalize Copilot features from Microsoft 365 Admin Center, Microsoft Graph beta rollout policies, Teams Admin Center, and Power Platform Admin settings. Current version uses tier-defined feature templates; live data collection requires customer implementation. | Supports compliance with controls 4.1 and 4.2 by giving operations and compliance teams a shared registry of enabled capabilities. |
+| Feature registry | Provides structure to normalize Copilot features from Microsoft 365 Admin Center, Microsoft Graph beta rollout policies, Teams admin center, and Power Platform Admin settings. Current version uses tier-defined feature templates; live data collection requires customer implementation. | Supports compliance with controls 4.1 and 4.2 by giving operations and compliance teams a shared registry of enabled capabilities. |
 | Ring management | Applies Preview Ring, Early Adopters, General Availability, and Restricted ring definitions with tier-aware approval rules and target populations. | Supports compliance with control 4.3 by limiting exposure before supervisory review is complete. |
 | Drift detection | Compares current feature state against approved baseline settings and highlights unexpected enablement, scope, or ring changes. | Supports compliance with control 4.4 by identifying deviations that require remediation or documented acceptance. |
 | Change tracking | Records change intent, ring promotions, and alert history for operational and supervisory review. | Supports compliance with control 4.12 by preserving rollout rationale and approval context. |
@@ -40,8 +40,8 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 ```text
 +-----------------------------------+     +----------------------------------+
 | Microsoft 365 Admin Center        |     | Microsoft Graph beta             |
-| Teams Admin Center                | --> | /policies/featureRolloutPolicies |
-| Power Platform Admin Center       |     +----------------+-----------------+
+| Teams admin center                | --> | /policies/featureRolloutPolicies |
+| Power Platform admin center       |     +----------------+-----------------+
 +----------------------+------------+                      |
                        |                                   v
                        |                  +----------------+-----------------+

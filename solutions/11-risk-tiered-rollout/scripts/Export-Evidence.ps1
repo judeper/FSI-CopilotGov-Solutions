@@ -40,99 +40,7 @@ $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
-
-function Read-JsonConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path)) {
-        throw "File was not found: $Path"
-    }
-
-    return Get-Content -Path $Path -Raw | ConvertFrom-Json -AsHashtable -Depth 20
-}
-
-function Copy-ConfigValue {
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [object]$Value
-    )
-
-    if ($null -eq $Value) {
-        return $null
-    }
-
-    if ($Value -is [System.Collections.IDictionary]) {
-        $copy = [ordered]@{}
-        foreach ($key in $Value.Keys) {
-            $copy[$key] = Copy-ConfigValue -Value $Value[$key]
-        }
-
-        return $copy
-    }
-
-    if (($Value -is [System.Collections.IEnumerable]) -and -not ($Value -is [string])) {
-        $items = @()
-        foreach ($item in $Value) {
-            $items += ,(Copy-ConfigValue -Value $item)
-        }
-
-        return $items
-    }
-
-    return $Value
-}
-
-function Merge-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$Base,
-
-        [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$Overlay
-    )
-
-    $result = [ordered]@{}
-
-    foreach ($key in $Base.Keys) {
-        $result[$key] = Copy-ConfigValue -Value $Base[$key]
-    }
-
-    foreach ($key in $Overlay.Keys) {
-        if (
-            $result.Contains($key) -and
-            ($result[$key] -is [System.Collections.IDictionary]) -and
-            ($Overlay[$key] -is [System.Collections.IDictionary])
-        ) {
-            $result[$key] = Merge-Hashtable -Base $result[$key] -Overlay $Overlay[$key]
-            continue
-        }
-
-        $result[$key] = Copy-ConfigValue -Value $Overlay[$key]
-    }
-
-    return $result
-}
-
-function Get-RolloutConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Tier
-    )
-
-    $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
-    $tierConfigPath = Join-Path $solutionRoot ("config\{0}.json" -f $Tier)
-    $defaultConfig = Read-JsonConfiguration -Path $defaultConfigPath
-    $tierConfig = Read-JsonConfiguration -Path $tierConfigPath
-
-    return Merge-Hashtable -Base $defaultConfig -Overlay $tierConfig
-}
+Import-Module (Join-Path $solutionRoot 'scripts\RolloutConfig.psm1') -Force
 
 function Get-ControlStatuses {
     [CmdletBinding()]
@@ -218,7 +126,11 @@ function New-WaveReadinessLog {
             readinessPercent = $readinessPercent
             blockedUsers = $blockedUsers
             dependencyArtifact = $Configuration.dependencies.readinessScanner.requiredArtifactPath
-            gateReady = ($readinessPercent -ge [double]$Configuration.gateThresholds.minimumExpansionReadinessPercent)
+            gateReady = if ([int]$wave.waveNumber -eq 0) {
+                ($readinessPercent -ge [double]$Configuration.gateThresholds.minimumPilotReadinessPercent)
+            } else {
+                ($readinessPercent -ge [double]$Configuration.gateThresholds.minimumExpansionReadinessPercent)
+            }
             generatedAt = (Get-Date).ToString('o')
             runtimeMode = $script:RuntimeMode
             dataSourceMode = 'representative-sample'
@@ -324,7 +236,7 @@ function Write-ArtifactFile {
 }
 
 try {
-    $configuration = Get-RolloutConfiguration -Tier $ConfigurationTier
+    $configuration = Get-RolloutConfiguration -Tier $ConfigurationTier -SolutionRoot $solutionRoot
     $null = New-Item -ItemType Directory -Path $OutputPath -Force
 
     $waveReadinessLog = New-WaveReadinessLog -Configuration $configuration -Tier $ConfigurationTier

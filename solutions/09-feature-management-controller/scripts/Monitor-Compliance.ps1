@@ -287,6 +287,21 @@ try {
         throw "Baseline file not found: $BaselinePath"
     }
 
+    # Verify baseline integrity if companion SHA-256 hash file exists
+    $hashPath = "${BaselinePath}.sha256"
+    if (Test-Path -Path $hashPath) {
+        $hashContent = (Get-Content -Path $hashPath -Raw).Trim()
+        $expectedHash = ($hashContent -split '\s+')[0]
+        $actualHash = (Get-FileHash -Path $BaselinePath -Algorithm SHA256).Hash
+        if ($expectedHash -ne $actualHash) {
+            throw "Baseline integrity check failed: SHA-256 hash mismatch for '$BaselinePath'. Expected '$expectedHash', got '$actualHash'. The baseline may have been tampered with."
+        }
+        Write-Verbose "Baseline integrity verified: SHA-256 hash matches."
+    }
+    else {
+        Write-Warning "No companion .sha256 file found for baseline '$BaselinePath'. Baseline integrity cannot be verified. For tamper-evident storage, generate a hash file during baseline capture."
+    }
+
     $baselineDocument = Get-Content -Path $BaselinePath -Raw | ConvertFrom-Json
     if (-not $baselineDocument.features) {
         throw 'Baseline file does not contain a features collection.'

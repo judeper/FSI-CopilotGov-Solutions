@@ -18,7 +18,7 @@ Recommended for fuller signal coverage:
 - Microsoft 365 E5 or equivalent add-ons where Purview, Defender, or advanced audit signals are needed
 - SharePoint Advanced Management licensing if the customer wants to validate control 1.7 readiness in more detail
 
-## Required Azure AD and Microsoft 365 Roles
+## Required Microsoft Entra ID and Microsoft 365 Roles
 
 The simplest deployment model is to use a Global Administrator account in a controlled non-production or delegated operations process. If the customer prefers least privilege, the following role combination is typically required:
 
@@ -45,6 +45,18 @@ The exact API permissions depend on the final authentication model, but the scan
 | SharePoint Online | Tenant admin read access and PnP connection rights | Site inventory, sharing posture, advanced management readiness |
 | Teams | Teams admin read access | Teams workload dependencies and sharing context |
 | Power Platform | Admin API read access | Environment governance and DLP coverage review |
+
+## Graph API Scopes Per Script
+
+The following table documents the Microsoft Graph scopes requested by each script. Production deployments should review these scopes against actual API call patterns and apply least-privilege principles where possible.
+
+| Script | Scopes Requested | Usage |
+|--------|-----------------|-------|
+| `Deploy-Solution.ps1` | `Organization.Read.All`, `Directory.Read.All`, `AuditLog.Read.All` | Placeholder Graph connectivity validation |
+| `Monitor-Compliance.ps1` | `Organization.Read.All`, `Directory.Read.All`, `Reports.Read.All` | Tenant metadata and readiness signal collection |
+| `Export-Evidence.ps1` | None directly (delegates to shared modules) | Evidence assembly from local data |
+
+> **Note:** These scopes are currently requested unconditionally. When extending the scanner with live Graph queries, narrow each script's scope to only the permissions required by its specific API calls. For example, `Reports.Read.All` is only needed by `Monitor-Compliance.ps1` for usage reporting, not by `Deploy-Solution.ps1`.
 
 ## PowerShell Modules Required
 

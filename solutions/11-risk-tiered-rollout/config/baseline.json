@@ -66,6 +66,5 @@
     "Tier2",
     "Tier3"
   ],
-  "evidenceRetentionDays": 30,
-  "notificationMode": "summary"
+  "evidenceRetentionDays": 30
 }

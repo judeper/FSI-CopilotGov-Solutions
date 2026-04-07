@@ -12,7 +12,7 @@
 |-------|------|-------------|
 | `reportingPeriodStart` | string | Start date for the monitoring period. |
 | `reportingPeriodEnd` | string | End date for the monitoring period. |
-| `skuName` | string | Licensed SKU under review, typically Copilot for Microsoft 365. |
+| `skuName` | string | Licensed SKU under review, typically Microsoft 365 Copilot. |
 | `totalAssignedSeats` | integer | Number of seats assigned during the period. |
 | `activeSeats` | integer | Seats with activity inside the configured inactivity threshold. |
 | `inactiveSeats` | integer | Seats with no activity inside the configured threshold. |

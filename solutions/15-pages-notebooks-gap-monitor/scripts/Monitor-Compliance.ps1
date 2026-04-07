@@ -3,7 +3,7 @@
     Monitors the Copilot Pages and Notebooks compliance gap register.
 
 .DESCRIPTION
-    Assesses known retention, eDiscovery, sharing, and books-and-records gaps for
+    Assesses known retention, Microsoft Purview eDiscovery, sharing, and books-and-records gaps for
     Copilot Pages, Loop workspaces, and notebooks. The script uses documentation-first
     stub checks to inventory likely coverage gaps, validates whether registered
     compensating controls remain in place, and summarizes any Microsoft platform
@@ -72,23 +72,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
-function Get-PngmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $configRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'config'
-    $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-    $tierConfigPath = Join-Path $configRoot ('{0}.json' -f $Tier)
-
-    return [pscustomobject]@{
-        Default = (Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json)
-        Tier = (Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json)
-    }
-}
+Import-Module (Join-Path $PSScriptRoot 'PngmShared.psm1') -Force
 
 function Get-CopilotPagesRetentionGaps {
     [CmdletBinding()]
@@ -133,6 +117,16 @@ function Get-CopilotPagesRetentionGaps {
                 status = 'open'
                 platformUpdateRequired = $false
             }
+            [pscustomobject]@{
+                gapId = 'PNGM-GAP-005'
+                description = 'Copilot Pages and Loop-backed content may not satisfy books-and-records preservation requirements natively, requiring formal exceptions with documented compensating controls.'
+                affectedCapability = 'Books-and-records preservation exceptions'
+                regulations = @('SEC 17a-4', 'FINRA 4511')
+                severity = 'high'
+                discoveredAt = $assessedAt.AddDays(-28).ToString('o')
+                status = 'open'
+                platformUpdateRequired = $true
+            }
         )
     }
 }
@@ -152,8 +146,8 @@ function Get-NotebooksEDiscoveryGaps {
         gaps = @(
             [pscustomobject]@{
                 gapId = 'PNGM-GAP-002'
-                description = 'Loop workspace content referenced by Copilot Pages is not represented consistently in current eDiscovery workflows.'
-                affectedCapability = 'Loop workspace eDiscovery scope'
+                description = 'Loop workspace content referenced by Copilot Pages is not represented consistently in current Microsoft Purview eDiscovery workflows.'
+                affectedCapability = 'Loop workspace Microsoft Purview eDiscovery scope'
                 regulations = @('SEC 17a-4', 'FINRA 4511')
                 severity = 'high'
                 discoveredAt = $assessedAt.AddDays(-21).ToString('o')
@@ -186,8 +180,9 @@ function Test-CompensatingControlStatus {
 
     $controlsRequired = [bool]$TierConfiguration.compensatingControlsRequired
     $now = Get-Date
+    $openGapIds = @($OpenGaps | ForEach-Object { $_.gapId })
 
-    return @(
+    $allControls = @(
         [pscustomobject]@{
             controlId = 'PNGM-CC-001'
             gapId = 'PNGM-GAP-001'
@@ -215,7 +210,27 @@ function Test-CompensatingControlStatus {
             reviewDueDate = $now.AddDays(14).ToString('o')
             status = $(if ($controlsRequired -and $TierConfiguration.tier -eq 'regulated') { 'in-place' } elseif ($controlsRequired) { 'planned' } else { 'planned' })
         }
+        [pscustomobject]@{
+            controlId = 'PNGM-CC-004'
+            gapId = 'PNGM-GAP-003'
+            controlDescription = 'Compliance operations validates notebook storage location, retention label inheritance, and export steps during quarterly control reviews to confirm Copilot-generated notebook context is preserved.'
+            controlType = 'manual-export'
+            lastValidatedAt = $now.AddDays(-7).ToString('o')
+            reviewDueDate = $now.AddDays(30).ToString('o')
+            status = $(if ($controlsRequired) { 'in-place' } else { 'planned' })
+        }
+        [pscustomobject]@{
+            controlId = 'PNGM-CC-005'
+            gapId = 'PNGM-GAP-005'
+            controlDescription = 'Records Management registers a formal preservation exception with legal sign-off and documents the interim manual export procedure for books-and-records compliance until native WORM-compliant preservation is available.'
+            controlType = 'preservation-exception'
+            lastValidatedAt = $now.AddDays(-3).ToString('o')
+            reviewDueDate = $now.AddDays(90).ToString('o')
+            status = $(if ($controlsRequired) { 'in-place' } else { 'planned' })
+        }
     )
+
+    return @($allControls | Where-Object { $openGapIds -contains $_.gapId })
 }
 
 function Get-PlatformUpdateStatus {
@@ -244,7 +259,7 @@ function Get-PlatformUpdateStatus {
         updates = @(
             [pscustomobject]@{
                 messageId = 'MC-PNGM-2025-001'
-                title = 'Loop workspace retention and eDiscovery coverage update remains under evaluation'
+                title = 'Loop workspace retention and Microsoft Purview eDiscovery coverage update remains under evaluation'
                 publishedAt = $checkedAt.AddDays(-10).ToString('o')
                 status = 'watch'
                 closesGapIds = @()

@@ -11,10 +11,11 @@
     "1.3",
     "1.4",
     "1.6",
+    "1.7",
     "2.5",
     "2.12"
   ],
-  "framework_ids": [
+  "framework_ids":[
     "finra-4511",
     "sec-reg-sp",
     "glba-501b",
@@ -24,7 +25,8 @@
   "evidenceOutputs": [
     "oversharing-findings",
     "remediation-queue",
-    "site-owner-attestations"
+    "site-owner-attestations",
+    "sensitivity-label-coverage"
   ],
   "upstreamDependency": "01-copilot-readiness-scanner",
   "defaults": {
@@ -47,7 +49,6 @@
   "alertThreshold": 10,
   "enableSiteOwnerNotifications": false,
   "enableRestrictedSharePointSearch": false,
-  "restrictedSharePointSearchEnabled": false,
   "evidenceRetentionDays": 90,
   "maxSitesPerRun": 1000,
   "requireOwnerAttestation": false,
@@ -59,7 +60,7 @@
     "broadInternal": 15,
     "targeted": 5
   },
-  "fsiFsiDataClassifiers": {
+  "fsiDataClassifiers": {
     "customerPII": {
       "weight": 35,
       "keywords": [

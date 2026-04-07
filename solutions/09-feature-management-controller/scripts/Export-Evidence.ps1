@@ -104,6 +104,23 @@ function Merge-Hashtable {
     return $result
 }
 
+function Get-StableFeatureHash {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$FeatureId
+    )
+
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = $sha.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($FeatureId))
+        return [BitConverter]::ToUInt32($bytes, 0)
+    }
+    finally {
+        $sha.Dispose()
+    }
+}
+
 function Get-FmcConfiguration {
     [CmdletBinding()]
     param(
@@ -141,11 +158,14 @@ function Write-ArtifactDocument {
     }
 }
 
+try {
 $config = Get-FmcConfiguration -Tier $ConfigurationTier
 $resolvedOutputPath = [IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
 $capturedAt = (Get-Date).ToString('o')
 
+# Feature baseline snapshot derived from tier configuration templates. In production,
+# these values would be collected from live Microsoft 365, Teams, and Power Platform admin surfaces.
 $featureStateBaseline = @(
     foreach ($feature in @($config.features)) {
         [pscustomobject]@{
@@ -163,6 +183,8 @@ $featureStateBaseline = @(
     }
 )
 
+# Sample rollout history entries for format validation. In production, these values
+# would be derived from actual change records, approval workflows, and CAB tickets.
 $rolloutRingHistory = @(
     foreach ($feature in @($config.features | Select-Object -First 3)) {
         [pscustomobject]@{
@@ -173,12 +195,14 @@ $rolloutRingHistory = @(
             requestedBy = 'Copilot Governance Board'
             approvedBy = if ($config.strictChangeApprovalRequired) { 'Compliance and Operations CAB' } else { 'Platform Operations Manager' }
             changedAt = $capturedAt
-            changeTicket = ('CAB-{0}-{1}' -f $ConfigurationTier.ToUpperInvariant(), [math]::Abs($feature.featureId.GetHashCode()))
+            changeTicket = ('CAB-{0}-{1}' -f $ConfigurationTier.ToUpperInvariant(), (Get-StableFeatureHash -FeatureId $feature.featureId))
             approvalMode = $config.changeApprovalMode
         }
     }
 )
 
+# Sample drift findings for format validation. In production, these would be generated
+# by comparing observed tenant state against the approved baseline.
 $driftFindings = @(
     [pscustomobject]@{
         findingId = 'FMC-DRIFT-001'
@@ -191,7 +215,11 @@ $driftFindings = @(
         remediationStatus = 'open'
         notes = 'One production policy assignment moved ahead of the approved ring plan.'
     }
-    [pscustomobject]@{
+)
+# Only include third-party plugin drift finding when the feature is tracked in the selected tier
+$pluginFeature = @($config.features) | Where-Object { $_.featureId -eq 'third-party-plugin-execution' }
+if ($pluginFeature) {
+    $driftFindings += [pscustomobject]@{
         findingId = 'FMC-DRIFT-002'
         featureId = 'third-party-plugin-execution'
         driftType = 'unapproved-enablement'
@@ -202,12 +230,14 @@ $driftFindings = @(
         remediationStatus = 'investigating'
         notes = 'Connector governance review is still pending for one pilot connector.'
     }
-)
+}
 
 $baselineArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'feature-state-baseline.json') -Name 'feature-state-baseline' -Content $featureStateBaseline
 $historyArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'rollout-ring-history.json') -Name 'rollout-ring-history' -Content $rolloutRingHistory
 $driftArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'drift-findings.json') -Name 'drift-findings' -Content $driftFindings
 
+# Control implementation status based on solution capabilities. Review 'partial' controls
+# before presenting the package as a final supervisory record.
 $controls = @(
     [pscustomobject]@{
         controlId = '2.6'
@@ -266,4 +296,10 @@ $package = Export-SolutionEvidencePackage `
     Package = $package
     Controls = $controls
     Artifacts = $artifacts
+}
+}
+catch {
+    $message = "Export-Evidence.ps1 failed for FMC: $($_.Exception.Message)"
+    Write-Error $message
+    throw
 }

@@ -8,29 +8,30 @@
     "periodStart": "2026-01-01",
     "periodEnd": "2026-01-31",
     "evidenceMode": "documentation-first",
+    "warning": "Documentation-first export emits configuration-based sample evidence. Use -LiveExport with Dataverse connectivity before treating supervisory controls as implemented.",
     "policyId": "00000000-0000-0000-0000-000000000000",
-    "environmentUrl": "https://contoso.crm.dynamics.com"
+    "environmentUrl": "https://REPLACE-ME.crm.dynamics.com"
   },
   "summary": {
     "recordCount": 13,
-    "overallStatus": "implemented",
+    "overallStatus": "partial",
     "exceptionCount": 1,
-    "findingCount": 0
+    "findingCount": 3
   },
   "controls": [
     {
       "controlId": "3.4",
-      "status": "implemented",
+      "status": "partial",
       "notes": "Supports compliance with supervisory coverage by capturing queue intake, zone assignment, sampling configuration, and SLA targets."
     },
     {
       "controlId": "3.5",
-      "status": "implemented",
+      "status": "partial",
       "notes": "Supports compliance with review disposition accountability through reviewer actions, timestamps, and recorded outcomes."
     },
     {
       "controlId": "3.6",
-      "status": "implemented",
+      "status": "partial",
       "notes": "Supports compliance with exception tracking through escalation settings, breach logging, and review notes retained for audit."
     }
   ],
@@ -38,19 +39,19 @@
     {
       "name": "supervision-queue-snapshot",
       "type": "supervision-queue-snapshot",
-      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\solutions\\04-finra-supervision-workflow\\scripts\\..\\artifacts\\evidence\\supervision-queue-snapshot.json",
+      "path": "artifacts/evidence/supervision-queue-snapshot.json",
       "hash": "c0c9234e289984d335f326db7e1f6cff44bd1e805124ac7ebd52ebf7927e0dc2"
     },
     {
       "name": "review-disposition-log",
       "type": "review-disposition-log",
-      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\solutions\\04-finra-supervision-workflow\\scripts\\..\\artifacts\\evidence\\review-disposition-log.json",
+      "path": "artifacts/evidence/review-disposition-log.json",
       "hash": "4de413b0632505e8d7e17fe30c810ff953645f21f34cbfc122b997d9479b9934"
     },
     {
       "name": "sampling-summary",
       "type": "sampling-summary",
-      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\solutions\\04-finra-supervision-workflow\\scripts\\..\\artifacts\\evidence\\sampling-summary.json",
+      "path": "artifacts/evidence/sampling-summary.json",
       "hash": "a08c12ea9c9ce7161f229fcdefd62042c70c878804e27335920965308feb5209"
     }
   ]

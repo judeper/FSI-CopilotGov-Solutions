@@ -42,6 +42,10 @@ Set-StrictMode -Version Latest
 
 $solutionRoot = Split-Path $PSScriptRoot -Parent
 
+# NOTE: Read-JsonFile, Write-JsonFile, Resolve-ConfiguredPath, Merge-Configuration, and
+# New-PolicyTemplate are duplicated across Deploy-Solution.ps1, Monitor-Compliance.ps1,
+# and Export-Evidence.ps1. Changes to shared logic must be applied to all three files.
+# See docs\architecture.md for details on this acknowledged tech debt.
 function Read-JsonFile {
     [CmdletBinding()]
     param(
@@ -226,7 +230,7 @@ function New-PolicyTemplate {
         else {
             @('all')
         }
-        signInRiskLevels = @($RiskTierName)
+        signInRiskLevels = @()
         locations = [ordered]@{
             includeLocations = if ($RiskTierSettings.namedLocationRequired) { $namedLocations } else { @('All') }
             excludeLocations = if ($RiskTierSettings.namedLocationRequired) { @('AllTrusted') } else { @() }
@@ -234,9 +238,16 @@ function New-PolicyTemplate {
     }
 
     if ($Configuration.blockUnknownDeviceStates -or $RiskTierSettings.compliantDevice) {
-        $conditions.deviceStates = [ordered]@{
-            includeStates = @('Compliant', 'HybridAzureADJoined')
-            excludeStates = if ($Configuration.blockUnknownDeviceStates) { @('Unknown') } else { @() }
+        $filterRule = if ($Configuration.blockUnknownDeviceStates) {
+            'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
+        } else {
+            'device.isCompliant -eq True'
+        }
+        $conditions.devices = [ordered]@{
+            deviceFilter = [ordered]@{
+                mode = 'include'
+                rule = $filterRule
+            }
         }
     }
 
@@ -251,8 +262,15 @@ function New-PolicyTemplate {
         }
         conditions = $conditions
         sessionControls = [ordered]@{
-            persistentBrowser = 'never'
-            signInFrequencyHours = if ($Configuration.tier -eq 'regulated') { 4 } elseif ($RiskTierName -eq 'high') { 8 } else { 12 }
+            persistentBrowser = [ordered]@{
+                mode = 'never'
+                isEnabled = $true
+            }
+            signInFrequency = [ordered]@{
+                value = if ($Configuration.tier -eq 'regulated') { 4 } elseif ($RiskTierName -eq 'high') { 8 } else { 12 }
+                type = 'hours'
+                isEnabled = $true
+            }
         }
         deploymentGuidance = 'Review named locations, excluded break-glass accounts, and service principals before enabling the policy.'
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
@@ -268,7 +286,7 @@ function Get-PolicyRequestBody {
 
     return [ordered]@{
         displayName = $PolicyTemplate.displayName
-        state = 'enabled'
+        state = 'enabledForReportingButNotEnforced'
         conditions = $PolicyTemplate.conditions
         grantControls = $PolicyTemplate.grantControls
         sessionControls = $PolicyTemplate.sessionControls
@@ -292,7 +310,8 @@ function Get-GraphCommandText {
         $null = $commands.Add("Connect-MgGraph -Scopes 'Policy.Read.All','Policy.ReadWrite.ConditionalAccess'")
     }
     else {
-        $null = $commands.Add("Connect-MgGraph -TenantId '$TenantId' -Scopes 'Policy.Read.All','Policy.ReadWrite.ConditionalAccess'")
+        $escapedTenantId = $TenantId -replace "'", "''"
+        $null = $commands.Add("Connect-MgGraph -TenantId '$escapedTenantId' -Scopes 'Policy.Read.All','Policy.ReadWrite.ConditionalAccess'")
     }
 
     foreach ($requestBody in $RequestBodies) {
@@ -403,7 +422,28 @@ if ($Execute) {
     }
 
     foreach ($requestBody in $requestBodies) {
-        Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies' -Body $requestBody | Out-Null
+        $jsonBody = $requestBody | ConvertTo-Json -Depth 12
+        $policyName = if ($requestBody.ContainsKey('displayName')) { $requestBody.displayName } else { 'unknown' }
+        $maxRetries = 3
+        $retryDelays = @(2, 4, 8)
+        $succeeded = $false
+        for ($attempt = 0; $attempt -lt $maxRetries; $attempt++) {
+            try {
+                Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies' -Body $jsonBody -ContentType 'application/json' | Out-Null
+                $succeeded = $true
+                break
+            }
+            catch {
+                $statusCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 }
+                if (($statusCode -eq 429 -or $statusCode -eq 503) -and $attempt -lt ($maxRetries - 1)) {
+                    Write-Warning ("Transient error (HTTP {0}) creating policy '{1}'. Retrying in {2}s (attempt {3}/{4})." -f $statusCode, $policyName, $retryDelays[$attempt], ($attempt + 2), $maxRetries)
+                    Start-Sleep -Seconds $retryDelays[$attempt]
+                }
+                else {
+                    Write-Error ("Failed to create Conditional Access policy '{0}': {1}" -f $policyName, $_.Exception.Message)
+                }
+            }
+        }
     }
 }
 

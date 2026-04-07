@@ -67,4 +67,28 @@ Describe 'Copilot Connector and Plugin Governance solution content' {
 
         $errors.Count | Should -Be 0
     }
+
+    It 'has valid PowerShell syntax in Export-Evidence.ps1' {
+        $errors = $null
+        $tokens = $null
+        [System.Management.Automation.Language.Parser]::ParseFile(
+            (Join-Path $scriptsRoot 'Export-Evidence.ps1'),
+            [ref]$tokens,
+            [ref]$errors
+        ) | Out-Null
+
+        $errors.Count | Should -Be 0
+    }
+
+    It 'has valid PowerShell syntax in Monitor-Compliance.ps1' {
+        $errors = $null
+        $tokens = $null
+        [System.Management.Automation.Language.Parser]::ParseFile(
+            (Join-Path $scriptsRoot 'Monitor-Compliance.ps1'),
+            [ref]$tokens,
+            [ref]$errors
+        ) | Out-Null
+
+        $errors.Count | Should -Be 0
+    }
 }

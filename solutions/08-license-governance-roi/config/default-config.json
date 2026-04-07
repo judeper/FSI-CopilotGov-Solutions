@@ -32,9 +32,10 @@
     ],
     "reallocationTriggerUtilizationPct": 40,
     "licenseSkus": [
-      "Copilot for Microsoft 365"
+      "Microsoft 365 Copilot"
     ],
-    "reportingPeriodDays": 90
+    "reportingPeriodDays": 90,
+    "annualizedCostPerSeatUsd": 360
   },
   "consumptionBilling": {
     "payAsYouGoEnabled": false,

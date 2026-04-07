@@ -43,6 +43,7 @@ param(
 
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
+    [ValidatePattern('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')]
     [string]$TenantId,
 
     [Parameter()]
@@ -53,92 +54,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function ConvertTo-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$InputObject
-    )
-
-    if ($null -eq $InputObject) {
-        return $null
-    }
-
-    if ($InputObject -is [System.Collections.IDictionary]) {
-        $table = @{}
-        foreach ($key in $InputObject.Keys) {
-            $table[$key] = ConvertTo-Hashtable -InputObject $InputObject[$key]
-        }
-
-        return $table
-    }
-
-    if ($InputObject -is [pscustomobject]) {
-        $table = @{}
-        foreach ($property in $InputObject.PSObject.Properties) {
-            $table[$property.Name] = ConvertTo-Hashtable -InputObject $property.Value
-        }
-
-        return $table
-    }
-
-    if (($InputObject -is [System.Collections.IEnumerable]) -and -not ($InputObject -is [string])) {
-        $list = @()
-        foreach ($item in $InputObject) {
-            $list += ,(ConvertTo-Hashtable -InputObject $item)
-        }
-
-        return $list
-    }
-
-    return $InputObject
-}
-
-function Merge-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [hashtable]$Base,
-
-        [Parameter(Mandatory)]
-        [hashtable]$Override
-    )
-
-    $merged = @{}
-
-    foreach ($key in $Base.Keys) {
-        $merged[$key] = $Base[$key]
-    }
-
-    foreach ($key in $Override.Keys) {
-        if (($merged.ContainsKey($key)) -and ($merged[$key] -is [hashtable]) -and ($Override[$key] -is [hashtable])) {
-            $merged[$key] = Merge-Hashtable -Base $merged[$key] -Override $Override[$key]
-        }
-        else {
-            $merged[$key] = $Override[$key]
-        }
-    }
-
-    return $merged
-}
-
-function Get-Configuration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$ConfigurationTier
-    )
-
-    $configRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\config'))
-    $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-    $tierConfigPath = Join-Path $configRoot ("{0}.json" -f $ConfigurationTier)
-
-    $defaultConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path $defaultConfigPath -Raw) | ConvertFrom-Json)
-    $tierConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path $tierConfigPath -Raw) | ConvertFrom-Json)
-
-    return (Merge-Hashtable -Base $defaultConfig -Override $tierConfig)
-}
+Import-Module (Join-Path $PSScriptRoot 'SharedUtilities.psm1') -Force
 
 function Test-SharePointAdvancedManagementLicense {
     [CmdletBinding()]
@@ -204,7 +120,7 @@ function Resolve-RestrictedSharePointSearchState {
         [string]$ScanMode
     )
 
-    $enabled = [bool]($Configuration.enableRestrictedSharePointSearch -or $Configuration.restrictedSharePointSearchEnabled)
+    $enabled = [bool]$Configuration.enableRestrictedSharePointSearch
     if (-not $enabled) {
         return [pscustomobject]@{
             Enabled = $false
@@ -213,7 +129,7 @@ function Resolve-RestrictedSharePointSearchState {
         }
     }
 
-    $status = if ($ScanMode -eq 'AutoRemediate') { 'planned-enable' } else { 'planned-enable' }
+    $status = if ($ScanMode -eq 'AutoRemediate') { 'planned-enforce' } else { 'planned-enable' }
 
     return [pscustomobject]@{
         Enabled = $true
@@ -222,7 +138,7 @@ function Resolve-RestrictedSharePointSearchState {
     }
 }
 
-$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
+$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier -ScriptRoot $PSScriptRoot
 $upstreamCheck = Test-UpstreamReadinessOutput -DependencyName $configuration.upstreamDependency
 $licenseCheck = Test-SharePointAdvancedManagementLicense -Configuration $configuration -TenantId $TenantId
 $restrictedSearchState = Resolve-RestrictedSharePointSearchState -Configuration $configuration -ScanMode $ScanMode
@@ -248,6 +164,10 @@ $manifest = [ordered]@{
         maxSitesPerRun = $configuration.maxSitesPerRun
         notificationMode = $configuration.notificationMode
         enableSiteOwnerNotifications = $configuration.enableSiteOwnerNotifications
+        evidenceRetentionDays = $configuration.evidenceRetentionDays
+        riskThresholds = $configuration.riskThresholds
+        requireOwnerAttestation = $configuration.requireOwnerAttestation
+        requireExaminerReadyEvidence = $configuration.requireExaminerReadyEvidence
     }
 }
 

@@ -30,7 +30,7 @@ PS> .\Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath .\artifacts\e
 This script supports compliance with books-and-records examinations by exporting a structured
 JSON package and SHA-256 companion files for the selected tier.
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -52,48 +52,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Resolve-AtmOutputPath {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if ([IO.Path]::IsPathRooted($Path)) {
-        return $Path
-    }
-
-    return [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $Path))
-}
-
-function Read-AtmJsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    return Get-Content -Path $Path -Raw | ConvertFrom-Json -Depth 20
-}
-
-function Write-AtmJsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path,
-
-        [Parameter(Mandatory)]
-        [object]$InputObject
-    )
-
-    $directory = Split-Path -Path $Path -Parent
-    if (-not (Test-Path -Path $directory)) {
-        New-Item -ItemType Directory -Path $directory -Force | Out-Null
-    }
-
-    $InputObject | ConvertTo-Json -Depth 20 | Set-Content -Path $Path -Encoding utf8
-    return $Path
-}
+Import-Module (Join-Path $PSScriptRoot 'AtmShared.psm1') -Force
 
 function Write-AtmHashFile {
     [CmdletBinding()]
@@ -261,23 +220,57 @@ $ediscoveryArtifact = [ordered]@{
     )
 }
 
-$null = New-Item -ItemType Directory -Path $outputFolder -Force
-$auditPath = Write-AtmJsonFile -Path (Join-Path $outputFolder 'audit-log-completeness.json') -InputObject $auditArtifact
-$retentionPath = Write-AtmJsonFile -Path (Join-Path $outputFolder 'retention-policy-state.json') -InputObject $retentionArtifact
-$ediscoveryPath = Write-AtmJsonFile -Path (Join-Path $outputFolder 'ediscovery-readiness-package.json') -InputObject $ediscoveryArtifact
+if ($PSCmdlet.ShouldProcess($outputFolder, 'Write ATM evidence artifacts')) {
+    $null = New-Item -ItemType Directory -Path $outputFolder -Force
+    $auditPath = Write-AtmJsonFile -Path (Join-Path $outputFolder 'audit-log-completeness.json') -InputObject $auditArtifact
+    $retentionPath = Write-AtmJsonFile -Path (Join-Path $outputFolder 'retention-policy-state.json') -InputObject $retentionArtifact
+    $ediscoveryPath = Write-AtmJsonFile -Path (Join-Path $outputFolder 'ediscovery-readiness-package.json') -InputObject $ediscoveryArtifact
 
-$auditHash = Write-AtmHashFile -Path $auditPath
-$retentionHash = Write-AtmHashFile -Path $retentionPath
-$ediscoveryHash = Write-AtmHashFile -Path $ediscoveryPath
+    $auditHash = Write-AtmHashFile -Path $auditPath
+    $retentionHash = Write-AtmHashFile -Path $retentionPath
+    $ediscoveryHash = Write-AtmHashFile -Path $ediscoveryPath
+} else {
+    return
+}
 
 $retentionGapCount = @($retentionValidation | Where-Object { -not $_.meetsMinimum }).Count
 $control32Status = if ($retentionGapCount -eq 0) { 'implemented' } else { 'partial' }
 $summaryStatus = if ($retentionGapCount -eq 0) { 'implemented' } else { 'partial' }
 
+$requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
+$configuredEventTypes = @($tierConfig.auditEventTypes)
+$missingEventTypes = @($requiredEventTypes | Where-Object { $_ -notin $configuredEventTypes })
+$allowedAuditLevels = @($defaultConfig.defaults.auditLevelRequired)
+$auditLevelValid = ($tierConfig.auditLevel -in $allowedAuditLevels)
+
+$control31Status = if ($missingEventTypes.Count -eq 0 -and $auditLevelValid) {
+    'implemented'
+} else {
+    'partial'
+}
+
+$control33Status = if ($tierConfig.ediscovery.mode -in @('basic', 'enhanced', 'full')) {
+    'implemented'
+} else {
+    'partial'
+}
+
+$control311Status = if ([bool]$tierConfig.retentionLabelRequired -and -not [string]::IsNullOrWhiteSpace([string]$tierConfig.retentionPolicyMode)) {
+    'implemented'
+} else {
+    'partial'
+}
+
+$control312Status = if ($tierConfig.powerAutomate.exceptionAlertsEnabled) {
+    'implemented'
+} else {
+    'monitor-only'
+}
+
 $controls = @(
     [pscustomobject]@{
         controlId = '3.1'
-        status = 'implemented'
+        status = $control31Status
         notes = 'audit-log-completeness captures required Copilot event types and audit level notes for the selected tier.'
     }
     [pscustomobject]@{
@@ -287,17 +280,17 @@ $controls = @(
     }
     [pscustomobject]@{
         controlId = '3.3'
-        status = 'implemented'
+        status = $control33Status
         notes = 'ediscovery-readiness-package records case, hold, custodian, and preservation expectations.'
     }
     [pscustomobject]@{
         controlId = '3.11'
-        status = 'implemented'
+        status = $control311Status
         notes = 'Retention labels and publishing mode are documented for Copilot interaction artifacts.'
     }
     [pscustomobject]@{
         controlId = '3.12'
-        status = 'implemented'
+        status = $control312Status
         notes = 'Notification mode and exception-handling responsibilities are described by tier.'
     }
 )

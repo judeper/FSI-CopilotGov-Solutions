@@ -88,4 +88,56 @@ Describe 'FINRA Supervision Workflow for Copilot solution' {
         $package.metadata.warning | Should -Match 'sample evidence'
         $package.summary.overallStatus | Should -Be 'partial'
     }
+
+    It 'Export-Evidence.ps1 rejects PeriodEnd before PeriodStart' {
+        { & (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'evidence-bad-dates') -PeriodStart '2026-03-15' -PeriodEnd '2026-01-01' } | Should -Throw '*PeriodEnd*'
+    }
+
+    It 'scripts fail gracefully when a tier config file is missing' {
+        $fakeTierPath = Join-Path $TestDrive 'missing-tier-solution'
+        $null = New-Item -ItemType Directory -Path (Join-Path $fakeTierPath 'config') -Force
+        Copy-Item -Path (Join-Path $solutionRoot 'config\default-config.json') -Destination (Join-Path $fakeTierPath 'config\default-config.json')
+        { & (Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1') -ConfigurationTier regulated -OutputPath (Join-Path $TestDrive 'monitor-missing') 3>$null } | Should -Throw '*not found*'
+    }
+
+    It 'Shared-Functions.ps1 exists and defines expected functions' {
+        $sharedPath = Join-Path $solutionRoot 'scripts\Shared-Functions.ps1'
+        Test-Path $sharedPath | Should -BeTrue
+        $content = Get-Content -Path $sharedPath -Raw
+        $content | Should -Match 'function Read-JsonFile'
+        $content | Should -Match 'function Get-ConfiguredEnvironmentUrl'
+        $content | Should -Match 'function Get-EffectiveConfiguration'
+    }
+
+    It 'boolean governance flags are monotonically non-decreasing across tiers' {
+        $tiers = @('baseline', 'recommended', 'regulated')
+        $configs = @{}
+        foreach ($tier in $tiers) {
+            $configs[$tier] = Get-Content -Path (Join-Path $solutionRoot "config\$tier.json") -Raw | ConvertFrom-Json -AsHashtable
+        }
+
+        # immutableLogRequired must be true for recommended and regulated if baseline is true
+        $configs['recommended']['immutableLogRequired'] | Should -Be $true
+        $configs['regulated']['immutableLogRequired'] | Should -Be $true
+
+        # escalationEnabled: baseline ≤ recommended ≤ regulated
+        if ($configs['baseline']['escalationEnabled']) {
+            $configs['recommended']['escalationEnabled'] | Should -Be $true
+            $configs['regulated']['escalationEnabled'] | Should -Be $true
+        }
+        if ($configs['recommended']['escalationEnabled']) {
+            $configs['regulated']['escalationEnabled'] | Should -Be $true
+        }
+
+        # evidenceRetentionDays: baseline ≤ recommended ≤ regulated
+        $configs['recommended']['evidenceRetentionDays'] | Should -BeGreaterOrEqual $configs['baseline']['evidenceRetentionDays']
+        $configs['regulated']['evidenceRetentionDays'] | Should -BeGreaterOrEqual $configs['recommended']['evidenceRetentionDays']
+    }
+
+    It 'Export-Evidence.ps1 includes retry logic for Dataverse API calls' {
+        $content = Get-Content -Path (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1') -Raw
+        $content | Should -Match 'maxRetries'
+        $content | Should -Match '429'
+        $content | Should -Match 'maxPages'
+    }
 }

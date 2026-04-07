@@ -7,7 +7,7 @@
 ### Added
 - Initial solution scaffold for Copilot Pages and Notebooks Compliance Gap Monitor
 - Gap discovery framework for Copilot Pages (Loop-based content) retention coverage
-- Gap discovery for Notebooks (OneNote in Teams/SharePoint) eDiscovery limitations
+- Gap discovery for Notebooks (OneNote in Teams/SharePoint) Microsoft Purview eDiscovery limitations
 - Compensating control registration schema: manual export procedures, enhanced audit logging, access restriction controls
 - Preservation exception register aligned to SEC 17a-4 Rule 17a-4(f) electronic records requirements
 - Platform capability tracker: monitors Microsoft release notes for gap closure announcements

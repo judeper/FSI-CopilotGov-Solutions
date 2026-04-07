@@ -8,14 +8,14 @@ Conditional Access Policy Automation for Copilot provides a documented control p
 
 | Layer | Components | Responsibility |
 |-------|------------|----------------|
-| Policy layer | Azure AD Conditional Access, named locations, MFA, compliant-device grant controls | Enforces access patterns for Microsoft 365 Copilot and Copilot Studio |
+| Policy layer | Microsoft Entra Conditional Access, named locations, MFA, compliant-device grant controls | Enforces access patterns for Microsoft 365 Copilot and Copilot Studio |
 | Automation layer | `scripts\Deploy-Solution.ps1`, `scripts\Monitor-Compliance.ps1`, `scripts\Export-Evidence.ps1` | Generates templates, validates tier alignment, and packages evidence |
 | Monitoring layer | Scheduled drift detection, Power Automate exception approval, audit review workflow | Detects unauthorized policy changes and routes exception decisions for approval |
 | Evidence layer | `ca-policy-state`, `drift-alert-summary`, `access-exception-register` | Produces evidence artifacts aligned to the shared schema |
 
 ## Policy layer
 
-The policy layer is implemented in Azure AD Conditional Access and should target the Copilot application IDs defined in `config\default-config.json`. Policies are organized around risk tiers:
+The policy layer is implemented in Microsoft Entra Conditional Access and should target the Copilot application IDs defined in `config\default-config.json`. Policies are organized around risk tiers:
 
 - Low: authenticated access with the selected tier safeguards.
 - Medium: stronger authentication and device requirements for elevated users.
@@ -28,6 +28,8 @@ The automation layer runs in PowerShell:
 - `Deploy-Solution.ps1` builds Copilot Conditional Access policy templates, a deployment manifest, and a baseline snapshot stub.
 - `Monitor-Compliance.ps1` validates tier settings, compares the approved baseline to the current policy definition, and checks for expired exceptions.
 - `Export-Evidence.ps1` writes evidence artifacts, their SHA-256 companions, and the shared evidence package.
+
+> **Note on shared utility functions:** `Read-JsonFile`, `Resolve-ConfiguredPath`, `Merge-Configuration`, and `New-PolicyTemplate` are duplicated across all three scripts. Changes to shared logic (such as JSON parsing, path resolution, configuration merging, or policy template generation) must be applied consistently to all three files. A future refactoring may extract these into a shared `.psm1` module.
 
 ## Monitoring layer
 
@@ -81,6 +83,6 @@ Evidence exports are intentionally simple and machine-readable:
 
 ## Integration notes
 
-- Copilot app targeting uses the Microsoft Copilot for M365 and Copilot Studio application IDs.
+- Copilot app targeting uses the Microsoft 365 Copilot and Copilot Studio application IDs.
 - Drift monitoring should run weekly for baseline, daily for recommended, and near real time for regulated deployments.
 - Exception workflows should include supervisory approval, expiry tracking, and compensating-control documentation.

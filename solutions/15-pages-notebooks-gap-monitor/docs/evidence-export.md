@@ -12,7 +12,7 @@ The `gap-findings` artifact records each known gap discovered by the solution.
 |-------|-------------|
 | `gapId` | Stable identifier for the documented gap |
 | `description` | Plain-language description of the platform limitation or review finding |
-| `affectedCapability` | Capability impacted, such as Copilot Pages retention coverage or notebook eDiscovery validation |
+| `affectedCapability` | Capability impacted, such as Copilot Pages retention coverage or notebook Microsoft Purview eDiscovery validation |
 | `affectedRegulation[]` | One or more regulations affected by the gap |
 | `severity` | Severity rating, typically `high`, `medium`, or `low` |
 | `discoveredAt` | Timestamp when the gap was first recorded or revalidated |

@@ -31,7 +31,8 @@ Optional directory used to write `monitor-findings.json` and
 Application (client) ID for app-only Graph authentication.
 
 .PARAMETER ClientSecret
-Client secret for app-only Graph authentication.
+Client secret for app-only Graph authentication. Use a SecureString value
+(e.g., ConvertTo-SecureString) to avoid exposing secrets in shell history.
 
 .PARAMETER CertificateThumbprint
 Certificate thumbprint for app-only Graph authentication.
@@ -56,6 +57,7 @@ param(
 
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
+    [ValidatePattern('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')]
     [string]$TenantId,
 
     [Parameter()]
@@ -72,7 +74,7 @@ param(
     [string]$ClientId,
 
     [Parameter()]
-    [string]$ClientSecret,
+    [securestring]$ClientSecret,
 
     [Parameter()]
     [string]$CertificateThumbprint,
@@ -84,91 +86,49 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
-Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'SharedUtilities.psm1') -Force
 
-function ConvertTo-Hashtable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$InputObject
-    )
-
-    if ($null -eq $InputObject) {
-        return $null
-    }
-
-    if ($InputObject -is [System.Collections.IDictionary]) {
-        $table = @{}
-        foreach ($key in $InputObject.Keys) {
-            $table[$key] = ConvertTo-Hashtable -InputObject $InputObject[$key]
-        }
-
-        return $table
-    }
-
-    if ($InputObject -is [pscustomobject]) {
-        $table = @{}
-        foreach ($property in $InputObject.PSObject.Properties) {
-            $table[$property.Name] = ConvertTo-Hashtable -InputObject $property.Value
-        }
-
-        return $table
-    }
-
-    if (($InputObject -is [System.Collections.IEnumerable]) -and -not ($InputObject -is [string])) {
-        $list = @()
-        foreach ($item in $InputObject) {
-            $list += ,(ConvertTo-Hashtable -InputObject $item)
-        }
-
-        return $list
-    }
-
-    return $InputObject
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$graphAuthModulePath = Join-Path $repoRoot 'scripts\common\GraphAuth.psm1'
+if (Test-Path $graphAuthModulePath) {
+    Import-Module $graphAuthModulePath -Force
+}
+else {
+    Write-Warning "Shared module GraphAuth.psm1 not found at '$graphAuthModulePath'. Graph authentication unavailable; sample data will be used."
 }
 
-function Merge-Hashtable {
+function Invoke-GraphWithRetry {
+    <#
+    .SYNOPSIS
+    Wraps Invoke-CopilotGovGraphRequest with retry and exponential backoff for throttled (429) responses.
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
-        [hashtable]$Base,
-
-        [Parameter(Mandatory)]
-        [hashtable]$Override
+        [Parameter(Mandatory)][psobject]$Context,
+        [Parameter(Mandatory)][string]$Uri,
+        [switch]$AllPages,
+        [int]$MaxRetries = 3,
+        [int[]]$BackoffSeconds = @(60, 120, 240)
     )
-
-    $merged = @{}
-
-    foreach ($key in $Base.Keys) {
-        $merged[$key] = $Base[$key]
-    }
-
-    foreach ($key in $Override.Keys) {
-        if (($merged.ContainsKey($key)) -and ($merged[$key] -is [hashtable]) -and ($Override[$key] -is [hashtable])) {
-            $merged[$key] = Merge-Hashtable -Base $merged[$key] -Override $Override[$key]
+    $attempt = 0
+    while ($true) {
+        try {
+            $params = @{ Context = $Context; Uri = $Uri }
+            if ($AllPages) { $params['AllPages'] = $true }
+            return Invoke-CopilotGovGraphRequest @params
         }
-        else {
-            $merged[$key] = $Override[$key]
+        catch {
+            $attempt++
+            $is429 = $_.Exception.Message -match '429' -or
+                     $_.Exception.Message -match 'throttl' -or
+                     ($null -ne $_.Exception.Response -and
+                      [int]$_.Exception.Response.StatusCode -eq 429)
+            if (-not $is429 -or $attempt -gt $MaxRetries) { throw }
+            $delay = if ($attempt -le $BackoffSeconds.Count) { $BackoffSeconds[$attempt - 1] } else { $BackoffSeconds[-1] }
+            Write-Warning "Graph API throttled (attempt $attempt/$MaxRetries). Retrying in ${delay}s..."
+            Start-Sleep -Seconds $delay
         }
     }
-
-    return $merged
-}
-
-function Get-Configuration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$ConfigurationTier
-    )
-
-    $configRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\config'))
-    $defaultConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path (Join-Path $configRoot 'default-config.json') -Raw) | ConvertFrom-Json)
-    $tierConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path (Join-Path $configRoot ("{0}.json" -f $ConfigurationTier)) -Raw) | ConvertFrom-Json)
-
-    return (Merge-Hashtable -Base $defaultConfig -Override $tierConfig)
 }
 
 function Get-SitePermissionAnalysis {
@@ -208,7 +168,7 @@ function Get-SitePermissionAnalysis {
                     $exposureReasons += 'Organization-wide sharing link'
                 }
                 'users' {
-                    $anomalyCount++
+                    # User-scoped links are targeted (most restrictive) — do not inflate anomaly count
                 }
             }
         }
@@ -266,11 +226,11 @@ function Get-SiteDataSignals {
     )
 
     $signals = @()
-    if ($null -eq $Configuration -or -not $Configuration.ContainsKey('fsiFsiDataClassifiers')) {
+    if ($null -eq $Configuration -or -not $Configuration.ContainsKey('fsiDataClassifiers')) {
         return $signals
     }
 
-    $classifiers = $Configuration.fsiFsiDataClassifiers
+    $classifiers = $Configuration.fsiDataClassifiers
     $siteNameLower = $SiteName.ToLower()
 
     foreach ($classifierKey in $classifiers.Keys) {
@@ -336,7 +296,7 @@ function Get-SharePointOversharingSites {
         )
     }
 
-    $sites = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
+    $sites = @(Invoke-GraphWithRetry -Context $GraphContext `
         -Uri "/sites?search=*&`$select=id,displayName,webUrl,isPersonalSite&`$top=999" -AllPages)
 
     $spSites = @($sites | Where-Object {
@@ -352,7 +312,7 @@ function Get-SharePointOversharingSites {
 
         $permissions = @()
         try {
-            $permissions = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $permissions = @(Invoke-GraphWithRetry -Context $GraphContext `
                 -Uri "/sites/$siteId/drive/root/permissions")
         }
         catch {
@@ -364,7 +324,7 @@ function Get-SharePointOversharingSites {
 
         $owner = ''
         try {
-            $siteDetail = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $siteDetail = Invoke-GraphWithRetry -Context $GraphContext `
                 -Uri "/sites/$siteId`?`$select=createdBy"
             $createdBy = if ($siteDetail -is [hashtable]) { $siteDetail['createdBy'] } else { $siteDetail.createdBy }
             if ($null -ne $createdBy) {
@@ -374,7 +334,7 @@ function Get-SharePointOversharingSites {
                 }
             }
         }
-        catch { }
+        catch { Write-Warning "Could not resolve owner for site $siteUrl : $($_.Exception.Message)" }
         if ([string]::IsNullOrWhiteSpace($owner)) { $owner = "siteadmin@tenant" }
 
         $candidates += [pscustomobject]@{
@@ -430,7 +390,7 @@ function Get-OneDriveOversharingItems {
         )
     }
 
-    $sites = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
+    $sites = @(Invoke-GraphWithRetry -Context $GraphContext `
         -Uri "/sites?search=*&`$select=id,displayName,webUrl,isPersonalSite&`$top=999" -AllPages)
 
     $personalSites = @($sites | Where-Object {
@@ -446,7 +406,7 @@ function Get-OneDriveOversharingItems {
 
         $permissions = @()
         try {
-            $permissions = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $permissions = @(Invoke-GraphWithRetry -Context $GraphContext `
                 -Uri "/sites/$siteId/drive/root/permissions")
         }
         catch {
@@ -457,7 +417,7 @@ function Get-OneDriveOversharingItems {
         if ($analysis.AnomalyCount -eq 0) { continue }
 
         $signals = Get-SiteDataSignals -SiteName $siteName -Configuration $Configuration
-        $ownerEmail = $siteName -replace '^.*personal[/\\]', ''
+        $ownerEmail = $siteUrl -replace '^.*personal[/\\]', ''
         if ([string]::IsNullOrWhiteSpace($ownerEmail) -or $ownerEmail -notmatch '@') {
             $ownerEmail = "$ownerEmail@tenant"
         }
@@ -517,7 +477,7 @@ function Get-TeamsOversharingChannels {
 
     $groups = @()
     try {
-        $groups = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
+        $groups = @(Invoke-GraphWithRetry -Context $GraphContext `
             -Uri "/groups?`$filter=resourceProvisioningOptions/Any(x:x eq 'Team')&`$select=id,displayName,mail" -AllPages)
     }
     catch {
@@ -533,7 +493,7 @@ function Get-TeamsOversharingChannels {
 
         $spSite = $null
         try {
-            $spSite = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $spSite = Invoke-GraphWithRetry -Context $GraphContext `
                 -Uri "/groups/$groupId/sites/root?`$select=id,webUrl"
         }
         catch {
@@ -546,7 +506,7 @@ function Get-TeamsOversharingChannels {
 
         $permissions = @()
         try {
-            $permissions = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $permissions = @(Invoke-GraphWithRetry -Context $GraphContext `
                 -Uri "/sites/$siteId/drive/root/permissions")
         }
         catch {
@@ -607,7 +567,7 @@ function Invoke-RiskClassification {
     )
 
     $thresholds = $Configuration.riskThresholds
-    $classifiers = $Configuration.fsiFsiDataClassifiers
+    $classifiers = $Configuration.fsiDataClassifiers
 
     foreach ($candidate in $Candidates) {
         $score = Get-SharingScopeWeight -SharingScope $candidate.SharingScope -Configuration $Configuration
@@ -674,7 +634,106 @@ function Invoke-RiskClassification {
     }
 }
 
-$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
+function Get-SensitivityLabelCoverage {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$TenantId,
+
+        [Parameter()]
+        [psobject]$GraphContext,
+
+        [Parameter()]
+        [object[]]$ScannedSites = @()
+    )
+
+    if ($null -eq $GraphContext) {
+        # Sample data: representative label coverage for documentation-first scenarios
+        $totalSites = [Math]::Max(@($ScannedSites).Count, 7)
+        $labeledCount = [Math]::Floor($totalSites * 0.43)
+        return [pscustomobject]@{
+            TenantId = $TenantId
+            TotalSitesScanned = $totalSites
+            SitesWithLabels = $labeledCount
+            SitesWithoutLabels = ($totalSites - $labeledCount)
+            LabelCoveragePercent = [Math]::Round(($labeledCount / $totalSites) * 100, 1)
+            LabelBreakdown = @(
+                [pscustomobject]@{ Label = 'Highly Confidential'; Count = [Math]::Floor($labeledCount * 0.33) }
+                [pscustomobject]@{ Label = 'Confidential'; Count = [Math]::Floor($labeledCount * 0.50) }
+                [pscustomobject]@{ Label = 'General'; Count = ($labeledCount - [Math]::Floor($labeledCount * 0.33) - [Math]::Floor($labeledCount * 0.50)) }
+            )
+            Recommendation = 'Apply Microsoft Purview Information Protection sensitivity labels to all sites containing regulated data to restrict Microsoft 365 Copilot content surfacing.'
+        }
+    }
+
+    $labeledSiteCount = 0
+    $unlabeledSiteCount = 0
+    $labelCounts = @{}
+
+    foreach ($site in $ScannedSites) {
+        $siteUrl = if ($site -is [hashtable]) { $site['SiteUrl'] } else { $site.SiteUrl }
+        $siteId = $null
+        try {
+            $siteInfo = Invoke-GraphWithRetry -Context $GraphContext `
+                -Uri "/sites?search=$([Uri]::EscapeDataString($siteUrl))&`$select=id&`$top=1"
+            $siteId = if ($siteInfo -is [array] -and $siteInfo.Count -gt 0) {
+                if ($siteInfo[0] -is [hashtable]) { $siteInfo[0]['id'] } else { $siteInfo[0].id }
+            }
+        }
+        catch {
+            Write-Warning "Could not look up site ID for $siteUrl : $($_.Exception.Message)"
+        }
+
+        if ($null -eq $siteId) { $unlabeledSiteCount++; continue }
+
+        try {
+            $driveItems = @(Invoke-GraphWithRetry -Context $GraphContext `
+                -Uri "/sites/$siteId/drive/root/children?`$select=id,sensitivityLabel&`$top=50")
+            $labeledItems = @($driveItems | Where-Object {
+                $label = if ($_ -is [hashtable]) { $_['sensitivityLabel'] } else { $_.sensitivityLabel }
+                $null -ne $label
+            })
+
+            if ($labeledItems.Count -gt 0) {
+                $labeledSiteCount++
+                foreach ($item in $labeledItems) {
+                    $label = if ($item -is [hashtable]) { $item['sensitivityLabel'] } else { $item.sensitivityLabel }
+                    $labelName = if ($label -is [hashtable]) { $label['displayName'] } else { $label.displayName }
+                    if (-not [string]::IsNullOrWhiteSpace($labelName)) {
+                        if (-not $labelCounts.ContainsKey($labelName)) { $labelCounts[$labelName] = 0 }
+                        $labelCounts[$labelName]++
+                    }
+                }
+            }
+            else {
+                $unlabeledSiteCount++
+            }
+        }
+        catch {
+            Write-Warning "Could not retrieve sensitivity labels for site $siteUrl : $($_.Exception.Message)"
+            $unlabeledSiteCount++
+        }
+    }
+
+    $totalScanned = $labeledSiteCount + $unlabeledSiteCount
+    $coveragePercent = if ($totalScanned -gt 0) { [Math]::Round(($labeledSiteCount / $totalScanned) * 100, 1) } else { 0 }
+
+    $breakdown = foreach ($key in $labelCounts.Keys | Sort-Object) {
+        [pscustomobject]@{ Label = $key; Count = $labelCounts[$key] }
+    }
+
+    return [pscustomobject]@{
+        TenantId = $TenantId
+        TotalSitesScanned = $totalScanned
+        SitesWithLabels = $labeledSiteCount
+        SitesWithoutLabels = $unlabeledSiteCount
+        LabelCoveragePercent = $coveragePercent
+        LabelBreakdown = @($breakdown)
+        Recommendation = 'Apply Microsoft Purview Information Protection sensitivity labels to all sites containing regulated data to restrict Microsoft 365 Copilot content surfacing.'
+    }
+}
+
+$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier -ScriptRoot $PSScriptRoot
 
 $effectiveWorkloads = if ($PSBoundParameters.ContainsKey('WorkloadsToScan')) {
     $WorkloadsToScan
@@ -723,9 +782,15 @@ foreach ($workload in $effectiveWorkloads) {
 
 $findings = @(Invoke-RiskClassification -Candidates $rawCandidates -Configuration $configuration -RemediationMode (([string]$configuration.remediationMode).Substring(0, 1).ToUpper() + ([string]$configuration.remediationMode).Substring(1)))
 
+if ($effectiveMaxSites -eq 0) {
+    Write-Warning "MaxSites is 0. No findings will be returned. Set MaxSites to -1 (no cap) or a positive integer if this is unintentional."
+}
+
 if ($effectiveMaxSites -ge 0) {
     $findings = @($findings | Select-Object -First $effectiveMaxSites)
 }
+
+$sensitivityLabelCoverage = Get-SensitivityLabelCoverage -TenantId $TenantId -GraphContext $graphContext -ScannedSites $rawCandidates
 
 $summary = [pscustomobject]@{
     TenantId = $TenantId
@@ -735,9 +800,10 @@ $summary = [pscustomobject]@{
     HighRiskCount = @($findings | Where-Object { $_.RiskLevel -eq 'HIGH' }).Count
     MediumRiskCount = @($findings | Where-Object { $_.RiskLevel -eq 'MEDIUM' }).Count
     LowRiskCount = @($findings | Where-Object { $_.RiskLevel -eq 'LOW' }).Count
+    SensitivityLabelCoverage = $sensitivityLabelCoverage
 }
 
-Write-Host ("Summary: Total={0}; HIGH={1}; MEDIUM={2}; LOW={3}" -f $summary.TotalFindings, $summary.HighRiskCount, $summary.MediumRiskCount, $summary.LowRiskCount)
+Write-Host ("Summary: Total={0}; HIGH={1}; MEDIUM={2}; LOW={3}; LabelCoverage={4}%" -f $summary.TotalFindings, $summary.HighRiskCount, $summary.MediumRiskCount, $summary.LowRiskCount, $sensitivityLabelCoverage.LabelCoveragePercent)
 
 if ($PSBoundParameters.ContainsKey('ExportPath')) {
     $exportRoot = [System.IO.Path]::GetFullPath($ExportPath)

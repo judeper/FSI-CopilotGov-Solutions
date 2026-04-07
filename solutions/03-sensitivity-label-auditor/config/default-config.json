@@ -90,5 +90,5 @@
   },
   "prioritySites": [],
   "remediationManifestMaxItems": 500,
-  "graphApiVersion": "beta"
+  "graphApiVersion": "v1.0"
 }

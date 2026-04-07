@@ -82,6 +82,5 @@
     "minimumExpansionReadinessPercent": 90,
     "maximumOpenIncidents": 3
   },
-  "evidenceRetentionDays": 90,
-  "notificationMode": "standard"
+  "evidenceRetentionDays": 90
 }

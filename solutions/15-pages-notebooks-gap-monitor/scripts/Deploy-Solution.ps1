@@ -42,7 +42,7 @@
     Version: v0.1.0
 
     NOTE: This solution documents compliance gaps. It does NOT automatically
-    remediate retention or eDiscovery configurations. All gap remediations
+    remediate retention or Microsoft Purview eDiscovery configurations. All gap remediations
     require human review and approval by compliance personnel.
 #>
 [CmdletBinding(SupportsShouldProcess)]
@@ -61,29 +61,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
-function Get-PngmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $configRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'config'
-    $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-    $tierConfigPath = Join-Path $configRoot ('{0}.json' -f $Tier)
-
-    foreach ($path in @($defaultConfigPath, $tierConfigPath)) {
-        if (-not (Test-Path -Path $path)) {
-            throw "Configuration file not found: $path"
-        }
-    }
-
-    return [pscustomobject]@{
-        Default = (Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json)
-        Tier = (Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json)
-    }
-}
+Import-Module (Join-Path $PSScriptRoot 'PngmShared.psm1') -Force
 
 function Get-KnownGapBaseline {
     [CmdletBinding()]
@@ -111,15 +89,15 @@ function Get-KnownGapBaseline {
         }
         [pscustomobject]@{
             gapId = 'PNGM-GAP-002'
-            description = 'Loop workspace content referenced by Copilot Pages may not appear consistently in eDiscovery workflows across tenant configurations, requiring case-by-case validation.'
-            affectedCapability = 'Loop workspace eDiscovery scope'
+            description = 'Loop workspace content referenced by Copilot Pages may not appear consistently in Microsoft Purview eDiscovery workflows across tenant configurations, requiring case-by-case validation.'
+            affectedCapability = 'Loop workspace Microsoft Purview eDiscovery scope'
             regulations = @('SEC 17a-4', 'FINRA 4511')
             severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-21).ToString('o')
             platformUpdateRequired = $true
             gapCategory = 'loop-ediscovery-coverage'
-            owner = 'eDiscovery Operations'
+            owner = 'Microsoft Purview eDiscovery Operations'
             recommendedCompensatingControl = 'Capture manual exports and related site URLs in the investigation record until native search coverage is confirmed.'
             reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
         }
@@ -149,6 +127,20 @@ function Get-KnownGapBaseline {
             gapCategory = 'pages-sharing-controls'
             owner = 'Collaboration Governance'
             recommendedCompensatingControl = 'Restrict site membership, disable external sharing where required, and capture monthly sharing reviews in the control log.'
+            reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
+        }
+        [pscustomobject]@{
+            gapId = 'PNGM-GAP-005'
+            description = 'Copilot Pages and Loop-backed content may not satisfy books-and-records preservation requirements natively, requiring formal exceptions with documented compensating controls until platform coverage is confirmed.'
+            affectedCapability = 'Books-and-records preservation exceptions'
+            regulations = @('SEC 17a-4', 'FINRA 4511')
+            severity = 'high'
+            status = 'open'
+            discoveredAt = $generatedAt.AddDays(-28).ToString('o')
+            platformUpdateRequired = $true
+            gapCategory = 'books-and-records-exceptions'
+            owner = 'Records Management'
+            recommendedCompensatingControl = 'Register a formal preservation exception with legal sign-off, document the interim manual export procedure, and schedule quarterly reviews until native WORM-compliant preservation is available.'
             reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
         }
     )
@@ -200,7 +192,7 @@ $deploymentManifest = [ordered]@{
     )
     initializedAt = (Get-Date).ToString('o')
     gapCount = $knownGaps.Count
-    notes = 'This deployment creates a gap register and manifest. It does not change tenant retention or eDiscovery settings.'
+    notes = 'This deployment creates a gap register and manifest. It does not change tenant retention or Microsoft Purview eDiscovery settings.'
 }
 
 $gapRegister = [ordered]@{

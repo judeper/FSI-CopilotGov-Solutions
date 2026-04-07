@@ -6,7 +6,7 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 
 - [ ] Confirm Power Apps Premium, Power Automate Premium, and Microsoft 365 E5 Compliance licenses are assigned.
 - [ ] Confirm Power Platform Admin, Purview Compliance Admin, and Global Reader roles are available to the deployment team.
-- [ ] Confirm Azure AD groups exist for supervisory principals, escalation recipients, and service accounts.
+- [ ] Confirm Microsoft Entra ID groups exist for supervisory principals, escalation recipients, and service accounts.
 - [ ] Confirm the target Dataverse environment URL is known and approved for use.
 - [ ] Confirm PowerShell 7 or later is installed on the admin workstation.
 - [ ] Confirm Graph and Purview API access is approved for any live export or validation workflow.
@@ -45,7 +45,7 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 - [ ] Run `scripts\Export-Evidence.ps1` for the current reporting period.
 - [ ] Verify the evidence package contains `supervision-queue-snapshot`, `review-disposition-log`, and `sampling-summary`.
 - [ ] Verify each evidence file has a matching `.sha256` companion file.
-- [ ] Verify the final evidence package conforms to `data\evidence-schema.json`.
+- [ ] Verify the final evidence package conforms to `config\evidence-schema.json`.
 
 ## 6. Sign-off
 

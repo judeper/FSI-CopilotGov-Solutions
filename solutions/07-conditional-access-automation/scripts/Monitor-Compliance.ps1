@@ -40,6 +40,10 @@ Set-StrictMode -Version Latest
 
 $solutionRoot = Split-Path $PSScriptRoot -Parent
 
+# NOTE: Read-JsonFile, Write-JsonFile, Resolve-ConfiguredPath, Merge-Configuration, and
+# New-PolicyTemplate are duplicated across Deploy-Solution.ps1, Monitor-Compliance.ps1,
+# and Export-Evidence.ps1. Changes to shared logic must be applied to all three files.
+# See docs\architecture.md for details on this acknowledged tech debt.
 function Read-JsonFile {
     [CmdletBinding()]
     param(
@@ -261,7 +265,7 @@ function New-PolicyTemplate {
         else {
             @('all')
         }
-        signInRiskLevels = @($RiskTierName)
+        signInRiskLevels = @()
         locations = [ordered]@{
             includeLocations = if ($RiskTierSettings.namedLocationRequired) { $namedLocations } else { @('All') }
             excludeLocations = if ($RiskTierSettings.namedLocationRequired) { @('AllTrusted') } else { @() }
@@ -269,9 +273,16 @@ function New-PolicyTemplate {
     }
 
     if ($Configuration.blockUnknownDeviceStates -or $RiskTierSettings.compliantDevice) {
-        $conditions.deviceStates = [ordered]@{
-            includeStates = @('Compliant', 'HybridAzureADJoined')
-            excludeStates = if ($Configuration.blockUnknownDeviceStates) { @('Unknown') } else { @() }
+        $filterRule = if ($Configuration.blockUnknownDeviceStates) {
+            'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
+        } else {
+            'device.isCompliant -eq True'
+        }
+        $conditions.devices = [ordered]@{
+            deviceFilter = [ordered]@{
+                mode = 'include'
+                rule = $filterRule
+            }
         }
     }
 
@@ -285,6 +296,17 @@ function New-PolicyTemplate {
             builtInControls = @($grantControls)
         }
         conditions = $conditions
+        sessionControls = [ordered]@{
+            persistentBrowser = [ordered]@{
+                mode = 'never'
+                isEnabled = $true
+            }
+            signInFrequency = [ordered]@{
+                value = if ($Configuration.tier -eq 'regulated') { 4 } elseif ($RiskTierName -eq 'high') { 8 } else { 12 }
+                type = 'hours'
+                isEnabled = $true
+            }
+        }
     }
 }
 
@@ -431,12 +453,13 @@ function ConvertTo-PolicyFingerprint {
         @()
     }
 
-    $deviceStateObject = Get-KeyValue -InputObject $conditionsObject -Key 'deviceStates'
-    $excludeStates = if (Test-KeyPresent -InputObject $deviceStateObject -Key 'excludeStates') {
-        @(Get-KeyValue -InputObject $deviceStateObject -Key 'excludeStates')
+    $devicesObject = Get-KeyValue -InputObject $conditionsObject -Key 'devices'
+    $deviceFilterObject = Get-KeyValue -InputObject $devicesObject -Key 'deviceFilter'
+    $deviceFilterRule = if (Test-KeyPresent -InputObject $deviceFilterObject -Key 'rule') {
+        [string](Get-KeyValue -InputObject $deviceFilterObject -Key 'rule')
     }
     else {
-        @()
+        ''
     }
 
     return [ordered]@{
@@ -444,7 +467,7 @@ function ConvertTo-PolicyFingerprint {
         targetedAppIds = @($Policy.targetedAppIds | Sort-Object)
         grantControls = @($grantControls | Sort-Object)
         includeLocations = @($includeLocations | Sort-Object)
-        blockUnknownDeviceStates = ($excludeStates -contains 'Unknown')
+        blockUnknownDeviceStates = ($deviceFilterRule -match 'ServerAD')
     }
 }
 

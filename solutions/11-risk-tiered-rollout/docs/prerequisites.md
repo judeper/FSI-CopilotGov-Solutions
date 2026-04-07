@@ -9,15 +9,14 @@
 ## Licensing
 
 - Microsoft 365 E3 or E5 licensing for the targeted users
-- Copilot for Microsoft 365 licenses sized for the intended wave plus rollback reserve
+- Microsoft 365 Copilot licenses sized for the intended wave plus rollback reserve
 - Power Automate Premium licenses for approvers or service accounts that run approval workflows
 
 ## Permissions
 
 The rollout automation design assumes the following Graph permissions are approved for the service principal or admin context used during implementation:
 
-- `User.ReadWrite.All`
-- `LicenseAssignment.ReadWrite.All`
+- `User.ReadWrite.All` (covers license assignment via `POST /users/{id}/assignLicense`)
 - `Directory.Read.All`
 
 ## Platform Requirements

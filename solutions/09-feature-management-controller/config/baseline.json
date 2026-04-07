@@ -51,7 +51,7 @@
     {
       "featureId": "teams-copilot-chat",
       "displayName": "Copilot in Teams chat",
-      "sourceSystem": "Teams Admin Center",
+      "sourceSystem": "Teams admin center",
       "category": "teams-experiences",
       "expectedEnabled": true,
       "expectedRing": "Early Adopters",

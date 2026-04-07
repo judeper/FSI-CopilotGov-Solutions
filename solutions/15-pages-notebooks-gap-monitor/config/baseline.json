@@ -12,7 +12,8 @@
   "gapDiscovery": {
     "enabledCapabilities": [
       "Pages",
-      "Notebooks"
+      "Notebooks",
+      "Loop"
     ]
   },
   "compensatingControlsRequired": false,

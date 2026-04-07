@@ -5,9 +5,9 @@ Use this checklist before promoting the solution into an operational tenant.
 ## Dependency and readiness
 
 - [ ] `05-dlp-policy-governance` is complete and validated for the target tenant.
-- [ ] Azure AD P1 or P2 licensing is confirmed for all scoped Copilot users.
+- [ ] Microsoft Entra ID P1 or P2 licensing is confirmed for all scoped Copilot users.
 - [ ] Required administrator roles are assigned and time-bounded.
-- [ ] Copilot app IDs are verified for Microsoft Copilot for M365 and Copilot Studio.
+- [ ] Copilot app IDs are verified for Microsoft 365 Copilot and Copilot Studio.
 
 ## Policy deployment
 

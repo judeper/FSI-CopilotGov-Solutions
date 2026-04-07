@@ -34,93 +34,7 @@ $ErrorActionPreference = 'Stop'
 $solutionRoot = (Resolve-Path (Split-Path $PSScriptRoot -Parent)).Path
 $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
-
-function Read-JsonFile {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if (-not (Test-Path -Path $Path)) {
-        throw "JSON file not found: $Path"
-    }
-
-    $rawContent = Get-Content -Path $Path -Raw
-    if ([string]::IsNullOrWhiteSpace($rawContent)) {
-        throw "JSON file is empty: $Path"
-    }
-
-    return $rawContent | ConvertFrom-Json -Depth 32
-}
-
-function Get-PolicyModeValue {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$PolicyModes,
-
-        [Parameter(Mandatory)]
-        [string]$Name,
-
-        [Parameter()]
-        [string]$Fallback = 'Audit'
-    )
-
-    if ($null -ne $PolicyModes -and $PolicyModes.PSObject.Properties.Name -contains $Name) {
-        return [string]$PolicyModes.$Name
-    }
-
-    return $Fallback
-}
-
-function New-DlpPolicyTemplate {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [object]$DefaultConfig,
-
-        [Parameter(Mandatory)]
-        [object]$TierConfig
-    )
-
-    $defaultMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'default' -Fallback 'Audit'
-    $highSensitivityMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'highSensitivity' -Fallback $defaultMode
-    $npiMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'npi' -Fallback $highSensitivityMode
-    $piiMode = Get-PolicyModeValue -PolicyModes $TierConfig.policyModes -Name 'pii' -Fallback $highSensitivityMode
-
-    $templates = foreach ($workload in @($TierConfig.copilotWorkloads)) {
-        [ordered]@{
-            policyName = "Copilot DLP - $workload - $($TierConfig.tier)"
-            workload = [string]$workload
-            mode = $defaultMode
-            highSensitivityMode = $highSensitivityMode
-            labelSpecificModes = [ordered]@{
-                NPI = $npiMode
-                PII = $piiMode
-            }
-            sensitivityConditions = [ordered]@{
-                standard = @($TierConfig.sensitivityConditions.standard)
-                highSensitivity = @($TierConfig.sensitivityConditions.highSensitivity)
-            }
-            scope = [ordered]@{
-                includedGroups = @($DefaultConfig.defaults.policyScope.includedGroups)
-                excludedGroups = @($DefaultConfig.defaults.policyScope.excludedGroups)
-            }
-            monitoredSignals = @($DefaultConfig.defaults.copilotSignals)
-            exceptionHandling = [ordered]@{
-                approvalRequired = [bool]$TierConfig.exceptionApprovalRequired
-                attestationRequired = [bool]$TierConfig.exceptionAttestationRequired
-                approverRole = [string]$TierConfig.exceptionApproverRole
-                policyChangeApproval = [string]$TierConfig.policyChangeApproval
-            }
-            evidenceRetentionDays = [int]$TierConfig.evidenceRetentionDays
-            driftCheckFrequency = [string]$TierConfig.driftCheckFrequency
-        }
-    }
-
-    return $templates
-}
+. (Join-Path $PSScriptRoot 'Common-Functions.ps1')
 
 $defaultConfig = Read-JsonFile -Path (Join-Path $solutionRoot 'config\default-config.json')
 $tierConfig = Read-JsonFile -Path (Join-Path $solutionRoot ("config\{0}.json" -f $ConfigurationTier))
@@ -144,7 +58,7 @@ $baselineSnapshot = [ordered]@{
     snapshotType = 'template'
     baselineSource = 'tier-configuration'
     controls = @('2.1', '3.10', '3.12')
-    regulations = @('GLBA 501(b)', 'SEC Reg S-P', 'DORA Article 9', 'GDPR')
+    regulations = @('GLBA 501(b)', 'SEC Reg S-P', 'DORA Article 9', 'GDPR', 'FINRA 4511', 'SOX 302/404')
     copilotWorkloads = @($tierConfig.copilotWorkloads)
     monitoredSignals = @($defaultConfig.defaults.copilotSignals)
     policyModes = [ordered]@{
@@ -158,6 +72,8 @@ $baselineSnapshot = [ordered]@{
         attestationRequired = [bool]$tierConfig.exceptionAttestationRequired
         approverRole = [string]$tierConfig.exceptionApproverRole
         policyChangeApproval = [string]$tierConfig.policyChangeApproval
+        seniorComplianceSignOffRequired = if ($tierConfig.PSObject.Properties.Name -contains 'seniorComplianceSignOffRequired') { [bool]$tierConfig.seniorComplianceSignOffRequired } else { $false }
+        mandatoryAttestation = if ($tierConfig.PSObject.Properties.Name -contains 'mandatoryAttestation') { [bool]$tierConfig.mandatoryAttestation } else { $false }
     }
     evidenceRetentionDays = [int]$tierConfig.evidenceRetentionDays
     driftCheckFrequency = [string]$tierConfig.driftCheckFrequency

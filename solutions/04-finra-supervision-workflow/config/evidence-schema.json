@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FINRA Supervision Workflow Evidence Package",
+  "description": "Schema for the evidence package produced by Export-Evidence.ps1 for the FINRA Supervision Workflow for Copilot solution.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "summary",
+    "controls",
+    "artifacts"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "solution",
+        "solutionCode",
+        "exportVersion",
+        "exportedAt",
+        "tier",
+        "periodStart",
+        "periodEnd",
+        "evidenceMode"
+      ],
+      "properties": {
+        "solution": {
+          "type": "string",
+          "const": "04-finra-supervision-workflow"
+        },
+        "solutionCode": {
+          "type": "string",
+          "const": "FSW"
+        },
+        "exportVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "exportedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["baseline", "recommended", "regulated"]
+        },
+        "periodStart": {
+          "type": "string",
+          "format": "date"
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidenceMode": {
+          "type": "string",
+          "enum": ["documentation-first", "live-export"]
+        },
+        "warning": {
+          "type": "string"
+        },
+        "policyId": {
+          "type": "string"
+        },
+        "environmentUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "overallStatus",
+        "recordCount",
+        "findingCount",
+        "exceptionCount"
+      ],
+      "properties": {
+        "overallStatus": {
+          "type": "string",
+          "enum": ["implemented", "partial", "not-implemented"]
+        },
+        "recordCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "findingCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exceptionCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["controlId", "status", "notes"],
+        "properties": {
+          "controlId": {
+            "type": "string",
+            "enum": ["3.4", "3.5", "3.6"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["implemented", "partial", "not-implemented"]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "path", "hash"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["supervision-queue-snapshot", "review-disposition-log", "sampling-summary"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["supervision-queue-snapshot", "review-disposition-log", "sampling-summary"]
+          },
+          "path": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

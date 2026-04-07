@@ -26,7 +26,7 @@
     Path for deployment artifacts and evidence output.
 
 .PARAMETER TenantId
-    Azure AD tenant ID. Defaults to AZURE_TENANT_ID environment variable.
+    Microsoft Entra ID tenant ID. Defaults to AZURE_TENANT_ID environment variable.
 
 .PARAMETER WhatIf
     Preview deployment actions without creating or modifying artifacts.
@@ -61,106 +61,11 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
-
-function Get-DrmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('baseline', 'recommended', 'regulated')]
-        [string]$Tier
-    )
-
-    $configRoot = Join-Path $PSScriptRoot '..\config'
-    $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-    $tierConfigPath = Join-Path $configRoot ("{0}.json" -f $Tier)
-
-    foreach ($pathToCheck in @($defaultConfigPath, $tierConfigPath)) {
-        if (-not (Test-Path -Path $pathToCheck)) {
-            throw "Configuration file not found: $pathToCheck"
-        }
-    }
-
-    $defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
-    $tierConfig = Get-Content -Path $tierConfigPath -Raw | ConvertFrom-Json -AsHashtable
-
-    return [ordered]@{
-        solution = $defaultConfig.solution
-        displayName = $defaultConfig.displayName
-        solutionCode = $defaultConfig.solutionCode
-        version = $defaultConfig.version
-        track = $defaultConfig.track
-        priority = $defaultConfig.priority
-        regulations = $defaultConfig.regulations
-        defaults = $defaultConfig.defaults
-        tier = $tierConfig.tier
-        controls = $tierConfig.controls
-        evidenceRetentionDays = $tierConfig.evidenceRetentionDays
-        notificationMode = $tierConfig.notificationMode
-        serviceHealthPollingIntervalMinutes = $tierConfig.serviceHealthPollingIntervalMinutes
-        incidentClassification = $tierConfig.incidentClassification
-        resilienceTestTracking = $tierConfig.resilienceTestTracking
-        sentinelIntegration = $tierConfig.sentinelIntegration
-        powerAutomateFlow = $tierConfig.powerAutomateFlow
-        dataResidency = if ($tierConfig.Contains('dataResidency')) { $tierConfig.dataResidency } else { $null }
-        evidenceImmutability = if ($tierConfig.Contains('evidenceImmutability')) { $tierConfig.evidenceImmutability } else { $null }
-    }
-}
-
-function Test-DrmConfiguration {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [hashtable]$Configuration
-    )
-
-    $requiredFields = @(
-        'solution',
-        'displayName',
-        'solutionCode',
-        'version',
-        'track',
-        'priority',
-        'regulations',
-        'defaults',
-        'tier',
-        'controls',
-        'evidenceRetentionDays',
-        'notificationMode',
-        'serviceHealthPollingIntervalMinutes',
-        'incidentClassification',
-        'resilienceTestTracking',
-        'sentinelIntegration',
-        'powerAutomateFlow'
-    )
-
-    $missingFields = @()
-    foreach ($field in $requiredFields) {
-        if (-not $Configuration.Contains($field) -or $null -eq $Configuration[$field]) {
-            $missingFields += $field
-            continue
-        }
-
-        if ($Configuration[$field] -is [string] -and [string]::IsNullOrWhiteSpace([string]$Configuration[$field])) {
-            $missingFields += $field
-        }
-    }
-
-    if ($missingFields.Count -gt 0) {
-        throw "DRM configuration is missing required fields: $($missingFields -join ', ')"
-    }
-
-    if (-not $Configuration.defaults.Contains('monitoredServices') -or @($Configuration.defaults.monitoredServices).Count -lt 5) {
-        throw 'DRM configuration must define at least five monitored services.'
-    }
-
-    if (-not $Configuration.incidentClassification.Contains('severityThresholds')) {
-        throw 'DRM configuration must include incident severity thresholds.'
-    }
-}
+Import-Module (Join-Path $PSScriptRoot 'DrmConfig.psm1') -Force
 
 Write-Verbose ("Loading DRM configuration for tier [{0}]." -f $ConfigurationTier)
 $configuration = Get-DrmConfiguration -Tier $ConfigurationTier
-Test-DrmConfiguration -Configuration $configuration
+Test-DrmConfiguration -Configuration $configuration -AdditionalRequiredFields @('track', 'priority', 'regulations')
 
 $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
 $resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
@@ -169,26 +74,9 @@ $monitoredServices = @(
     'SharePoint Online',
     'Microsoft Teams',
     'Microsoft Graph',
+    'Microsoft 365 Apps',
     'Microsoft Copilot'
 )
-
-$severityThresholdsByTier = [ordered]@{
-    baseline = [ordered]@{
-        major = [ordered]@{ downtimeMinutes = 60; affectedUserPct = 50 }
-        significant = [ordered]@{ downtimeMinutes = 15; affectedUserPct = 20 }
-        minor = [ordered]@{ downtimeMinutes = 1; affectedUserPct = 5 }
-    }
-    recommended = [ordered]@{
-        major = [ordered]@{ downtimeMinutes = 60; affectedUserPct = 20 }
-        significant = [ordered]@{ downtimeMinutes = 15; affectedUserPct = 10 }
-        minor = [ordered]@{ downtimeMinutes = 1; affectedUserPct = 1 }
-    }
-    regulated = [ordered]@{
-        major = [ordered]@{ downtimeMinutes = 60; affectedUserPct = 10 }
-        significant = [ordered]@{ downtimeMinutes = 10; affectedUserPct = 5 }
-        minor = [ordered]@{ downtimeMinutes = 1; affectedUserPct = 1 }
-    }
-}
 
 $connectionReferences = @(
     'fsi_cr_dora_resilience_monitor_graph',
@@ -229,7 +117,7 @@ $deploymentManifest = [pscustomobject]@{
     serviceHealthPollingIntervalMinutes = $configuration.serviceHealthPollingIntervalMinutes
     notificationMode = $configuration.notificationMode
     evidenceRetentionDays = $configuration.evidenceRetentionDays
-    incidentSeverityThresholds = $severityThresholdsByTier[$ConfigurationTier]
+    incidentSeverityThresholds = $configuration.incidentClassification.severityThresholds
     dataverseTables = [ordered]@{
         baseline = 'fsi_cg_dora_resilience_monitor_baseline'
         finding = 'fsi_cg_dora_resilience_monitor_finding'

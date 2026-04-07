@@ -164,8 +164,8 @@ $connectorInventory = @(
         approvalStatus = 'blocked'
         dataFlowBoundaries = @('personal-or-public-services')
         assetType = 'connector'
-        publisherType = 'consumer-service'
-        certification = 'not-approved'
+        publisherType = 'third-party'
+        certification = 'Certified'
         lastSeen = $exportedAt
         classificationReason = 'Public storage connector is blocked in regulated Copilot contexts.'
         requiresDataFlowAttestation = $false
@@ -207,7 +207,7 @@ $dataFlowAttestations = @(
             connectorId = $connector.connectorId
             displayName = $connector.displayName
             sourceBoundary = 'internal-m365'
-            destinationBoundary = $connector.dataFlowBoundaries[-1]
+            destinationBoundary = ($connector.dataFlowBoundaries -join ',')
             businessJustification = 'Approved business workflow requires controlled data movement for Copilot extensibility.'
             reviewedBy = if ($connector.riskLevel -eq 'high') { 'ThirdPartyRiskManagement' } else { 'Security Architecture' }
             attestedOn = $exportedAt
@@ -256,7 +256,7 @@ $package = Export-SolutionEvidencePackage `
     -Tier $ConfigurationTier `
     -OutputPath $resolvedOutputPath `
     -Summary @{
-        overallStatus = 'partial'
+        overallStatus = if (@($controls | Where-Object { $_.status -ne 'implemented' }).Count -eq 0) { 'implemented' } else { 'partial' }
         recordCount = ($connectorInventory.Count + $approvalRegister.Count + $dataFlowAttestations.Count)
         findingCount = @($approvalRegister | Where-Object { $_.status -ne 'approved' }).Count
         exceptionCount = @($dataFlowAttestations | Where-Object { $_.status -ne 'approved' }).Count

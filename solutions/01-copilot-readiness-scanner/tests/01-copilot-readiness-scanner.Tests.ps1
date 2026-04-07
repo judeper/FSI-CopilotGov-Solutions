@@ -15,7 +15,8 @@ BeforeAll {
     $requiredScripts = @(
         (Join-Path $scriptsPath 'Deploy-Solution.ps1'),
         (Join-Path $scriptsPath 'Monitor-Compliance.ps1'),
-        (Join-Path $scriptsPath 'Export-Evidence.ps1')
+        (Join-Path $scriptsPath 'Export-Evidence.ps1'),
+        (Join-Path $scriptsPath 'CRS-Common.psm1')
     )
 
     $requiredConfigs = @(
@@ -98,6 +99,12 @@ Describe 'Script syntax validation' {
     It 'Export-Evidence.ps1 has no syntax errors' {
         $errors = $null
         [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $scriptsPath 'Export-Evidence.ps1'), [ref]$null, [ref]$errors) | Out-Null
+        $errors.Count | Should -Be 0
+    }
+
+    It 'CRS-Common.psm1 has no syntax errors' {
+        $errors = $null
+        [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $scriptsPath 'CRS-Common.psm1'), [ref]$null, [ref]$errors) | Out-Null
         $errors.Count | Should -Be 0
     }
 }

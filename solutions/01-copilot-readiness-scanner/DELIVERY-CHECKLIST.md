@@ -22,6 +22,7 @@
 - scripts\Deploy-Solution.ps1
 - scripts\Monitor-Compliance.ps1
 - scripts\Export-Evidence.ps1
+- scripts\CRS-Common.psm1
 - config\default-config.json
 - config\baseline.json
 - config\recommended.json
@@ -41,9 +42,8 @@
 
 ## Solution Validation Before Handover
 
-- [ ] `python scripts/validate-contracts.py`
-- [ ] `python scripts/validate-solutions.py`
-- [ ] PowerShell syntax validation completed for all three scripts
+- [ ] `pwsh -Command "Invoke-Pester tests/ -Passthru"` — Pester tests pass
+- [ ] PowerShell syntax validation completed for all three scripts and `CRS-Common.psm1`
 - [ ] Pester test file executed successfully
 - [ ] Tier configuration values reviewed for retention, threshold, notification, and scan scope
 - [ ] Evidence export verified to create JSON artifacts and matching `.sha256` files

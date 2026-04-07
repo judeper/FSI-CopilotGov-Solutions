@@ -33,8 +33,8 @@
 
 ## Pre-Delivery Validation
 
-- [ ] `python scripts/validate-contracts.py`
-- [ ] `python scripts/validate-solutions.py`
+- [ ] `pwsh scripts/Deploy-Solution.ps1 -ConfigurationTier baseline -WhatIf`
+- [ ] `pwsh scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline`
 - [ ] PowerShell syntax validation completed for `Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, and `Export-Evidence.ps1`.
 - [ ] `Invoke-Pester tests\12-regulatory-compliance-dashboard.Tests.ps1`
 - [ ] `Deploy-Solution.ps1` executed successfully in a non-production environment or with `-WhatIf`.

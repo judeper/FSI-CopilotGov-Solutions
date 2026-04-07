@@ -9,7 +9,7 @@ The format is based on Keep a Changelog, and this project follows semantic versi
 ### Added
 - Detailed README with regulatory context, deployment workflow, monitoring guidance, and limitations.
 - Detailed architecture, deployment, prerequisite, evidence export, and troubleshooting documentation.
-- ATM-specific baseline, recommended, and regulated configuration files with retention, audit, and eDiscovery settings.
+- ATM-specific baseline, recommended, and regulated configuration files with retention, audit, and Microsoft Purview eDiscovery settings.
 - PowerShell implementations for deployment manifest generation, compliance monitoring, and evidence export.
 - Pester coverage for configuration, documentation, script presence, syntax validation, and content assertions.
 

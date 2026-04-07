@@ -83,7 +83,7 @@
     ]
   },
   "teamsAdmin": {
-    "policySource": "Teams Admin Center",
+    "policySource": "Teams admin center",
     "policyAreas": [
       "Teams meetings",
       "Teams chat",

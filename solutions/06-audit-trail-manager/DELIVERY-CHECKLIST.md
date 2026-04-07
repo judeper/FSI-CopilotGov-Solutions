@@ -16,9 +16,9 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 - [ ] Retention schedule is documented for SEC 17a-4, FINRA 4511, CFTC 1.31, and SOX 404.
 - [ ] WORM or immutable storage documentation is attached for regulated deployments.
 
-## eDiscovery readiness
+## Microsoft Purview eDiscovery readiness
 
-- [ ] eDiscovery cases are created or referenced for the selected tier.
+- [ ] Microsoft Purview eDiscovery cases are created or referenced for the selected tier.
 - [ ] Holds are configured for required custodians or record locations.
 - [ ] Preservation status, hold counts, and custodian counts are documented.
 - [ ] Legal hold owners and examination response contacts are recorded.
