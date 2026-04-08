@@ -86,6 +86,8 @@ Deploy the solution from this folder after confirming the correct governance tie
 
 This solution supports compliance with FINRA 3110, SEC Reg S-P, GLBA 501(b), OCC 2011-12, and the FFIEC IT Handbook by highlighting readiness gaps in supervision, data exposure, retention posture, privileged access, and governance documentation. The readiness model is designed to provide risk-weighted operational evidence rather than making an absolute compliance determination.
 
+This solution also supports compliance with SOX 302/404 internal control requirements and the Interagency Guidance on AI (2023) by providing documented readiness evidence across governance domains.
+
 ## Evidence Export
 
 The solution exports the following evidence types: `readiness-scorecard`, `data-hygiene-findings`, and `remediation-plan`. Each artifact receives a companion `.sha256` file, and the package file aligns to `../../data/evidence-schema.json`; see [docs/evidence-export.md](./docs/evidence-export.md) for invocation details and naming conventions.
@@ -97,3 +99,5 @@ The solution exports the following evidence types: `readiness-scorecard`, `data-
 - Very large tenants may require batching, API throttling controls, and staged site sampling to complete scans within operational windows.
 - Power BI visuals depend on a customer-managed dataset refresh process and are not published automatically by the current script set.
 - Immutable evidence storage and long-term retention controls depend on the target storage platform selected by the customer.
+- Microsoft 365 Copilot licensing now includes a free Copilot Chat tier (web-grounded, included with E3/E5/Business plans), a paid Microsoft 365 Copilot tier ($30/user/month for Graph-grounded capabilities), and consumption-based Copilot agent credits. The licensing readiness domain should account for these tiers when assessing control 1.9.
+- The Copilot configuration scanning domain should be updated to reference the Copilot Control System, which provides centralized Copilot feature management, agent governance, and connector oversight in the Microsoft 365 admin center.

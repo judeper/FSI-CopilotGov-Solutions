@@ -34,6 +34,8 @@ Install-Module -Name Microsoft.Graph -MinimumVersion 2.0.0 -Scope CurrentUser
 Install-Module -Name Pester -MinimumVersion 5.0.0 -Scope CurrentUser
 ```
 
+> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
+
 ## Application Registration
 
 For unattended (service account) operation, register an Azure AD application with:

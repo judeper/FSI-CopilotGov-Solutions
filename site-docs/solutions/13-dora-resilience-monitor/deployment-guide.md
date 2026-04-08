@@ -12,7 +12,7 @@ Review [docs/prerequisites.md](prerequisites.md) before deployment. The deployme
 
 ```powershell
 git clone https://github.com/judeper/FSI-CopilotGov-Solutions.git
-Set-Location C:\Dev\FSI-CopilotGov-Solutions\solutions-dora-resilience-monitor
+Set-Location C:\Dev\FSI-CopilotGov-Solutions\13-dora-resilience-monitor
 $env:AZURE_TENANT_ID = '<tenant-guid>'
 $env:AZURE_CLIENT_ID = '<app-registration-guid>'
 $clientSecret = Read-Host 'Enter client secret' -AsSecureString
@@ -44,13 +44,13 @@ Confirm the following before deployment:
 Run the deployment script in preview mode to validate configuration and manifest content before creating artifacts.
 
 ```powershell
-.\scripts\Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId $env:AZURE_TENANT_ID -OutputPath .rtifacts -WhatIf -Verbose
+.\scripts\Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId $env:AZURE_TENANT_ID -OutputPath .\artifacts -WhatIf -Verbose
 ```
 
 If the preview is acceptable, rerun without `-WhatIf`.
 
 ```powershell
-.\scripts\Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId $env:AZURE_TENANT_ID -OutputPath .rtifacts -Verbose
+.\scripts\Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId $env:AZURE_TENANT_ID -OutputPath .\artifacts -Verbose
 ```
 
 ## Step 4: Verify Deployment Manifest in artifacts/
@@ -68,7 +68,7 @@ After deployment, confirm that the manifest is present in `artifacts/` and revie
 Capture the initial service-health baseline and resilience-test state.
 
 ```powershell
-.\scripts\Monitor-Compliance.ps1 -ConfigurationTier recommended -OutputPath .rtifacts -TenantId $env:AZURE_TENANT_ID -ClientId $env:AZURE_CLIENT_ID -ClientSecret $clientSecret -Verbose
+.\scripts\Monitor-Compliance.ps1 -ConfigurationTier recommended -OutputPath .\artifacts -TenantId $env:AZURE_TENANT_ID -ClientId $env:AZURE_CLIENT_ID -ClientSecret $clientSecret -Verbose
 ```
 
 Review the output for:
@@ -95,7 +95,7 @@ The repository does not deploy the flow automatically. Manual implementation and
 Export the evidence package after the initial baseline is captured.
 
 ```powershell
-.\scripts\Export-Evidence.ps1 -ConfigurationTier recommended -OutputPath .rtifacts -Verbose
+.\scripts\Export-Evidence.ps1 -ConfigurationTier recommended -OutputPath .\artifacts -Verbose
 ```
 
 Verify the following files exist:

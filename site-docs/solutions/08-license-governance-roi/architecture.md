@@ -21,6 +21,7 @@ License Governance and ROI Tracker provides a structured operating model for Cop
       | - Monitor-Compliance.ps1                                      |
       | - Export-Evidence.ps1                                         |
       | - IntegrationConfig.psm1, GraphAuth.psm1, EvidenceExport.psm1 |
+      | - DataverseHelpers.psm1                                       |
       +-------------------------+-------------------+-----------------+
                                 |                   |
                                 |                   |
@@ -59,7 +60,7 @@ Additional ROI input: Viva Insights exports or curated analyst-provided extracts
 | Endpoint | Purpose in LGR | Notes |
 |----------|----------------|-------|
 | `GET https://graph.microsoft.com/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled` | Identify licensed user population, departments, and active accounts for governance review. | Used to align seat holders to business units and reviewer routing. |
-| `GET https://graph.microsoft.com/v1.0/subscribedSkus` | Inventory Copilot for Microsoft 365 SKU availability and consumed units. | Supports seat planning, chargeback, and license optimization controls. |
+| `GET https://graph.microsoft.com/v1.0/subscribedSkus` | Inventory Microsoft 365 Copilot SKU availability and consumed units. | Supports seat planning, chargeback, and license optimization controls. |
 | `GET https://graph.microsoft.com/beta/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')` | Retrieve user-level Copilot activity detail for inactivity and utilization analysis. | Response is typically a downloadable report payload; schedule accordingly. |
 | `GET https://graph.microsoft.com/beta/reports/getMicrosoft365CopilotUsageUserCounts(period='D30')` | Capture aggregate active-user counts for management trend reporting. | Useful for Power BI trend cards and consistency checks. |
 

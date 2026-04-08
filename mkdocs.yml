@@ -107,6 +107,27 @@ nav:
         - Evidence Export: solutions/03-sensitivity-label-auditor/evidence-export.md
         - Prerequisites: solutions/03-sensitivity-label-auditor/prerequisites.md
         - Troubleshooting: solutions/03-sensitivity-label-auditor/troubleshooting.md
+      - Item-Level Oversharing Scanner:
+        - solutions/16-item-level-oversharing-scanner/index.md
+        - Architecture: solutions/16-item-level-oversharing-scanner/architecture.md
+        - Deployment Guide: solutions/16-item-level-oversharing-scanner/deployment-guide.md
+        - Evidence Export: solutions/16-item-level-oversharing-scanner/evidence-export.md
+        - Prerequisites: solutions/16-item-level-oversharing-scanner/prerequisites.md
+        - Troubleshooting: solutions/16-item-level-oversharing-scanner/troubleshooting.md
+      - SharePoint Permissions Drift Detection:
+        - solutions/17-sharepoint-permissions-drift/index.md
+        - Architecture: solutions/17-sharepoint-permissions-drift/architecture.md
+        - Deployment Guide: solutions/17-sharepoint-permissions-drift/deployment-guide.md
+        - Evidence Export: solutions/17-sharepoint-permissions-drift/evidence-export.md
+        - Prerequisites: solutions/17-sharepoint-permissions-drift/prerequisites.md
+        - Troubleshooting: solutions/17-sharepoint-permissions-drift/troubleshooting.md
+      - Entra Access Reviews Automation:
+        - solutions/18-entra-access-reviews/index.md
+        - Architecture: solutions/18-entra-access-reviews/architecture.md
+        - Deployment Guide: solutions/18-entra-access-reviews/deployment-guide.md
+        - Evidence Export: solutions/18-entra-access-reviews/evidence-export.md
+        - Prerequisites: solutions/18-entra-access-reviews/prerequisites.md
+        - Troubleshooting: solutions/18-entra-access-reviews/troubleshooting.md
     - Security and Compliance Enforcement:
       - FINRA Supervision Workflow for Copilot:
         - solutions/04-finra-supervision-workflow/index.md

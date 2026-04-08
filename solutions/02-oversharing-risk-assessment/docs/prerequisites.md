@@ -30,6 +30,8 @@ Example installation command:
 Install-Module PnP.PowerShell, Microsoft.Graph, ExchangeOnlineManagement -Scope CurrentUser
 ```
 
+> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
+
 ## Power Automate Environment
 
 Power Automate is documentation-first in this solution version. A managed Power Automate environment should still be identified in advance so the documented `SiteOwnerNotification` and `RemediationApproval` flows can be implemented without redesigning routing, approvals, or connectors later.

@@ -7,11 +7,11 @@ This guide describes how to deploy the FINRA Supervision Workflow for Copilot in
 1. Confirm prerequisites in `docs\prerequisites.md`.
 2. Identify the Power Platform environment URL, for example `https://contoso.crm.dynamics.com`.
 3. Confirm the environment has Dataverse enabled and that makers are allowed to create cloud flows.
-4. Create Azure AD groups for:
+4. Create Microsoft Entra ID groups for:
    - Supervisory principals by zone
    - Escalation recipients
    - Governance administrators
-5. Record the Purview Communication Compliance policy ID that captures Copilot prompts and responses.
+5. Record the Microsoft Purview Communication Compliance policy ID that captures Copilot prompts and responses.
 
 ## 2. Deploy Dataverse schema
 

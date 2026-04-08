@@ -51,7 +51,7 @@ This architecture supports compliance with supervisory review requirements by se
 ### Flows
 
 - Ingest Flagged Items
-  - Reads flagged Purview Communication Compliance items for Copilot prompts and responses.
+  - Reads flagged Microsoft Purview Communication Compliance items for Copilot prompts and responses.
   - Normalizes metadata and creates queue and log entries.
 - Assignment Flow
   - Routes queue items to supervisory principals by zone and tier.

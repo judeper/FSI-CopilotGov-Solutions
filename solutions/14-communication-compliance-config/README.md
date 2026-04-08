@@ -109,6 +109,8 @@ This solution supports compliance with the following regulatory expectations whe
 - SEC Reg BI for best-interest and disclosure monitoring.
 - FCA SYSC 10 for conflict-of-interest indicators and supervisory follow-up.
 
+This solution also supports GLBA 501(b) safeguard requirements and SOX 302/404 internal control documentation by providing supervision policy templates and review workflow evidence.
+
 ## Evidence Export
 
 The solution publishes the following evidence outputs:

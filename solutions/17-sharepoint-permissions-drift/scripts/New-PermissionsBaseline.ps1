@@ -1,4 +1,5 @@
-#Requires -Modules PnP.PowerShell
+# PnP.PowerShell is required for live SharePoint operations.
+# Scripts fall back to representative sample data when PnP is unavailable.
 
 <#
 .SYNOPSIS
@@ -184,7 +185,30 @@ function Get-SitePermissionsSnapshot {
     }
     catch {
         Write-Warning "PnP enumeration failed for $SiteUrl — $($_.Exception.Message). Using sample data."
-        return Get-SitePermissionsSnapshot -SiteUrl $SiteUrl -Config $Config
+        # Disconnect to prevent stale context on re-entry, then return sample data directly
+        try { Disconnect-PnPOnline -ErrorAction SilentlyContinue } catch { }
+        $pnpContext = $null
+        return [pscustomobject]@{
+            siteUrl          = $SiteUrl
+            sharingSettings  = [pscustomobject]@{
+                sharingCapability     = 'ExternalUserSharingOnly'
+                defaultSharingLinkType = 'Internal'
+                allowAnonymousLinks   = $false
+            }
+            uniquePermissions = @(
+                [pscustomobject]@{
+                    itemPath        = 'Shared Documents'
+                    itemType        = 'Library'
+                    principalName   = 'Finance Members'
+                    principalType   = 'SharePointGroup'
+                    permissionLevel = 'Contribute'
+                    isInherited     = $false
+                }
+            )
+            sharingLinks      = @()
+            externalUsers     = @()
+            dataSource        = 'fallback-after-pnp-failure'
+        }
     }
 }
 

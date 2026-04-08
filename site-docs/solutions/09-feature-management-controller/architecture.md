@@ -24,7 +24,7 @@ The collector normalizes Copilot feature state from the following administrative
 
 - **Microsoft Graph beta:** `https://graph.microsoft.com/beta/policies/featureRolloutPolicies`
 - **Microsoft 365 Admin Center:** feature policy and app-specific Copilot enablement settings
-- **Teams Admin Center:** Teams meeting, chat, or app policy settings that control Copilot exposure
+- **Teams admin center:** Teams meeting, chat, or app policy settings that control Copilot exposure
 - **Power Platform Admin API:** environment and maker-facing Copilot settings for Power Apps and Power Automate
 
 Each collected feature record is tagged with:
@@ -71,7 +71,7 @@ The alerting layer converts drift findings into actionable outputs:
 | Integration | Role in FMC | Notes |
 |-------------|-------------|-------|
 | Microsoft Graph beta `/policies/featureRolloutPolicies` | Source of rollout policy state and ring definition references | Used for inventory collection and planned ring updates. |
-| Teams Admin Center | Source for Teams-specific Copilot policy coverage | Often requires export, documentation, or scripted collection depending on tenant tooling. |
+| Teams admin center | Source for Teams-specific Copilot policy coverage | Often requires export, documentation, or scripted collection depending on tenant tooling. |
 | Power Platform Admin API | Source for Copilot in Power Apps and Power Automate settings | Used to confirm whether maker and runtime Copilot experiences align to approved tiers. |
 | Dataverse | Persistent store for baseline, findings, and evidence metadata | Table names follow the FMC naming convention. |
 | Power Automate | Notification and operational orchestration | Documentation-first until production import is approved. |

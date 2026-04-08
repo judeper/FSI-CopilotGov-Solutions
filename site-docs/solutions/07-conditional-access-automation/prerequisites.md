@@ -6,8 +6,8 @@ Complete `05-dlp-policy-governance` before deploying this solution. Conditional 
 
 ## Licensing
 
-- Azure AD P1 minimum for Conditional Access creation and enforcement.
-- Azure AD P2 for risk-based policies and Identity Protection signals.
+- Microsoft Entra ID P1 minimum for Conditional Access creation and enforcement.
+- Microsoft Entra ID P2 for risk-based policies and Microsoft Entra ID Protection signals.
 - Microsoft 365 E3 or E5 with the required Copilot entitlement for app targeting and user assignment.
 
 ## Required roles
@@ -36,7 +36,13 @@ Minimum delegated or application permissions should be approved according to the
 - `Policy.Read.All` for monitoring and evidence collection.
 - `Policy.ReadWrite.ConditionalAccess` for deployment and policy updates.
 
+> **Security note:** These permissions are tenant-wide. `Policy.Read.All` grants read access to *all* Conditional Access policies in the tenant, not just Copilot-targeting ones. `Policy.ReadWrite.ConditionalAccess` grants write access to *all* Conditional Access policies. Restrict the service principal or delegated user to the minimum set of administrators required, and audit Graph API calls through Microsoft Entra sign-in and audit logs. Consider using Privileged Identity Management (PIM) to make these permissions just-in-time rather than standing.
+
 Grant admin consent where required before automation runs in production.
+
+## External module dependency
+
+`Export-Evidence.ps1` imports `scripts\common\EvidenceExport.psm1` from the parent repository root (two levels above the solution directory). This shared module provides the `Export-SolutionEvidencePackage` and `Get-CopilotGovSha256` functions used to assemble and hash evidence packages. Ensure the parent repository structure is intact when running `Export-Evidence.ps1` outside the standard solution layout.
 
 ## Environment preparation
 

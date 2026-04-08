@@ -31,8 +31,7 @@ Optional directory used to write `monitor-findings.json` and
 Application (client) ID for app-only Graph authentication.
 
 .PARAMETER ClientSecret
-Client secret for app-only Graph authentication. Use a SecureString value
-(e.g., ConvertTo-SecureString) to avoid exposing secrets in shell history.
+Client secret for app-only Graph authentication.
 
 .PARAMETER CertificateThumbprint
 Certificate thumbprint for app-only Graph authentication.
@@ -74,7 +73,7 @@ param(
     [string]$ClientId,
 
     [Parameter()]
-    [securestring]$ClientSecret,
+    [string]$ClientSecret,
 
     [Parameter()]
     [string]$CertificateThumbprint,
@@ -88,7 +87,7 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module (Join-Path $PSScriptRoot 'SharedUtilities.psm1') -Force
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 $graphAuthModulePath = Join-Path $repoRoot 'scripts\common\GraphAuth.psm1'
 if (Test-Path $graphAuthModulePath) {
     Import-Module $graphAuthModulePath -Force

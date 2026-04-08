@@ -73,7 +73,33 @@ artifacts\evidence\
 
 ## Notes
 
-- Export output follows `data\evidence-schema.json` for package structure.
+- Export output follows `config\evidence-schema.json` for package structure.
 - Documentation-first mode is suitable for design reviews and dry runs.
 - Live export mode should be used only in approved environments with authenticated Dataverse access.
+
+## Live export security considerations
+
+Live export (`-LiveExport`) queries Dataverse for actual supervisory records including reviewer identities, review notes, and timestamps. These records may contain sensitive supervisory information subject to FINRA record-keeping requirements.
+
+**Use a non-repository output path for live exports:**
+
+```powershell
+.\scripts\Export-Evidence.ps1 `
+  -ConfigurationTier regulated `
+  -OutputPath C:\SecureAudit\evidence `
+  -PeriodStart 2026-01-01 `
+  -PeriodEnd 2026-01-31 `
+  -LiveExport
+```
+
+**Prevent accidental commits of live evidence:**
+
+Add the live export output directory to `.gitignore` if it falls within the repository tree:
+
+```text
+# Live evidence exports (contains sensitive supervisory data)
+artifacts/evidence-live/
+```
+
+Alternatively, always specify `-OutputPath` pointing to a directory outside the repository to ensure live supervisory records are never committed to source control.
 

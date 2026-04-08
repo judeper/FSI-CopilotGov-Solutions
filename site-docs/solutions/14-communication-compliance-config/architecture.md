@@ -2,7 +2,7 @@
 
 ## Solution Overview
 
-Communication Compliance Configurator generates and documents Microsoft Purview Communication Compliance policy templates for Copilot-assisted financial services communications. The solution focuses on policy publication readiness, reviewer workflow setup, lexicon governance, and evidence packaging. Portal deployment remains documentation-first because Purview Communication Compliance publication still requires manual steps.
+Microsoft Purview Communication Compliance Configurator generates and documents Microsoft Purview Communication Compliance policy templates for Copilot-assisted financial services communications. The solution focuses on policy publication readiness, reviewer workflow setup, lexicon governance, and evidence packaging. Portal deployment remains documentation-first because Microsoft Purview Communication Compliance publication still requires manual steps.
 
 The solution supports compliance with FINRA 2210, FINRA 3110, SEC Reg BI, and FCA SYSC 10 by pairing policy templates with reviewer oversight, lexicon governance, and evidence outputs.
 
@@ -59,7 +59,7 @@ The solution supports compliance with FINRA 2210, FINRA 3110, SEC Reg BI, and FC
 
 1. **Policy Templates** - Tier configuration selects the policy template set, reviewer SLA, sampling rate, and lexicon words.
 2. **Purview Configuration** - `Deploy-Solution.ps1` builds policy JSON templates and a deployment manifest for manual publication in Microsoft Purview.
-3. **Reviewer Queue** - Reviewers process matched items through the Purview Communication Compliance queue with documented assignments, dispositions, and escalations.
+3. **Reviewer Queue** - Reviewers process matched items through the Microsoft Purview Communication Compliance queue with documented assignments, dispositions, and escalations.
 4. **Evidence Export** - `Monitor-Compliance.ps1` and `Export-Evidence.ps1` capture policy, queue, and lexicon evidence into the shared evidence package contract.
 
 ## Components
@@ -101,7 +101,7 @@ Queue metrics collection captures a readiness snapshot of:
 - escalated items
 - overdue items
 
-Automated collection is currently a stub because Purview Communication Compliance queue automation depends on a supported API or Graph beta capability.
+Automated collection is currently a stub because Microsoft Purview Communication Compliance queue automation depends on a supported API or Graph beta capability.
 
 ### Evidence Packager
 
@@ -161,7 +161,7 @@ Video recap artifact management and retention enforcement are outside the scope 
 
 ## Security
 
-- Reviewer access should be limited to Communication Compliance analysts, investigators, and approved supervisors.
+- Reviewer access should be limited to Microsoft Purview Communication Compliance analysts, investigators, and approved supervisors.
 - DLP integration should be reviewed so sensitive communications remain governed during review workflows.
 - Audit log retention should cover policy publication, reviewer actions, lexicon updates, and evidence exports.
 - Escalation procedures should align to least-privilege access and documented supervisory authority.

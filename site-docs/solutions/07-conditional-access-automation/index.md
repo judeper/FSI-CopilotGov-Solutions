@@ -35,7 +35,7 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 
 | Application | App ID | Purpose in this solution |
 |-------------|--------|--------------------------|
-| Microsoft Copilot for M365 | `2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4` | Primary Conditional Access target for Copilot user access |
+| Microsoft 365 Copilot (Enterprise Copilot Platform) | `fb8d773d-7ef8-4ec0-a117-179f88add510` | Primary Conditional Access target for Copilot user access; requires service principal registration via `New-MgServicePrincipal` |
 | Copilot Studio | `7df0a125-d3be-4c96-aa54-591f83ff541c` | Optional secondary target for makers and administrators |
 
 ## Regulatory context
@@ -58,7 +58,7 @@ DORA Article 9 focuses on ICT security, including identity, access management, a
 |--------------------|----------------|-------------------|-----------------|
 | `baseline` | MFA required; no compliant-device requirement; no named-location requirement | MFA required; no compliant-device requirement; no named-location requirement | MFA required; no compliant-device requirement; no named-location requirement |
 | `recommended` | MFA required; no named-location requirement | MFA plus compliant device; named locations for Zone 2 | MFA plus compliant device; named locations for Zone 2 and Zone 3 |
-| `regulated` | MFA plus compliant device; named location required | MFA plus compliant device; named location required | MFA plus compliant device; named location required; block unknown device states |
+| `regulated` | MFA plus compliant device; named location required; block unknown device states | MFA plus compliant device; named location required; block unknown device states | MFA plus compliant device; named location required; block unknown device states |
 
 Additional regulated-tier safeguards include blocking legacy authentication pathways and requiring strict exception review before temporary overrides are granted.
 
@@ -88,13 +88,13 @@ Expired exceptions should be treated as findings until they are closed or renewe
 ## Prerequisites
 
 - Confirm that `05-dlp-policy-governance` is complete and that the latest protection baseline has been reviewed.
-- Confirm Azure AD P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
+- Confirm Microsoft Entra ID P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
 - Ensure Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
 
 ## Deployment steps
 
 1. Confirm that `05-dlp-policy-governance` is complete.
-2. Confirm Azure AD P1 or P2 licensing and required administrator roles.
+2. Confirm Microsoft Entra ID P1 or P2 licensing and required administrator roles.
 3. Run `scripts\Deploy-Solution.ps1` for the selected tier to generate policy templates, a deployment manifest, and a baseline stub.
 4. Review generated policy templates and Graph API command examples.
 5. Create or update Conditional Access policies in the Entra admin center or via Microsoft Graph.
@@ -136,7 +136,7 @@ This solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article
 
 ## Known limitations
 
-- Conditional Access policy creation requires Azure AD P1 or P2 licensing, and risk-based policies require Azure AD P2.
+- Conditional Access policy creation requires Microsoft Entra ID P1 or P2 licensing, and risk-based policies require Microsoft Entra ID P2.
 - Copilot app targeting requires Microsoft 365 E3 or E5 licensing with the appropriate Copilot entitlement.
 - Conditional Access policy evaluation can take about 5 minutes after a change before the new state is consistently enforced.
 - Named-location strategies still require tenant-specific design for branch offices, vendors, and break-glass accounts.

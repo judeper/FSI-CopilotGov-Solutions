@@ -1,4 +1,5 @@
-#Requires -Modules PnP.PowerShell
+# PnP.PowerShell is required for live SharePoint operations.
+# Scripts fall back to representative sample data when PnP is unavailable.
 
 <#
 .SYNOPSIS
@@ -181,7 +182,7 @@ Please review and approve or deny the reversion within $($ApprovalGate.approvalW
                     toRecipients = @(@{ emailAddress = @{ address = $approver } })
                 }
             }
-            Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/v1.0/me/sendMail" -Body $message
+            Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/v1.0/users/$approver/sendMail" -Body $message
         }
         catch {
             Write-Warning "Failed to send approval request to $approver — $($_.Exception.Message)"

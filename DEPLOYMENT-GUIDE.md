@@ -19,6 +19,7 @@ This guide maps common Microsoft 365 Copilot governance needs to the solution se
 ### Wave 1 — Readiness and oversharing foundation
 
 - Run the readiness and oversharing solutions before enabling broad Copilot access.
+- Solutions 16 (Item-Level Oversharing Scanner), 17 (SharePoint Permissions Drift Detection), and 18 (Entra Access Reviews Automation) extend the Wave 1 foundation with item-level scanning, permissions drift detection, and access-review automation.
 
 ### Wave 2 — Security and compliance controls
 
@@ -36,7 +37,7 @@ This guide maps common Microsoft 365 Copilot governance needs to the solution se
 
 | Customer Need | Solutions |
 |---------------|-----------|
-| Copilot readiness, label posture, and oversharing cleanup | 01, 02, 03 |
+| Copilot readiness, label posture, and oversharing cleanup | 01, 02, 03, 16, 17, 18 |
 | Broker-dealer supervision and communications oversight | 04, 06, 14 |
 | DLP, Conditional Access, and feature-state governance | 05, 07, 09 |
 | License optimization, phased rollout, and control reporting | 08, 11, 12 |
@@ -56,7 +57,7 @@ Before scheduling a deployment wave, confirm that the required service connectio
 
 | Wave | Solutions | Graph API | Power BI | Power Automate | Purview | Entra ID | Other |
 |------|-----------|-----------|----------|----------------|---------|----------|-------|
-| 1 | 01, 02, 03 | ✅ | ✅ | ✅ | ✅ | — | SharePoint |
+| 1 | 01, 02, 03, 16, 17, 18 | ✅ | ✅ | ✅ | ✅ | ✅ | SharePoint, Entra ID |
 | 2 | 04, 05, 06, 07 | ✅ | ✅ | ✅ | ✅ | ✅ | eDiscovery, Exchange |
 | 3 | 08, 09, 10, 11, 12 | ✅ | ✅ | ✅ | — | — | Viva Insights, Teams Admin, Power Platform |
 | 4 | 13, 14, 15 | ✅ | ✅ | ✅ | ✅ | — | Sentinel, eDiscovery |

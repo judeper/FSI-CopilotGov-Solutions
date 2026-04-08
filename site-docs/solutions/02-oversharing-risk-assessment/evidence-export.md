@@ -56,6 +56,22 @@ Expected fields include:
 
 For regulated deployments, this artifact helps demonstrate that business ownership and remediation closure were documented.
 
+### sensitivity-label-coverage
+
+Microsoft Purview Information Protection label coverage across scanned sites.
+
+Expected fields include:
+
+- `totalSitesScanned`
+- `sitesWithLabels`
+- `sitesWithoutLabels`
+- `labelCoveragePercent`
+- `reportingPeriodStart`
+- `reportingPeriodEnd`
+- `recommendation`
+
+This artifact supports control 1.7 by reporting which sites have sensitivity labels applied. Sites without labels may expose regulated content via Microsoft 365 Copilot.
+
 ## Control Status Mapping by Evidence Type
 
 | Evidence type | Primary controls supported | Typical status interpretation |
@@ -63,6 +79,7 @@ For regulated deployments, this artifact helps demonstrate that business ownersh
 | `oversharing-findings` | 1.2, 1.6, 2.5 | Detection and monitoring evidence, often `partial` or `monitor-only` until tenant APIs are fully implemented |
 | `remediation-queue` | 1.2, 1.3, 1.4, 2.12 | Shows governance response and prioritization for search scope, permissions, and external sharing |
 | `site-owner-attestations` | 1.2, 1.4, 2.12 | Demonstrates owner involvement, exception handling, and post-remediation review |
+| `sensitivity-label-coverage` | 1.7 | Reports Microsoft Purview Information Protection label coverage across scanned sites |
 
 ## Standard Control Statuses Used by the Export Script
 
@@ -74,6 +91,7 @@ For regulated deployments, this artifact helps demonstrate that business ownersh
 | 2.5 | monitor-only | Data minimization is monitored through broad-access findings and recommended actions |
 | 2.12 | partial | External sharing and guest access governance is captured in findings and remediation workflow stubs |
 | 1.6 | monitor-only | Permission model anomalies are surfaced and counted for follow-up |
+| 1.7 | monitor-only | Sensitivity label coverage is derived from Microsoft Purview Information Protection data and reported as a standalone artifact. Sites without labels may expose regulated content via Microsoft 365 Copilot |
 
 ## Retention Note
 

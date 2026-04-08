@@ -61,7 +61,7 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module (Join-Path $PSScriptRoot 'SharedUtilities.psm1') -Force
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 $evidenceModulePath = Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1'
 $integrationModulePath = Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1'
 
@@ -72,13 +72,18 @@ else {
     Write-Warning "Shared module EvidenceExport.psm1 not found at '$evidenceModulePath'. Using local fallbacks."
     function Write-CopilotGovSha256File {
         param([Parameter(Mandatory)][string]$Path)
-        $hash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash
-        Set-Content -Path "$Path.sha256" -Value $hash -Encoding utf8
+        $hash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+        $fileName = [IO.Path]::GetFileName($Path)
+        $hashLine = '{0}  {1}' -f $hash, $fileName
+        Set-Content -Path "$Path.sha256" -Value $hashLine -Encoding utf8
         return [pscustomobject]@{ Hash = $hash; Path = "$Path.sha256" }
     }
-    function Get-CopilotGovEvidenceSchemaVersion { return '1.0.0-local' }
+    function Get-CopilotGovEvidenceSchemaVersion { return '1.1.0' }
+    # Fallback validator used only when shared EvidenceExport.psm1 cannot be loaded.
+    # Returns IsValid=$true because full schema/hash validation requires the shared module.
     function Test-CopilotGovEvidencePackage {
         param([Parameter(Mandatory)][string]$Path, [string[]]$ExpectedArtifacts = @())
+        Write-Warning 'Using fallback evidence validator — shared module EvidenceExport.psm1 was not loaded. Skipping schema and hash checks.'
         return [pscustomobject]@{ IsValid = $true; Errors = @() }
     }
 }

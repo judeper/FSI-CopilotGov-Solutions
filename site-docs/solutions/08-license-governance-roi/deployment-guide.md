@@ -4,7 +4,7 @@
 
 Before running the solution scripts, confirm the following:
 
-- Copilot for Microsoft 365 license inventory is known and finance-approved for the scoped population.
+- Microsoft 365 Copilot license inventory is known and finance-approved for the scoped population.
 - Required Graph permissions are approved: `Reports.Read.All`, `Directory.Read.All`, `User.Read.All`.
 - The target tenant has a documented owner for reallocation decisions and exception approvals.
 - The dependency output from `11-risk-tiered-rollout` is available or an alternate protected-user list has been defined.

@@ -4,7 +4,7 @@
 
 - Microsoft 365 Copilot licenses for users whose Pages or Notebooks content is in scope
 - SharePoint Online and Microsoft Teams enabled for the workloads under review
-- Microsoft Purview retention and eDiscovery capabilities, typically E5 Compliance or an equivalent licensing bundle
+- Microsoft Purview retention and Microsoft Purview eDiscovery capabilities, typically E5 Compliance or an equivalent licensing bundle
 - Microsoft Loop and Copilot Pages enabled in the tenant if those workloads are being assessed
 - A governed repository for storing exported evidence and supporting review records
 
@@ -12,7 +12,7 @@
 
 - Compliance Administrator for control review and evidence oversight
 - SharePoint Administrator to assess site configuration, sharing controls, and storage locations
-- eDiscovery Administrator to evaluate search scope and hold procedures
+- Microsoft Purview eDiscovery Administrator to evaluate search scope and hold procedures
 - Records Management or Information Governance lead to review preservation expectations
 - Power Platform administrator if Power Automate review workflows will be enabled
 
@@ -24,11 +24,11 @@ The monitoring approach assumes access to supporting inventory and policy metada
 - `InformationProtectionPolicy.Read` for retention and label policy inspection
 - Message Center or release-note access for platform update monitoring
 
-If application authentication is used, store the client secret in an approved secret store and rotate it according to enterprise policy.
+> **Note:** The current scripts use stub authentication logic and representative sample data. The permissions listed above are reserved for future authenticated monitoring functionality. Until that functionality is implemented, operators do not need to provision these permissions or configure a client secret. When authenticated monitoring is enabled, store the client secret in an approved secret store and rotate it according to enterprise policy.
 
-## eDiscovery Assessment Access
+## Microsoft Purview eDiscovery Assessment Access
 
-- eDiscovery Admin access is required to assess discovery coverage for Pages, Loop, and notebook content.
+- Microsoft Purview eDiscovery Admin access is required to assess discovery coverage for Pages, Loop, and notebook content.
 - Investigations teams should be able to validate whether Loop-backed Pages content appears in case searches and legal hold workflows.
 - Where discovery coverage is incomplete, the team must document the manual export or collection process used instead.
 

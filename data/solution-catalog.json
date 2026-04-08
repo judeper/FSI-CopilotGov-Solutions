@@ -7,7 +7,7 @@
     "domain": "readiness-data",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "PowerShell",
       "Power BI"
@@ -25,7 +25,9 @@
       "SEC Reg S-P",
       "GLBA 501(b)",
       "OCC 2011-12",
-      "FFIEC IT Handbook"
+      "FFIEC IT Handbook",
+      "SOX 302/404",
+      "Interagency AI Guidance"
     ],
     "framework_ids": [
       "finra-3110",
@@ -68,7 +70,7 @@
     "domain": "readiness-data",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "PowerShell",
       "Power Automate"
@@ -87,7 +89,8 @@
       "GLBA 501(b)",
       "SEC Reg S-P",
       "FINRA 4511",
-      "FFIEC IT Handbook"
+      "FFIEC IT Handbook",
+      "SOX 302/404"
     ],
     "framework_ids": [
       "finra-4511",
@@ -131,7 +134,7 @@
     "domain": "readiness-data",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "PowerShell",
       "Power Automate"
@@ -193,7 +196,7 @@
     "domain": "security-compliance",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "Power Automate",
       "Dataverse"
@@ -244,7 +247,7 @@
     "domain": "security-compliance",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "PowerShell",
       "Power Automate"
@@ -259,7 +262,9 @@
       "GLBA 501(b)",
       "SEC Reg S-P",
       "DORA",
-      "GDPR"
+      "GDPR",
+      "FINRA 4511",
+      "SOX 302/404"
     ],
     "framework_ids": [
       "finra-4511",
@@ -269,7 +274,7 @@
       "dora",
       "gdpr"
     ],
-    "summary": "Deploys, baselines, and monitors DLP policies that target Copilot prompts, responses, and grounded content access patterns.",
+    "summary": "Deploys, baselines, and monitors DLP policiesthat target Copilot prompts, responses, and grounded content access patterns.",
     "evidence_outputs": [
       "dlp-policy-baseline",
       "policy-drift-findings",
@@ -301,7 +306,7 @@
     "domain": "security-compliance",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "PowerShell",
       "Power Automate",
@@ -361,7 +366,7 @@
     "domain": "security-compliance",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.1.0",
+    "version": "v0.2.0",
     "solution_type": [
       "PowerShell",
       "Power Automate"
@@ -431,7 +436,9 @@
     "supporting_controls": [],
     "regulations": [
       "OCC 2011-12",
-      "SOX 404"
+      "SOX 404",
+      "GLBA 501(b)",
+      "FFIEC IT Handbook"
     ],
     "framework_ids": [
       "glba-501b",
@@ -803,7 +810,9 @@
       "FINRA 2210",
       "FINRA 3110",
       "SEC Reg BI",
-      "FCA SYSC 10"
+      "FCA SYSC 10",
+      "GLBA 501(b)",
+      "SOX 302/404"
     ],
     "framework_ids": [
       "finra-2210",
@@ -921,7 +930,8 @@
       "GLBA 501(b)",
       "SEC Reg S-P",
       "FINRA 4511",
-      "FFIEC IT Handbook"
+      "FFIEC IT Handbook",
+      "SOX 302/404"
     ],
     "framework_ids": [
       "finra-4511",
@@ -980,7 +990,8 @@
       "GLBA 501(b)",
       "SEC Reg S-P",
       "FINRA 4511",
-      "FFIEC IT Handbook"
+      "FFIEC IT Handbook",
+      "SOX 302/404"
     ],
     "framework_ids": [
       "finra-4511",
@@ -1038,7 +1049,8 @@
       "GLBA 501(b)",
       "SEC Reg S-P",
       "FINRA 4511",
-      "FFIEC IT Handbook"
+      "FFIEC IT Handbook",
+      "SOX 302/404"
     ],
     "framework_ids": [
       "finra-4511",

@@ -10,6 +10,8 @@ DLP Policy Governance for Copilot deploys a read-only governance pattern for Mic
 
 This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 ICT security expectations, GDPR, FINRA 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
+> **Microsoft 365 Copilot DLP location:** Microsoft Purview DLP now supports **Microsoft 365 Copilot** as a dedicated policy location. DLP policies can help block Copilot from processing prompts containing sensitive information types, supporting prompt-level data loss prevention for AI-assisted interactions. Tenants receive a default Copilot DLP policy in simulation mode.
+
 ## Related Controls
 
 - 2.1 - DLP coverage for Copilot workloads and sensitive content paths
@@ -35,6 +37,7 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 - ❌ Does not deploy Power Automate flows (exception workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not configure Adaptive Protection policies (Insider Risk Management integration with DLP is documented as a complementary capability)
 
 ## Prerequisites
 

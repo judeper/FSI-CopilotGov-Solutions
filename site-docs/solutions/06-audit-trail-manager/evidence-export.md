@@ -2,7 +2,7 @@
 
 ## Overview
 
-`Export-Evidence.ps1` produces a regulator-ready JSON package aligned to `data\evidence-schema.json`. The script also writes SHA-256 companion files for each JSON artifact.
+`Export-Evidence.ps1` produces a structured JSON evidence package for format validation and examination-support workflows. The script also writes SHA-256 companion files for each JSON artifact.
 
 ## Artifact: audit-log-completeness.json
 

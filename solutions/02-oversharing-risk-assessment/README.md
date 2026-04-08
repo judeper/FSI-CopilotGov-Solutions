@@ -90,6 +90,8 @@ Solution 02 depends on the baseline inventory and readiness outputs from solutio
 
 This solution supports compliance with GLBA 501(b), SEC Reg S-P, FINRA 4511, and the FFIEC IT Handbook by documenting repeatable detection, triage, remediation, and evidence export patterns for overshared collaboration content. It is designed to help regulated institutions demonstrate governance intent, control monitoring, and examiner-ready recordkeeping without making absolute compliance claims.
 
+The solution also supports SOX 302/404 internal control documentation by providing evidence of data exposure assessment and remediation tracking.
+
 ## Evidence Export
 
 Evidence packages align to `..\..\data\evidence-schema.json` and include:

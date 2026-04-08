@@ -50,7 +50,7 @@
 
 **Actions**
 
-- Confirm the environment type and data loss prevention policies
+- Confirm the environment type and Microsoft Purview Data Loss Prevention policies
 - Use the documentation-first design to map an approved replacement connector or routing method
 - Delay notification enablement until the environment is approved
 

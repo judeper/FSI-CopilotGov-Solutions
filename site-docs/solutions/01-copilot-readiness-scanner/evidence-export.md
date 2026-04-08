@@ -87,6 +87,10 @@ The package file aligns to `../../data/evidence-schema.json` and includes:
 - `artifacts`
   - one entry per evidence artifact with `name`, `type`, `path`, and `hash`
 
+## Evidence Integrity Warning
+
+> **Important:** The SHA-256 companion files provide tamper detection only when the hash values are stored or verified independently of the evidence artifacts. If both the artifact and its `.sha256` file reside in the same mutable directory, an actor with write access can modify both. For regulated-tier deployments (SEC 17a-4, FINRA 3110), store evidence in WORM-capable storage or use externally signed manifests. See [architecture.md](./architecture.md) for detailed guidance.
+
 ## Control Status Entries
 
 The package includes entries for the following controls:

@@ -7,7 +7,7 @@ Review [Prerequisites](./prerequisites.md) before running the solution scripts. 
 ## Step 1: Verify Purview licenses and permissions
 
 1. Confirm Microsoft Purview Communication Compliance is licensed for the tenant.
-2. Confirm the deployment operator has Communication Compliance Administrator or Compliance Administrator permissions.
+2. Confirm the deployment operator has Microsoft Purview Communication Compliance Administrator or Compliance Administrator permissions.
 3. Confirm reviewers and supervisors have approved roles before policy publication.
 4. Confirm the target tenant ID is available for deployment records.
 
@@ -40,10 +40,10 @@ Expected outputs:
 
 ## Step 4: Deploy Purview policies manually
 
-Communication Compliance publication is manual in this version. Use the generated policy templates and perform the following portal steps:
+Microsoft Purview Communication Compliance publication is manual in this version. Use the generated policy templates and perform the following portal steps:
 
 1. Open the Microsoft Purview compliance portal.
-2. Navigate to **Communication Compliance** and create or update a policy.
+2. Navigate to **Microsoft Purview Communication Compliance** and create or update a policy.
 3. Copy the policy name, scope, keywords, conditions, and reviewer guidance from the matching JSON template.
 4. Assign the correct reviewers and escalation contacts from the deployment manifest.
 5. Publish the policy and document the publication timestamp.

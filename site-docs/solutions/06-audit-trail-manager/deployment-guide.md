@@ -32,9 +32,9 @@ The deployment script creates the following files:
   - regulated: 2555 days
 - Confirm that retention labels are scoped to Copilot interaction artifacts, related files, and exported evidence where firm policy requires coverage.
 
-## 5. Configure eDiscovery holds
+## 5. Configure Microsoft Purview eDiscovery holds
 
-- Create or update eDiscovery cases for the selected tier.
+- Create or update Microsoft Purview eDiscovery cases for the selected tier.
 - Confirm hold count, custodian list, preservation status, and legal hold ownership.
 - Document export permissions and examination response contacts.
 - Align case naming to the readiness templates in the tier configuration.
@@ -42,7 +42,7 @@ The deployment script creates the following files:
 ## 6. Deploy the Power BI monitoring dashboard
 
 - Build the dashboard from the documented JSON outputs and metrics described in the README and [evidence-export.md](./evidence-export.md).
-- Include pages for audit completeness, retention coverage, and eDiscovery readiness.
+- Include pages for audit completeness, retention coverage, and Microsoft Purview eDiscovery readiness.
 - Configure scheduled refresh using approved Graph or data gateway credentials.
 - Record the dashboard owner, workspace name, and refresh schedule.
 
@@ -67,4 +67,4 @@ Review the generated SHA-256 companions and archive the evidence package with th
 .\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath .\artifacts\monitor -TenantId <tenant-id> -CheckRetention $true -CheckAuditLevel $true
 ```
 
-Address any retention gaps, missing event types, or eDiscovery readiness findings before regulatory review.
+Address any retention gaps, missing event types, or Microsoft Purview eDiscovery readiness findings before regulatory review.

@@ -57,6 +57,6 @@ DRM depends on shared repository components:
 
 ## Recommended
 
-- Azure Sentinel workspace with Copilot activity logs
+- Microsoft Sentinel workspace with Copilot activity logs
 - Defined escalation list for service-health incidents and resilience-test exceptions
 - Approved evidence-retention location for JSON and SHA-256 artifacts

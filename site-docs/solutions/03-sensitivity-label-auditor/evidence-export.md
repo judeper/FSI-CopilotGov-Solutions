@@ -89,3 +89,15 @@ Typical contents:
 - Regulated tier should retain classification evidence for seven years where required by the organization's books-and-records obligations.
 
 For regulated deployments, SEC 17a-4 requires seven-year retention of records classification evidence, so teams should store exported packages and hash files in the approved evidence repository with immutability or equivalent protection where mandated.
+
+## Evidence Immutability Limitations
+
+The `regulated.json` configuration sets `immutableEvidenceStorage: true` and `requireExaminerReadyEvidence: true`, but `Export-Evidence.ps1` writes artifacts and their `.sha256` companion files to a standard writable directory. An actor with write access to the output path can modify evidence files and regenerate matching hashes without detection. The SHA-256 companion files verify transfer integrity but do not provide tamper evidence on their own.
+
+To enforce true immutability for regulated deployments:
+
+- Store exported evidence packages in WORM (Write Once Read Many) storage such as Azure Immutable Blob Storage or a compliant records management system.
+- Apply cryptographic signing (e.g., code-signing certificates or detached PGP signatures) to evidence packages before archival so any post-export modification is detectable.
+- Restrict write access to the evidence output directory using role-based access controls so only the export service identity can write new packages.
+
+These measures are external to the solution and must be configured as part of the organization's evidence retention infrastructure.

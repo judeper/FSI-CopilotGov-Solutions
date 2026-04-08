@@ -28,7 +28,8 @@ SharePoint tenant admin URL used for PnP connection.
 .EXAMPLE
 .\Get-ItemLevelPermissions.ps1 -SiteUrls @("https://tenant.sharepoint.com/sites/finance","https://tenant.sharepoint.com/sites/legal") -TenantUrl "https://tenant-admin.sharepoint.com"
 #>
-#Requires -Modules PnP.PowerShell
+# PnP.PowerShell is required for live SharePoint operations.
+# Scripts fall back to representative sample data when PnP is unavailable.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]

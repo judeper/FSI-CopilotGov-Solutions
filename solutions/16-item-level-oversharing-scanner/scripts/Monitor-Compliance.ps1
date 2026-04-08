@@ -147,9 +147,9 @@ $configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
 
 if (-not $SiteUrls) {
     $SiteUrls = @(
-        "https://$TenantId.sharepoint.com/sites/finance",
-        "https://$TenantId.sharepoint.com/sites/legal",
-        "https://$TenantId.sharepoint.com/sites/compliance"
+        "https://contoso.sharepoint.com/sites/finance",
+        "https://contoso.sharepoint.com/sites/legal",
+        "https://contoso.sharepoint.com/sites/compliance"
     )
 }
 

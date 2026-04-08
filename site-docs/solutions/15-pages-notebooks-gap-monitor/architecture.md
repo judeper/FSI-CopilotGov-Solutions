@@ -2,9 +2,9 @@
 
 ## Solution Overview
 
-Copilot Pages and Notebooks Compliance Gap Monitor uses a gap-monitor pattern rather than a remediation pattern. The goal is to identify where Copilot Pages, Loop-backed content, and notebook experiences do not yet provide the books-and-records, retention, eDiscovery, or audit coverage that regulated firms need, then document the manual and administrative controls used to reduce risk until native platform support improves.
+Copilot Pages and Notebooks Compliance Gap Monitor uses a gap-monitor pattern rather than a remediation pattern. The goal is to identify where Copilot Pages, Loop-backed content, and notebook experiences do not yet provide the books-and-records, retention, Microsoft Purview eDiscovery, or audit coverage that regulated firms need, then document the manual and administrative controls used to reduce risk until native platform support improves.
 
-The solution supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by creating an auditable chain from gap discovery to exception review and evidence export. It does not directly change tenant retention policies or eDiscovery settings.
+The solution supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by creating an auditable chain from gap discovery to exception review and evidence export. It does not directly change tenant retention policies or Microsoft Purview eDiscovery settings.
 
 ## ASCII Component Diagram
 
@@ -17,7 +17,7 @@ The solution supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by crea
 +---------------------------------------------------------------+
 | Gap Discovery Engine                                           |
 | - Pages retention coverage checks                              |
-| - Notebook storage and eDiscovery checks                       |
+| - Notebook storage and Microsoft Purview eDiscovery checks                       |
 | - Sharing and access review prompts                            |
 +-------------------------------+-------------------------------+
                                 |
@@ -25,7 +25,7 @@ The solution supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by crea
 +---------------------------------------------------------------+
 | Gap Classifier                                                 |
 | - Retention mapping                                            |
-| - eDiscovery mapping                                           |
+| - Microsoft Purview eDiscovery mapping                                           |
 | - Audit and books-and-records mapping                          |
 +-------------------+----------------------+---------------------+
                     |                      |
@@ -64,10 +64,10 @@ The solution supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by crea
 ## Components
 
 ### Gap Discovery Engine
-The Gap Discovery Engine inventories Copilot Pages, Loop-based content, and SharePoint-backed notebooks to determine where retention, eDiscovery, or sharing controls may not be fully covered. It is documentation-led and uses stub checks until deeper API coverage is available.
+The Gap Discovery Engine inventories Copilot Pages, Loop-based content, and SharePoint-backed notebooks to determine where retention, Microsoft Purview eDiscovery, or sharing controls may not be fully covered. It is documentation-led and uses stub checks until deeper API coverage is available.
 
 ### Gap Classifier
-The Gap Classifier maps each discovered issue to the relevant regulatory requirement. Primary classifications include retention, eDiscovery, security and sharing, and books-and-records preservation.
+The Gap Classifier maps each discovered issue to the relevant regulatory requirement. Primary classifications include retention, Microsoft Purview eDiscovery, security and sharing, and books-and-records preservation.
 
 ### Compensating Control Registry
 The registry documents the control used to manage each open gap, such as manual exports, restricted sharing settings, enhanced audit logging, or quarterly supervisory reviews.
@@ -82,7 +82,7 @@ The Platform Update Tracker monitors Microsoft Message Center and release notes 
 The Evidence Packager writes the gap register outputs and then calls the shared `Export-SolutionEvidencePackage` function to create the evidence package and SHA-256 integrity hash.
 
 ### Power Automate Flow
-The Power Automate flow is documentation-first. It routes review reminders, exception approvals, and quarterly reassessment tasks, but it does not claim to remediate retention or eDiscovery settings automatically.
+The Power Automate flow is documentation-first. It routes review reminders, exception approvals, and quarterly reassessment tasks, but it does not claim to remediate retention or Microsoft Purview eDiscovery settings automatically.
 
 ## Integration Points
 
@@ -94,8 +94,10 @@ The Power Automate flow is documentation-first. It routes review reminders, exce
 
 ## Known Platform Limitations as of 2025
 
+> **Implementation note:** `Get-PngmConfiguration` is defined in the shared module `scripts/PngmShared.psm1` and imported by all three scripts (`Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, `Export-Evidence.ps1`). The module includes file-existence validation for both the default and tier-specific configuration files.
+
 - Copilot Pages retention policy application may lag behind traditional Exchange or Teams retention boundaries.
-- Loop workspaces can have limited eDiscovery search scope in some tenant configurations.
+- Loop workspaces can have limited Microsoft Purview eDiscovery search scope in some tenant configurations.
 - Notebooks in Teams are SharePoint-backed and retention is typically covered, but each tenant should verify storage paths, discovery coverage, and review evidence.
 - Some gap closures depend on future Microsoft platform updates and must be validated before changing the register status.
 

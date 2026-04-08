@@ -46,6 +46,7 @@ The solution uses tiered configuration, PowerShell collection scripts, shared he
 
 | Path | Purpose |
 |------|---------|
+| `scripts/CRS-Common.psm1` | Shared utility functions (configuration loading, module import, hashtable merge) used by all three scripts |
 | `scripts/Deploy-Solution.ps1` | Validates local prerequisites, merges tier configuration, creates deployment manifests, and records deployment activity |
 | `scripts/Monitor-Compliance.ps1` | Runs sample domain-level readiness checks, labels the output as simulated, and exports scored monitoring output for dashboard ingestion |
 | `scripts/Export-Evidence.ps1` | Builds evidence artifacts and a schema-aligned package with SHA-256 companion files |

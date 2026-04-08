@@ -10,7 +10,7 @@
 
 Minimum roles for deployment and operations:
 
-- Communication Compliance Administrator
+- Microsoft Purview Communication Compliance Administrator
 - Compliance Administrator
 - Global Reader for audit and validation support
 
@@ -18,7 +18,7 @@ Additional tenant-specific roles may be required if the customer uses delegated 
 
 ## Reviewer Requirements
 
-Reviewers should have Communication Compliance Analyst or Investigator permissions, along with the appropriate security clearance to review employee and customer communications. Supervisors and legal reviewers should be assigned according to documented segregation-of-duty requirements.
+Reviewers should have Microsoft Purview Communication Compliance Analyst or Investigator permissions, along with the appropriate security clearance to review employee and customer communications. Supervisors and legal reviewers should be assigned according to documented segregation-of-duty requirements.
 
 ## API Permissions
 

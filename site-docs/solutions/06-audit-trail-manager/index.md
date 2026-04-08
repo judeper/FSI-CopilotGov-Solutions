@@ -6,7 +6,7 @@
 
 ## Overview
 
-Copilot Interaction Audit Trail Manager supports compliance with books-and-records, audit trail, and supervisory evidence requirements by documenting how to validate Microsoft 365 Copilot audit capture, configure retention coverage, verify eDiscovery readiness, and assemble regulator-ready evidence. The solution is documentation-first for Power Automate and Power BI and uses PowerShell to generate deployment manifests, monitor posture, and export structured evidence.
+Copilot Interaction Audit Trail Manager supports compliance with books-and-records, audit trail, and supervisory evidence requirements by documenting how to validate Microsoft 365 Copilot audit capture, configure retention coverage, verify Microsoft Purview eDiscovery readiness, and assemble regulator-ready evidence. The solution is documentation-first for Power Automate and Power BI and uses PowerShell to generate deployment manifests, monitor posture, and export structured evidence.
 
 ## Solution profile
 
@@ -22,9 +22,9 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 
 - Supports validation of Microsoft 365 Unified Audit Log configuration by checking tier-specific audit level expectations and confirming that CopilotInteraction and AIInteraction events are included in validation scope.
 - Documents Purview retention policy and retention label requirements for Copilot interaction artifacts.
-- Validates eDiscovery readiness against tier requirements including preservation status, hold counts, case coverage, and custodian scope.
+- Validates Microsoft Purview eDiscovery readiness against tier requirements including preservation status, hold counts, case coverage, and custodian scope.
 - Packages JSON evidence with SHA-256 companion files for examination support.
-- Defines Power BI dashboard metrics for audit completeness, retention coverage, and eDiscovery readiness (requires customer implementation in their tenant).
+- Defines Power BI dashboard metrics for audit completeness, retention coverage, and Microsoft Purview eDiscovery readiness (requires customer implementation in their tenant).
 - Defines Power Automate exception alert expectations for retention and evidence gaps (requires customer implementation in their tenant).
 
 ## Scope Boundaries
@@ -45,11 +45,11 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 - CFTC 1.31 requires preservation, searchability, and production readiness for regulated records, commonly five years for books-and-records use cases.
 - SOX 404 places emphasis on reliable audit trails, control evidence, and traceable operation of supervisory controls.
 
-This solution supports compliance with those obligations by organizing audit validation, retention configuration, eDiscovery readiness checks, and evidence export into repeatable PowerShell-driven activities.
+This solution supports compliance with those obligations by organizing audit validation, retention configuration, Microsoft Purview eDiscovery readiness checks, and evidence export into repeatable PowerShell-driven activities.
 
 ## Prerequisites
 
-- Microsoft 365 E5 or E5 Compliance licensing for Purview features used by audit, retention, and eDiscovery operations.
+- Microsoft 365 E5 or E5 Compliance licensing for Purview features used by audit, retention, and Microsoft Purview eDiscovery operations.
 - Power BI Pro for dashboard publication and refresh management.
 - Roles: Compliance Administrator, eDiscovery Manager, Audit Log Reader, and Global Reader.
 - PowerShell modules: ExchangeOnlineManagement and Microsoft.Graph.
@@ -60,12 +60,12 @@ See [docs/prerequisites.md](prerequisites.md) for the detailed prerequisite matr
 
 ## Deployment
 
-Deploy this solution in stages: validate Unified Audit Log coverage, generate the retention manifest, confirm eDiscovery readiness, then publish the first evidence package. The detailed configuration and operating activities are organized in the following subsections so teams can execute the rollout in a controlled order.
+Deploy this solution in stages: validate Unified Audit Log coverage, generate the retention manifest, confirm Microsoft Purview eDiscovery readiness, then publish the first evidence package. The detailed configuration and operating activities are organized in the following subsections so teams can execute the rollout in a controlled order.
 
 ## Audit configuration steps
 
 1. Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
-2. Manually verify that CopilotInteraction and AIInteraction events appear in the Unified Audit Log through the Security & Compliance portal or PowerShell.
+2. Manually verify that CopilotInteraction and AIInteraction events appear in the Unified Audit Log through the Microsoft Purview compliance portal or PowerShell.
 3. Confirm the expected audit level for the selected tier:
    - baseline: Standard
    - recommended: Advanced
@@ -85,9 +85,9 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
    - SOX 404 supervisory evidence reference: 2555 days
 5. For regulated deployments, document WORM-capable storage or equivalent immutable storage attestations separately.
 
-## eDiscovery readiness
+## Microsoft Purview eDiscovery readiness
 
-- Confirm that at least one eDiscovery case template exists for the selected tier.
+- Confirm that at least one Microsoft Purview eDiscovery case template exists for the selected tier.
 - Validate preservation status, hold counts, and custodian coverage before evidence export.
 - Ensure legal hold owners, escalation contacts, and export responsibilities are documented.
 - Use `scripts\Monitor-Compliance.ps1` to record readiness status before examination support exports.
@@ -99,7 +99,7 @@ The Power BI dashboard is documentation-first in this repository. The expected d
 
 - Audit completeness: event coverage, sample count trend, UAL validation age, and Copilot event type availability.
 - Retention coverage: configured retention by regulation, label coverage status, and policy gap alerts.
-- eDiscovery readiness: case counts, hold counts, custodian coverage, preservation status, and evidence package age.
+- Microsoft Purview eDiscovery readiness: case counts, hold counts, custodian coverage, preservation status, and evidence package age.
 
 Recommended measures include audit completeness percentage, retention minimum variance, open exception count, and days since last evidence export.
 
@@ -110,7 +110,7 @@ The Power Automate flow is documentation-first in this repository. The expected 
 - Trigger on compliance status updates or evidence export findings.
 - Alert when required event types are missing from the validation scope.
 - Alert when configured retention days are below regulatory minimums.
-- Alert when eDiscovery hold readiness is incomplete for the selected tier.
+- Alert when Microsoft Purview eDiscovery hold readiness is incomplete for the selected tier.
 - Route notifications to the compliance operations owner and solution mailbox.
 
 ## Related Controls
@@ -119,7 +119,7 @@ The Power Automate flow is documentation-first in this repository. The expected 
 |---------|-------|----------------------------------------|
 | 3.1 | Audit trail completeness | Validates Unified Audit Log readiness and confirms Copilot interaction event coverage. |
 | 3.2 | Data retention policies for Copilot interactions | Documents retention schedules, labels, and tier-specific policy expectations. |
-| 3.3 | eDiscovery for Copilot-generated content | Tracks case readiness, hold coverage, and custodian scope before evidence export. |
+| 3.3 | Microsoft Purview eDiscovery for Copilot-generated content | Tracks case readiness, hold coverage, and custodian scope before evidence export. |
 | 3.11 | Record keeping and books-and-records compliance | Organizes retention manifests and readiness outputs that support recordkeeping reviews. |
 | 3.12 | Evidence collection and audit attestation | Packages JSON artifacts and SHA-256 companion files for downstream audit handling. |
 
@@ -142,7 +142,7 @@ The evidence package supports compliance with recordkeeping examinations by pres
 | SEC 17a-3 | Preserve required records and supporting supervisory evidence | Audit evidence package and retention manifest | Use exported evidence to support books-and-records reviews |
 | SEC 17a-4 | 3-6 year preservation, plus non-rewriteable and non-erasable retention where applicable | Retention manifest, WORM documentation note, immutable storage attestation tracking | WORM enforcement requires a third-party archive or Azure Immutable Storage design outside this repository |
 | FINRA 4511 | 3-year minimum retention and prompt production | Baseline retention schedule and evidence package | Baseline tier aligns to the minimum 1095-day schedule |
-| CFTC 1.31 | 5-year preservation and prompt production readiness | Recommended tier retention schedule and eDiscovery readiness checks | Recommended tier aligns to 1825-day retention |
+| CFTC 1.31 | 5-year preservation and prompt production readiness | Recommended tier retention schedule and Microsoft Purview eDiscovery readiness checks | Recommended tier aligns to 1825-day retention |
 | SOX 404 | Reliable audit trail and control evidence | Audit completeness monitoring and exported control notes | Regulated tier extends evidence retention to support supervisory review |
 
 ## Known limitations

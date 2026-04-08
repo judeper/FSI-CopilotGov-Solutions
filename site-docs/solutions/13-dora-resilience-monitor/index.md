@@ -67,6 +67,7 @@ The solution uses PowerShell scripts for deployment, monitoring, and evidence ex
 | `scripts/Deploy-Solution.ps1` | Tier-aware deployment manifest generation and configuration validation |
 | `scripts/Monitor-Compliance.ps1` | Service-health monitoring, incident classification, and resilience status collection using a local stub or sample payload until live Graph polling is added |
 | `scripts/Export-Evidence.ps1` | Evidence artifact creation and package export using shared modules |
+| `scripts/DrmConfig.psm1` | Shared DRM configuration loading and validation module used by all three scripts |
 | `config/default-config.json` | Shared DRM defaults including monitored services and dashboard feed settings |
 | `config/baseline.json` | Baseline tier settings for summary monitoring and alerting |
 | `config/recommended.json` | Recommended tier settings for incident logging and resilience tracking |
@@ -88,12 +89,14 @@ Deploy DRM by selecting the target governance tier, generating the deployment ma
 
 ## Related Controls
 
-| Control | Title | Playbooks |
-|---------|-------|-----------|
-| 2.7 | Data Residency and Cross-Border Data Flow Governance | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/2.7/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/2.7/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/2.7/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/2.7/troubleshooting.md) |
-| 4.9 | Incident Reporting and Root Cause Analysis | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.9/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.9/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.9/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.9/troubleshooting.md) |
-| 4.10 | Business Continuity and Disaster Recovery for Copilot Dependency | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.10/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.10/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.10/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.10/troubleshooting.md) |
-| 4.11 | Microsoft Sentinel Integration for Copilot Events | [Portal Walkthrough](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.11/portal-walkthrough.md) / [PowerShell Setup](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.11/powershell-setup.md) / [Verification and Testing](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.11/verification-testing.md) / [Troubleshooting](https://github.com/judeper/FSI-CopilotGov/blob/e0fb7b769529dcc008cc2066402cdabae4f369cf/docs/playbooks/control-implementations/4.11/troubleshooting.md) |
+| Control | Title |
+|---------|-------|
+| 2.7 | Data Residency and Cross-Border Data Flow Governance |
+| 4.9 | Incident Reporting and Root Cause Analysis |
+| 4.10 | Business Continuity and Disaster Recovery for Copilot Dependency |
+| 4.11 | Microsoft Sentinel Integration for Copilot Events |
+
+> **Playbooks:** Control implementation playbooks (portal walkthroughs, PowerShell setup, verification and testing, troubleshooting) are maintained in the FSI-CopilotGov framework repository under `docs/playbooks/control-implementations/`.
 
 ## Regulatory Alignment
 

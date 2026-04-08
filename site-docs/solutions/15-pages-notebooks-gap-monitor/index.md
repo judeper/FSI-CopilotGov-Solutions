@@ -12,11 +12,11 @@ This solution is intentionally a gap monitor. It supports compliance with SEC 17
 
 ## Why this exists
 
-Copilot Pages are fluid, Loop-based documents that can persist outside traditional Exchange and Teams retention boundaries. Depending on tenant configuration and current platform capabilities, Microsoft Loop workspaces and Copilot Pages content may not receive the same retention, eDiscovery, or books-and-records coverage that financial services firms expect for regulated communications.
+Copilot Pages are fluid, Loop-based documents that can persist outside traditional Exchange and Teams retention boundaries. Depending on tenant configuration and current platform capabilities, Microsoft Loop workspaces and Copilot Pages content may not receive the same retention, Microsoft Purview eDiscovery, or books-and-records coverage that financial services firms expect for regulated communications.
 
 For financial services firms, that creates risk in three areas:
 - books-and-records preservation for SEC 17a-4 and FINRA 4511
-- eDiscovery completeness for investigations and litigation holds
+- Microsoft Purview eDiscovery completeness for investigations and litigation holds
 - internal control evidence for SOX 404 reviews
 
 This solution gives compliance, legal, and operations teams a repeatable way to inventory the risk, register the gap, and document what the organization is doing about it.
@@ -25,7 +25,7 @@ This solution gives compliance, legal, and operations teams a repeatable way to 
 
 - Gap discovery for Copilot Pages, Loop-based workspaces, and notebook storage patterns
 - Compensating control registration for manual exports, access restrictions, enhanced audit logging, and review workflows
-- Preservation exception tracking for scenarios where native platform retention or eDiscovery coverage remains incomplete
+- Preservation exception tracking for scenarios where native platform retention or Microsoft Purview eDiscovery coverage remains incomplete
 - Platform update monitoring so documented gaps can be re-evaluated when Microsoft releases relevant changes
 - Tier-aware configuration for baseline, recommended, and regulated deployments
 - Evidence packaging for gap-findings, compensating-control-log, and preservation-exception-register
@@ -36,7 +36,7 @@ This solution gives compliance, legal, and operations teams a repeatable way to 
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
 - ❌ Does not connect to Microsoft 365 APIs for Pages or Notebooks monitoring (scripts use representative sample data)
-- ❌ Does not enforce preservation policies or eDiscovery holds automatically
+- ❌ Does not enforce preservation policies or Microsoft Purview eDiscovery holds automatically
 - ❌ Does not register compensating controls automatically (registration framework is documented for manual use)
 - ❌ Does not deploy Power Automate flows (gap notification workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
@@ -70,7 +70,7 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 4. Review the generated gap register with compliance and legal stakeholders.
 5. Export the initial evidence package:
    `pwsh -File .\scripts\Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath .\artifacts\evidence -PassThru`
-6. Schedule a quarterly review cycle and a release-note review for Microsoft 365 updates that affect Pages, Loop, or notebook retention and eDiscovery coverage.
+6. Schedule a quarterly review cycle and a release-note review for Microsoft 365 updates that affect Pages, Loop, or notebook retention and Microsoft Purview eDiscovery coverage.
 
 ## Solution Components
 
@@ -100,7 +100,7 @@ Deploy the solution by initializing the selected tier with `Deploy-Solution.ps1`
 |---------|-------|--------------------------------|
 | 2.11 | Copilot Pages Security and Sharing Controls | Monitors sharing-control gaps and documents compensating access restrictions |
 | 3.2 | Data Retention Policies for Copilot Interactions | Registers retention coverage gaps and manual preservation procedures |
-| 3.3 | eDiscovery for Copilot-Generated Content | Tracks notebook and Loop discovery limitations and review status |
+| 3.3 | Microsoft Purview eDiscovery for Copilot-Generated Content | Tracks notebook and Loop discovery limitations and review status |
 | 3.11 | Record Keeping and Books-and-Records Compliance (SEC 17a-3/4, FINRA 4511) | Maintains the preservation exception register and books-and-records gap log |
 
 ## Regulatory Alignment
@@ -124,6 +124,6 @@ Evidence is exported through the shared `Export-SolutionEvidencePackage` functio
 ## Known Limitations
 
 - This solution is primarily monitor-only and documentation-led.
-- It does not automate retention policy changes, legal hold actions, or eDiscovery configuration changes.
+- It does not automate retention policy changes, legal hold actions, or Microsoft Purview eDiscovery configuration changes.
 - Human review is required for all gap registrations, compensating control approvals, and preservation exception entries.
 - Platform behavior for Copilot Pages, Loop workspaces, and notebook discovery coverage can change over time and must be revalidated against current Microsoft guidance.

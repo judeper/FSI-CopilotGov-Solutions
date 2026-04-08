@@ -34,7 +34,8 @@ SharePoint tenant admin URL used for PnP connection during remediation.
 .EXAMPLE
 .\Invoke-BulkRemediation.ps1 -InputPath .\artifacts\scored\risk-scored-report.csv -OutputPath .\artifacts\remediation -ConfigPath .\config\remediation-policy.json -TenantUrl "https://tenant-admin.sharepoint.com"
 #>
-#Requires -Modules PnP.PowerShell
+# PnP.PowerShell is required for live SharePoint operations.
+# Scripts fall back to representative sample data when PnP is unavailable.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]

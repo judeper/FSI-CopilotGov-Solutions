@@ -84,6 +84,7 @@ Solution 02 depends on the baseline inventory and readiness outputs from solutio
 | 2.5 | Primary | Promotes data minimization by reducing broadly accessible content in Copilot grounding paths |
 | 2.12 | Primary | Surfaces guest access and external sharing exposure for governance review and cleanup |
 | 1.6 | Supporting | Supplements permission model audits with workload-level anomaly counts and remediation recommendations |
+| 1.7 | Supporting | Reports sensitivity label coverage across scanned sites to identify gaps in Microsoft Purview Information Protection enforcement for Copilot interactions |
 
 ## Regulatory Alignment
 
@@ -96,6 +97,7 @@ Evidence packages align to `..\..\data\evidence-schema.json` and include:
 - `oversharing-findings`
 - `remediation-queue`
 - `site-owner-attestations`
+- `sensitivity-label-coverage`
 
 Each JSON artifact is written with a companion `.sha256` file so control evidence can be verified during audit preparation, internal assurance reviews, and regulator response exercises.
 

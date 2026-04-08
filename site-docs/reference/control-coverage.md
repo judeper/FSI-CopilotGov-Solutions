@@ -8,11 +8,11 @@ Playbook only: 5 controls
 | Control | Pillar | Coverage | Solutions |
 |---------|--------|----------|-----------|
 | 1.1 | Readiness & Assessment | automated | 01-copilot-readiness-scanner |
-| 1.2 | Readiness & Assessment | automated | 02-oversharing-risk-assessment |
-| 1.3 | Readiness & Assessment | partially-automated | 02-oversharing-risk-assessment |
-| 1.4 | Readiness & Assessment | partially-automated | 02-oversharing-risk-assessment |
+| 1.2 | Readiness & Assessment | automated | 02-oversharing-risk-assessment, 16-item-level-oversharing-scanner, 17-sharepoint-permissions-drift, 18-entra-access-reviews |
+| 1.3 | Readiness & Assessment | partially-automated | 02-oversharing-risk-assessment, 16-item-level-oversharing-scanner |
+| 1.4 | Readiness & Assessment | partially-automated | 02-oversharing-risk-assessment, 16-item-level-oversharing-scanner, 17-sharepoint-permissions-drift |
 | 1.5 | Readiness & Assessment | automated | 01-copilot-readiness-scanner, 03-sensitivity-label-auditor |
-| 1.6 | Readiness & Assessment | automated | 01-copilot-readiness-scanner, 02-oversharing-risk-assessment |
+| 1.6 | Readiness & Assessment | automated | 01-copilot-readiness-scanner, 02-oversharing-risk-assessment, 16-item-level-oversharing-scanner, 17-sharepoint-permissions-drift, 18-entra-access-reviews |
 | 1.7 | Readiness & Assessment | partially-automated | 01-copilot-readiness-scanner |
 | 1.8 | Readiness & Assessment | playbook-only | — |
 | 1.9 | Readiness & Assessment | automated | 01-copilot-readiness-scanner, 08-license-governance-roi, 11-risk-tiered-rollout |
@@ -24,14 +24,14 @@ Playbook only: 5 controls
 | 2.2 | Security & Protection | automated | 03-sensitivity-label-auditor |
 | 2.3 | Security & Protection | automated | 07-conditional-access-automation |
 | 2.4 | Security & Protection | playbook-only | — |
-| 2.5 | Security & Protection | automated | 02-oversharing-risk-assessment |
+| 2.5 | Security & Protection | automated | 02-oversharing-risk-assessment, 16-item-level-oversharing-scanner, 17-sharepoint-permissions-drift, 18-entra-access-reviews |
 | 2.6 | Security & Protection | partially-automated | 07-conditional-access-automation, 09-feature-management-controller |
 | 2.7 | Security & Protection | dashboard-monitored | 12-regulatory-compliance-dashboard, 13-dora-resilience-monitor |
 | 2.8 | Security & Protection | playbook-only | — |
 | 2.9 | Security & Protection | partially-automated | 07-conditional-access-automation |
 | 2.10 | Security & Protection | dashboard-monitored | 12-regulatory-compliance-dashboard, 14-communication-compliance-config |
 | 2.11 | Security & Protection | automated | 15-pages-notebooks-gap-monitor |
-| 2.12 | Security & Protection | automated | 02-oversharing-risk-assessment |
+| 2.12 | Security & Protection | automated | 02-oversharing-risk-assessment, 18-entra-access-reviews |
 | 2.13 | Security & Protection | automated | 10-connector-plugin-governance |
 | 2.14 | Security & Protection | automated | 10-connector-plugin-governance |
 | 2.15 | Security & Protection | playbook-only | — |

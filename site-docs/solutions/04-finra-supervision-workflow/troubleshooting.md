@@ -61,7 +61,7 @@ Resolution:
 - Review environment-level security role assignments.
 - Reopen the connection reference after role changes.
 
-## Communication Compliance API access issues
+## Microsoft Purview Communication Compliance API access issues
 
 Symptoms:
 - Purview policy data cannot be read or no flagged items are returned.
@@ -91,4 +91,22 @@ Resolution:
 - Correct the tier JSON file and reseed `fsi_cg_fsw_config` rows.
 - Re-run `Monitor-Compliance.ps1` to confirm the control status returns to implemented.
 - Document the change in the firm's supervisory procedures if sampling policy changed.
+
+## Dataverse API rate limiting and transient failures
+
+Symptoms:
+- Live export fails intermittently with HTTP 429 (Too Many Requests), 503 (Service Unavailable), or 504 (Gateway Timeout).
+- Export completes on retry but not on the first attempt.
+- Pagination appears to stall or time out mid-export.
+
+Checks:
+- Confirm the Dataverse environment is not under heavy concurrent load from other integrations.
+- Verify the service account is not exceeding the per-user API request limits (default 6,000 requests per 5-minute window).
+- Check the `Retry-After` header value in the error response for guidance on when to retry.
+
+Resolution:
+- `Invoke-DataverseTableQuery` includes automatic retry logic for HTTP 429, 503, and 504 responses with exponential backoff (2s, 4s, 8s) up to 3 retries. If the issue persists after retries, investigate Dataverse service health.
+- Reduce concurrent API consumers or stagger export schedules to avoid hitting the per-user rate limit.
+- For large result sets, confirm pagination completes within 1,000 pages. If exceeded, apply a narrower `$filter` to reduce the result set (for example, shorter date ranges).
+- Monitor the Power Platform admin center for environment-level API capacity metrics and consider capacity add-ons if limits are consistently reached.
 

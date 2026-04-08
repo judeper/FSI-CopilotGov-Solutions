@@ -28,7 +28,7 @@ The tenant, workload, or calling identity does not meet the required licensing o
 
 **Cause**
 
-Exchange message label metadata may not be consistently exposed through the chosen collection method, especially where the Microsoft Information Protection client or equivalent processing is not uniformly deployed.
+Exchange message label metadata may not be consistently exposed through the chosen collection method, especially where the Microsoft Purview Information Protection client or equivalent processing is not uniformly deployed.
 
 **Resolution**
 

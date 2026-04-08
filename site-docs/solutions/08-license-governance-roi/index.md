@@ -16,7 +16,7 @@ Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot
 
 | Capability | What the solution does | Primary source | Controls |
 |------------|------------------------|----------------|----------|
-| License utilization querying | Inventories Copilot for Microsoft 365 SKU assignments and seat consumption through Microsoft Graph inventory planning calls. | Microsoft Graph `/v1.0/subscribedSkus` | 1.9, 4.8 |
+| License utilization querying | Inventories Microsoft 365 Copilot SKU assignments and seat consumption through Microsoft Graph inventory planning calls. | Microsoft Graph `/v1.0/subscribedSkus` | 1.9, 4.8 |
 | Inactivity detection | Flags seats whose last reported activity is older than the configured threshold and prepares reallocation candidates. | Microsoft Graph Copilot usage reports | 1.9, 4.5, 4.8 |
 | ROI signal collection | Documents how Viva Insights and Microsoft 365 usage signals feed a management scorecard for adoption and value conversations. | Viva Insights export plus M365 usage reports | 4.5, 4.6 |
 | Reallocation workflow | Produces manager-review recommendations that can exclude protected users from solution `11-risk-tiered-rollout` before a seat is reclaimed. | Dataverse findings plus governance review process | 1.9, 4.8 |
@@ -89,6 +89,7 @@ See [docs/architecture.md](architecture.md) for the full data flow, endpoint inv
 | `scripts\Deploy-Solution.ps1` | Loads tier settings, validates Graph connectivity planning, and writes the deployment manifest JSON. |
 | `scripts\Monitor-Compliance.ps1` | Produces a structured license-utilization snapshot with inactive-seat analysis and reallocation flags. |
 | `scripts\Export-Evidence.ps1` | Builds evidence artifacts, calculates finding counts, and packages JSON plus SHA-256 outputs. |
+| `scripts\SolutionConfig.ps1` | Shared configuration loader dot-sourced by Deploy, Monitor, and Export scripts. |
 | `config\default-config.json` | Defines solution metadata, default reporting settings, and shared operational assumptions. |
 | `config\baseline.json` | Baseline tier settings for 30-day inactivity review and summary notifications. |
 | `config\recommended.json` | Recommended tier settings for 21-day inactivity review, detailed notifications, and Viva Insights usage. |
@@ -97,6 +98,8 @@ See [docs/architecture.md](architecture.md) for the full data flow, endpoint inv
 | `docs\deployment-guide.md` | Step-by-step deployment and rollback guidance for customer-owned environments. |
 | `docs\evidence-export.md` | Defines artifact schemas, export commands, and SHA-256 verification steps. |
 | `tests\08-license-governance-roi.Tests.ps1` | Pester checks for required content, script help, and tier configuration expectations. |
+| `docs\prerequisites.md` | Lists licensing, permissions, module, network, and readiness requirements. |
+| `docs\troubleshooting.md` | Covers Graph throttling, permissions, Viva data gaps, Power BI refresh, and SHA-256 mismatches. |
 
 ## Deployment
 
@@ -106,7 +109,7 @@ The deployment flow assumes a customer-managed Power BI workspace and dataset. N
 
 ## Prerequisites Summary
 
-- Copilot for Microsoft 365 licenses available for the scoped user population.
+- Microsoft 365 Copilot licenses available for the scoped user population.
 - Viva Insights data available if ROI scorecards are required for the selected tier.
 - Microsoft Graph application permissions: `Reports.Read.All`, `Directory.Read.All`, `User.Read.All`.
 - Power BI Pro or Power BI Premium Per User for report publishing and scheduled refresh.

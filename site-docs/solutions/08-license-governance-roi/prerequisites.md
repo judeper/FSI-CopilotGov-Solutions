@@ -2,7 +2,7 @@
 
 ## Microsoft 365 Licensing
 
-- Copilot for Microsoft 365 licenses must be available for the users or cohorts included in the governance review.
+- Microsoft 365 Copilot licenses must be available for the users or cohorts included in the governance review.
 - Viva Insights licenses are required if the customer expects the ROI scorecard to include Viva-based impact measurements.
 - Power BI Pro or Power BI Premium Per User is required for report publishing, workspace collaboration, and scheduled refresh.
 
