@@ -110,9 +110,9 @@ See [docs/prerequisites.md](docs/prerequisites.md) for full prerequisites and op
 | Control | Title | Playbooks |
 |---------|-------|-----------|
 | 1.9 | License Planning and Copilot Assignment Strategy | [deployment guide](docs/deployment-guide.md), [architecture](docs/architecture.md), [evidence export](docs/evidence-export.md) |
-| 1.11 | Phased Rollout and Pilot Wave Management | [architecture](docs/architecture.md), [deployment guide](docs/deployment-guide.md), [troubleshooting](docs/troubleshooting.md) |
-| 1.12 | Rollout Gate Criteria and Expansion Approvals | [architecture](docs/architecture.md), [deployment guide](docs/deployment-guide.md), [evidence export](docs/evidence-export.md) |
-| 4.12 | Change Management and Rollout Risk Tracking | [deployment guide](docs/deployment-guide.md), [troubleshooting](docs/troubleshooting.md), [evidence export](docs/evidence-export.md) |
+| 1.11 | Organizational Change Management and Adoption Planning | [architecture](docs/architecture.md), [deployment guide](docs/deployment-guide.md), [troubleshooting](docs/troubleshooting.md) |
+| 1.12 | Training and Awareness Program | [architecture](docs/architecture.md), [deployment guide](docs/deployment-guide.md), [evidence export](docs/evidence-export.md) |
+| 4.12 | Change Management for Copilot Feature Rollouts | [deployment guide](docs/deployment-guide.md), [troubleshooting](docs/troubleshooting.md), [evidence export](docs/evidence-export.md) |
 
 ## Regulatory Alignment
 
@@ -137,3 +137,5 @@ Each export aligns to the shared repository evidence schema and includes a compa
 - The deployment and monitoring scripts are structured stubs and do not directly invoke Microsoft Graph or Power Automate APIs in this repository state.
 - Risk-tier classification uses representative sample logic until live HR, Entra, and readiness-scanner data feeds are connected.
 - Power Automate and Power BI assets remain documentation-first; implementation teams must bind the documented flows and datasets to the target environment.
+- The wave planning model assumes a single paid Copilot SKU assignment per user. Organizations using the free Copilot Chat tier should note that Tier 1 users may already have basic Copilot access before any wave begins.
+- The Copilot Control System in the Microsoft 365 admin center now provides built-in rollout controls. This solution complements those controls by adding risk-tiered wave planning, gate criteria enforcement, and evidence packaging.

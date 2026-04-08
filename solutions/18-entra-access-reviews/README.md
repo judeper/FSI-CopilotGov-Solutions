@@ -89,9 +89,9 @@ Solution 18 depends on risk-scored site output from solution 02-oversharing-risk
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|
 | 1.2 | Primary | Supports periodic access recertification for SharePoint sites exposed to Copilot grounding |
-| 1.6 | Primary | Helps meet permission model audit requirements through scheduled access reviews |
-| 2.5 | Supporting | Supports data minimization by removing unnecessary access through review deny decisions |
-| 2.12 | Supporting | Surfaces guest and external user access for periodic recertification and cleanup |
+| 1.6 | Supporting | Helps meet permission model audit requirements through scheduled access reviews |
+| 2.5 | Primary | Supports data minimization by removing unnecessary access through review deny decisions |
+| 2.12 | Primary | Surfaces guest and external user access for periodic recertification and cleanup |
 
 ## Regulatory Alignment
 

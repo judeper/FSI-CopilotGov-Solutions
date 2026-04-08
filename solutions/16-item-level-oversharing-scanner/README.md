@@ -91,7 +91,7 @@ Solution 16 depends on the site-level oversharing assessment from solution 02 to
 |---------|--------------|----------------------------------------|
 | 1.2 | Primary | Detects item-level oversharing within SharePoint document libraries and prepares governed remediation actions |
 | 1.3 | Primary | Supports Restricted SharePoint Search planning by identifying overshared items that should be limited |
-| 1.4 | Supporting | Supports semantic index governance by surfacing items with permissions that exceed intended Copilot grounding scope |
+| 1.4 | Primary | Supports semantic index governance by surfacing items with permissions that exceed intended Copilot grounding scope |
 | 1.6 | Supporting | Supplements site-level permission audits with granular item-level anomaly detection |
 | 2.5 | Primary | Promotes data minimization by identifying and remediating item-level permissions that are broader than necessary |
 

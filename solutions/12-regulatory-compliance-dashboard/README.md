@@ -90,12 +90,12 @@ Deployment is intentionally staged:
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|
-| 3.7 | Compliance Posture Reporting and Executive Dashboards | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
-| 3.8 | Regulatory Examination Readiness Reporting | [Evidence Export](docs/evidence-export.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 3.7 | Compliance Posture Reporting and Executive Dashboards (Regulatory Reporting (FINRA, SEC, SOX, GLBA, CFPB UDAAP)) | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 3.8 | Regulatory Examination Readiness Reporting (Model Risk Management Alignment (OCC 2011-12 / SR 11-7)) | [Evidence Export](docs/evidence-export.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
 | 3.12 | Evidence Collection and Audit Attestation | [Evidence Export](docs/evidence-export.md) / [Architecture](docs/architecture.md) / [Troubleshooting](docs/troubleshooting.md) |
-| 3.13 | Third-Party Audit and Regulatory Reporting | [Architecture](docs/architecture.md) / [Evidence Export](docs/evidence-export.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 3.13 | Third-Party Audit and Regulatory Reporting (FFIEC IT Examination Handbook Alignment) | [Architecture](docs/architecture.md) / [Evidence Export](docs/evidence-export.md) / [Troubleshooting](docs/troubleshooting.md) |
 | 4.5 | Copilot Usage Analytics and Adoption Reporting | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
-| 4.7 | Governance Maturity Scoring and Benchmarking | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
+| 4.7 | Governance Maturity Scoring and Benchmarking (Copilot Feedback and Telemetry Data Governance) | [Architecture](docs/architecture.md) / [Deployment Guide](docs/deployment-guide.md) / [Troubleshooting](docs/troubleshooting.md) |
 
 ## Regulatory Alignment
 
