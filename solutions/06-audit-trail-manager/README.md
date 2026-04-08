@@ -152,6 +152,7 @@ The evidence package supports compliance with recordkeeping examinations by pres
 - WORM retention under SEC 17a-4 requires a third-party archive, Azure Immutable Storage, or another approved immutable storage pattern outside this repository.
 - The repository provides documentation-first definitions for Power BI and Power Automate; deployment teams must implement tenant-specific assets.
 - Evidence exports describe expected control state and support compliance with validation workflows, but they do not replace legal or regulatory review.
+- The SEC's 2022 amendment to Rule 17a-4 now permits an audit-trail alternative to WORM storage, provided firms maintain detailed audit logs that prevent alteration or deletion. Organizations should evaluate both WORM and audit-trail options when planning immutable evidence storage.
 
 ## Additional documentation
 

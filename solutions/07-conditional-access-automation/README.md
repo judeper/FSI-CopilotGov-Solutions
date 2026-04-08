@@ -35,7 +35,7 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 
 | Application | App ID | Purpose in this solution |
 |-------------|--------|--------------------------|
-| Microsoft 365 Copilot | `2d7f3606-b07d-41d1-b9d2-0d0c9296a6e4` | Primary Conditional Access target for Copilot user access |
+| Microsoft 365 Copilot (Enterprise Copilot Platform) | `fb8d773d-7ef8-4ec0-a117-179f88add510` | Primary Conditional Access target for Copilot user access; requires service principal registration via `New-MgServicePrincipal` |
 | Copilot Studio | `7df0a125-d3be-4c96-aa54-591f83ff541c` | Optional secondary target for makers and administrators |
 
 ## Regulatory context
@@ -91,7 +91,7 @@ Expired exceptions should be treated as findings until they are closed or renewe
 - Confirm Microsoft Entra ID P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
 - Ensure Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
 
-## Deployment steps
+## Deployment
 
 1. Confirm that `05-dlp-policy-governance` is complete.
 2. Confirm Microsoft Entra ID P1 or P2 licensing and required administrator roles.
@@ -127,7 +127,7 @@ See `docs\deployment-guide.md` for the detailed workflow.
 | Control | Objective | Regulations | Evidence |
 |---------|-----------|-------------|----------|
 | `2.3` | Copilot access control and Conditional Access enforcement | OCC 2011-12, FINRA 3110, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
-| `2.6` | Controlled feature enablement, exception handling, and drift oversight | OCC 2011-12, FINRA 3110 | `drift-alert-summary.json`, `access-exception-register.json` |
+| `2.6` | Copilot Web Search and Web Grounding Controls — manages web search/grounding feature exceptions and drift oversight | OCC 2011-12, FINRA 3110 | `drift-alert-summary.json`, `access-exception-register.json` |
 | `2.9` | Device compliance requirements for Copilot sessions | OCC 2011-12, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
 
 ## Regulatory Alignment

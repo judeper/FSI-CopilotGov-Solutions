@@ -866,7 +866,7 @@
     "control_id": "2.11",
     "title": "Copilot Pages Security and Sharing Controls",
     "pillar": "Security & Protection",
-    "coverage": "automated",
+    "coverage": "partially-automated",
     "solutions": [
       "15-pages-notebooks-gap-monitor"
     ],

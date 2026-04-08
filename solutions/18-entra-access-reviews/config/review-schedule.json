@@ -6,6 +6,6 @@
   },
   "defaultReviewer": "site-owner",
   "fallbackReviewer": "compliance-officer",
-  "autoApplyDecisions": true,
+  "autoApplyDecisions": false,
   "reminderDays": 2
 }

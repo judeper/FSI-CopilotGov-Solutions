@@ -127,3 +127,4 @@ Evidence is exported through the shared `Export-SolutionEvidencePackage` functio
 - It does not automate retention policy changes, legal hold actions, or Microsoft Purview eDiscovery configuration changes.
 - Human review is required for all gap registrations, compensating control approvals, and preservation exception entries.
 - Platform behavior for Copilot Pages, Loop workspaces, and notebook discovery coverage can change over time and must be revalidated against current Microsoft guidance.
+- As of January 2025, retention policies and basic Microsoft Purview eDiscovery support are generally available for Copilot Pages and Loop content. The remaining compliance gaps include limited retention label support, no full-text search in eDiscovery review sets, and no information barriers for SharePoint Embedded containers. Organizations should reassess GAP-001 and GAP-002 severity in light of these platform improvements.

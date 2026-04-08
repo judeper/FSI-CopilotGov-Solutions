@@ -14,7 +14,7 @@
 - [ ] Verify the sensitivity label taxonomy is finalized before the audit starts.
 - [ ] Confirm the organization has approved the Public, Internal, Confidential, Highly Confidential, and Restricted label hierarchy for Copilot use.
 - [ ] Confirm Microsoft Purview Information Protection licensing is available for the target tenant.
-- [ ] Confirm Microsoft 365 E5 Compliance or equivalent licensing is approved for the solution scope.
+- [ ] Confirm Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) or equivalent licensing is approved for the solution scope.
 - [ ] Confirm required admin roles are assigned to the deployment and evidence export operators.
 
 ## Dependency Readiness
