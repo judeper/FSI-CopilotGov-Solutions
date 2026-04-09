@@ -107,5 +107,12 @@
       "expectedRing": "Restricted",
       "riskNote": "Disabled until connector risk assessment and approval are complete."
     }
-  ]
+  ],
+  "webGroundingPolicy": {
+    "enforceExclusionList": true,
+    "requireAuthoritativeSourceDesignation": true,
+    "webSearchEnabled": false,
+    "mandatoryAuthoritativeSourceReview": true,
+    "excludedDomainCategories": ["social-media", "personal-storage", "unverified-news"]
+  }
 }

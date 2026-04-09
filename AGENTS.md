@@ -36,6 +36,7 @@ This repository contains documentation-first governance solution scaffolds for M
 | 16 | Item-Level Oversharing Scanner | P1 | A | 1.2, 1.3, 1.4, 1.6, 2.5 |
 | 17 | SharePoint Permissions Drift Detection | P1 | A | 1.2, 1.4, 1.6, 2.5 |
 | 18 | Entra Access Reviews Automation | P1 | A | 1.2, 1.6, 2.5, 2.12 |
+| 19 | Agent Lifecycle and Deployment Governance | P0 | C | 1.13, 2.13, 2.14, 4.1, 4.13 |
 
 ## Directory Structure
 
@@ -44,7 +45,7 @@ FSI-CopilotGov-Solutions/
 |-- docs/                     # Source documentation for the public site
 |-- data/                     # Machine-readable control, solution, and evidence metadata
 |-- scripts/                  # Build, validation, shared modules, and deployment utilities
-|-- solutions/                # Eighteen Copilot governance solution folders
+|-- solutions/                # Nineteen Copilot governance solution folders
 |-- templates/                # Policy templates, dashboard feed schema, and regulatory mapping assets
 |-- site-docs/                # Generated MkDocs input built from docs/ and solution READMEs
 ```

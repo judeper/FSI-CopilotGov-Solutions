@@ -77,5 +77,11 @@
       "expectedRing": "Preview Ring",
       "riskNote": "Kept in pilot due to transcript and meeting summary sensitivity."
     }
-  ]
+  ],
+  "webGroundingPolicy": {
+    "enforceExclusionList": true,
+    "requireAuthoritativeSourceDesignation": true,
+    "webSearchEnabled": true,
+    "excludedDomainCategories": ["social-media", "personal-storage"]
+  }
 }

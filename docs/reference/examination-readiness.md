@@ -22,6 +22,7 @@ Each solution ships an evidence-export pattern that supports consistent examinat
 | Item-Level Oversharing Scanner | item-oversharing-findings, risk-scored-report, remediation-actions | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
 | SharePoint Permissions Drift Detection | drift-report, baseline-snapshot, reversion-log | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
 | Entra Access Reviews Automation | access-review-definitions, review-decisions, applied-actions | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
+| Agent Lifecycle and Deployment Governance | agent-registry, approval-register, sharing-policy-audit | FINRA 3110, SEC Reg S-P, GLBA 501(b), OCC 2011-12, SOX 302/404, FFIEC IT Handbook, Interagency AI Guidance, DORA | finra-3110, sec-reg-sp, glba-501b, sox-302-404, occ-2011-12, ffiec-it-handbook, interagency-ai-guidance, dora |
 
 Unified evidence export is orchestrated through `scripts/deployment/Export-CopilotGovernanceEvidence.ps1` and validated with `scripts/deployment/Test-EvidenceIntegrity.ps1`.
 

@@ -1,6 +1,6 @@
 # License Governance and ROI Tracker
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -9,6 +9,8 @@
 License Governance and ROI Tracker helps financial-services teams monitor Copilot license assignment quality, identify inactive seats, document business-value indicators, and prepare reallocation recommendations for management review. The solution is designed for institutions that need disciplined seat planning, cost allocation support, and repeatable evidence packages that support compliance with OCC 2011-12 and SOX 404 expectations.
 
 The implementation is intentionally documentation-first for Power BI assets. The PowerShell scripts define the deployment, monitoring, and evidence packaging flow, while the architecture and deployment guides document how a customer-owned Power BI dataset should be configured.
+
+Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go messaging at $0.01 per message and prepaid message packs. This solution documents governance patterns for billing policy assignment by security group, cost monitoring through Azure Cost Management, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements.
 
 ## Detailed Features
 
@@ -19,6 +21,7 @@ The implementation is intentionally documentation-first for Power BI assets. The
 | ROI signal collection | Documents how Viva Insights and Microsoft 365 usage signals feed a management scorecard for adoption and value conversations. | Viva Insights export plus M365 usage reports | 4.5, 4.6 |
 | Reallocation workflow | Produces manager-review recommendations that can exclude protected users from solution `11-risk-tiered-rollout` before a seat is reclaimed. | Dataverse findings plus governance review process | 1.9, 4.8 |
 | Evidence packaging | Exports JSON evidence, companion SHA-256 hashes, and artifact references for periodic control reviews. | `Export-Evidence.ps1` and `EvidenceExport.psm1` | 4.5, 4.8 |
+| Consumption-based billing governance | Documents the governance pattern for Copilot PAYG (pay-as-you-go) billing policies, message pack metering, high-usage user visibility, and cost cap monitoring through the Microsoft 365 admin center and Azure Cost Management. | Billing > Cost Management in M365 admin center, Azure Cost Management tags | 4.5, 4.6, 4.8 |
 
 ## Scope Boundaries
 
@@ -31,6 +34,7 @@ The implementation is intentionally documentation-first for Power BI assets. The
 - ❌ Does not deploy Power Automate flows (reallocation workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not configure PAYG billing policies or spending caps (billing policy creation and cost monitoring are documented for manual configuration in the M365 admin center)
 
 ## Architecture
 

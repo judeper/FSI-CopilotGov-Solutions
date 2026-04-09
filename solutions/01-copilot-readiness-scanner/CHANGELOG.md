@@ -2,6 +2,10 @@
 
 All notable changes to this solution are documented in this file.
 
+## v0.3.0
+
+- Added reference to redesigned Microsoft 365 Admin Center Copilot overview page (January 2026) as supplemental readiness input in README and architecture documentation.
+
 ## [v0.2.0] - 2026-03-07
 
 ### Added

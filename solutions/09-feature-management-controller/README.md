@@ -1,6 +1,6 @@
 # Copilot Feature Management Controller
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -21,6 +21,7 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 | Drift detection | Compares current feature state against approved baseline settings and highlights unexpected enablement, scope, or ring changes. | Supports compliance with control 4.4 by identifying deviations that require remediation or documented acceptance. |
 | Change tracking | Records change intent, ring promotions, and alert history for operational and supervisory review. | Supports compliance with control 4.12 by preserving rollout rationale and approval context. |
 | Baseline enforcement | Maintains expected feature state for regulated, recommended, and baseline tiers and flags nonconforming tenant behavior. | Supports compliance with controls 2.6 and 4.13 by restricting feature scope and highlighting unmanaged plugin or connector exposure. |
+| Web grounding governance | Documents the configuration pattern for Copilot web grounding domain exclusion lists, authoritative source designation, and web search policy enforcement. Current version provides governance templates; live policy deployment requires customer implementation in the Microsoft 365 admin center. | Supports compliance with controls 2.5 and 4.1 by governing which external web sources Copilot can reference and prioritizing authoritative internal content. |
 
 ## Scope Boundaries
 
@@ -32,6 +33,7 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 - ❌ Does not deploy Power Automate flows (change-tracking workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not configure web grounding domain exclusion or authoritative sources in the Microsoft 365 admin center (governance templates and audit patterns are documented for manual configuration)
 
 ## Architecture
 

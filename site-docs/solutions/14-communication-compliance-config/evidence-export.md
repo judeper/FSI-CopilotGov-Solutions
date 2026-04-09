@@ -73,6 +73,32 @@ The solution writes the package and SHA-256 hash file into the selected output f
 | 3.6 | `partial` | Reviewer queue metrics and supervision workflow evidence require manual reviewer actions |
 | 3.9 | `partial` | AI disclosure policy templates are exported, but monitoring remains partly manual |
 
+## Insider Risk and Video Recap Evidence Fields
+
+Evidence packages should document the following additional compliance artifact categories to support insider risk management and video recap governance:
+
+### Insider Risk AI Usage Policy State
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `irmPolicyName` | string | Name of the insider risk management policy targeting AI usage indicators |
+| `irmPolicyStatus` | string | Configuration state such as `documented`, `configured`, or `active` |
+| `riskIndicators[]` | array | List of enabled IRM indicators for Copilot interactions (e.g., sensitive prompt, unusual volume) |
+| `adaptiveProtectionEnabled` | boolean | Whether Adaptive Protection risk scoring is configured for the policy |
+| `lastReviewedAt` | string | ISO 8601 timestamp of the most recent policy review |
+
+### Video Recap Retention Policy Coverage
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `videoRecapRetentionPolicy` | string | Name of the retention policy governing video recap source artifacts |
+| `retentionPeriodDays` | number | Configured retention period in days for meeting recordings and transcripts |
+| `videoRecapInScope` | boolean | Whether video recap artifacts are included in communication compliance supervision scope |
+| `sourceArtifactTypes[]` | array | Source artifact types covered (e.g., `meeting-recording`, `meeting-transcript`, `video-recap`) |
+| `regulatoryBasis` | string | Regulatory requirement driving retention (e.g., `SEC Rule 17a-4`, `FINRA Rule 4511`) |
+
+These fields are recommended additions to the evidence package. They document the configuration posture for insider risk AI usage detection and video recap retention rather than attesting to live policy enforcement.
+
 ## Operational Notes
 
 - Evidence export packages generated content and documented monitoring data; it does not attest that all policies are published unless customer operations maintain the required portal records.

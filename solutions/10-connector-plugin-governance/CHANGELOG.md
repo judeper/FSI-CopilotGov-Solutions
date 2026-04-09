@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0
+
+- Added cross-reference to Solution 19 (Agent Lifecycle and Deployment Governance) for agent-specific lifecycle governance coverage.
+
 ## v0.1.0
 
 - Replaced shallow scaffold content with detailed connector and plugin governance guidance tailored to financial services operations and analytics teams.

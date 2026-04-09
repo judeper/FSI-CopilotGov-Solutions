@@ -1,0 +1,45 @@
+{
+  "solution": "19-agent-lifecycle-governance",
+  "tier": "regulated",
+  "controls": [
+    "1.13",
+    "2.13",
+    "2.14",
+    "4.1",
+    "4.13"
+  ],
+  "approvalModel": {
+    "autoApproveMicrosoftPublished": false,
+    "requireApprovalForAllAgents": true,
+    "mandatoryReviewStages": [
+      "security-review",
+      "business-owner-attestation",
+      "final-approval"
+    ],
+    "userCreatedReviewStages": [
+      "security-review",
+      "business-owner-attestation",
+      "ciso-sign-off"
+    ],
+    "mandatoryCisoSignoffForUserCreated": true,
+    "maintainDoraThirdPartyRegister": true
+  },
+  "approvalSLAHours": {
+    "microsoftPublished": 24,
+    "itDeveloped": 24,
+    "userCreated": 24,
+    "blocked": 0
+  },
+  "sharingPolicyControls": {
+    "orgWideSharingRestriction": "blocked-without-exception",
+    "externalSharingPolicy": "blocked",
+    "catalogVisibility": "admin-only"
+  },
+  "doraRegister": {
+    "required": true,
+    "reconciliationFrequency": "monthly",
+    "ownerRole": "ThirdPartyRiskManagement"
+  },
+  "evidenceRetentionDays": 365,
+  "notificationMode": "strict"
+}

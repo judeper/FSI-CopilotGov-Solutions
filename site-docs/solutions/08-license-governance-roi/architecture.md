@@ -114,6 +114,32 @@ Solution `11-risk-tiered-rollout` is a required dependency because license gover
 - evidence packages can explain why a low-utilization user remained assigned, and
 - management reporting can distinguish optimization opportunities from approved exceptions.
 
+## Consumption-Based Billing Governance
+
+Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot features. This section documents the governance patterns for organizations that adopt pay-as-you-go (PAYG) messaging or prepaid message packs alongside, or instead of, traditional per-seat licensing.
+
+### Billing Policy Assignment by Entra ID Security Group
+
+Billing policies in the Microsoft 365 admin center control which users may consume PAYG messages. Each policy is scoped to one or more Entra ID security groups, enabling administrators to align consumption entitlements with department, business unit, or risk tier. This solution documents the recommended governance pattern: maintain a dedicated security group per billing policy, require change-management approval before group membership changes, and retain a log of policy-to-group assignments for audit review.
+
+### Message Pack vs PAYG Cost Tracking
+
+Organizations may choose between individual pay-as-you-go billing at $0.01 per message or prepaid 25,000-message packs at a fixed monthly rate. This solution documents the pattern for tracking consumption across both models, including message volume by user and department, pack utilization percentage, and overage forecasting. These patterns support compliance with SOX 404 cost allocation expectations by providing traceable spend data at the business-unit level.
+
+### Azure Cost Management Integration Pattern
+
+PAYG charges for Copilot appear in the linked Azure subscription and are visible through Azure Cost Management. This solution documents the tagging and filtering conventions recommended for financial-services organizations, including the use of the `m365copilotchat` cost-tracking tag, departmental cost-center tags, and budget alert rules. Budget alerts help meet OCC 2011-12 expectations for technology expense oversight by notifying governance teams when consumption approaches defined thresholds.
+
+### High-Usage User Visibility and Alerting
+
+High-volume message consumption may indicate productive adoption, shadow workflows, or unintended automation against the Copilot endpoint. This solution documents the pattern for identifying users whose daily message count exceeds a configurable threshold, routing high-usage findings to management review, and recording review outcomes in the evidence package. These patterns provide a framework for institutions that require periodic review of outlier consumption.
+
+### Departmental Chargeback and Showback Model
+
+For institutions that allocate technology costs to business units, this solution documents a chargeback and showback model that apportions PAYG and message pack costs by department based on user-level consumption data. The model supports compliance with SOX 404 expectations for cost allocation traceability and helps meet OCC 2011-12 governance requirements for technology expense reporting to business-line management.
+
+> **Note:** All patterns described in this section are documentation-first governance scaffolds. They do not configure billing policies, create Azure budget alerts, or connect to live cost-management APIs. Implementation requires manual configuration in the Microsoft 365 admin center and Azure portal following the documented patterns.
+
 ## Security and Control Considerations
 
 - Use application permissions with tenant-admin consent for Graph reporting workloads.

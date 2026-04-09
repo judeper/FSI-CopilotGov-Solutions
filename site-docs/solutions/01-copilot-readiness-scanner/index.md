@@ -1,6 +1,6 @@
 # Copilot Readiness Assessment Scanner
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P0 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.3.0 | **Priority:** P0 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -15,6 +15,7 @@ The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 re
 - Supports `baseline`, `recommended`, and `regulated` governance tiers with different monitoring cadence, evidence retention, and alert thresholds.
 - Exports evidence packages aligned to the shared schema, including companion SHA-256 files for downstream audit handling.
 - Produces Power BI-ready JSON artifacts that can be used to populate executive scorecards and remediation dashboards.
+- References the redesigned Microsoft 365 Admin Center Copilot overview page (January 2026), which centralizes security configuration, readiness recommendations, and governance settings as supplemental readiness inputs.
 - Tracks FSI-relevant controls 1.1, 1.5, 1.6, 1.7, and 1.9 in a format suitable for control owners, security teams, and exam preparation leads.
 
 ## Scope Boundaries

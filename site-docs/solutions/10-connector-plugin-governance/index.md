@@ -1,6 +1,6 @@
 # Copilot Connector and Plugin Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -9,6 +9,8 @@
 Copilot Connector and Plugin Governance extends Copilot supervision into the connector, plugin, and extensibility layer used by Microsoft 365 Copilot, Copilot Studio, Graph Connectors, and Power Platform based agent scenarios. In a financial services environment, those extensibility paths can introduce third-party risk, data egress risk, and approval obligations that sit within FINRA 3110 supervisory scope, OCC 2011-12 third-party risk management expectations, and DORA ICT third-party risk oversight.
 
 This solution inventories connectors and plugins, applies risk classification, routes approval requests, and records data-flow boundary decisions for approved use cases. It supports compliance with internal control programs by documenting which external systems Copilot can reach, who approved that reach, and whether ongoing monitoring is catching new or unapproved extensibility paths.
+
+For agent-specific lifecycle governance — including Copilot Studio agent request and approval workflows, org-wide sharing restrictions, and agent catalog auditing — see [Solution 19: Agent Lifecycle and Deployment Governance](../19-agent-lifecycle-governance/index.md). Solution 10 focuses on connector and plugin extensibility governance, while Solution 19 addresses the agent deployment and sharing lifecycle.
 
 ## Features
 

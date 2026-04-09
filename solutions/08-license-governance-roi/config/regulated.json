@@ -23,5 +23,12 @@
     "fsi_cg_lgr_baseline",
     "fsi_cg_lgr_finding",
     "fsi_cg_lgr_evidence"
-  ]
+  ],
+  "consumptionBilling": {
+    "monitorPayAsYouGo": true,
+    "requireBillingPolicyForPAYG": true,
+    "monthlyBudgetAlertEnabled": true,
+    "requireDepartmentalChargeback": true,
+    "highUsageReviewRequired": true
+  }
 }

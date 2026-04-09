@@ -108,3 +108,42 @@ The alerting layer converts drift findings into actionable outputs:
 - FMC supports compliance with FINRA 3110 by preserving supervisory review data, change intent, and drift findings.
 - The design assumes change approval is stricter in the `regulated` tier than in `baseline` or `recommended`.
 - Third-party connector and plugin exposure should be reviewed with solution 10 if deeper connector governance controls are required.
+
+## Web Grounding Governance
+
+FMC extends feature management governance to cover Copilot web grounding controls, including domain exclusion lists, authoritative source designation, and web search policy enforcement. These capabilities are documentation-first governance patterns; live configuration is performed in the Microsoft 365 admin center.
+
+### Domain Exclusion Configuration
+
+Administrators can maintain a blocklist of external web domains that Copilot should not reference when generating grounded responses. The domain exclusion governance pattern documents:
+
+- How to define and maintain the excluded domain list in the Microsoft 365 admin center
+- Categorization of excluded domains (for example, social media, personal storage, unverified news)
+- Tier-appropriate exclusion policies: baseline tiers may leave the exclusion list unenforced, while regulated tiers apply strict blocklists and disable web search entirely
+- Change tracking and approval workflows for domain exclusion list updates
+
+### Authoritative Source Designation
+
+Organizations can designate specific SharePoint sites as authoritative sources so that Copilot prioritizes internal, curated content over external web results. The governance pattern documents:
+
+- How to register authoritative SharePoint sites in the Microsoft 365 admin center
+- Review cadence for authoritative source lists to help meet content accuracy and relevance requirements
+- Tier-appropriate policies: recommended tiers require authoritative source designation, and regulated tiers add mandatory periodic review of designated sites
+- Integration with the feature baseline comparator to detect drift when authoritative source configuration changes
+
+### Web Search Policy Integration
+
+The "Allow web search" policy controls whether Copilot can query external web sources during response generation. FMC governance templates document:
+
+- Group-controlled web search enablement aligned to rollout ring definitions
+- Regulated tier guidance that recommends disabling web search for populations handling sensitive or material non-public information
+- Baseline and recommended tier guidance that permits web search with appropriate domain exclusion controls
+
+### Relationship to Feature Management Model
+
+Web grounding governance extends the existing FMC baseline, drift detection, and change tracking model:
+
+- Domain exclusion lists and authoritative source designations are tracked as feature baseline settings alongside rollout ring assignments
+- Changes to web grounding configuration are subject to the same change approval and notification workflows as other feature policy updates
+- Drift detection covers unexpected changes to excluded domains, authoritative sources, or web search policy state
+- Evidence export includes web grounding configuration snapshots for supervisory review

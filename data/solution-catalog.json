@@ -1071,5 +1071,73 @@
       "prerequisites.md",
       "troubleshooting.md"
     ]
+  },
+  {
+    "id": "19",
+    "slug": "19-agent-lifecycle-governance",
+    "display_name": "Agent Lifecycle and Deployment Governance",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P0",
+    "phase": 2,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell"
+    ],
+    "primary_controls": [
+      "1.13",
+      "2.13",
+      "2.14",
+      "4.13"
+    ],
+    "supporting_controls": [
+      "4.1"
+    ],
+    "regulations": [
+      "FINRA 3110",
+      "SEC Reg S-P",
+      "GLBA 501(b)",
+      "OCC 2011-12",
+      "SOX 302/404",
+      "FFIEC IT Handbook",
+      "Interagency AI Guidance",
+      "DORA"
+    ],
+    "framework_ids": [
+      "finra-3110",
+      "sec-reg-sp",
+      "glba-501b",
+      "sox-302-404",
+      "occ-2011-12",
+      "ffiec-it-handbook",
+      "interagency-ai-guidance",
+      "dora"
+    ],
+    "summary": "Governs agent lifecycle including request/approval workflows, org-wide sharing restrictions, agent catalog auditing, and deployment gating for Copilot agents in financial services.",
+    "evidence_outputs": [
+      "agent-registry",
+      "approval-register",
+      "sharing-policy-audit"
+    ],
+    "dependencies": [
+      "09-feature-management-controller",
+      "10-connector-plugin-governance"
+    ],
+    "controls": [
+      "1.13",
+      "2.13",
+      "2.14",
+      "4.1",
+      "4.13"
+    ],
+    "control_count": 5,
+    "code": "ALG",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
   }
 ]

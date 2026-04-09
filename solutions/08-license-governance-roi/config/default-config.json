@@ -35,5 +35,13 @@
       "Copilot for Microsoft 365"
     ],
     "reportingPeriodDays": 90
+  },
+  "consumptionBilling": {
+    "payAsYouGoEnabled": false,
+    "messagePacksEnabled": false,
+    "costTrackingTag": "m365copilotchat",
+    "billingPolicyScopeType": "security-group",
+    "highUsageThresholdMessagesPerDay": 100,
+    "costAlertThresholdUSD": 500
   }
 }

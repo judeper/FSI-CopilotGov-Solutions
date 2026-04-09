@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## v0.2.0
+
+- Added insider risk management integration for risky AI usage detection: IRM prompt/response monitoring, Adaptive Protection correlation, and control 2.10 coverage.
+- Added Copilot video recap compliance artifact documentation: governance patterns for FINRA 3110 supervision and SEC 17a-4 retention of AI-generated meeting highlights.
+- Updated scope boundaries to clarify IRM and video recap governance posture.
+- Updated architecture and evidence export documentation with new compliance artifact categories.
+
 ## v0.1.0 - 2025-01-15
 
 ### Added

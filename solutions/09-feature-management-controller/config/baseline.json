@@ -66,5 +66,10 @@
       "expectedRing": "Restricted",
       "riskNote": "Held in restricted state during the baseline tier."
     }
-  ]
+  ],
+  "webGroundingPolicy": {
+    "enforceExclusionList": false,
+    "requireAuthoritativeSourceDesignation": false,
+    "webSearchEnabled": true
+  }
 }

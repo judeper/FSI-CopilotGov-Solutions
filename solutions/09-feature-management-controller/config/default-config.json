@@ -131,5 +131,12 @@
   "notifications": {
     "channel": "FMC-governance-alerts",
     "mode": "summary"
+  },
+  "webGroundingGovernance": {
+    "domainExclusionEnabled": true,
+    "excludedDomains": [],
+    "authoritativeSourceSites": [],
+    "webSearchPolicy": "group-controlled",
+    "auditWebGroundingChanges": true
   }
 }

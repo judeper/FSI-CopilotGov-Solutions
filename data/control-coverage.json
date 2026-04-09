@@ -462,7 +462,8 @@
     "pillar": "Readiness & Assessment",
     "coverage": "automated",
     "solutions": [
-      "10-connector-plugin-governance"
+      "10-connector-plugin-governance",
+      "19-agent-lifecycle-governance"
     ],
     "framework_ids": [
       "glba-501b",
@@ -940,7 +941,8 @@
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
-      "10-connector-plugin-governance"
+      "10-connector-plugin-governance",
+      "19-agent-lifecycle-governance"
     ],
     "framework_ids": [
       "glba-501b",
@@ -977,7 +979,8 @@
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
-      "10-connector-plugin-governance"
+      "10-connector-plugin-governance",
+      "19-agent-lifecycle-governance"
     ],
     "framework_ids": [
       "glba-501b",
@@ -1536,7 +1539,8 @@
     "pillar": "Operations & Monitoring",
     "coverage": "automated",
     "solutions": [
-      "09-feature-management-controller"
+      "09-feature-management-controller",
+      "19-agent-lifecycle-governance"
     ],
     "framework_ids": [
       "sec-reg-fd",
@@ -1992,7 +1996,8 @@
     "coverage": "automated",
     "solutions": [
       "09-feature-management-controller",
-      "10-connector-plugin-governance"
+      "10-connector-plugin-governance",
+      "19-agent-lifecycle-governance"
     ],
     "framework_ids": [
       "sec-reg-fd",

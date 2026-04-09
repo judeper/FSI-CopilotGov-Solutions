@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## v0.2.0
+
+- Added roadmap awareness section referencing 2026 Release Wave 1 AI governance capabilities relevant to DORA monitoring.
+
 ## v0.1.0 - 2025-01-15
 
 ### Added

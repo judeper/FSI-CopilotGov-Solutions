@@ -1,6 +1,6 @@
 # DORA Operational Resilience Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -108,6 +108,16 @@ The solution exports the following evidence outputs:
 - `resilience-test-results`: annual exercise schedule, RTO and RPO targets, outcomes, and documented gaps
 
 All evidence packages are written as JSON with SHA-256 companion files and are aligned to the shared schema in `data/evidence-schema.json`.
+
+## Roadmap Awareness
+
+The 2026 Release Wave 1 (April–September 2026) introduces several capabilities relevant to DORA operational resilience monitoring:
+
+- Real-time risk assessment capabilities in Copilot Studio for automated governance workflows
+- AI-powered governance agents for tenant monitoring and compliance alerting
+- Enhanced service health analytics integration
+
+These features are in preview or rolling out through September 2026. As they reach general availability, this solution's architecture and monitoring patterns may be extended to incorporate them. Customers should evaluate Wave 1 features against their DORA ICT risk management framework requirements as they become available.
 
 ## Known Limitations
 

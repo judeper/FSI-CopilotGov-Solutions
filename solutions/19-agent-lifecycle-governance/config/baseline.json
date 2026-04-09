@@ -1,0 +1,38 @@
+{
+  "solution": "19-agent-lifecycle-governance",
+  "tier": "baseline",
+  "controls": [
+    "1.13",
+    "2.13",
+    "2.14",
+    "4.1",
+    "4.13"
+  ],
+  "approvalModel": {
+    "autoApproveMicrosoftPublished": true,
+    "autoApproveItDeveloped": false,
+    "autoApprovedAgentIds": [
+      "microsoft-365-copilot",
+      "microsoft-viva-agent",
+      "microsoft-teams-copilot"
+    ],
+    "requireApprovalForUserCreated": true,
+    "mandatoryReviewStages": [
+      "security-review",
+      "business-owner-attestation"
+    ]
+  },
+  "approvalSLAHours": {
+    "microsoftPublished": 72,
+    "itDeveloped": 72,
+    "userCreated": 48,
+    "blocked": 0
+  },
+  "sharingPolicyControls": {
+    "orgWideSharingRestriction": "admin-approval-required",
+    "externalSharingPolicy": "disabled",
+    "catalogVisibility": "admin-managed"
+  },
+  "evidenceRetentionDays": 90,
+  "notificationMode": "summary"
+}
