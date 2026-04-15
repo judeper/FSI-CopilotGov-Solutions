@@ -290,11 +290,6 @@ $controls = @(
         status = 'monitor-only'
         notes = 'Permission model anomalies are counted and reported for follow-up.'
     }
-    [pscustomobject]@{
-        controlId = '1.7'
-        status = 'monitor-only'
-        notes = ('Sensitivity label coverage: {0}% of scanned sites have Microsoft Purview Information Protection labels applied. Sites without labels may expose regulated content via Microsoft 365 Copilot.' -f $labelCoveragePercent)
-    }
 )
 
 $package = [ordered]@{
