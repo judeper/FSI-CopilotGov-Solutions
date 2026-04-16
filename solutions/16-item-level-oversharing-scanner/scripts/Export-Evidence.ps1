@@ -54,8 +54,15 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
-Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
-Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force -Global
+Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force -Global
+
+function Get-SchemaVersion {
+    if (Get-Command -Name Get-CopilotGovEvidenceSchemaVersion -ErrorAction SilentlyContinue) {
+        return (Get-CopilotGovEvidenceSchemaVersion)
+    }
+    return '1.1.0'
+}
 
 function ConvertTo-Hashtable {
     [CmdletBinding()]
@@ -280,7 +287,7 @@ $package = [ordered]@{
     metadata = [ordered]@{
         solution = $configuration.solution
         solutionCode = $configuration.solutionCode
-        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
+        exportVersion = (Get-SchemaVersion)
         exportedAt = (Get-Date).ToString('o')
         tier = $ConfigurationTier
         periodStart = $PeriodStart.ToString('yyyy-MM-dd')

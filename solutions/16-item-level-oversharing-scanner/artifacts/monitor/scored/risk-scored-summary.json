@@ -1,0 +1,13 @@
+{
+  "totalItems": 15,
+  "highRisk": 9,
+  "mediumRisk": 3,
+  "lowRisk": 3,
+  "generatedAt": "2026-04-15T21:08:43.4621863-04:00",
+  "shareTypeCounts": {
+    "AnyoneLink": 6,
+    "ExternalUser": 3,
+    "OrgLink": 3,
+    "BroadGroup": 3
+  }
+}

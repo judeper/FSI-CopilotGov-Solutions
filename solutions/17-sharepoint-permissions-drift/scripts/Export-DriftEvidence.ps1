@@ -50,6 +50,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
 #region Helper Functions
 
@@ -237,7 +238,7 @@ $evidenceSummary = [pscustomobject]@{
     metadata   = [pscustomobject]@{
         solution      = '17-sharepoint-permissions-drift'
         solutionCode  = 'SPD'
-        exportVersion = 'v0.1.0'
+        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
         exportedAt    = (Get-Date).ToString('o')
         tier          = $ConfigurationTier
         periodStart   = (Get-Date).AddDays(-30).ToString('o')
@@ -266,10 +267,9 @@ $evidenceSummary = [pscustomobject]@{
         [pscustomobject]@{ controlId = '2.5'; status = 'monitor-only'; notes = 'Documents reversion workflow pattern; approval-gate default' }
     )
     artifacts  = @(
-        [pscustomobject]@{ name = 'drift-findings.json'; path = $findingsResult.FilePath; hash = $findingsResult.Hash }
-        [pscustomobject]@{ name = 'drift-findings.csv'; path = $csvPath; hash = (Get-FileHash -Path $csvPath -Algorithm SHA256).Hash }
-        [pscustomobject]@{ name = 'baseline-snapshot.json'; path = $baselineResult.FilePath; hash = $baselineResult.Hash }
-        [pscustomobject]@{ name = 'reversion-log.json'; path = $reversionResult.FilePath; hash = $reversionResult.Hash }
+        [pscustomobject]@{ name = 'drift-report'; type = 'drift-report'; path = $findingsResult.FilePath; hash = $findingsResult.Hash }
+        [pscustomobject]@{ name = 'baseline-snapshot'; type = 'baseline-snapshot'; path = $baselineResult.FilePath; hash = $baselineResult.Hash }
+        [pscustomobject]@{ name = 'reversion-log'; type = 'reversion-log'; path = $reversionResult.FilePath; hash = $reversionResult.Hash }
     )
 }
 
