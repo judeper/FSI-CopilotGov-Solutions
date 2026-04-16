@@ -97,7 +97,7 @@ Describe 'FINRA Supervision Workflow for Copilot solution' {
         $fakeTierPath = Join-Path $TestDrive 'missing-tier-solution'
         $null = New-Item -ItemType Directory -Path (Join-Path $fakeTierPath 'config') -Force
         Copy-Item -Path (Join-Path $solutionRoot 'config\default-config.json') -Destination (Join-Path $fakeTierPath 'config\default-config.json')
-        { & (Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1') -ConfigurationTier regulated -OutputPath (Join-Path $TestDrive 'monitor-missing') 3>$null } | Should -Throw '*not found*'
+        { & (Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1') -ConfigurationTier regulated -SolutionRoot $fakeTierPath -OutputPath (Join-Path $TestDrive 'monitor-missing') 3>$null } | Should -Throw '*not found*'
     }
 
     It 'Shared-Functions.ps1 exists and defines expected functions' {

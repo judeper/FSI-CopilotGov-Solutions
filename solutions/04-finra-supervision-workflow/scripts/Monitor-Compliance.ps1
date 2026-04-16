@@ -26,7 +26,10 @@ param(
     [switch]$LiveCheck,
 
     [Parameter()]
-    [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\monitoring')
+    [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\monitoring'),
+
+    [Parameter()]
+    [string]$SolutionRoot
 )
 
 Set-StrictMode -Version Latest
@@ -87,7 +90,10 @@ function Test-LiveDataverseEndpoint {
     return [pscustomobject]$result
 }
 
-$solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+if ([string]::IsNullOrWhiteSpace($SolutionRoot)) {
+    $SolutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+}
+$solutionRoot = $SolutionRoot
 $configuration = Get-EffectiveConfiguration -SolutionRoot $solutionRoot -Tier $ConfigurationTier
 
 $expectedZonesByTier = @{

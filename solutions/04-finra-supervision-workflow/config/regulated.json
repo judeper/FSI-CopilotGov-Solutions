@@ -4,7 +4,7 @@
     "code": "FSW",
     "name": "FINRA Supervision Workflow for Copilot",
     "tier": "regulated",
-    "status": "implemented"
+    "status": "documentation-first"
   },
   "supportedZones": [
     "Zone1",

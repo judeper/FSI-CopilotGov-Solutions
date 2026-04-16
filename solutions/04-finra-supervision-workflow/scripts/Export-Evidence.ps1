@@ -86,14 +86,13 @@ function Write-JsonArtifact {
     $null = New-Item -ItemType Directory -Path $DestinationPath -Force
     $path = Join-Path $DestinationPath ("{0}.json" -f $FileName)
     $Payload | ConvertTo-Json -Depth 12 | Set-Content -Path $path -Encoding utf8
-    $hash = Get-CopilotGovSha256 -Path $path
-    Set-Content -Path ($path + '.sha256') -Value ("{0}  {1}" -f $hash, [System.IO.Path]::GetFileName($path)) -Encoding utf8
+    $hashInfo = Write-CopilotGovSha256File -Path $path
 
     return [ordered]@{
         name = $FileName
         type = $ArtifactType
         path = $path
-        hash = $hash
+        hash = $hashInfo.Hash
     }
 }
 

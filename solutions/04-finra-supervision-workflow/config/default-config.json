@@ -3,7 +3,7 @@
     "slug": "04-finra-supervision-workflow",
     "code": "FSW",
     "name": "FINRA Supervision Workflow for Copilot",
-    "status": "implemented",
+    "status": "documentation-first",
     "track": "B",
     "priority": "P0",
     "type": "Power Automate, Dataverse"
