@@ -37,6 +37,9 @@ Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot
 - ❌ Does not configure PAYG billing policies or spending caps (billing policy creation and cost monitoring are documented for manual configuration in the M365 admin center)
 - ❌ Does not track Copilot Chat (free tier) usage separately from paid Microsoft 365 Copilot seats
 - ❌ Does not meter Copilot agent credit consumption (agent credits use a separate consumption-based billing model)
+- ❌ Does not distinguish Copilot Chat Basic vs Premium tiers or Edit with Copilot (Agent Mode) usage (v1.3+ framework features pending solution update)
+- ❌ Does not track PAYG message pack consumption or high-usage user monitoring
+- ❌ Does not capture Copilot Dashboard satisfaction or intent metrics
 
 ## Architecture
 
@@ -109,7 +112,7 @@ Use `scripts\Deploy-Solution.ps1` to assemble the tier-specific deployment manif
 
 The deployment flow assumes a customer-managed Power BI workspace and dataset. No `.pbix` binary is included in the repository; the dataset design is documented in `docs\architecture.md` and `docs\deployment-guide.md`.
 
-## Prerequisites Summary
+## Prerequisites
 
 - Microsoft 365 Copilot licenses available for the scoped user population.
 - Viva Insights data available if ROI scorecards are required for the selected tier.

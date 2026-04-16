@@ -12,11 +12,11 @@ Item-level scanning matters for Copilot readiness because Copilot surfaces conte
 
 The solution implements a 3-script pipeline:
 
-1. **Scan** (`Get-ItemLevelPermissions.ps1`) — Connects via PnP PowerShell to enumerate document libraries and retrieve per-item permission entries. Flags items shared via anyone links, organization-wide edit links, external/guest users, or broad groups such as "Everyone" or "Everyone except external users."
+1. **Scan** (`Get-ItemLevelPermissions.ps1`) — Documents a pattern for connecting via PnP PowerShell to enumerate document libraries and retrieve per-item permission entries. Flags items shared via anyone links, organization-wide edit links, external/guest users, or broad groups such as "Everyone" or "Everyone except external users."
 
 2. **Score** (`Export-OversharedItems.ps1`) — Reads the scan output and applies FSI risk scoring. Items are classified as HIGH, MEDIUM, or LOW based on sharing type, sensitivity label, and content-type risk weighting from `config/risk-thresholds.json`.
 
-3. **Remediate** (`Invoke-BulkRemediation.ps1`) — Processes the scored report and applies remediation actions such as removing sharing links, removing external user permissions, or downgrading organization links from Edit to View. HIGH-risk items always require approval before action. MEDIUM and LOW items follow the policy defined in `config/remediation-policy.json`, which defaults to approval-gate mode.
+3. **Remediate** (`Invoke-BulkRemediation.ps1`) — Processes the scored report and documents remediation actions such as removing sharing links, removing external user permissions, or downgrading organization links from Edit to View. HIGH-risk items always require approval before action. MEDIUM and LOW items follow the policy defined in `config/remediation-policy.json`, which defaults to approval-gate mode.
 
 Risk thresholds are configurable through `config/risk-thresholds.json`, which defines base risk scores for each sharing type and content-type weighting multipliers for FSI-sensitive categories such as customer PII, trading data, legal documents, and regulatory filings.
 

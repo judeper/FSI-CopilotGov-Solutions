@@ -4,7 +4,7 @@
   "displayName": "DLP Policy Governance for Copilot",
   "track": "B",
   "priority": "P1",
-  "status": "implemented",
+  "status": "documentation-first",
   "solutionType": [
     "PowerShell",
     "Power Automate"

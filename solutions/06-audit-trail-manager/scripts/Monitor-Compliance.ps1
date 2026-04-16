@@ -202,7 +202,7 @@ $control311Status = if ([bool]$tierConfig.retentionLabelRequired -and -not [stri
     'partial'
 }
 
-$control312Status = if ($tierConfig.powerAutomate.exceptionAlertsEnabled) {
+$control312Status = if ($defaultConfig.defaults.evidenceOutputs -and $tierConfig.powerAutomate.exceptionAlertsEnabled) {
     'implemented'
 } else {
     'monitor-only'
@@ -237,7 +237,7 @@ $controls = @(
         controlId = '3.12'
         status = $control312Status
         dashboardScore = (Get-CopilotGovStatusScore -Status $control312Status)
-        notes = 'Exception handling depends on Power Automate alert routing and notification mode.'
+        notes = 'Evidence collection readiness is assessed based on evidence output configuration and exception alert coverage.'
     }
 )
 

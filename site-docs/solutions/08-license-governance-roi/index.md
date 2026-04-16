@@ -35,6 +35,11 @@ Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not configure PAYG billing policies or spending caps (billing policy creation and cost monitoring are documented for manual configuration in the M365 admin center)
+- ❌ Does not track Copilot Chat (free tier) usage separately from paid Microsoft 365 Copilot seats
+- ❌ Does not meter Copilot agent credit consumption (agent credits use a separate consumption-based billing model)
+- ❌ Does not distinguish Copilot Chat Basic vs Premium tiers or Edit with Copilot (Agent Mode) usage (v1.3+ framework features pending solution update)
+- ❌ Does not track PAYG message pack consumption or high-usage user monitoring
+- ❌ Does not capture Copilot Dashboard satisfaction or intent metrics
 
 ## Architecture
 
@@ -107,7 +112,7 @@ Use `scripts\Deploy-Solution.ps1` to assemble the tier-specific deployment manif
 
 The deployment flow assumes a customer-managed Power BI workspace and dataset. No `.pbix` binary is included in the repository; the dataset design is documented in `docs\architecture.md` and `docs\deployment-guide.md`.
 
-## Prerequisites Summary
+## Prerequisites
 
 - Microsoft 365 Copilot licenses available for the scoped user population.
 - Viva Insights data available if ROI scorecards are required for the selected tier.
@@ -129,6 +134,8 @@ The deployment flow assumes a customer-managed Power BI workspace and dataset. N
 - OCC 2011-12: Supports compliance with governance expectations for management reporting, assumption review, and challenge over ongoing seat-assignment decisions.
 - SOX 404: Supports compliance with control evidence and review-traceability expectations for license allocation, monitoring, exception handling, and cost reallocation decisions.
 
+This solution also supports GLBA 501(b) safeguard requirements and the FFIEC IT Handbook by documenting license allocation controls and operational cost governance.
+
 ## Evidence Export
 
 The solution publishes the following evidence-oriented artifacts:
@@ -145,3 +152,4 @@ Evidence packages are created by `scripts\Export-Evidence.ps1`, aligned to `..\.
 - The Power BI asset remains documentation-led by design; no `.pbix` file is created in the repository.
 - Reallocation actions still require business-owner or manager approval before a Copilot license is removed.
 - Dependency data from `11-risk-tiered-rollout` must be supplied by the customer if high-risk cohorts should be excluded from automatic reallocation.
+- In baseline tier deployments where Viva Insights is disabled, the monitoring script may report `monitor-only` status even when inactive seats are detected. Upgrade to recommended or regulated tier for full utilization visibility.

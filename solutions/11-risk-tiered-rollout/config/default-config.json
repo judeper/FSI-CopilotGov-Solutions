@@ -2,7 +2,7 @@
   "solution": "11-risk-tiered-rollout",
   "solutionCode": "RTR",
   "displayName": "Risk-Tiered Rollout Automation",
-  "version": "0.1.0",
+  "version": "v0.1.0",
   "track": "C",
   "priority": "P0",
   "controls": [

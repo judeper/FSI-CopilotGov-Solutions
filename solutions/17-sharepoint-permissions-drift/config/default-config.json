@@ -17,7 +17,8 @@
     "sec-reg-sp",
     "glba-501b",
     "sox-302-404",
-    "ffiec-it-handbook"
+    "ffiec-it-handbook",
+    "nist-sp-800-53"
   ],
   "evidenceOutputs": [
     "drift-report",

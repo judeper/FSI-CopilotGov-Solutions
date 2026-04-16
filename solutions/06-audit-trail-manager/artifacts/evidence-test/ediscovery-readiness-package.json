@@ -1,0 +1,21 @@
+{
+  "solution": "06-audit-trail-manager",
+  "solutionCode": "ATM",
+  "tier": "baseline",
+  "tenantId": "not-specified",
+  "generatedAt": "2026-04-15T20:10:43.9651267-04:00",
+  "caseCount": 1,
+  "holdCount": 0,
+  "custodianCount": 2,
+  "preservationStatus": "manual-review",
+  "caseTemplate": "ATM-Baseline-Readiness",
+  "holdConfiguration": {
+    "required": false,
+    "mode": "basic",
+    "custodianScope": "core-compliance-team"
+  },
+  "notes": [
+    "Counts reflect the tier readiness baseline and should be replaced with tenant values before regulator production.",
+    "Legal hold ownership and export operators should be documented outside the package."
+  ]
+}

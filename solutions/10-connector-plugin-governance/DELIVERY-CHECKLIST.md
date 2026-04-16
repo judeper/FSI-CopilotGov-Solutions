@@ -78,3 +78,12 @@
 ## Communication Template
 
 Share the README, deployment guide, prerequisites, connector inventory results, approval workflow expectations, and evidence output definitions with the implementation team before production enablement begins.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

@@ -15,9 +15,13 @@
   "solutionType": "PowerShell + Power Automate",
   "regulations": [
     "FINRA 4511",
+    "SEC 17a-3",
     "SEC 17a-4",
+    "SEC Reg S-P",
     "GDPR",
-    "GLBA 501(b)"
+    "GLBA 501(b)",
+    "SOX 302/404",
+    "FFIEC IT Handbook"
   ],
   "framework_ids": [
     "finra-4511",

@@ -1,0 +1,105 @@
+{
+  "solution": "06-audit-trail-manager",
+  "solutionCode": "ATM",
+  "tier": "baseline",
+  "tenantId": "not-specified",
+  "generatedAt": "2026-04-15T20:10:43.9651267-04:00",
+  "activePolicies": [
+    {
+      "policyName": "ATM-baseline-SEC_17a4",
+      "regulation": "SEC 17a-4",
+      "configuredDays": 1095,
+      "minimumDays": 2190,
+      "meetsMinimum": false,
+      "workloadScope": [
+        "Exchange",
+        "SharePoint",
+        "Teams",
+        "Microsoft365Copilot"
+      ]
+    },
+    {
+      "policyName": "ATM-baseline-FINRA_4511",
+      "regulation": "FINRA 4511",
+      "configuredDays": 1095,
+      "minimumDays": 1095,
+      "meetsMinimum": true,
+      "workloadScope": [
+        "Exchange",
+        "SharePoint",
+        "Teams",
+        "Microsoft365Copilot"
+      ]
+    },
+    {
+      "policyName": "ATM-baseline-CFTC_1_31",
+      "regulation": "CFTC 1.31",
+      "configuredDays": 1095,
+      "minimumDays": 1825,
+      "meetsMinimum": false,
+      "workloadScope": [
+        "Exchange",
+        "SharePoint",
+        "Teams",
+        "Microsoft365Copilot"
+      ]
+    },
+    {
+      "policyName": "ATM-baseline-SOX_404",
+      "regulation": "SOX 404",
+      "configuredDays": 1095,
+      "minimumDays": 2555,
+      "meetsMinimum": false,
+      "workloadScope": [
+        "Exchange",
+        "SharePoint",
+        "Teams",
+        "Microsoft365Copilot"
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "labelName": "ATM-baseline-Copilot-Record",
+      "appliesTo": "Copilot interaction artifacts and supporting files",
+      "required": true,
+      "publishingMode": "portal-documented"
+    }
+  ],
+  "retentionPeriodsByRegulation": [
+    {
+      "regulationKey": "SEC_17a4",
+      "regulation": "SEC 17a-4",
+      "minimumDays": 2190,
+      "configuredDays": 1095,
+      "meetsMinimum": false
+    },
+    {
+      "regulationKey": "FINRA_4511",
+      "regulation": "FINRA 4511",
+      "minimumDays": 1095,
+      "configuredDays": 1095,
+      "meetsMinimum": true
+    },
+    {
+      "regulationKey": "CFTC_1_31",
+      "regulation": "CFTC 1.31",
+      "minimumDays": 1825,
+      "configuredDays": 1095,
+      "meetsMinimum": false
+    },
+    {
+      "regulationKey": "SOX_404",
+      "regulation": "SOX 404",
+      "minimumDays": 2555,
+      "configuredDays": 1095,
+      "meetsMinimum": false
+    }
+  ],
+  "wormDocumentationRequired": false,
+  "immutableStorageAttestationRequired": false,
+  "notes": [
+    "Retention schedules should be confirmed in Microsoft Purview before relying on the evidence package.",
+    "SEC 17a-4 immutable storage requirements are documented separately from this JSON output."
+  ]
+}

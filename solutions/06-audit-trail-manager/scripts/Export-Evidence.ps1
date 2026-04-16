@@ -61,9 +61,8 @@ function Write-AtmHashFile {
         [string]$Path
     )
 
-    $hash = Get-CopilotGovSha256 -Path $Path
-    Set-Content -Path ($Path + '.sha256') -Value ('{0}  {1}' -f $hash, [IO.Path]::GetFileName($Path)) -Encoding utf8
-    return $hash
+    $result = Write-CopilotGovSha256File -Path $Path
+    return $result.Hash
 }
 
 if ($PeriodEnd -lt $PeriodStart) {
@@ -261,7 +260,7 @@ $control311Status = if ([bool]$tierConfig.retentionLabelRequired -and -not [stri
     'partial'
 }
 
-$control312Status = if ($tierConfig.powerAutomate.exceptionAlertsEnabled) {
+$control312Status = if ($defaultConfig.defaults.evidenceOutputs -and $tierConfig.powerAutomate.exceptionAlertsEnabled) {
     'implemented'
 } else {
     'monitor-only'
@@ -291,7 +290,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '3.12'
         status = $control312Status
-        notes = 'Notification mode and exception-handling responsibilities are described by tier.'
+        notes = 'Evidence collection attestation readiness is assessed based on evidence output configuration and exception alert coverage.'
     }
 )
 

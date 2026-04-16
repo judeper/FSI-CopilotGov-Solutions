@@ -12,7 +12,7 @@ Review [docs/prerequisites.md](prerequisites.md) before deployment. The deployme
 
 ```powershell
 git clone https://github.com/judeper/FSI-CopilotGov-Solutions.git
-Set-Location C:\Dev\FSI-CopilotGov-Solutions\13-dora-resilience-monitor
+Set-Location C:\Dev\FSI-CopilotGov-Solutions\solutions\13-dora-resilience-monitor
 $env:AZURE_TENANT_ID = '<tenant-guid>'
 $env:AZURE_CLIENT_ID = '<app-registration-guid>'
 $clientSecret = Read-Host 'Enter client secret' -AsSecureString

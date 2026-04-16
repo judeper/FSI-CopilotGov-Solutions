@@ -38,6 +38,8 @@ The DORA Operational Resilience Monitor (DRM) provides an operational-resilience
 - ❌ Does not deploy Power Automate flows (resilience alerting workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not cover NYDFS Part 500 cybersecurity incident reporting requirements (framework_ids updated, solution content pending)
+- ❌ Does not cover FINRA 4370 business continuity plan testing requirements (framework_ids updated, solution content pending)
 
 ## Architecture
 

@@ -73,7 +73,7 @@ Sensitivity Label Coverage Auditor is a monitoring-first solution that measures 
 ## Data Flow
 
 1. `scripts\Deploy-Solution.ps1` loads the selected governance tier, records a snapshot of the configured label taxonomy, and confirms upstream dependencies are available.
-2. `scripts\Monitor-Compliance.ps1` queries Microsoft Graph coverage sources for:
+2. `scripts\Monitor-Compliance.ps1` is designed to query Microsoft Graph coverage sources for:
    - SharePoint and OneDrive drive items plus `contentLabel` metadata
    - Exchange messages and associated label metadata
    - Sensitivity label definitions needed for tier mapping
@@ -85,7 +85,7 @@ Sensitivity Label Coverage Auditor is a monitoring-first solution that measures 
 4. The gap analyzer identifies unlabeled sites, drives, and mailboxes and calculates remediation priority.
 5. The remediation manifest generator ranks corrective actions and suggests the next label based on workload sensitivity and risk score.
 6. `scripts\Export-Evidence.ps1` packages the coverage report, gap findings, and remediation manifest into evidence outputs with SHA-256 companions.
-7. Documented Power Automate flows notify stakeholders and route remediation for review without requiring manual spreadsheet handling.
+7. Documented Power Automate flow designs describe how to notify stakeholders and route remediation for review after tenant approval.
 
 ## Workloads
 

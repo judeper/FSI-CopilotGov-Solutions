@@ -124,6 +124,11 @@ function Write-Sha256CompanionFile {
     if ($PSCmdlet.ShouldProcess($Path, 'Write SHA-256 companion file')) {
         return (Write-CopilotGovSha256File -Path $Path)
     }
+
+    return [pscustomobject]@{
+        Hash     = 'whatif-placeholder'
+        HashPath = "$Path.sha256"
+    }
 }
 
 function New-ArtifactRecord {

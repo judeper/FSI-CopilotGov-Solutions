@@ -34,6 +34,8 @@ For agent-specific lifecycle governance — including Copilot Studio agent reque
 - ❌ Does not deploy Power Automate flows (governance workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not cover Agent 365 platform governance, Entra Agent ID security controls, or agent pinning (v1.3+ framework features pending solution update)
+- ❌ Does not govern third-party model provider integrations
 
 ## Architecture
 

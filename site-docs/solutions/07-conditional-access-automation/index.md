@@ -6,7 +6,7 @@
 
 ## Overview
 
-Conditional Access Policy Automation for Copilot deploys, validates, and documents Conditional Access patterns for Microsoft 365 Copilot. The solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 by defining risk-tiered access patterns, capturing approved policy baselines, monitoring for policy drift, and maintaining an exception register for approved overrides.
+Conditional Access Policy Automation for Copilot documents, prepares, and validates Conditional Access patterns for Microsoft 365 Copilot. The solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 by defining risk-tiered access patterns, maintaining approved policy baselines, monitoring for policy drift, and maintaining an exception register for approved overrides.
 
 This solution is scoped to Conditional Access controls for Copilot access. It depends on `05-dlp-policy-governance` so that prompt, response, and content protection controls are in place before Copilot access is widened.
 
@@ -16,7 +16,7 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 - Generates tier-aware policy templates for baseline, recommended, and regulated deployments.
 - Documents and prepares tier-aware Conditional Access policy patterns for low, medium, and high risk-tier users and administrators.
 - Prepares a JSON baseline template of approved policy state for change-control and drift monitoring.
-- Detects unauthorized policy changes outside the approved change process.
+- Highlights unauthorized policy changes outside the approved change process.
 - Maintains an exception register with approver, approval date, business justification, and expiry.
 - Exports evidence packages aligned to `..\..\data\evidence-schema.json`.
 
@@ -26,7 +26,7 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
 - ❌ Does not create Conditional Access policies in Entra ID (policy templates and Graph API commands are generated for manual review and execution)
-- ❌ Does not connect to Microsoft Graph APIs (scripts use representative sample data)
+- ❌ Does not connect to Microsoft Graph APIs by default (scripts use representative sample data; an optional `-Execute` flag documents the pattern for live policy creation but requires explicit opt-in and Graph permissions)
 - ❌ Does not deploy Power Automate flows (drift alert workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
@@ -91,7 +91,7 @@ Expired exceptions should be treated as findings until they are closed or renewe
 - Confirm Microsoft Entra ID P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
 - Ensure Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
 
-## Deployment steps
+## Deployment
 
 1. Confirm that `05-dlp-policy-governance` is complete.
 2. Confirm Microsoft Entra ID P1 or P2 licensing and required administrator roles.
@@ -127,7 +127,7 @@ See `docs\deployment-guide.md` for the detailed workflow.
 | Control | Objective | Regulations | Evidence |
 |---------|-----------|-------------|----------|
 | `2.3` | Copilot access control and Conditional Access enforcement | OCC 2011-12, FINRA 3110, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
-| `2.6` | Controlled feature enablement, exception handling, and drift oversight | OCC 2011-12, FINRA 3110 | `drift-alert-summary.json`, `access-exception-register.json` |
+| `2.6` | Change oversight, exception governance, and policy drift review for Copilot access controls | OCC 2011-12, FINRA 3110 | `drift-alert-summary.json`, `access-exception-register.json` |
 | `2.9` | Device compliance requirements for Copilot sessions | OCC 2011-12, DORA Article 9 | `ca-policy-state.json`, `drift-alert-summary.json` |
 
 ## Regulatory Alignment

@@ -36,3 +36,12 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 - [ ] `ediscovery-readiness-package.json` is generated and reviewed.
 - [ ] SHA-256 companion files validate successfully.
 - [ ] The full evidence package is archived with the deployment record.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

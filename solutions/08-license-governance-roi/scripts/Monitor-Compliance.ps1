@@ -162,11 +162,14 @@ try {
     $statusValue = if (@($flaggedSeats).Count -eq 0 -and $metrics.atOrAboveThreshold) {
         'implemented'
     }
+    elseif (@($flaggedSeats).Count -gt 0) {
+        'partial'
+    }
     elseif (-not $configuration.vivaInsightsEnabled) {
         'monitor-only'
     }
     else {
-        'partial'
+        'implemented'
     }
 
     $statusObject = [pscustomobject][ordered]@{

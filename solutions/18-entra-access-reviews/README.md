@@ -29,8 +29,8 @@ Integration with solution 02 provides the upstream oversharing findings that dri
 > **Important:** This solution provides governance scaffolds, templates, and documentation-first
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
-- ❌ Does not connect to Microsoft Graph or Entra ID APIs (scripts use representative sample data)
-- ❌ Does not create or modify access reviews in any tenant (review definitions are documented, not executed)
+- ❌ Does not connect to Microsoft Graph or Entra ID APIs by default (scripts use representative sample data; an optional live Graph path exists with fallback to sample data when authentication is not provided)
+- ❌ Does not create or modify access reviews in any tenant by default (review definitions are documented; optional live execution requires explicit authentication and Graph permissions)
 - ❌ Does not remove user access or apply deny decisions automatically (decision application is documented, not enforced)
 - ❌ Does not deploy Power Automate flows (escalation and notification designs are documented, not exported)
 - ❌ Does not replace Entra ID Governance licensing or Privileged Identity Management workflows

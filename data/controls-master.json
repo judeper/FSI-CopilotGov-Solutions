@@ -49,7 +49,7 @@
       "SEC Regulation S-P (Rule 248.30)",
       "FFIEC IT Handbook (Information Security Booklet)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -129,7 +129,7 @@
       "FFIEC IT Handbook (Information Security Booklet)",
       "SOX 302/404"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -250,7 +250,7 @@
       "GLBA 501(b)",
       "FFIEC IT Examination Handbook (Information Security Booklet)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -330,7 +330,7 @@
       "FFIEC IT Handbook (IT Operations)",
       "SOX 302/404"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -411,7 +411,7 @@
       "Interagency AI Guidance (2023)",
       "OCC Heightened Standards"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -493,7 +493,7 @@
       "OCC Bulletin 2013-29 (Third-Party Relationships)",
       "Interagency AI Guidance (2023)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -524,6 +524,129 @@
     ]
   },
   {
+    "control_id": "1.14",
+    "title": "Item-Level Permission Scanning",
+    "pillar": "Readiness & Assessment",
+    "source_path": "docs/controls/pillar-1-readiness/1.14-item-level-permission-scanning.md",
+    "regulatory_references": [
+      "GLBA §314.4(c)",
+      "SEC Rule 17a-4",
+      "FFIEC IT Handbook (Access Controls)",
+      "NIST SP 800-53 (AC-3, AC-6, AU-2)"
+    ],
+    "last_verified": "2026-04-09",
+    "governance_levels": [
+      "Baseline",
+      "Recommended",
+      "Regulated"
+    ],
+    "summary": "",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/1.14/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/1.14/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/1.14/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/1.14/troubleshooting.md"
+      }
+    ]
+  },
+  {
+    "control_id": "1.15",
+    "title": "SharePoint Permissions Drift Detection",
+    "pillar": "Readiness & Assessment",
+    "source_path": "docs/controls/pillar-1-readiness/1.15-sharepoint-permissions-drift.md",
+    "regulatory_references": [
+      "GLBA §314.4(c)",
+      "SEC Rule 17a-4",
+      "SEC Rule 17a-4(f)",
+      "FFIEC IT Handbook (Access Controls, Change Management)",
+      "NIST SP 800-53 (CM-3, SI-7, AC-6)"
+    ],
+    "last_verified": "2026-04-09",
+    "governance_levels": [
+      "Baseline",
+      "Recommended",
+      "Regulated"
+    ],
+    "summary": "",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/1.15/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/1.15/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/1.15/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/1.15/troubleshooting.md"
+      }
+    ]
+  },
+  {
+    "control_id": "1.16",
+    "title": "Copilot Tuning Governance",
+    "pillar": "Readiness & Assessment",
+    "source_path": "docs/controls/pillar-1-readiness/1.16-copilot-tuning-governance.md",
+    "regulatory_references": [
+      "GLBA 501(b)",
+      "OCC Bulletin 2011-12 (SR 11-7)",
+      "Interagency AI Guidance (2023)"
+    ],
+    "last_verified": "2026-04-09",
+    "governance_levels": [
+      "Baseline",
+      "Recommended",
+      "Regulated"
+    ],
+    "summary": "",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/1.16/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/1.16/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/1.16/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/1.16/troubleshooting.md"
+      }
+    ]
+  },
+  {
     "control_id": "2.1",
     "title": "DLP Policies for M365 Copilot Interactions",
     "pillar": "Security & Protection",
@@ -534,7 +657,7 @@
       "GLBA 501(b)",
       "SOX 404"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -573,7 +696,7 @@
       "GLBA 501(b)",
       "SOX 404"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -731,7 +854,7 @@
       "GLBA 501(b)",
       "Data Residency Considerations"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -843,7 +966,7 @@
   },
   {
     "control_id": "2.9",
-    "title": "Defender for Cloud Apps \u2014 Copilot Session Controls",
+    "title": "Defender for Cloud Apps — Copilot Session Controls",
     "pillar": "Security & Protection",
     "source_path": "docs/controls/pillar-2-security/2.9-defender-cloud-apps.md",
     "regulatory_references": [
@@ -890,7 +1013,7 @@
       "SOX 404",
       "FINRA 3110"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -929,7 +1052,7 @@
       "GLBA 501(b)",
       "FINRA 4511"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1039,13 +1162,13 @@
   },
   {
     "control_id": "2.14",
-    "title": "Declarative Agents from SharePoint \u2014 Creation and Sharing Governance",
+    "title": "Declarative Agents from SharePoint — Creation and Sharing Governance",
     "pillar": "Security & Protection",
     "source_path": "docs/controls/pillar-2-security/2.14-declarative-agents-governance.md",
     "regulatory_references": [
       "GLBA 501(b)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1164,7 +1287,7 @@
       "SEC 17a-4 (Preservation of Records)",
       "SOX 802 (Criminal Penalties for Altering Documents)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1206,7 +1329,7 @@
       "34",
       "37(e)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1246,7 +1369,7 @@
       "FINRA 2210 (Communications with the Public)",
       "SEC Regulation Best Interest (Reg BI)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1408,7 +1531,7 @@
     "source_path": "docs/controls/pillar-3-compliance/3.8-model-risk-management.md",
     "regulatory_references": [
       "OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)",
-      "OCC Bulletin 2025-26 (Model Risk Management \u2014 Community Bank Proportionality)",
+      "OCC Bulletin 2025-26 (Model Risk Management — Community Bank Proportionality)",
       "Federal Reserve SR 11-7",
       "ECOA (Equal Credit Opportunity Act)",
       "Fair Housing Act"
@@ -1534,7 +1657,7 @@
       "SEC Rule 17a-4 (Records to Be Preserved)",
       "FINRA Rule 4511 (General Requirements)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1574,7 +1697,7 @@
       "PCAOB Auditing Standards (AS 2201)",
       "FINRA 3120 (Supervisory Control System)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1656,7 +1779,7 @@
       "FFIEC IT Examination Handbook",
       "GLBA 501(b)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1820,7 +1943,7 @@
       "FFIEC IT Examination Handbook",
       "GLBA 501(b)"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -1941,7 +2064,7 @@
       "OCC Heightened Standards",
       "FFIEC IT Examination Handbook"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",
@@ -2146,7 +2269,7 @@
       "SOX Section 404",
       "OCC Third-Party Risk Management Guidance"
     ],
-    "last_verified": "2026-02-17",
+    "last_verified": "2026-04-09",
     "governance_levels": [
       "Baseline",
       "Recommended",

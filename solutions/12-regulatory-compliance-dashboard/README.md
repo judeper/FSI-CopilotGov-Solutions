@@ -77,7 +77,7 @@ Deployment is intentionally staged:
 3. Run the deployment script to seed the baseline status table and generate the manifest used by Power BI.
 4. Build the Power BI report from the documented template specification, then configure dataset refresh and row-level security.
 
-## Prerequisites Summary
+## Prerequisites
 
 - Solutions `06-audit-trail-manager` and `11-risk-tiered-rollout` deployed in the same environment.
 - Power BI Pro or Premium Per User licensing for authors and workspace administrators.

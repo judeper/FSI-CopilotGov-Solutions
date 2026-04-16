@@ -36,7 +36,7 @@ This repository contains documentation-first governance solution scaffolds for M
 | 16 | Item-Level Oversharing Scanner | P1 | A | 1.2, 1.3, 1.4, 1.6, 2.5 |
 | 17 | SharePoint Permissions Drift Detection | P1 | A | 1.2, 1.4, 1.6, 2.5 |
 | 18 | Entra Access Reviews Automation | P1 | A | 1.2, 1.6, 2.5, 2.12 |
-| 19 | Agent Lifecycle and Deployment Governance | P0 | C | 1.13, 2.13, 2.14, 4.1, 4.13 |
+| 19 | Copilot Tuning Governance | P1 | A | 1.16, 3.8 |
 
 ## Directory Structure
 

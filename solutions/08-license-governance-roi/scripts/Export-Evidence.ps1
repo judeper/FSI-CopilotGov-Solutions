@@ -168,7 +168,7 @@ try {
         [pscustomobject]@{
             controlId = '4.5'
             status = 'implemented'
-            notes = 'License-utilization reporting captures active versus inactive seats, utilization trends, and business-unit segmentation.'
+            notes = 'License-utilization reporting documents active versus inactive seats, utilization trends, and business-unit segmentation.'
         }
         [pscustomobject]@{
             controlId = '4.6'

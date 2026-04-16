@@ -6,19 +6,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## v0.4.0
 
 ### Added
-- Solution 19: Agent Lifecycle and Deployment Governance — governs Copilot agent request/approval workflows, org-wide sharing restrictions, agent catalog auditing, and deployment gating for financial services.
-- Web grounding domain exclusion and authoritative source management governance in Solution 09 (Feature Management Controller).
-- Consumption-based billing governance (PAYG message packs, billing policies, cost management) in Solution 08 (License Governance and ROI Tracker).
-- Insider risk management for risky AI usage detection and Copilot video recap compliance artifacts in Solution 14 (Communication Compliance Configurator).
-- Roadmap awareness section for 2026 Release Wave 1 AI governance capabilities in Solution 13 (DORA Resilience Monitor).
-- Reference to redesigned M365 Admin Center Copilot overview page in Solution 01 (Readiness Scanner).
-- Cross-reference to Solution 19 in Solution 10 (Connector and Plugin Governance).
+- Solution 19: Copilot Tuning Governance — governs Copilot Tuning lifecycle for 5,000+ license organizations covering data selection, access controls, output supervision, audit trails, and OCC SR 11-7 model risk alignment.
+- Controls 1.14 (Item-Level Permission Scanning), 1.15 (SharePoint Permissions Drift Detection), 1.16 (Copilot Tuning Governance) added to `controls-master.json` — framework now tracks 57 controls.
+- Six new regulatory frameworks added to `frameworks-master.json`: NIST SP 800-53, NYDFS Part 500, FINRA 4370, FINRA 4530, EU AI Act, Colorado AI Act.
+- Playbook mappings for controls 1.14 and 1.15 added to solutions 16 and 17 respectively in `solution-to-playbooks.json`.
 
 ### Changed
-- Expanded `SOLUTION-README-TEMPLATE.md` to include all required sections matching actual solution README structure.
-- Moved `RUNTIME-HARDENING-AUDIT.txt` and `RUNTIME-HARDENING-FINDINGS.txt` from repository root to `docs/reference/` as markdown files.
-- Updated repository metadata for 19 solutions: `solution-config.yml`, `solution-catalog.json`, `solution-to-playbooks.json`, `control-coverage.json`.
-- Updated AGENTS.md, README.md, and mkdocs.yml navigation to reflect 19 solutions.
+- Updated `validate-contracts.py` expected control count from 54 to 57.
+- Updated `AGENTS.md`, `README.md`, and solution catalog to reflect 19 solutions and 57 controls.
+- Fixed version drift in `solution-config.yml` for solutions 01–07 (v0.1.0 → v0.2.0 to match catalog and READMEs).
+- Updated `last_verified` dates for 21 controls modified in framework v1.3/v1.3.1/v1.3.2.
+- Updated framework_ids across `control-coverage.json`, `solution-catalog.json`, `solution-to-playbooks.json` for bidirectional consistency with new frameworks.
 
 ## v0.3.0
 

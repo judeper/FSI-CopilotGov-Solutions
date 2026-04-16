@@ -32,15 +32,20 @@ Sensitivity Label Coverage Auditor measures how much in-scope content is actuall
 
 See `docs\architecture.md` for the component diagram, Graph data flow, workload coverage model, gap prioritization formula, and Power Automate flow design.
 
+## Prerequisites
+
+- Sensitivity label taxonomy is finalized in Microsoft Purview.
+- Microsoft Purview Information Protection licensing is confirmed for the target tenant.
+- Microsoft Graph permissions for label and workload data collection are approved.
+- `01-copilot-readiness-scanner` baseline outputs are complete.
+- `02-oversharing-risk-assessment` initial findings are available for cross-reference.
+- See `docs\prerequisites.md` for detailed requirements.
+
 ## Quick Start
 
 ### Prerequisites Check
 
-- [ ] Sensitivity label taxonomy is finalized in Microsoft Purview.
-- [ ] Microsoft Purview Information Protection licensing is confirmed for the target tenant.
-- [ ] Microsoft Graph permissions for label and workload data collection are approved.
-- [ ] `01-copilot-readiness-scanner` baseline outputs are complete.
-- [ ] `02-oversharing-risk-assessment` initial findings are available for cross-reference.
+- [ ] All prerequisites above are confirmed.
 
 ### Initial Execution
 
@@ -131,3 +136,5 @@ Power Automate is documentation-first in this version. The solution documents tw
 - The `assignSensitivityLabel` API requires the correct Microsoft 365 and Purview licensing, plus approved permissions for bulk application scenarios.
 - Exchange coverage can lag if required message-level label metadata is not consistently exposed through the chosen collection method.
 - This version focuses on monitoring, evidence production, and remediation planning; it does not claim automatic enforcement across every workload.
+- Microsoft is replacing the parent/sublabel hierarchy with a label groups model. Forced auto-migration runs December 2025 through May 2026 and is irreversible. The solution's taxonomy snapshot should be updated to capture label group membership after migration.
+- Service-side auto-labeling can now override existing lower-priority labels on files (previously only emails). Remediation manifests should account for this capability.

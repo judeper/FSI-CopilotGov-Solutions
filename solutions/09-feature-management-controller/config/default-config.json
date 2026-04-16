@@ -2,7 +2,7 @@
   "solution": "09-feature-management-controller",
   "solutionCode": "FMC",
   "displayName": "Copilot Feature Management Controller",
-  "version": "0.1.0",
+  "version": "v0.1.0",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P1",

@@ -2,10 +2,10 @@
   "solution": "07-conditional-access-automation",
   "displayName": "Conditional Access Policy Automation for Copilot",
   "solutionCode": "CAA",
-  "version": "0.2.0",
+  "version": "v0.2.0",
   "track": "B",
   "priority": "P1",
-  "status": "implemented",
+  "status": "Documentation-first scaffold",
   "controls": [
     "2.3",
     "2.6",
@@ -28,7 +28,8 @@
     "glba-501b",
     "occ-2011-12",
     "ffiec-it-handbook",
-    "dora"
+    "dora",
+    "nydfs-part-500"
   ],
   "dependencies": [
     "05-dlp-policy-governance"

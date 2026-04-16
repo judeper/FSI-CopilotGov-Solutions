@@ -70,3 +70,12 @@
 ## Communication Template
 
 Share the README, architecture, deployment guide, prerequisites, and evidence expectations with the implementation team. Include the selected governance tier, approved rollout rings, drift threshold, and supervisory escalation path in the handoff package.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

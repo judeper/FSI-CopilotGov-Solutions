@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "solution": "01-copilot-readiness-scanner",
+    "tenantId": "contoso.onmicrosoft.com",
+    "tier": "baseline",
+    "generatedAt": "2026-04-15T19:34:23.9310004-04:00",
+    "runtimeMode": "documentation-first-sample-data",
+    "dataSourceMode": "simulated-control-evidence",
+    "warning": "Artifacts were generated from representative sample findings in the repository and do not confirm live tenant scans."
+  },
+  "actions": [
+    {
+      "actionId": "RP-001",
+      "priority": "high",
+      "owner": "ComplianceEngineering",
+      "targetDate": "2026-04-29",
+      "relatedFinding": "DH-001",
+      "action": "Expand sensitivity label remediation for high-exposure repositories."
+    },
+    {
+      "actionId": "RP-002",
+      "priority": "high",
+      "owner": "IdentityOperations",
+      "targetDate": "2026-05-06",
+      "relatedFinding": "DH-002",
+      "action": "Complete privileged access attestation and remove stale elevated assignments."
+    },
+    {
+      "actionId": "RP-003",
+      "priority": "medium",
+      "owner": "CollaborationProgramOffice",
+      "targetDate": "2026-05-15",
+      "relatedFinding": "DH-003",
+      "action": "Reconcile Copilot license assignments with the approved rollout wave."
+    }
+  ]
+}

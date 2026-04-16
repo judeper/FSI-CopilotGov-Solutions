@@ -59,3 +59,12 @@
 ## Communication Template
 
 Share the README, architecture guide, delivery checklist, mapped controls, evidence export expectations, and row-level security plan with the implementation team before go-live.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

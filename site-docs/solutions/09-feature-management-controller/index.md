@@ -1,6 +1,6 @@
 # Copilot Feature Management Controller
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -9,6 +9,8 @@
 Copilot Feature Management Controller (FMC) centralizes Copilot feature inventory, rollout ring policy, baseline capture, and drift monitoring across Microsoft 365, Teams, and Power Platform workloads. The solution is designed for financial services operating models where feature enablement decisions must be scoped by user cohort, application, and supervisory approval before Copilot capabilities are exposed more broadly.
 
 For regulated firms, Copilot feature activation can change how material non-public information, research notes, customer interactions, and plugin outputs are surfaced. FMC supports compliance with SEC Reg FD by documenting where high-impact Copilot features are enabled and supports compliance with FINRA 3110 by giving supervisors a repeatable baseline, monitoring cadence, and evidence trail for feature policy decisions.
+
+Microsoft now provides the **Copilot Control System** in the Microsoft 365 admin center Adoption Hub as a centralized governance surface for Copilot features, agents, and connectors. This solution complements the Copilot Control System by adding tier-aware configuration management, drift detection, and evidence packaging for regulated environments.
 
 The solution uses PowerShell for baseline capture, ring planning, monitoring, and evidence packaging, while Power Automate assets remain documentation-first until approved for tenant deployment.
 
@@ -21,7 +23,6 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 | Drift detection | Compares current feature state against approved baseline settings and highlights unexpected enablement, scope, or ring changes. | Supports compliance with control 4.4 by identifying deviations that require remediation or documented acceptance. |
 | Change tracking | Records change intent, ring promotions, and alert history for operational and supervisory review. | Supports compliance with control 4.12 by preserving rollout rationale and approval context. |
 | Baseline enforcement | Maintains expected feature state for regulated, recommended, and baseline tiers and flags nonconforming tenant behavior. | Supports compliance with controls 2.6 and 4.13 by restricting feature scope and highlighting unmanaged plugin or connector exposure. |
-| Web grounding governance | Documents the configuration pattern for Copilot web grounding domain exclusion lists, authoritative source designation, and web search policy enforcement. Current version provides governance templates; live policy deployment requires customer implementation in the Microsoft 365 admin center. | Supports compliance with controls 2.5 and 4.1 by governing which external web sources Copilot can reference and prioritizing authoritative internal content. |
 
 ## Scope Boundaries
 
@@ -33,7 +34,9 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 - ❌ Does not deploy Power Automate flows (change-tracking workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
-- ❌ Does not configure web grounding domain exclusion or authoritative sources in the Microsoft 365 admin center (governance templates and audit patterns are documented for manual configuration)
+- ❌ Does not cover Agent 365 platform governance, Entra Agent ID controls, or domain exclusion for web grounding (v1.3+ framework features pending solution update)
+- ❌ Does not manage Baseline Security Mode (BSM) simulation or enforcement
+- ❌ Does not govern third-party model providers (Anthropic Claude, xAI)
 
 ## Architecture
 
@@ -138,11 +141,11 @@ Detailed requirements are listed in [docs/prerequisites.md](prerequisites.md).
 
 | Control | Requirement | FMC implementation support |
 |---------|-------------|----------------------------|
-| 2.6 | Scoped Feature Enablement and Copilot App Access Control | Uses approved feature scope, app coverage lists, and Restricted ring definitions to keep unapproved Copilot experiences blocked or isolated. |
-| 4.1 | Copilot Feature Inventory and Capability Registry | Maintains an inventory of Copilot features, source systems, and expected state across supported admin surfaces. |
-| 4.2 | Feature Toggle and Policy-Based Enablement | Documents expected enablement by tier and highlights policy exceptions that require formal approval. |
-| 4.3 | Rollout Ring Management for Copilot Features | Defines four rollout rings with target population percentages and approval expectations. |
-| 4.4 | Feature Drift Detection and Baseline Enforcement | Compares observed feature state to approved baseline and records drift findings for follow-up. |
+| 2.6 | Copilot Web Search and Web Grounding Controls | Uses approved feature scope, app coverage lists, and Restricted ring definitions to keep unapproved Copilot experiences — including web search and grounding — blocked or isolated. |
+| 4.1 | Copilot Admin Settings and Feature Management | Maintains an inventory of Copilot features, source systems, and expected state across supported admin surfaces. |
+| 4.2 | Copilot in Teams Meetings Governance | Documents expected enablement by tier and highlights policy exceptions that require formal approval for Teams Meetings Copilot features. |
+| 4.3 | Copilot in Teams Phone and Queues Governance | Defines four rollout rings with target population percentages and approval expectations for Teams Phone and Queues Copilot features. |
+| 4.4 | Copilot in Viva Suite Governance | Compares observed feature state to approved baseline and records drift findings for follow-up across Viva Suite Copilot capabilities. |
 | 4.12 | Change Management and Rollout Risk Tracking | Preserves rollout promotion history, change references, and notification events for supervisory review. |
 | 4.13 | Third-Party Connector and Plugin Risk Assessment | Flags connector and plugin exposure in the feature registry so separate risk review can be triggered before enablement. |
 
@@ -169,3 +172,4 @@ All evidence packages use the shared JSON contract and SHA-256 companion hash fr
 - Some Teams and Power Platform feature settings may require export or administrative documentation instead of direct API writes.
 - Drift scoring is most meaningful after a tenant-specific baseline has been captured and approved.
 - Power Automate flow deployment remains documentation-first; the scripts record deployment intent and flow metadata rather than importing live flow packages.
+- The feature registry does not yet include Copilot agents, Copilot Studio governance, or Cloud Policy Service (OCPS) toggles (web search, Copilot Pages, Copilot Notebooks). These are recommended additions for the next version.

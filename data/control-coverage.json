@@ -497,6 +497,120 @@
     ]
   },
   {
+    "control_id": "1.14",
+    "title": "Item-Level Permission Scanning",
+    "pillar": "Readiness & Assessment",
+    "coverage": "automated",
+    "solutions": [
+      "16-item-level-oversharing-scanner"
+    ],
+    "framework_ids": [
+      "sec-17a4",
+      "glba-501b",
+      "ffiec-it-handbook",
+      "nist-sp-800-53"
+    ],
+    "notes": "Item-level permission scanning extends site-level oversharing detection from solution 16.",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/1.14/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/1.14/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/1.14/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/1.14/troubleshooting.md"
+      }
+    ]
+  },
+  {
+    "control_id": "1.15",
+    "title": "SharePoint Permissions Drift Detection",
+    "pillar": "Readiness & Assessment",
+    "coverage": "automated",
+    "solutions": [
+      "17-sharepoint-permissions-drift"
+    ],
+    "framework_ids": [
+      "sec-17a4",
+      "glba-501b",
+      "ffiec-it-handbook",
+      "nist-sp-800-53"
+    ],
+    "notes": "Permissions drift detection is a native output of solution 17.",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/1.15/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/1.15/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/1.15/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/1.15/troubleshooting.md"
+      }
+    ]
+  },
+  {
+    "control_id": "1.16",
+    "title": "Copilot Tuning Governance",
+    "pillar": "Readiness & Assessment",
+    "coverage": "automated",
+    "solutions": [
+      "19-copilot-tuning-governance"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "sr-11-7",
+      "interagency-ai-guidance"
+    ],
+    "notes": "Copilot Tuning governance assessment and lifecycle management is a native output of solution 19.",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/1.16/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/1.16/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/1.16/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/1.16/troubleshooting.md"
+      }
+    ]
+  },
+  {
     "control_id": "2.1",
     "title": "DLP Policies for M365 Copilot Interactions",
     "pillar": "Security & Protection",
@@ -582,7 +696,8 @@
     "framework_ids": [
       "glba-501b",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "nydfs-part-500"
     ],
     "notes": "Conditional Access templates, drift monitoring, and evidence export live in solution 07.",
     "playbooks": [
@@ -760,7 +875,8 @@
     "solutions": [],
     "framework_ids": [
       "glba-501b",
-      "ffiec-it-handbook"
+      "ffiec-it-handbook",
+      "nydfs-part-500"
     ],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
@@ -788,7 +904,7 @@
   },
   {
     "control_id": "2.9",
-    "title": "Defender for Cloud Apps \u2014 Copilot Session Controls",
+    "title": "Defender for Cloud Apps — Copilot Session Controls",
     "pillar": "Security & Protection",
     "coverage": "partially-automated",
     "solutions": [
@@ -975,7 +1091,7 @@
   },
   {
     "control_id": "2.14",
-    "title": "Declarative Agents from SharePoint \u2014 Creation and Sharing Governance",
+    "title": "Declarative Agents from SharePoint — Creation and Sharing Governance",
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
@@ -1017,7 +1133,8 @@
     "coverage": "playbook-only",
     "solutions": [],
     "framework_ids": [
-      "ffiec-it-handbook"
+      "ffiec-it-handbook",
+      "nydfs-part-500"
     ],
     "notes": "No dedicated solution is scaffolded yet; implementation guidance remains in the framework playbooks and dashboard evidence can track readiness later.",
     "playbooks": [
@@ -1282,7 +1399,8 @@
     "framework_ids": [
       "glba-501b",
       "sox-302-404",
-      "dora"
+      "dora",
+      "finra-4530"
     ],
     "notes": "Regulatory reporting readiness is aggregated through the control dashboard and unified evidence manifests.",
     "playbooks": [
@@ -1318,7 +1436,9 @@
     ],
     "framework_ids": [
       "occ-2011-12",
-      "sr-11-7"
+      "sr-11-7",
+      "eu-ai-act",
+      "colorado-ai-act"
     ],
     "notes": "Model-risk alignment remains evidence-led and is reflected through dashboard rollups.",
     "playbooks": [
@@ -1354,7 +1474,9 @@
     ],
     "framework_ids": [
       "sec-reg-bi",
-      "fca-sysc-10"
+      "fca-sysc-10",
+      "eu-ai-act",
+      "colorado-ai-act"
     ],
     "notes": "Disclosure lexicons and policy templates can be configured, but supervisory judgment remains necessary.",
     "playbooks": [
@@ -1847,7 +1969,9 @@
       "glba-501b",
       "occ-2011-12",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "nydfs-part-500",
+      "finra-4530"
     ],
     "notes": "Operational incident evidence and classification are central to solution 13.",
     "playbooks": [
@@ -1885,7 +2009,8 @@
       "glba-501b",
       "occ-2011-12",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "finra-4370"
     ],
     "notes": "Business-continuity and resilience evidence are central to solution 13.",
     "playbooks": [
@@ -1923,7 +2048,8 @@
       "glba-501b",
       "sox-302-404",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "nydfs-part-500"
     ],
     "notes": "Solution 13 records Sentinel-readiness hooks and supporting resilience telemetry.",
     "playbooks": [

@@ -103,7 +103,8 @@
     "evidence_outputs": [
       "oversharing-findings",
       "remediation-queue",
-      "site-owner-attestations"
+      "site-owner-attestations",
+      "sensitivity-label-coverage"
     ],
     "dependencies": [
       "01-copilot-readiness-scanner"
@@ -261,7 +262,7 @@
     "regulations": [
       "GLBA 501(b)",
       "SEC Reg S-P",
-      "DORA",
+      "DORA Article 9",
       "GDPR",
       "FINRA 4511",
       "SOX 302/404"
@@ -274,7 +275,7 @@
       "dora",
       "gdpr"
     ],
-    "summary": "Deploys, baselines, and monitors DLP policiesthat target Copilot prompts, responses, and grounded content access patterns.",
+    "summary": "Documents baseline expectations and monitors drift for DLP policies that target Copilot prompts, responses, and grounded content access patterns.",
     "evidence_outputs": [
       "dlp-policy-baseline",
       "policy-drift-findings",
@@ -334,7 +335,7 @@
       "sox-302-404",
       "cftc-1-31"
     ],
-    "summary": "Configures retention, validates Copilot audit completeness, and packages evidence for books-and-records examinations.",
+    "summary": "Documents retention configuration, checks audit completeness expectations, and packages evidence for books-and-records examinations.",
     "evidence_outputs": [
       "audit-log-completeness",
       "retention-policy-state",
@@ -388,9 +389,10 @@
       "glba-501b",
       "occ-2011-12",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "nydfs-part-500"
     ],
-    "summary": "Deploys Conditional Access patterns for Copilot users and watches for policy drift across risk tiers and device states.",
+    "summary": "Documents Conditional Access patterns for Copilot users and provides a framework for policy drift detection across risk tiers and device states.",
     "evidence_outputs": [
       "ca-policy-state",
       "drift-alert-summary",
@@ -436,7 +438,7 @@
     "supporting_controls": [],
     "regulations": [
       "OCC 2011-12",
-      "SOX 404",
+      "SOX 302/404",
       "GLBA 501(b)",
       "FFIEC IT Handbook"
     ],
@@ -510,7 +512,7 @@
       "occ-2011-12",
       "ffiec-it-handbook"
     ],
-    "summary": "Centralizes Copilot feature toggles, rollout rings, and drift monitoring across applications and user cohorts.",
+    "summary": "Documents approved Copilot feature settings, rollout ring definitions, and drift-monitoring patterns across applications and user cohorts.",
     "evidence_outputs": [
       "feature-state-baseline",
       "rollout-ring-history",
@@ -571,7 +573,7 @@
       "interagency-ai-guidance",
       "dora"
     ],
-    "summary": "Inventories connectors and plugins, routes approval requests, and records data-flow decisions for extensibility scenarios.",
+    "summary": "Documents connector and plugin inventory patterns, approval routing, and data-flow decision records for extensibility governance scenarios.",
     "evidence_outputs": [
       "connector-inventory",
       "approval-register",
@@ -631,7 +633,7 @@
       "interagency-ai-guidance",
       "dora"
     ],
-    "summary": "Sequences Copilot license assignment, prerequisite checks, pilot waves, and expansion gates by risk tier.",
+    "summary": "Documents risk-tiered Copilot rollout preparation, prerequisite checks, pilot waves, and expansion gates by risk tier.",
     "evidence_outputs": [
       "wave-readiness-log",
       "approval-history",
@@ -697,9 +699,12 @@
       "occ-2011-12",
       "sr-11-7",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "finra-4530",
+      "eu-ai-act",
+      "colorado-ai-act"
     ],
-    "summary": "Aggregates solution outputs into a control-centric dashboard that highlights implementation state, evidence freshness, and regulatory coverage.",
+    "summary": "Provides a framework for aggregating solution outputs into a control-centric dashboard that highlights implementation state, evidence freshness, and regulatory coverage.",
     "evidence_outputs": [
       "control-status-snapshot",
       "framework-coverage-matrix",
@@ -758,9 +763,12 @@
       "occ-2011-12",
       "ffiec-it-handbook",
       "dora",
-      "gdpr"
+      "gdpr",
+      "nydfs-part-500",
+      "finra-4370",
+      "finra-4530"
     ],
-    "summary": "Monitors Copilot service health, incident classification, resilience evidence, and operational-risk reporting for regulated environments.",
+    "summary": "Provides a monitoring framework for Copilot service health, incident classification, resilience evidence, and operational-risk reporting in regulated environments.",
     "evidence_outputs": [
       "service-health-log",
       "incident-register",
@@ -820,9 +828,11 @@
       "sec-reg-bi",
       "fca-sysc-10",
       "glba-501b",
-      "sox-302-404"
+      "sox-302-404",
+      "eu-ai-act",
+      "colorado-ai-act"
     ],
-    "summary": "Publishes communication compliance policy patterns for Copilot-assisted content and tracks reviewer workflows and escalations.",
+    "summary": "Generates communication compliance policy patterns for Copilot-assisted content and documents reviewer workflows and escalations.",
     "evidence_outputs": [
       "policy-template-export",
       "reviewer-queue-metrics",
@@ -938,9 +948,10 @@
       "sec-reg-sp",
       "glba-501b",
       "sox-302-404",
-      "ffiec-it-handbook"
+      "ffiec-it-handbook",
+      "nist-sp-800-53"
     ],
-    "summary": "Scans individual SharePoint items for overshared permissions, applies FSI risk scoring, and provides approval-gated remediation.",
+    "summary": "Provides a framework for scanning individual SharePoint items for overshared permissions, applies FSI risk scoring, and documents approval-gated remediation patterns.",
     "evidence_outputs": [
       "item-oversharing-findings",
       "risk-scored-report",
@@ -998,7 +1009,8 @@
       "sec-reg-sp",
       "glba-501b",
       "sox-302-404",
-      "ffiec-it-handbook"
+      "ffiec-it-handbook",
+      "nist-sp-800-53"
     ],
     "summary": "Captures baseline SharePoint permissions, detects drift over time, and provides approval-gated reversion with examiner-ready evidence.",
     "evidence_outputs": [
@@ -1059,7 +1071,7 @@
       "sox-302-404",
       "ffiec-it-handbook"
     ],
-    "summary": "Automates Entra ID Access Reviews for SharePoint sites, prioritized by risk tier from Solutions 02 and 16.",
+    "summary": "Provides a framework for automating Entra ID Access Reviews for SharePoint sites, prioritized by risk tier from Solutions 02 and 16.",
     "evidence_outputs": [
       "access-review-definitions",
       "review-decisions",
@@ -1086,31 +1098,90 @@
   },
   {
     "id": "19",
-    "slug": "19-agent-lifecycle-governance",
-    "display_name": "Agent Lifecycle and Deployment Governance",
-    "track": "C",
-    "domain": "operations-analytics",
-    "priority": "P0",
+    "slug": "19-copilot-tuning-governance",
+    "display_name": "Copilot Tuning Governance",
+    "track": "A",
+    "domain": "readiness-data",
+    "priority": "P1",
     "phase": 2,
     "version": "v0.1.0",
     "solution_type": [
       "PowerShell"
     ],
     "primary_controls": [
+      "1.16"
+    ],
+    "supporting_controls": [
+      "3.8"
+    ],
+    "regulations": [
+      "GLBA 501(b)",
+      "OCC 2011-12",
+      "SR 11-7",
+      "Interagency AI Guidance"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "sr-11-7",
+      "interagency-ai-guidance",
+      "eu-ai-act"
+    ],
+    "summary": "Provides a governance framework for Copilot Tuning lifecycle in 5,000+ license organizations — data selection, access controls, output supervision, audit trails, and model risk alignment.",
+    "evidence_outputs": [
+      "tuning-requests",
+      "model-inventory",
+      "risk-assessments"
+    ],
+    "dependencies": [
+      "01-copilot-readiness-scanner"
+    ],
+    "controls": [
+      "1.16",
+      "3.8"
+    ],
+    "control_count": 2,
+    "code": "CTG",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "slug": "19-agent-lifecycle-governance",
+    "display_name": "Agent Lifecycle and Deployment Governance",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P0",
+    "version": "v0.1.0",
+    "dependencies": [
+      "09-feature-management-controller",
+      "10-connector-plugin-governance"
+    ],
+    "primary_controls": [
       "1.13",
       "2.13",
       "2.14",
+      "4.1",
       "4.13"
     ],
-    "supporting_controls": [
-      "4.1"
+    "supporting_controls": [],
+    "controls": [
+      "1.13",
+      "2.13",
+      "2.14",
+      "4.1",
+      "4.13"
     ],
     "regulations": [
       "FINRA 3110",
       "SEC Reg S-P",
       "GLBA 501(b)",
-      "OCC 2011-12",
       "SOX 302/404",
+      "OCC 2011-12",
       "FFIEC IT Handbook",
       "Interagency AI Guidance",
       "DORA"
@@ -1125,22 +1196,11 @@
       "interagency-ai-guidance",
       "dora"
     ],
-    "summary": "Governs agent lifecycle including request/approval workflows, org-wide sharing restrictions, agent catalog auditing, and deployment gating for Copilot agents in financial services.",
+    "summary": "Provides a governance framework for Copilot Studio agent request and approval workflows, org-wide sharing restrictions, and agent catalog auditing.",
     "evidence_outputs": [
       "agent-registry",
       "approval-register",
       "sharing-policy-audit"
-    ],
-    "dependencies": [
-      "09-feature-management-controller",
-      "10-connector-plugin-governance"
-    ],
-    "controls": [
-      "1.13",
-      "2.13",
-      "2.14",
-      "4.1",
-      "4.13"
     ],
     "control_count": 5,
     "code": "ALG",

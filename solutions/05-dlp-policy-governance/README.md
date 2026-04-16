@@ -93,7 +93,7 @@ The repository uses a documentation-first pattern for Power Automate assets. The
 | `docs\*.md` | Architecture, deployment, evidence, prerequisites, and troubleshooting guidance |
 | `tests\05-dlp-policy-governance.Tests.ps1` | Pester checks for required files and PowerShell syntax |
 
-## Deployment overview
+## Deployment
 
 1. Confirm that solution `03-sensitivity-label-auditor` has produced a current label inventory.
 2. Connect to Security and Compliance PowerShell and Microsoft Graph with read permissions.

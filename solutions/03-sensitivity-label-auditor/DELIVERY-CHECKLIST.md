@@ -56,3 +56,12 @@
 - [ ] Targeted Pester validation completed for the solution folder.
 - [ ] README, deployment guide, evidence guide, and troubleshooting content reviewed by the solution owner.
 - [ ] Delivery handoff includes remediation assumptions, limitations, and Power Automate documentation-first notes.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

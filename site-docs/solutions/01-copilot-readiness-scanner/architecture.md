@@ -66,9 +66,7 @@ The Copilot Readiness Assessment Scanner is a PowerShell-first solution that doc
 1. `Deploy-Solution.ps1` loads `config/default-config.json` and the selected tier file, validates operator prerequisites, and records the deployment state.
 2. `Monitor-Compliance.ps1` uses the merged configuration to determine which domains to scan, what thresholds to apply, and how broadly to inspect the tenant.
 3. Domain scan functions currently emit representative domain findings and sample scores while marking clear insertion points for Microsoft Graph, Purview-aligned services, SharePoint Online, and Power Platform admin endpoints.
-4. The scoring engine converts domain findings into weighted control scores, calculates an overall readiness posture, and assigns operational statuses.
-
-> **Note:** Repository version uses representative sample data. For live implementation, customer must bind Microsoft Graph, Purview, and SharePoint endpoints with tenant-specific authentication.
+4. The scoring engine converts domain findings into weighted control scores, calculates an overall readiness posture, and assigns operational statuses. *(Note: Repository version uses representative sample data. For live implementation, customer must bind Microsoft Graph, Purview, and SharePoint endpoints with tenant-specific authentication.)*
 5. `Export-Evidence.ps1` writes the readiness scorecard, data hygiene findings, and remediation plan artifacts, then creates a package aligned to the shared evidence schema.
 6. Power BI ingests the JSON artifacts to provide executive dashboards, control drill-downs, and remediation views for stakeholders.
 

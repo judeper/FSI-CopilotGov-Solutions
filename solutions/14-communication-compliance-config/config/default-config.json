@@ -2,8 +2,8 @@
   "solution": "14-communication-compliance-config",
   "solutionCode": "CCC",
   "displayName": "Microsoft Purview Communication Compliance Configurator",
-  "version": "0.1.0",
-  "status": "Active",
+  "version": "v0.1.0",
+  "status": "documentation-first",
   "track": "D",
   "priority": "P1",
   "phase": 3,
@@ -26,7 +26,9 @@
     "sec-reg-bi",
     "fca-sysc-10",
     "glba-501b",
-    "sox-302-404"
+    "sox-302-404",
+    "eu-ai-act",
+    "colorado-ai-act"
   ],
   "dependencies": [
     "04-finra-supervision-workflow"

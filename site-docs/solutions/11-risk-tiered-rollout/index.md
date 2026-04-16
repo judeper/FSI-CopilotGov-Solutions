@@ -31,6 +31,8 @@ The solution depends on `01-copilot-readiness-scanner` to provide current readin
 - ❌ Does not deploy Power Automate flows (approval workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not distinguish Copilot Chat Basic vs Premium tiers in wave planning (v1.3+ framework feature pending solution update)
+- ❌ Does not include organizational branded footer configuration as a trust mechanism
 
 ## Architecture
 
@@ -94,7 +96,7 @@ Deployment begins with the `01-copilot-readiness-scanner` dependency, followed b
 
 Detailed deployment steps, sample commands, and rollback actions are documented in [docs/deployment-guide.md](deployment-guide.md).
 
-## Prerequisites Summary
+## Prerequisites
 
 - `01-copilot-readiness-scanner` is deployed and has produced a recent readiness evidence package.
 - Microsoft 365 E3 or E5 licensing plus Microsoft 365 Copilot licenses are available for the intended wave size.
@@ -110,9 +112,9 @@ See [docs/prerequisites.md](prerequisites.md) for full prerequisites and operati
 | Control | Title | Playbooks |
 |---------|-------|-----------|
 | 1.9 | License Planning and Copilot Assignment Strategy | [deployment guide](deployment-guide.md), [architecture](architecture.md), [evidence export](evidence-export.md) |
-| 1.11 | Phased Rollout and Pilot Wave Management | [architecture](architecture.md), [deployment guide](deployment-guide.md), [troubleshooting](troubleshooting.md) |
-| 1.12 | Rollout Gate Criteria and Expansion Approvals | [architecture](architecture.md), [deployment guide](deployment-guide.md), [evidence export](evidence-export.md) |
-| 4.12 | Change Management and Rollout Risk Tracking | [deployment guide](deployment-guide.md), [troubleshooting](troubleshooting.md), [evidence export](evidence-export.md) |
+| 1.11 | Organizational Change Management and Adoption Planning | [architecture](architecture.md), [deployment guide](deployment-guide.md), [troubleshooting](troubleshooting.md) |
+| 1.12 | Training and Awareness Program | [architecture](architecture.md), [deployment guide](deployment-guide.md), [evidence export](evidence-export.md) |
+| 4.12 | Change Management for Copilot Feature Rollouts | [deployment guide](deployment-guide.md), [troubleshooting](troubleshooting.md), [evidence export](evidence-export.md) |
 
 ## Regulatory Alignment
 
@@ -137,3 +139,5 @@ Each export aligns to the shared repository evidence schema and includes a compa
 - The deployment and monitoring scripts are structured stubs and do not directly invoke Microsoft Graph or Power Automate APIs in this repository state.
 - Risk-tier classification uses representative sample logic until live HR, Entra, and readiness-scanner data feeds are connected.
 - Power Automate and Power BI assets remain documentation-first; implementation teams must bind the documented flows and datasets to the target environment.
+- The wave planning model assumes a single paid Copilot SKU assignment per user. Organizations using the free Copilot Chat tier should note that Tier 1 users may already have basic Copilot access before any wave begins.
+- The Copilot Control System in the Microsoft 365 admin center now provides built-in rollout controls. This solution complements those controls by adding risk-tiered wave planning, gate criteria enforcement, and evidence packaging.

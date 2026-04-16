@@ -128,7 +128,9 @@
       "3.2",
       "3.3",
       "3.11",
-      "4.2"
+      "4.2",
+      "1.14",
+      "1.15"
     ],
     "solutions": [
       "03-sensitivity-label-auditor",
@@ -298,7 +300,10 @@
       "4.10",
       "4.11",
       "4.12",
-      "4.13"
+      "4.13",
+      "1.14",
+      "1.15",
+      "1.16"
     ],
     "solutions": [
       "01-copilot-readiness-scanner",
@@ -317,6 +322,7 @@
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
       "18-entra-access-reviews",
+      "19-copilot-tuning-governance",
       "19-agent-lifecycle-governance"
     ]
   },
@@ -406,7 +412,8 @@
       "4.8",
       "4.9",
       "4.10",
-      "4.13"
+      "4.13",
+      "1.16"
     ],
     "solutions": [
       "01-copilot-readiness-scanner",
@@ -417,6 +424,7 @@
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor",
+      "19-copilot-tuning-governance",
       "19-agent-lifecycle-governance"
     ]
   },
@@ -433,10 +441,12 @@
       "sr 11-7"
     ],
     "controls": [
-      "3.8"
+      "3.8",
+      "1.16"
     ],
     "solutions": [
-      "12-regulatory-compliance-dashboard"
+      "12-regulatory-compliance-dashboard",
+      "19-copilot-tuning-governance"
     ]
   },
   {
@@ -489,7 +499,9 @@
       "4.10",
       "4.11",
       "4.12",
-      "4.13"
+      "4.13",
+      "1.14",
+      "1.15"
     ],
     "solutions": [
       "01-copilot-readiness-scanner",
@@ -524,12 +536,14 @@
       "1.1",
       "1.11",
       "1.12",
-      "1.13"
+      "1.13",
+      "1.16"
     ],
     "solutions": [
       "01-copilot-readiness-scanner",
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
+      "19-copilot-tuning-governance",
       "19-agent-lifecycle-governance"
     ]
   },
@@ -622,5 +636,144 @@
       "06-audit-trail-manager"
     ],
     "traceability_note": "Controls are derived from the audit, retention, and eDiscovery scope in solution 06 because upstream control citations currently name adjacent SEC and FINRA recordkeeping obligations instead of CFTC 1.31 directly."
+  },
+  {
+    "id": "nist-sp-800-53",
+    "display_name": "NIST SP 800-53",
+    "title": "NIST Special Publication 800-53",
+    "issuer": "NIST",
+    "category": "security-controls",
+    "aliases": [
+      "NIST SP 800-53",
+      "NIST SP 800-53 (AC-3, AC-6, AU-2)",
+      "NIST SP 800-53 (CM-3, SI-7, AC-6)"
+    ],
+    "keywords": [
+      "nist",
+      "800-53"
+    ],
+    "controls": [
+      "1.14",
+      "1.15"
+    ],
+    "solutions": [
+      "16-item-level-oversharing-scanner",
+      "17-sharepoint-permissions-drift"
+    ]
+  },
+  {
+    "id": "nydfs-part-500",
+    "display_name": "NYDFS Part 500",
+    "title": "NYDFS 23 NYCRR Part 500",
+    "issuer": "NYDFS",
+    "category": "cybersecurity",
+    "aliases": [
+      "NYDFS Part 500",
+      "NYDFS Part 500.17"
+    ],
+    "keywords": [
+      "nydfs",
+      "part 500"
+    ],
+    "controls": [
+      "2.3",
+      "2.8",
+      "2.15",
+      "4.9",
+      "4.11"
+    ],
+    "solutions": [
+      "07-conditional-access-automation",
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "finra-4370",
+    "display_name": "FINRA 4370",
+    "title": "FINRA Rule 4370",
+    "issuer": "FINRA",
+    "category": "business-continuity",
+    "aliases": [
+      "FINRA Rule 4370"
+    ],
+    "keywords": [
+      "4370",
+      "finra rule 4370"
+    ],
+    "controls": [
+      "4.10"
+    ],
+    "solutions": [
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "finra-4530",
+    "display_name": "FINRA 4530",
+    "title": "FINRA Rule 4530",
+    "issuer": "FINRA",
+    "category": "reporting",
+    "aliases": [
+      "FINRA Rule 4530",
+      "FINRA Rule 4530 (Reporting Requirements)"
+    ],
+    "keywords": [
+      "4530",
+      "finra rule 4530"
+    ],
+    "controls": [
+      "3.7",
+      "4.9"
+    ],
+    "solutions": [
+      "12-regulatory-compliance-dashboard",
+      "13-dora-resilience-monitor"
+    ]
+  },
+  {
+    "id": "eu-ai-act",
+    "display_name": "EU AI Act",
+    "title": "EU Artificial Intelligence Act",
+    "issuer": "European Union",
+    "category": "ai-governance",
+    "aliases": [
+      "EU AI Act"
+    ],
+    "keywords": [
+      "eu ai act",
+      "artificial intelligence act"
+    ],
+    "controls": [
+      "3.8",
+      "3.9"
+    ],
+    "solutions": [
+      "12-regulatory-compliance-dashboard",
+      "14-communication-compliance-config",
+      "19-copilot-tuning-governance"
+    ]
+  },
+  {
+    "id": "colorado-ai-act",
+    "display_name": "Colorado AI Act",
+    "title": "Colorado AI Act (SB 25B-004)",
+    "issuer": "Colorado",
+    "category": "ai-governance",
+    "aliases": [
+      "Colorado AI Act",
+      "SB 25B-004"
+    ],
+    "keywords": [
+      "colorado ai act",
+      "sb 25b-004"
+    ],
+    "controls": [
+      "3.8",
+      "3.9"
+    ],
+    "solutions": [
+      "12-regulatory-compliance-dashboard",
+      "14-communication-compliance-config"
+    ]
   }
 ]

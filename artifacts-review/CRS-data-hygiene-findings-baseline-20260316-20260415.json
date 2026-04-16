@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "solution": "01-copilot-readiness-scanner",
+    "tenantId": "contoso.onmicrosoft.com",
+    "tier": "baseline",
+    "generatedAt": "2026-04-15T19:34:23.9307080-04:00",
+    "runtimeMode": "documentation-first-sample-data",
+    "dataSourceMode": "simulated-control-evidence",
+    "warning": "Artifacts were generated from representative sample findings in the repository and do not confirm live tenant scans."
+  },
+  "findings": [
+    {
+      "findingId": "DH-001",
+      "domain": "purview",
+      "severity": "high",
+      "title": "Unlabeled collaboration content detected",
+      "description": "The scanner expects unlabeled or legacy-labeled content to be remediated before broad Copilot exposure.",
+      "controlId": "1.1",
+      "recommendation": "Review label inheritance and prioritize repositories with broad internal visibility."
+    },
+    {
+      "findingId": "DH-002",
+      "domain": "identity",
+      "severity": "medium",
+      "title": "Privileged access review requires current attestation",
+      "description": "Privileged role assignments should be reconciled with business ownership before production rollout.",
+      "controlId": "1.6",
+      "recommendation": "Run a role attestation cycle and remove stale administrative assignments."
+    },
+    {
+      "findingId": "DH-003",
+      "domain": "licensing",
+      "severity": "medium",
+      "title": "Copilot assignment cohort is not fully justified",
+      "description": "License allocation should align with approved cohorts, use cases, and supervisory oversight.",
+      "controlId": "1.9",
+      "recommendation": "Update assignment records and confirm procurement approvals for inactive or excess allocations."
+    }
+  ]
+}

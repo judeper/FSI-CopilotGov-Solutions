@@ -3,7 +3,7 @@
 ## Licensing
 
 - Microsoft Purview Information Protection P2 license for auto-labeling scenarios
-- Microsoft 365 E5 Compliance or equivalent for the broader compliance and evidence workflow
+- Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) or equivalent for the broader compliance and evidence workflow
 
 Baseline monitoring can begin before enforcement use cases are approved, but bulk labeling and advanced policy scenarios should not proceed until licensing is confirmed.
 

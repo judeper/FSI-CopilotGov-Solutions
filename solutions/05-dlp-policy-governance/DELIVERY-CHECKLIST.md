@@ -36,3 +36,12 @@ Use this checklist before declaring DLP Policy Governance for Copilot ready for 
 - [ ] Run `scripts\Export-Evidence.ps1` for a test reporting window.
 - [ ] Validate `dlp-policy-baseline`, `policy-drift-findings`, and `exception-attestations` outputs.
 - [ ] Confirm `.sha256` companion files are present and match the exported artifacts.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

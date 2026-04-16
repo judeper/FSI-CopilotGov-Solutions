@@ -65,7 +65,7 @@ Graph path:
 
 ## Step 5: Validate policy posture
 
-If you imported the reference validation stub from `FSI-AgentGov-Solutions\conditional-access-automation`, run `Test-PolicyCompliance.ps1` against the deployed policies. If that stub is not present in your delivery pipeline, use `scripts\Monitor-Compliance.ps1` as the local validation step.
+Use `scripts\Monitor-Compliance.ps1` as the local validation step after tenant-specific policies are created or updated.
 
 ```powershell
 pwsh -File .\solutions\07-conditional-access-automation\scripts\Monitor-Compliance.ps1 `

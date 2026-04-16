@@ -1,9 +1,9 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-Deploys Conditional Access policy configuration for Microsoft 365 Copilot.
+Generates Conditional Access policy deployment artifacts for Microsoft 365 Copilot.
 .DESCRIPTION
-Takes a baseline snapshot of Conditional Access policies targeting Copilot application IDs, generates policy templates for the selected tier, writes a deployment manifest, and outputs Graph API commands required to create the policies. Policy creation requires Microsoft Graph permissions and should be executed by a Conditional Access Administrator.
+Generates baseline stubs, policy templates, deployment metadata, and Graph API command examples for Conditional Access policies targeting Copilot application IDs. Optional policy creation requires Microsoft Graph permissions and should be executed by a Conditional Access Administrator after tenant-specific review.
 .PARAMETER ConfigurationTier
 Specifies the governance tier to generate. Valid values are baseline, recommended, and regulated.
 .PARAMETER OutputPath
@@ -405,6 +405,10 @@ $manifest = [ordered]@{
 Write-JsonFile -Path $manifestPath -InputObject $manifest
 
 if ($Execute) {
+    if (-not $PSCmdlet.ShouldProcess($config.displayName, 'Connect to Microsoft Graph and create Conditional Access policies')) {
+        return
+    }
+
     if (-not (Get-Command -Name Connect-MgGraph -ErrorAction SilentlyContinue)) {
         throw 'Microsoft.Graph PowerShell SDK is required to use -Execute.'
     }
@@ -424,6 +428,9 @@ if ($Execute) {
     foreach ($requestBody in $requestBodies) {
         $jsonBody = $requestBody | ConvertTo-Json -Depth 12
         $policyName = if ($requestBody.ContainsKey('displayName')) { $requestBody.displayName } else { 'unknown' }
+        if (-not $PSCmdlet.ShouldProcess($policyName, 'Create Conditional Access policy via Microsoft Graph')) {
+            continue
+        }
         $maxRetries = 3
         $retryDelays = @(2, 4, 8)
         $succeeded = $false

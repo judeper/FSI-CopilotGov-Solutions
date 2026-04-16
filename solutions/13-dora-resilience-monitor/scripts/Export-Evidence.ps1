@@ -72,12 +72,11 @@ function New-DrmArtifactFile {
     $directory = Split-Path -Path $Path -Parent
     $null = New-Item -ItemType Directory -Path $directory -Force
     $Content | ConvertTo-Json -Depth 10 | Set-Content -Path $Path -Encoding utf8
-    $hash = Get-CopilotGovSha256 -Path $Path
-    Set-Content -Path ($Path + '.sha256') -Value ("{0}  {1}" -f $hash, [System.IO.Path]::GetFileName($Path)) -Encoding utf8
+    $hashInfo = Write-CopilotGovSha256File -Path $Path
 
     return [pscustomobject]@{
         Path = $Path
-        Hash = $hash
+        Hash = $hashInfo.Hash
     }
 }
 

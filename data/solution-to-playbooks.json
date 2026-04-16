@@ -765,7 +765,8 @@
       "glba-501b",
       "occ-2011-12",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "nydfs-part-500"
     ],
     "controls": [
       {
@@ -822,7 +823,7 @@
       },
       {
         "control_id": "2.9",
-        "title": "Defender for Cloud Apps \u2014 Copilot Session Controls",
+        "title": "Defender for Cloud Apps — Copilot Session Controls",
         "playbooks": [
           {
             "type": "portal-walkthrough",
@@ -1230,7 +1231,7 @@
       },
       {
         "control_id": "2.14",
-        "title": "Declarative Agents from SharePoint \u2014 Creation and Sharing Governance",
+        "title": "Declarative Agents from SharePoint — Creation and Sharing Governance",
         "playbooks": [
           {
             "type": "portal-walkthrough",
@@ -1414,7 +1415,10 @@
       "occ-2011-12",
       "sr-11-7",
       "ffiec-it-handbook",
-      "dora"
+      "dora",
+      "finra-4530",
+      "eu-ai-act",
+      "colorado-ai-act"
     ],
     "controls": [
       {
@@ -1584,7 +1588,10 @@
       "occ-2011-12",
       "ffiec-it-handbook",
       "dora",
-      "gdpr"
+      "gdpr",
+      "nydfs-part-500",
+      "finra-4370",
+      "finra-4530"
     ],
     "controls": [
       {
@@ -1702,7 +1709,9 @@
       "sec-reg-bi",
       "fca-sysc-10",
       "glba-501b",
-      "sox-302-404"
+      "sox-302-404",
+      "eu-ai-act",
+      "colorado-ai-act"
     ],
     "controls": [
       {
@@ -1962,9 +1971,36 @@
       "sec-reg-sp",
       "glba-501b",
       "sox-302-404",
-      "ffiec-it-handbook"
+      "ffiec-it-handbook",
+      "nist-sp-800-53"
     ],
     "controls": [
+      {
+        "control_id": "1.14",
+        "title": "Item-Level Permission Scanning",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.14/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.14/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.14/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.14/troubleshooting.md"
+          }
+        ]
+      },
       {
         "control_id": "1.2",
         "title": "SharePoint Oversharing Detection and Remediation (DSPM for AI)",
@@ -2105,9 +2141,36 @@
       "sec-reg-sp",
       "glba-501b",
       "sox-302-404",
-      "ffiec-it-handbook"
+      "ffiec-it-handbook",
+      "nist-sp-800-53"
     ],
     "controls": [
+      {
+        "control_id": "1.15",
+        "title": "SharePoint Permissions Drift Detection",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.15/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.15/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.15/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.15/troubleshooting.md"
+          }
+        ]
+      },
       {
         "control_id": "1.2",
         "title": "SharePoint Oversharing Detection and Remediation (DSPM for AI)",
@@ -2332,6 +2395,71 @@
     ]
   },
   {
+    "solution": "19-copilot-tuning-governance",
+    "display_name": "Copilot Tuning Governance",
+    "framework_ids": [
+      "glba-501b",
+      "occ-2011-12",
+      "sr-11-7",
+      "interagency-ai-guidance",
+      "eu-ai-act"
+    ],
+    "controls": [
+      {
+        "control_id": "1.16",
+        "title": "Copilot Tuning Governance",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/1.16/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/1.16/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/1.16/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/1.16/troubleshooting.md"
+          }
+        ]
+      },
+      {
+        "control_id": "3.8",
+        "title": "Model Risk Management Alignment (OCC 2011-12 / SR 11-7)",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/3.8/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/3.8/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/3.8/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/3.8/troubleshooting.md"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "solution": "19-agent-lifecycle-governance",
     "display_name": "Agent Lifecycle and Deployment Governance",
     "framework_ids": [
@@ -2347,133 +2475,23 @@
     "controls": [
       {
         "control_id": "1.13",
-        "title": "Extensibility Readiness (Graph Connectors, Plugins, Declarative Agents)",
-        "playbooks": [
-          {
-            "type": "portal-walkthrough",
-            "title": "Portal Walkthrough",
-            "path": "docs/playbooks/control-implementations/1.13/portal-walkthrough.md"
-          },
-          {
-            "type": "powershell-setup",
-            "title": "PowerShell Setup",
-            "path": "docs/playbooks/control-implementations/1.13/powershell-setup.md"
-          },
-          {
-            "type": "verification-testing",
-            "title": "Verification and Testing",
-            "path": "docs/playbooks/control-implementations/1.13/verification-testing.md"
-          },
-          {
-            "type": "troubleshooting",
-            "title": "Troubleshooting",
-            "path": "docs/playbooks/control-implementations/1.13/troubleshooting.md"
-          }
-        ]
+        "playbooks": []
       },
       {
         "control_id": "2.13",
-        "title": "Plugin and Graph Connector Security Governance",
-        "playbooks": [
-          {
-            "type": "portal-walkthrough",
-            "title": "Portal Walkthrough",
-            "path": "docs/playbooks/control-implementations/2.13/portal-walkthrough.md"
-          },
-          {
-            "type": "powershell-setup",
-            "title": "PowerShell Setup",
-            "path": "docs/playbooks/control-implementations/2.13/powershell-setup.md"
-          },
-          {
-            "type": "verification-testing",
-            "title": "Verification and Testing",
-            "path": "docs/playbooks/control-implementations/2.13/verification-testing.md"
-          },
-          {
-            "type": "troubleshooting",
-            "title": "Troubleshooting",
-            "path": "docs/playbooks/control-implementations/2.13/troubleshooting.md"
-          }
-        ]
+        "playbooks": []
       },
       {
         "control_id": "2.14",
-        "title": "Declarative Agents from SharePoint \u2014 Creation and Sharing Governance",
-        "playbooks": [
-          {
-            "type": "portal-walkthrough",
-            "title": "Portal Walkthrough",
-            "path": "docs/playbooks/control-implementations/2.14/portal-walkthrough.md"
-          },
-          {
-            "type": "powershell-setup",
-            "title": "PowerShell Setup",
-            "path": "docs/playbooks/control-implementations/2.14/powershell-setup.md"
-          },
-          {
-            "type": "verification-testing",
-            "title": "Verification and Testing",
-            "path": "docs/playbooks/control-implementations/2.14/verification-testing.md"
-          },
-          {
-            "type": "troubleshooting",
-            "title": "Troubleshooting",
-            "path": "docs/playbooks/control-implementations/2.14/troubleshooting.md"
-          }
-        ]
+        "playbooks": []
       },
       {
         "control_id": "4.1",
-        "title": "Copilot Admin Settings and Feature Management",
-        "playbooks": [
-          {
-            "type": "portal-walkthrough",
-            "title": "Portal Walkthrough",
-            "path": "docs/playbooks/control-implementations/4.1/portal-walkthrough.md"
-          },
-          {
-            "type": "powershell-setup",
-            "title": "PowerShell Setup",
-            "path": "docs/playbooks/control-implementations/4.1/powershell-setup.md"
-          },
-          {
-            "type": "verification-testing",
-            "title": "Verification and Testing",
-            "path": "docs/playbooks/control-implementations/4.1/verification-testing.md"
-          },
-          {
-            "type": "troubleshooting",
-            "title": "Troubleshooting",
-            "path": "docs/playbooks/control-implementations/4.1/troubleshooting.md"
-          }
-        ]
+        "playbooks": []
       },
       {
         "control_id": "4.13",
-        "title": "Copilot Extensibility Governance (Plugin Lifecycle, Connector Monitoring)",
-        "playbooks": [
-          {
-            "type": "portal-walkthrough",
-            "title": "Portal Walkthrough",
-            "path": "docs/playbooks/control-implementations/4.13/portal-walkthrough.md"
-          },
-          {
-            "type": "powershell-setup",
-            "title": "PowerShell Setup",
-            "path": "docs/playbooks/control-implementations/4.13/powershell-setup.md"
-          },
-          {
-            "type": "verification-testing",
-            "title": "Verification and Testing",
-            "path": "docs/playbooks/control-implementations/4.13/verification-testing.md"
-          },
-          {
-            "type": "troubleshooting",
-            "title": "Troubleshooting",
-            "path": "docs/playbooks/control-implementations/4.13/troubleshooting.md"
-          }
-        ]
+        "playbooks": []
       }
     ]
   }

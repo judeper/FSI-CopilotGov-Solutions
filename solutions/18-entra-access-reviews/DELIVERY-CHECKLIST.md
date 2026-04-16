@@ -70,3 +70,12 @@ Use this checklist to move solution 18 from documentation review into controlled
 - [ ] Run `scripts\New-AccessReview.ps1` to create initial review definitions for HIGH-risk sites.
 - [ ] Run `scripts\Get-ReviewResults.ps1` and verify review monitoring is working as expected.
 - [ ] Run `scripts\Export-Evidence.ps1` and archive the resulting package and checksums.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

@@ -10,7 +10,7 @@ The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 re
 
 ## Features
 
-- Provides a scanning framework across six governance domains with representative sample data; ready for Microsoft Graph API integration when deployed to a tenant.
+- Provides a scanning framework across six governance domains with representative sample data; designed for Microsoft Graph API integration when deployed to a tenant.
 - Uses a PowerShell scoring engine to translate technical findings into tier-aware readiness scores and control-level status outputs.
 - Supports `baseline`, `recommended`, and `regulated` governance tiers with different monitoring cadence, evidence retention, and alert thresholds.
 - Exports evidence packages aligned to the shared schema, including companion SHA-256 files for downstream audit handling.
@@ -31,7 +31,7 @@ The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 re
 
 ## Architecture
 
-The solution uses tiered configuration, PowerShell collection scripts, shared helper modules, and JSON evidence outputs that feed a Power BI reporting layer. See [docs/architecture.md](./docs/architecture.md) for the detailed component model, data flow, scoring logic, and shared module integration points.
+The solution uses tiered configuration, PowerShell collection scripts, shared helper modules, and JSON evidence outputs that support a Power BI reporting layer. See [docs/architecture.md](./docs/architecture.md) for the detailed component model, data flow, scoring logic, and shared module integration points.
 
 ## Quick Start
 

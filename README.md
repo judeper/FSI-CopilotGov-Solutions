@@ -2,7 +2,7 @@
 
 Governance solution scaffolds and documentation patterns for the [FSI-CopilotGov](https://github.com/judeper/FSI-CopilotGov) framework.
 
-This repository translates the framework's 54 controls and 216 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
+This repository translates the framework's 57 controls and 228 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
 
 ## What This Repository Contains
 
@@ -33,7 +33,7 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 | 16 | [Item-Level Oversharing Scanner](./solutions/16-item-level-oversharing-scanner/README.md) | P1 | A | 1.2, 1.3, 1.4, 1.6, 2.5 |
 | 17 | [SharePoint Permissions Drift Detection](./solutions/17-sharepoint-permissions-drift/README.md) | P1 | A | 1.2, 1.4, 1.6, 2.5 |
 | 18 | [Entra Access Reviews Automation](./solutions/18-entra-access-reviews/README.md) | P1 | A | 1.2, 1.6, 2.5, 2.12 |
-| 19 | [Agent Lifecycle and Deployment Governance](./solutions/19-agent-lifecycle-governance/README.md) | P0 | C | 1.13, 2.13, 2.14, 4.1, 4.13 |
+| 19 | [Copilot Tuning Governance](./solutions/19-copilot-tuning-governance/README.md) | P1 | A | 1.16, 3.8 |
 
 ## Implementation Depth
 
@@ -62,7 +62,7 @@ This repository translates the framework's 54 controls and 216 playbooks into so
 | 16 | Item-Level Oversharing Scanner | ✅ | ❌ | Representative sample data | PnP PowerShell, SharePoint |
 | 17 | SharePoint Permissions Drift | ✅ | ❌ | Representative sample data | PnP PowerShell, Graph |
 | 18 | Entra Access Reviews Automation | ✅ | ❌ | Representative sample data | Graph, Entra ID |
-| 19 | Agent Lifecycle Governance | ✅ | ❌ | Representative sample data | M365 Admin, Power Platform |
+| 19 | Copilot Tuning Governance | ✅ | ❌ | Representative sample data | M365 Admin, Graph |
 
 ## Connectivity Readiness
 
@@ -88,13 +88,13 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 | 16 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 17 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 18 | ✅ | — | — | — | — | ✅ | SharePoint |
-| 19 | ✅ | ✅ | ✅ | ✅ | — | ✅ | Power Platform |
+| 19 | ✅ | — | — | — | — | — | M365 Admin |
 
 ## Delivery Model
 
 1. **Preflight contract gate** — freeze templates, shared contracts, mappings, and validation rules.
 2. **Repository foundation** — bootstrap docs, site generation, workflows, and reusable modules.
-3. **Full solution scaffold** — create all 19 solution folders with consistent placeholders and delivery checklists.
+3. **Full solution scaffold** — create all 18 solution folders with consistent placeholders and delivery checklists.
 4. **Fleet execution** — implement track-specific logic only after the shared contracts are stable.
 5. **Integration and publication** — aggregate evidence, validate docs, and publish the site.
 

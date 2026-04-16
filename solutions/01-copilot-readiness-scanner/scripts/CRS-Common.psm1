@@ -40,7 +40,7 @@ function Import-SharedModule {
         throw "Shared module not found: $modulePath"
     }
 
-    Import-Module $modulePath -Force
+    Import-Module $modulePath -Force -Global
     return $true
 }
 

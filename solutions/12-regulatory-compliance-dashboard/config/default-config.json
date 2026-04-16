@@ -24,7 +24,10 @@
     "occ-2011-12",
     "sr-11-7",
     "ffiec-it-handbook",
-    "dora"
+    "dora",
+    "finra-4530",
+    "eu-ai-act",
+    "colorado-ai-act"
   ],
   "evidenceOutputs": [
     "control-status-snapshot",

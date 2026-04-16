@@ -136,7 +136,7 @@ $deploymentManifest = [ordered]@{
     displayName = $defaultConfig.displayName
     tier = $ConfigurationTier
     tierValue = $tierDefinition.Value
-    status = 'implemented'
+    status = 'documentation-first'
     tenantId = $TenantId
     generatedAt = $timestamp
     outputFiles = @(
@@ -175,20 +175,20 @@ if ($PSCmdlet.ShouldProcess($outputFolder, 'Write ATM deployment manifests')) {
     Write-AtmJsonFile -Path $retentionPath -InputObject $retentionManifest | Out-Null
     Write-AtmJsonFile -Path $auditPath -InputObject $auditRequirements | Out-Null
     Write-AtmJsonFile -Path $deploymentPath -InputObject $deploymentManifest | Out-Null
-}
 
-Write-Host ('Generated retention manifest: {0}' -f $retentionPath)
-Write-Host ('Generated audit requirements: {0}' -f $auditPath)
-Write-Host ('Generated deployment manifest: {0}' -f $deploymentPath)
-Write-Host 'Next steps:'
-$deploymentManifest.nextSteps | ForEach-Object { Write-Host ('- {0}' -f $_) }
+    Write-Host ('Generated retention manifest: {0}' -f $retentionPath)
+    Write-Host ('Generated audit requirements: {0}' -f $auditPath)
+    Write-Host ('Generated deployment manifest: {0}' -f $deploymentPath)
+    Write-Host 'Next steps:'
+    $deploymentManifest.nextSteps | ForEach-Object { Write-Host ('- {0}' -f $_) }
 
-[pscustomobject]@{
-    Solution = $defaultConfig.solution
-    Tier = $ConfigurationTier
-    TenantId = $TenantId
-    RetentionManifestPath = $retentionPath
-    AuditRequirementsPath = $auditPath
-    DeploymentManifestPath = $deploymentPath
-    NextSteps = $deploymentManifest.nextSteps
+    [pscustomobject]@{
+        Solution = $defaultConfig.solution
+        Tier = $ConfigurationTier
+        TenantId = $TenantId
+        RetentionManifestPath = $retentionPath
+        AuditRequirementsPath = $auditPath
+        DeploymentManifestPath = $deploymentPath
+        NextSteps = $deploymentManifest.nextSteps
+    }
 }

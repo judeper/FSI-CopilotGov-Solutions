@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "solution": "01-copilot-readiness-scanner",
+    "solutionCode": "CRS",
+    "tenantId": "contoso.onmicrosoft.com",
+    "tier": "baseline",
+    "periodStart": "2026-03-16",
+    "periodEnd": "2026-04-15",
+    "generatedAt": "2026-04-15T19:34:23.9274267-04:00",
+    "runtimeMode": "documentation-first-sample-data",
+    "dataSourceMode": "simulated-control-evidence",
+    "warning": "Artifacts were generated from representative sample findings in the repository and do not confirm live tenant scans."
+  },
+  "summary": {
+    "overallReadinessScore": 32.5,
+    "alertThreshold": 60,
+    "scanDomains": [
+      "licensing",
+      "identity",
+      "defender",
+      "purview",
+      "powerPlatform",
+      "copilotConfig"
+    ],
+    "reportFormat": "powerbi-json",
+    "warning": "Artifacts were generated from representative sample findings in the repository and do not confirm live tenant scans."
+  },
+  "controls": [
+    {
+      "controlId": "1.1",
+      "status": "partial",
+      "notes": "Automated readiness and data hygiene checks cover the six defined scan domains, but business-owned content remediation remains outside automation."
+    },
+    {
+      "controlId": "1.5",
+      "status": "monitor-only",
+      "notes": "Sensitivity label usage and coverage are inventoried, but taxonomy approval and legal interpretation remain compliance-led activities."
+    },
+    {
+      "controlId": "1.6",
+      "status": "monitor-only",
+      "notes": "Guest account review is excluded in this tier, so permission model coverage is limited to internal sharing posture."
+    },
+    {
+      "controlId": "1.7",
+      "status": "monitor-only",
+      "notes": "SharePoint Advanced Management readiness is sampled in this tier and should be expanded before production attestation."
+    },
+    {
+      "controlId": "1.9",
+      "status": "monitor-only",
+      "notes": "License planning is assessed at a summary level in this tier and should be supplemented with periodic business justification review."
+    }
+  ]
+}

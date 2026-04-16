@@ -93,7 +93,7 @@ The implementation uses four manual Power Automate cloud flows:
 
 See [docs\architecture.md](docs/architecture.md) and [docs\deployment-guide.md](docs/deployment-guide.md) for manual build steps.
 
-## Deployment steps
+## Deployment
 
 1. Review [docs\prerequisites.md](docs/prerequisites.md) and confirm licensing, roles, network access, and Microsoft Entra ID group membership.
 2. Create Dataverse tables and columns in the target environment as described in [docs\deployment-guide.md](docs/deployment-guide.md).

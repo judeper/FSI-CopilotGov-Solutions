@@ -1,0 +1,46 @@
+{
+  "solution": "06-audit-trail-manager",
+  "solutionCode": "ATM",
+  "tier": "baseline",
+  "tenantId": "not-specified",
+  "generatedAt": "2026-04-15T20:10:43.9651267-04:00",
+  "periodStart": "2026-01-01",
+  "periodEnd": "2026-01-31",
+  "ualStatus": {
+    "enabledCheck": "check",
+    "auditLevel": "Standard",
+    "validationCommand": "Check-AuditLogCompleteness",
+    "latencyNote": "UAL results may lag by up to 24 hours."
+  },
+  "requiredEventTypes": [
+    "CopilotInteraction",
+    "AIInteraction",
+    "SharePointFileAccess"
+  ],
+  "capturedEventTypes": [
+    "CopilotInteraction",
+    "AIInteraction",
+    "SharePointFileAccess"
+  ],
+  "sampleCounts": [
+    {
+      "eventType": "CopilotInteraction",
+      "sampleCount": 0,
+      "status": "pending-tenant-query"
+    },
+    {
+      "eventType": "AIInteraction",
+      "sampleCount": 0,
+      "status": "pending-tenant-query"
+    },
+    {
+      "eventType": "SharePointFileAccess",
+      "sampleCount": 0,
+      "status": "pending-tenant-query"
+    }
+  ],
+  "notes": [
+    "Copilot event detail depends on Microsoft 365 audit level.",
+    "Sample counts should be refreshed from tenant audit data before examination use."
+  ]
+}

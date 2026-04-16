@@ -1,0 +1,22 @@
+{
+  "solution": "19-copilot-tuning-governance",
+  "tier": "baseline",
+  "controls": [
+    "1.16",
+    "3.8"
+  ],
+  "evidenceOutputs": [
+    "tuning-requests",
+    "model-inventory",
+    "risk-assessments"
+  ],
+  "tuningEnabled": false,
+  "requireApprovalWorkflow": false,
+  "requireModelInventory": false,
+  "requireRiskAssessment": false,
+  "requireOwnerAttestation": false,
+  "requireExaminerReadyEvidence": false,
+  "riskReassessmentDays": -1,
+  "evidenceRetentionDays": 90,
+  "maxTuningRequestsPerCycle": 0
+}

@@ -104,14 +104,12 @@ function Write-JsonArtifact {
     )
 
     $Payload | ConvertTo-Json -Depth 10 | Set-Content -Path $Path -Encoding utf8
-    $hash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
-    $hashFilePath = $Path + '.sha256'
-    Set-Content -Path $hashFilePath -Value ("{0}  {1}" -f $hash, [System.IO.Path]::GetFileName($Path)) -Encoding utf8
+    $hashResult = Write-CopilotGovSha256File -Path $Path
 
     return [pscustomobject]@{
         Path         = $Path
-        Hash         = $hash
-        HashFilePath = $hashFilePath
+        Hash         = $hashResult.Hash
+        HashFilePath = $hashResult.HashPath
     }
 }
 

@@ -64,6 +64,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\DataverseHelpers.psm1') -Force
+Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
 function Get-FmcConfiguration {
     [CmdletBinding()]
@@ -345,8 +346,7 @@ try {
         $summaryPath = Join-Path $OutputPath 'fmc-deployment-summary.json'
 
         $baseline | ConvertTo-Json -Depth 10 | Set-Content -Path $baselinePath -Encoding utf8
-        $baselineHash = (Get-FileHash -Path $baselinePath -Algorithm SHA256).Hash
-        "$baselineHash  $(Split-Path -Leaf $baselinePath)" | Set-Content -Path "$baselinePath.sha256" -Encoding utf8
+        $null = Write-CopilotGovSha256File -Path $baselinePath
         $deploymentSummary | ConvertTo-Json -Depth 10 | Set-Content -Path $summaryPath -Encoding utf8
     }
 

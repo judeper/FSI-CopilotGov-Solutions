@@ -66,14 +66,12 @@ function Write-JsonWithHash {
     $json = $Data | ConvertTo-Json -Depth 15
     Set-Content -Path $FilePath -Value $json -Encoding UTF8
 
-    $hash = Get-FileHash -Path $FilePath -Algorithm SHA256
-    $hashFilePath = "$FilePath.sha256"
-    Set-Content -Path $hashFilePath -Value "$($hash.Hash)  $(Split-Path $FilePath -Leaf)" -Encoding UTF8
+    $hashInfo = Write-CopilotGovSha256File -Path $FilePath
 
     return [pscustomobject]@{
         FilePath = $FilePath
-        Hash     = $hash.Hash
-        HashFile = $hashFilePath
+        Hash     = $hashInfo.Hash
+        HashFile = $hashInfo.HashPath
     }
 }
 

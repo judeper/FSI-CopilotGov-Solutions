@@ -116,7 +116,7 @@ function Test-GraphConnectivityPlaceholder {
     )
 
     return [pscustomobject]@{
-        IsConnected = $true
+        IsConnected = $false
         Mode        = 'placeholder'
         TenantId    = $TenantId
         Scopes      = $context.Scopes

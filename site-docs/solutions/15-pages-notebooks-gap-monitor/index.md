@@ -1,6 +1,6 @@
 # Copilot Pages and Notebooks Compliance Gap Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P2 | **Track:** D | **Solution Code:** PNGM
+> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P2 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -41,6 +41,9 @@ This solution gives compliance, legal, and operations teams a repeatable way to 
 - ❌ Does not deploy Power Automate flows (gap notification workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not model Information Barriers limitation for SharePoint Embedded as a distinct named gap (v1.3+ framework feature)
+- ❌ Does not cover departed-user / leaver workflow for Copilot Pages and Notebooks
+- ❌ Does not capture notebook sensitivity labeling limitations as a distinct gap category
 
 ## Architecture
 
@@ -127,3 +130,4 @@ Evidence is exported through the shared `Export-SolutionEvidencePackage` functio
 - It does not automate retention policy changes, legal hold actions, or Microsoft Purview eDiscovery configuration changes.
 - Human review is required for all gap registrations, compensating control approvals, and preservation exception entries.
 - Platform behavior for Copilot Pages, Loop workspaces, and notebook discovery coverage can change over time and must be revalidated against current Microsoft guidance.
+- As of January 2025, retention policies and basic Microsoft Purview eDiscovery support are generally available for Copilot Pages and Loop content. The remaining compliance gaps include limited retention label support, no full-text search in eDiscovery review sets, and no information barriers for SharePoint Embedded containers. Organizations should reassess GAP-001 and GAP-002 severity in light of these platform improvements.

@@ -22,7 +22,10 @@
     "occ-2011-12",
     "ffiec-it-handbook",
     "dora",
-    "gdpr"
+    "gdpr",
+    "nydfs-part-500",
+    "finra-4370",
+    "finra-4530"
   ],
   "evidenceOutputs": [
     "service-health-log",

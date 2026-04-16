@@ -6,13 +6,13 @@
 
 ## Overview
 
-This solution operationalizes oversharing detection for SharePoint, Teams, and OneDrive content that Microsoft 365 Copilot can surface during grounded responses. It extends the output of solution 01-copilot-readiness-scanner, applies financial-services risk tiering to exposed content patterns, and prepares structured remediation actions for site owners, security operations, and compliance reviewers.
+This solution provides a framework for oversharing detection across SharePoint, Teams, and OneDrive content that Microsoft 365 Copilot can surface during grounded responses. It extends the output of solution 01-copilot-readiness-scanner, applies financial-services risk tiering to exposed content patterns, and prepares structured remediation actions for site owners, security operations, and compliance reviewers.
 
 The design focuses on the highest-risk FSI exposure scenarios: customer PII, trading data, legal and compliance documents, and other regulated records that have been shared too broadly. Findings are classified as HIGH, MEDIUM, or LOW so institutions can prioritize remediation waves before expanding Copilot access.
 
 ## Features
 
-- Bulk site and workspace scanning across SharePoint sites, OneDrive accounts, and Teams-connected sites
+- Documents bulk site and workspace scanning patterns across SharePoint sites, OneDrive accounts, and Teams-connected sites
 - FSI-specific risk scoring that weights sharing scope, guest access, and regulated data indicators
 - Remediation queue generation for high-priority permissions cleanup and owner follow-up
 - Site owner notification support through documentation-first Power Automate patterns
@@ -78,17 +78,18 @@ Solution 02 depends on the baseline inventory and readiness outputs from solutio
 
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|
-| 1.2 | Primary | Detects overshared SharePoint, Teams, and OneDrive content and prepares governed remediation actions |
+| 1.2 | Primary | Documents patterns for detecting overshared SharePoint, Teams, and OneDrive content and prepares governed remediation actions |
 | 1.3 | Primary | Documents how to enable Restricted SharePoint Search for narrower Copilot grounding scope |
 | 1.4 | Primary | Supports semantic index governance by identifying high-risk sites that should be limited or re-scoped |
+| 1.6 | Supporting | Supplements permission model audits with workload-level anomaly counts and remediation recommendations |
 | 2.5 | Primary | Promotes data minimization by reducing broadly accessible content in Copilot grounding paths |
 | 2.12 | Primary | Surfaces guest access and external sharing exposure for governance review and cleanup |
-| 1.6 | Supporting | Supplements permission model audits with workload-level anomaly counts and remediation recommendations |
-| 1.7 | Supporting | Reports sensitivity label coverage across scanned sites to identify gaps in Microsoft Purview Information Protection enforcement for Copilot interactions |
 
 ## Regulatory Alignment
 
 This solution supports compliance with GLBA 501(b), SEC Reg S-P, FINRA 4511, and the FFIEC IT Handbook by documenting repeatable detection, triage, remediation, and evidence export patterns for overshared collaboration content. It is designed to help regulated institutions demonstrate governance intent, control monitoring, and examiner-ready recordkeeping without making absolute compliance claims.
+
+The solution also supports SOX 302/404 internal control documentation by providing evidence of data exposure assessment and remediation tracking.
 
 ## Evidence Export
 

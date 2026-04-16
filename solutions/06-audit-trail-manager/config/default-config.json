@@ -2,8 +2,8 @@
   "solution": "06-audit-trail-manager",
   "solutionCode": "ATM",
   "displayName": "Copilot Interaction Audit Trail Manager",
-  "version": "0.2.0",
-  "status": "implemented",
+  "version": "v0.2.0",
+  "status": "documentation-first",
   "track": "B",
   "priority": "P0",
   "solutionType": [

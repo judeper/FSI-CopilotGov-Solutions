@@ -70,3 +70,12 @@ Use this checklist to move solution 02 from documentation review into controlled
 - [ ] Run the initial `Monitor-Compliance.ps1` scan and review findings with stakeholders.
 - [ ] Approve remediation wave sequencing and notification timing.
 - [ ] Run `Export-Evidence.ps1` and archive the resulting package and checksums.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

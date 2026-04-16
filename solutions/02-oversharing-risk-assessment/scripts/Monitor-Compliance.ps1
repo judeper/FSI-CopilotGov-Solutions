@@ -802,7 +802,7 @@ $summary = [pscustomobject]@{
     SensitivityLabelCoverage = $sensitivityLabelCoverage
 }
 
-Write-Host ("Summary: Total={0}; HIGH={1}; MEDIUM={2}; LOW={3}; LabelCoverage={4}%" -f $summary.TotalFindings, $summary.HighRiskCount, $summary.MediumRiskCount, $summary.LowRiskCount, $sensitivityLabelCoverage.LabelCoveragePercent)
+Write-Verbose ("Summary: Total={0}; HIGH={1}; MEDIUM={2}; LOW={3}; LabelCoverage={4}%" -f $summary.TotalFindings, $summary.HighRiskCount, $summary.MediumRiskCount, $summary.LowRiskCount, $sensitivityLabelCoverage.LabelCoveragePercent)
 
 if ($PSBoundParameters.ContainsKey('ExportPath')) {
     $exportRoot = [System.IO.Path]::GetFullPath($ExportPath)

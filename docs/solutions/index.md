@@ -9,6 +9,10 @@ The catalog is grouped by the four implementation tracks used for fleet executio
 | [Copilot Readiness Assessment Scanner](01-copilot-readiness-scanner/index.md) | P0 | 1.1, 1.5, 1.6, 1.7, 1.9 |
 | [Oversharing Risk Assessment and Remediation](02-oversharing-risk-assessment/index.md) | P0 | 1.2, 1.3, 1.4, 1.6, 2.5, 2.12 |
 | [Sensitivity Label Coverage Auditor](03-sensitivity-label-auditor/index.md) | P1 | 1.5, 2.2, 3.11, 3.12 |
+| [Item-Level Oversharing Scanner](16-item-level-oversharing-scanner/index.md) | P1 | 1.2, 1.3, 1.4, 1.6, 2.5 |
+| [SharePoint Permissions Drift Detection](17-sharepoint-permissions-drift/index.md) | P1 | 1.2, 1.4, 1.6, 2.5 |
+| [Entra Access Reviews Automation](18-entra-access-reviews/index.md) | P1 | 1.2, 1.6, 2.5, 2.12 |
+| [Copilot Tuning Governance](19-copilot-tuning-governance/index.md) | P1 | 1.16, 3.8 |
 
 ## Track B: Security And Compliance Enforcement
 

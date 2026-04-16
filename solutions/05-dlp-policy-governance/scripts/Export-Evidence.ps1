@@ -113,9 +113,8 @@ function Write-HashCompanion {
         [string]$Path
     )
 
-    $hash = Get-CopilotGovSha256 -Path $Path
-    Set-Content -Path ($Path + '.sha256') -Value ('{0}  {1}' -f $hash, [IO.Path]::GetFileName($Path)) -Encoding utf8
-    return $hash
+    $result = Write-CopilotGovSha256File -Path $Path
+    return $result.Hash
 }
 
 $defaultConfig = Read-JsonFile -Path (Join-Path $solutionRoot 'config\default-config.json')

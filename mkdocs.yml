@@ -222,6 +222,13 @@ nav:
         - Evidence Export: solutions/15-pages-notebooks-gap-monitor/evidence-export.md
         - Prerequisites: solutions/15-pages-notebooks-gap-monitor/prerequisites.md
         - Troubleshooting: solutions/15-pages-notebooks-gap-monitor/troubleshooting.md
+      - Copilot Tuning Governance:
+        - solutions/19-copilot-tuning-governance/index.md
+        - Architecture: solutions/19-copilot-tuning-governance/architecture.md
+        - Deployment Guide: solutions/19-copilot-tuning-governance/deployment-guide.md
+        - Evidence Export: solutions/19-copilot-tuning-governance/evidence-export.md
+        - Prerequisites: solutions/19-copilot-tuning-governance/prerequisites.md
+        - Troubleshooting: solutions/19-copilot-tuning-governance/troubleshooting.md
   - Reference:
     - reference/index.md
     - Architecture: reference/architecture.md

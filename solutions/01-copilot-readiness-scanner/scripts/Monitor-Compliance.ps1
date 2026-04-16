@@ -271,7 +271,7 @@ try {
     Write-Verbose "Loading configuration for tier [$ConfigurationTier]."
     $configuration = Get-SolutionConfiguration -Tier $ConfigurationTier
 
-    Import-SharedModule -ModuleName 'GraphAuth.psm1'
+    $null = Import-SharedModule -ModuleName 'GraphAuth.psm1'
     $null = New-CopilotGovGraphContext -TenantId $TenantId -Scopes @(
         'Organization.Read.All',
         'Directory.Read.All',

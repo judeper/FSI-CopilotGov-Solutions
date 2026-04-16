@@ -10,7 +10,7 @@ Conditional Access Policy Automation for Copilot provides a documented control p
 |-------|------------|----------------|
 | Policy layer | Microsoft Entra Conditional Access, named locations, MFA, compliant-device grant controls | Enforces access patterns for Microsoft 365 Copilot and Copilot Studio |
 | Automation layer | `scripts\Deploy-Solution.ps1`, `scripts\Monitor-Compliance.ps1`, `scripts\Export-Evidence.ps1` | Generates templates, validates tier alignment, and packages evidence |
-| Monitoring layer | Scheduled drift detection, Power Automate exception approval, audit review workflow | Detects unauthorized policy changes and routes exception decisions for approval |
+| Monitoring layer | Scheduled drift detection, Power Automate exception approval, audit review workflow | Highlights unauthorized or unapproved policy changes and routes exception decisions for approval |
 | Evidence layer | `ca-policy-state`, `drift-alert-summary`, `access-exception-register` | Produces evidence artifacts aligned to the shared schema |
 
 ## Policy layer

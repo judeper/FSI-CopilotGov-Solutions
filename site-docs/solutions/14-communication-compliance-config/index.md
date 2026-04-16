@@ -1,6 +1,6 @@
 # Microsoft Purview Communication Compliance Configurator
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** D | **Solution Code:** CCC
+> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -17,8 +17,6 @@ This solution depends on `04-finra-supervision-workflow` for downstream review r
 - Documents reviewer assignment, SLA, escalation, and dual-review workflows.
 - Documents how reviewer queue metrics should be collected and monitored. Queue metrics collection requires implementation in the customer's Purview environment.
 - Supports insider risk correlation planning for Copilot usage patterns and supervisory escalation.
-- Documents insider risk management integration for risky AI usage detection, including sensitive prompt monitoring, AI-generated response auditing, and Adaptive Protection correlation for Copilot interactions. Insider risk policy configuration requires implementation in the customer's Purview environment.
-- Documents the compliance implications of Copilot video recap for Teams meetings (March 2026), which creates AI-generated video highlights from recorded meetings. These artifacts are subject to FINRA Rule 3110 supervision and SEC Rule 17a-4 record retention requirements and must be included in communication compliance policy scope.
 - Packages evidence outputs aligned to the shared evidence schema and repository contracts.
 
 ## Scope Boundaries
@@ -31,9 +29,9 @@ This solution depends on `04-finra-supervision-workflow` for downstream review r
 - ❌ Does not configure reviewer queues or workflows (workflow designs are documented for manual setup)
 - ❌ Does not deploy Power Automate flows (escalation workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
-- ❌ Does not configure insider risk management policies for AI usage detection (IRM policies and indicators are documented for manual Purview configuration)
-- ❌ Does not manage or retain Copilot video recap artifacts (video recap governance is documented; retention and eDiscovery depend on existing Teams recording and transcript policies)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not cover v1.3+ content preview in IRM alerts or risky AI usage indicators for control 2.10
+- ❌ Does not cover EU AI Act or Colorado AI Act compliance tracking (framework_ids updated, solution content pending)
 
 ## Architecture
 
@@ -108,6 +106,8 @@ This solution supports compliance with the following regulatory expectations whe
 - FINRA 3110 for supervisory review and escalation workflows.
 - SEC Reg BI for best-interest and disclosure monitoring.
 - FCA SYSC 10 for conflict-of-interest indicators and supervisory follow-up.
+
+This solution also supports GLBA 501(b) safeguard requirements and SOX 302/404 internal control documentation by providing supervision policy templates and review workflow evidence.
 
 ## Evidence Export
 

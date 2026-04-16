@@ -59,7 +59,7 @@ The solution uses the required naming convention `fsi_cg_{solution}_{purpose}` a
 
 ## Discovery and Classification Logic
 
-1. `CPG-ConnectorInventory` or `Deploy-Solution.ps1` connects to the Power Platform Admin API for connector enumeration.
+1. `CPG-ConnectorInventory` or `Deploy-Solution.ps1` models the Power Platform Admin API inventory path for connector enumeration.
 2. Microsoft Graph inventory supplements discovery for app registrations and plugin dependencies that are not obvious from connector metadata alone.
 3. The risk classifier uses the configured risk categories:
    - `low` for Microsoft-built connectors with no external data egress

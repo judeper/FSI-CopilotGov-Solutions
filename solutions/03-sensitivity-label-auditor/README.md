@@ -32,15 +32,20 @@ Sensitivity Label Coverage Auditor measures how much in-scope content is actuall
 
 See `docs\architecture.md` for the component diagram, Graph data flow, workload coverage model, gap prioritization formula, and Power Automate flow design.
 
+## Prerequisites
+
+- Sensitivity label taxonomy is finalized in Microsoft Purview.
+- Microsoft Purview Information Protection licensing is confirmed for the target tenant.
+- Microsoft Graph permissions for label and workload data collection are approved.
+- `01-copilot-readiness-scanner` baseline outputs are complete.
+- `02-oversharing-risk-assessment` initial findings are available for cross-reference.
+- See `docs\prerequisites.md` for detailed requirements.
+
 ## Quick Start
 
 ### Prerequisites Check
 
-- [ ] Sensitivity label taxonomy is finalized in Microsoft Purview.
-- [ ] Microsoft Purview Information Protection licensing is confirmed for the target tenant.
-- [ ] Microsoft Graph permissions for label and workload data collection are approved.
-- [ ] `01-copilot-readiness-scanner` baseline outputs are complete.
-- [ ] `02-oversharing-risk-assessment` initial findings are available for cross-reference.
+- [ ] All prerequisites above are confirmed.
 
 ### Initial Execution
 

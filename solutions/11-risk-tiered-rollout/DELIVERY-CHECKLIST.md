@@ -81,3 +81,12 @@
 - [ ] Prerequisites and rollback procedures reviewed with tenant administrators
 - [ ] Regulatory alignment reviewed with compliance stakeholders
 - [ ] Known limitations and documentation-first assumptions explained to the rollout owner
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

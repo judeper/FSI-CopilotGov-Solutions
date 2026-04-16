@@ -40,6 +40,13 @@ Describe 'Conditional Access Policy Automation for Copilot' {
         $config.defaults.ContainsKey('copilotAppIds') | Should -BeTrue
     }
 
+    It 'configuration status stays documentation-first' {
+        foreach ($configPath in @($defaultConfigPath, $baselineConfigPath, $regulatedConfigPath, (Join-Path $solutionRoot 'config\\recommended.json'))) {
+            $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json -AsHashtable
+            $config.status | Should -Be 'Documentation-first scaffold'
+        }
+    }
+
     It 'default-config.json contains non-empty Copilot app IDs' {
         $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         @($config.defaults.copilotAppIds).Count | Should -BeGreaterThan 0
@@ -100,6 +107,12 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     It 'Deploy-Solution.ps1 Get-PolicyRequestBody defaults to report-only mode' {
         $content = Get-Content -Path $deployScriptPath -Raw
         $content | Should -Match 'enabledForReportingButNotEnforced'
+    }
+
+    It 'deployment guide stays repository-local for validation guidance' {
+        $content = Get-Content -Path (Join-Path $solutionRoot 'docs\\deployment-guide.md') -Raw
+        $content | Should -Not -Match 'FSI-AgentGov-Solutions'
+        $content | Should -Match 'Monitor-Compliance\.ps1'
     }
 
     It 'Deploy-Solution.ps1 -Execute path includes error handling' {

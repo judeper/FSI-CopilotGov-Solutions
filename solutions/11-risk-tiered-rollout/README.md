@@ -31,6 +31,8 @@ The solution depends on `01-copilot-readiness-scanner` to provide current readin
 - ❌ Does not deploy Power Automate flows (approval workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not distinguish Copilot Chat Basic vs Premium tiers in wave planning (v1.3+ framework feature pending solution update)
+- ❌ Does not include organizational branded footer configuration as a trust mechanism
 
 ## Architecture
 
@@ -94,7 +96,7 @@ Deployment begins with the `01-copilot-readiness-scanner` dependency, followed b
 
 Detailed deployment steps, sample commands, and rollback actions are documented in [docs/deployment-guide.md](docs/deployment-guide.md).
 
-## Prerequisites Summary
+## Prerequisites
 
 - `01-copilot-readiness-scanner` is deployed and has produced a recent readiness evidence package.
 - Microsoft 365 E3 or E5 licensing plus Microsoft 365 Copilot licenses are available for the intended wave size.

@@ -8,7 +8,7 @@ The Copilot Readiness Assessment Scanner requires Microsoft 365 administrative r
 
 At minimum, the target environment should have:
 
-- Microsoft 365 E3 or E5 for core productivity, identity, and compliance inventory
+- Microsoft 365 E3 or E5 for core productivity, identity, and compliance inventory (E5 compliance capabilities are now part of Microsoft Purview Suite)
 - Microsoft 365 Copilot licenses for the pilot or production cohort being assessed
 - Microsoft Purview capabilities appropriate for sensitivity labels and retention inventory
 - Microsoft Defender capabilities appropriate for the security posture checks being reviewed

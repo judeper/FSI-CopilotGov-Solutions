@@ -77,7 +77,7 @@ Deployment is intentionally staged:
 3. Run the deployment script to seed the baseline status table and generate the manifest used by Power BI.
 4. Build the Power BI report from the documented template specification, then configure dataset refresh and row-level security.
 
-## Prerequisites Summary
+## Prerequisites
 
 - Solutions `06-audit-trail-manager` and `11-risk-tiered-rollout` deployed in the same environment.
 - Power BI Pro or Premium Per User licensing for authors and workspace administrators.
@@ -90,12 +90,12 @@ Deployment is intentionally staged:
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|
-| 3.7 | Compliance Posture Reporting and Executive Dashboards | [Architecture](architecture.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
-| 3.8 | Regulatory Examination Readiness Reporting | [Evidence Export](evidence-export.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
+| 3.7 | Compliance Posture Reporting and Executive Dashboards (Regulatory Reporting (FINRA, SEC, SOX, GLBA, CFPB UDAAP)) | [Architecture](architecture.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
+| 3.8 | Regulatory Examination Readiness Reporting (Model Risk Management Alignment (OCC 2011-12 / SR 11-7)) | [Evidence Export](evidence-export.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
 | 3.12 | Evidence Collection and Audit Attestation | [Evidence Export](evidence-export.md) / [Architecture](architecture.md) / [Troubleshooting](troubleshooting.md) |
-| 3.13 | Third-Party Audit and Regulatory Reporting | [Architecture](architecture.md) / [Evidence Export](evidence-export.md) / [Troubleshooting](troubleshooting.md) |
+| 3.13 | Third-Party Audit and Regulatory Reporting (FFIEC IT Examination Handbook Alignment) | [Architecture](architecture.md) / [Evidence Export](evidence-export.md) / [Troubleshooting](troubleshooting.md) |
 | 4.5 | Copilot Usage Analytics and Adoption Reporting | [Architecture](architecture.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
-| 4.7 | Governance Maturity Scoring and Benchmarking | [Architecture](architecture.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
+| 4.7 | Governance Maturity Scoring and Benchmarking (Copilot Feedback and Telemetry Data Governance) | [Architecture](architecture.md) / [Deployment Guide](deployment-guide.md) / [Troubleshooting](troubleshooting.md) |
 
 ## Regulatory Alignment
 

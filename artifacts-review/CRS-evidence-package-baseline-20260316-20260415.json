@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "solution": "01-copilot-readiness-scanner",
+    "solutionCode": "CRS",
+    "exportVersion": "1.1.0",
+    "exportedAt": "2026-04-15T19:34:24.1892880-04:00",
+    "tier": "baseline",
+    "periodStart": "2026-03-16",
+    "periodEnd": "2026-04-15",
+    "runtimeMode": "documentation-first-sample-data",
+    "dataSourceMode": "simulated-control-evidence",
+    "warning": "Artifacts were generated from representative sample findings in the repository and do not confirm live tenant scans."
+  },
+  "summary": {
+    "overallStatus": "partial",
+    "recordCount": 7,
+    "findingCount": 3,
+    "exceptionCount": 4,
+    "statusSemantics": "Control states describe documentation-first sample evidence and must not be treated as proof of live scanning depth."
+  },
+  "controls": [
+    {
+      "controlId": "1.1",
+      "status": "partial",
+      "notes": "Automated readiness and data hygiene checks cover the six defined scan domains, but business-owned content remediation remains outside automation."
+    },
+    {
+      "controlId": "1.5",
+      "status": "monitor-only",
+      "notes": "Sensitivity label usage and coverage are inventoried, but taxonomy approval and legal interpretation remain compliance-led activities."
+    },
+    {
+      "controlId": "1.6",
+      "status": "monitor-only",
+      "notes": "Guest account review is excluded in this tier, so permission model coverage is limited to internal sharing posture."
+    },
+    {
+      "controlId": "1.7",
+      "status": "monitor-only",
+      "notes": "SharePoint Advanced Management readiness is sampled in this tier and should be expanded before production attestation."
+    },
+    {
+      "controlId": "1.9",
+      "status": "monitor-only",
+      "notes": "License planning is assessed at a summary level in this tier and should be supplemented with periodic business justification review."
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "readiness-scorecard",
+      "type": "readiness-scorecard",
+      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\artifacts-review\\CRS-readiness-scorecard-baseline-20260316-20260415.json",
+      "hash": "59ef9e9c538babd8af8ee8628ee1b2207faa21454bb55a0890a071c56f98ccc7"
+    },
+    {
+      "name": "data-hygiene-findings",
+      "type": "data-hygiene-findings",
+      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\artifacts-review\\CRS-data-hygiene-findings-baseline-20260316-20260415.json",
+      "hash": "d1be163c737a19d13265a8765b7328a34719b0bea21963b467bc9d2672b72f7c"
+    },
+    {
+      "name": "remediation-plan",
+      "type": "remediation-plan",
+      "path": "C:\\Dev\\FSI-CopilotGov-Solutions\\artifacts-review\\CRS-remediation-plan-baseline-20260316-20260415.json",
+      "hash": "eaad00aaa95f2867cb8a9a87456e48e61bd0813ffaca57bb248bc5637b2638f7"
+    }
+  ]
+}

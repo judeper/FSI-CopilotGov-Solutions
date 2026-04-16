@@ -30,3 +30,12 @@ Use this checklist before promoting the solution into an operational tenant.
 - [ ] `scripts\Export-Evidence.ps1` exports `ca-policy-state.json`, `drift-alert-summary.json`, and `access-exception-register.json`.
 - [ ] Evidence files include SHA-256 companions and align to `data\evidence-schema.json`.
 - [ ] Regulatory notes and control mappings are reviewed for OCC 2011-12, FINRA 3110, and DORA.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |

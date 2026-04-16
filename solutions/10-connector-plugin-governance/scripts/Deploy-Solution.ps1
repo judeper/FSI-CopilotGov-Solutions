@@ -3,7 +3,7 @@
 Builds the deployment manifest for Copilot Connector and Plugin Governance.
 
 .DESCRIPTION
-Connects to the documented Power Platform Admin API inventory path, simulates connector and
+Models the Power Platform Admin API inventory path, simulates connector and
 plugin enumeration, applies risk classification for the selected governance tier, seeds
 approval requests, and generates data-flow attestation records. The script is intentionally
 documentation-first for the Power Automate and Dataverse assets that support this solution

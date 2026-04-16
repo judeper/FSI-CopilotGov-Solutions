@@ -1,0 +1,51 @@
+{
+  "solution": "19-copilot-tuning-governance",
+  "displayName": "Copilot Tuning Governance",
+  "version": "v0.1.0",
+  "solutionCode": "CTG",
+  "track": "A",
+  "priority": "P1",
+  "phase": 2,
+  "controls": [
+    "1.16",
+    "3.8"
+  ],
+  "framework_ids": [
+    "glba-501b",
+    "occ-2011-12",
+    "sr-11-7",
+    "interagency-ai-guidance",
+    "eu-ai-act"
+  ],
+  "regulations": [
+    "GLBA 501(b)",
+    "OCC 2011-12",
+    "SR 11-7",
+    "Interagency AI Guidance",
+    "EU AI Act"
+  ],
+  "evidenceOutputs": [
+    "tuning-requests",
+    "model-inventory",
+    "risk-assessments"
+  ],
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\19-copilot-tuning-governance",
+    "notificationChannel": "CTG-governance-alerts",
+    "dashboardFeedEnabled": true
+  },
+  "tuningEnabled": false,
+  "requireApprovalWorkflow": false,
+  "requireModelInventory": false,
+  "requireRiskAssessment": false,
+  "requireOwnerAttestation": false,
+  "requireExaminerReadyEvidence": false,
+  "riskReassessmentDays": 90,
+  "evidenceRetentionDays": 90,
+  "approvalChain": [
+    "data-owner",
+    "model-risk-officer"
+  ],
+  "minimumLicenseThreshold": 5000,
+  "maxTuningRequestsPerCycle": 50
+}

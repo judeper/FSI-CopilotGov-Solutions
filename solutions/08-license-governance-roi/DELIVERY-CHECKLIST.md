@@ -66,3 +66,12 @@
 - [ ] Share the deployment guide, architecture guide, and evidence-export instructions with the platform owner.
 - [ ] Record the selected tier, reporting cadence, and approval workflow in the customer delivery notes.
 - [ ] Document any known tenant-specific gaps, such as unavailable Viva Insights data or delayed Graph reporting, before go-live.
+
+## Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Solution Owner | | | |
+| Security Lead | | | |
+| Compliance Lead | | | |
+| Customer Understanding | ☐ Customer confirms they understand this solution uses representative sample data and requires tenant binding for production use. | | |
