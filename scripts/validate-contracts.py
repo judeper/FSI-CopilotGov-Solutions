@@ -99,8 +99,8 @@ def main() -> None:
         for slug in config["solutions"].keys()
     }
 
-    if len(controls) != 57:
-        raise SystemExit(f"Expected 57 controls, found {len(controls)}")
+    if len(controls) != 58:
+        raise SystemExit(f"Expected 58 controls, found {len(controls)}")
 
     coverage_ids = {item["control_id"] for item in coverage}
     control_ids = {item["control_id"] for item in controls}

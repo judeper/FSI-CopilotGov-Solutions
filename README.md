@@ -2,7 +2,7 @@
 
 Governance solution scaffolds and documentation patterns for the [FSI-CopilotGov](https://github.com/judeper/FSI-CopilotGov) framework.
 
-This repository translates the framework's 57 controls and 228 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
+This repository translates the framework's 58 controls and 228 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
 
 ## What This Repository Contains
 

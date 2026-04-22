@@ -823,7 +823,7 @@
       },
       {
         "control_id": "2.9",
-        "title": "Defender for Cloud Apps — Copilot Session Controls",
+        "title": "Defender for Cloud Apps \u2014 Copilot Session Controls",
         "playbooks": [
           {
             "type": "portal-walkthrough",
@@ -1231,7 +1231,7 @@
       },
       {
         "control_id": "2.14",
-        "title": "Declarative Agents from SharePoint — Creation and Sharing Governance",
+        "title": "Declarative Agents from SharePoint \u2014 Creation and Sharing Governance",
         "playbooks": [
           {
             "type": "portal-walkthrough",
@@ -2456,42 +2456,6 @@
             "path": "docs/playbooks/control-implementations/3.8/troubleshooting.md"
           }
         ]
-      }
-    ]
-  },
-  {
-    "solution": "19-agent-lifecycle-governance",
-    "display_name": "Agent Lifecycle and Deployment Governance",
-    "framework_ids": [
-      "finra-3110",
-      "sec-reg-sp",
-      "glba-501b",
-      "sox-302-404",
-      "occ-2011-12",
-      "ffiec-it-handbook",
-      "interagency-ai-guidance",
-      "dora"
-    ],
-    "controls": [
-      {
-        "control_id": "1.13",
-        "playbooks": []
-      },
-      {
-        "control_id": "2.13",
-        "playbooks": []
-      },
-      {
-        "control_id": "2.14",
-        "playbooks": []
-      },
-      {
-        "control_id": "4.1",
-        "playbooks": []
-      },
-      {
-        "control_id": "4.13",
-        "playbooks": []
       }
     ]
   }

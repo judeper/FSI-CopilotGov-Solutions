@@ -462,8 +462,7 @@
     "pillar": "Readiness & Assessment",
     "coverage": "automated",
     "solutions": [
-      "10-connector-plugin-governance",
-      "19-agent-lifecycle-governance"
+      "10-connector-plugin-governance"
     ],
     "framework_ids": [
       "glba-501b",
@@ -904,7 +903,7 @@
   },
   {
     "control_id": "2.9",
-    "title": "Defender for Cloud Apps — Copilot Session Controls",
+    "title": "Defender for Cloud Apps \u2014 Copilot Session Controls",
     "pillar": "Security & Protection",
     "coverage": "partially-automated",
     "solutions": [
@@ -1057,8 +1056,7 @@
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
-      "10-connector-plugin-governance",
-      "19-agent-lifecycle-governance"
+      "10-connector-plugin-governance"
     ],
     "framework_ids": [
       "glba-501b",
@@ -1091,12 +1089,11 @@
   },
   {
     "control_id": "2.14",
-    "title": "Declarative Agents from SharePoint — Creation and Sharing Governance",
+    "title": "Declarative Agents from SharePoint \u2014 Creation and Sharing Governance",
     "pillar": "Security & Protection",
     "coverage": "automated",
     "solutions": [
-      "10-connector-plugin-governance",
-      "19-agent-lifecycle-governance"
+      "10-connector-plugin-governance"
     ],
     "framework_ids": [
       "glba-501b",
@@ -1157,6 +1154,43 @@
         "type": "troubleshooting",
         "title": "Troubleshooting",
         "path": "docs/playbooks/control-implementations/2.15/troubleshooting.md"
+      }
+    ]
+  },
+  {
+    "control_id": "2.16",
+    "title": "Federated Copilot Connector and Model Context Protocol (MCP) Governance",
+    "pillar": "Security & Protection",
+    "coverage": "automated",
+    "solutions": [
+      "10-connector-plugin-governance"
+    ],
+    "framework_ids": [
+      "glba-501b",
+      "ffiec-it-handbook",
+      "dora"
+    ],
+    "notes": "",
+    "playbooks": [
+      {
+        "type": "portal-walkthrough",
+        "title": "Portal Walkthrough",
+        "path": "docs/playbooks/control-implementations/2.16/portal-walkthrough.md"
+      },
+      {
+        "type": "powershell-setup",
+        "title": "PowerShell Setup",
+        "path": "docs/playbooks/control-implementations/2.16/powershell-setup.md"
+      },
+      {
+        "type": "verification-testing",
+        "title": "Verification and Testing",
+        "path": "docs/playbooks/control-implementations/2.16/verification-testing.md"
+      },
+      {
+        "type": "troubleshooting",
+        "title": "Troubleshooting",
+        "path": "docs/playbooks/control-implementations/2.16/troubleshooting.md"
       }
     ]
   },
@@ -1661,8 +1695,7 @@
     "pillar": "Operations & Monitoring",
     "coverage": "automated",
     "solutions": [
-      "09-feature-management-controller",
-      "19-agent-lifecycle-governance"
+      "09-feature-management-controller"
     ],
     "framework_ids": [
       "sec-reg-fd",
@@ -2122,8 +2155,7 @@
     "coverage": "automated",
     "solutions": [
       "09-feature-management-controller",
-      "10-connector-plugin-governance",
-      "19-agent-lifecycle-governance"
+      "10-connector-plugin-governance"
     ],
     "framework_ids": [
       "sec-reg-fd",

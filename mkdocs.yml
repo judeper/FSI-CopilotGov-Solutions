@@ -193,13 +193,6 @@ nav:
         - Evidence Export: solutions/12-regulatory-compliance-dashboard/evidence-export.md
         - Prerequisites: solutions/12-regulatory-compliance-dashboard/prerequisites.md
         - Troubleshooting: solutions/12-regulatory-compliance-dashboard/troubleshooting.md
-      - Agent Lifecycle and Deployment Governance:
-        - solutions/19-agent-lifecycle-governance/index.md
-        - Architecture: solutions/19-agent-lifecycle-governance/architecture.md
-        - Deployment Guide: solutions/19-agent-lifecycle-governance/deployment-guide.md
-        - Evidence Export: solutions/19-agent-lifecycle-governance/evidence-export.md
-        - Prerequisites: solutions/19-agent-lifecycle-governance/prerequisites.md
-        - Troubleshooting: solutions/19-agent-lifecycle-governance/troubleshooting.md
     - Regulatory Resilience:
       - DORA Operational Resilience Monitor:
         - solutions/13-dora-resilience-monitor/index.md
@@ -235,6 +228,8 @@ nav:
     - Control Coverage: reference/control-coverage.md
     - Examination Readiness: reference/examination-readiness.md
     - Shared Modules Contract: reference/shared-modules-contract.md
+    - Runtime Hardening Audit: reference/runtime-hardening-audit.md
+    - Runtime Hardening Findings: reference/runtime-hardening-findings.md
     - Changelog: reference/changelog.md
   - Disclaimer: disclaimer.md
 

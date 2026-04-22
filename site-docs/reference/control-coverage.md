@@ -35,6 +35,7 @@ Playbook only: 5 controls
 | 2.13 | Security & Protection | automated | 10-connector-plugin-governance |
 | 2.14 | Security & Protection | automated | 10-connector-plugin-governance |
 | 2.15 | Security & Protection | playbook-only | — |
+| 2.16 | Security & Protection | automated | 10-connector-plugin-governance |
 | 3.1 | Compliance & Audit | automated | 06-audit-trail-manager |
 | 3.2 | Compliance & Audit | automated | 06-audit-trail-manager, 15-pages-notebooks-gap-monitor |
 | 3.3 | Compliance & Audit | automated | 06-audit-trail-manager, 15-pages-notebooks-gap-monitor |

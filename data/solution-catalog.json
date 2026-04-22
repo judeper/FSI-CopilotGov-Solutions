@@ -1127,7 +1127,7 @@
       "interagency-ai-guidance",
       "eu-ai-act"
     ],
-    "summary": "Provides a governance framework for Copilot Tuning lifecycle in 5,000+ license organizations — data selection, access controls, output supervision, audit trails, and model risk alignment.",
+    "summary": "Provides a governance framework for Copilot Tuning lifecycle in 5,000+ license organizations \u2014 data selection, access controls, output supervision, audit trails, and model risk alignment.",
     "evidence_outputs": [
       "tuning-requests",
       "model-inventory",
@@ -1142,68 +1142,6 @@
     ],
     "control_count": 2,
     "code": "CTG",
-    "documentation_pages": [
-      "architecture.md",
-      "deployment-guide.md",
-      "evidence-export.md",
-      "prerequisites.md",
-      "troubleshooting.md"
-    ]
-  },
-  {
-    "slug": "19-agent-lifecycle-governance",
-    "display_name": "Agent Lifecycle and Deployment Governance",
-    "track": "C",
-    "domain": "operations-analytics",
-    "priority": "P0",
-    "version": "v0.1.0",
-    "dependencies": [
-      "09-feature-management-controller",
-      "10-connector-plugin-governance"
-    ],
-    "primary_controls": [
-      "1.13",
-      "2.13",
-      "2.14",
-      "4.1",
-      "4.13"
-    ],
-    "supporting_controls": [],
-    "controls": [
-      "1.13",
-      "2.13",
-      "2.14",
-      "4.1",
-      "4.13"
-    ],
-    "regulations": [
-      "FINRA 3110",
-      "SEC Reg S-P",
-      "GLBA 501(b)",
-      "SOX 302/404",
-      "OCC 2011-12",
-      "FFIEC IT Handbook",
-      "Interagency AI Guidance",
-      "DORA"
-    ],
-    "framework_ids": [
-      "finra-3110",
-      "sec-reg-sp",
-      "glba-501b",
-      "sox-302-404",
-      "occ-2011-12",
-      "ffiec-it-handbook",
-      "interagency-ai-guidance",
-      "dora"
-    ],
-    "summary": "Provides a governance framework for Copilot Studio agent request and approval workflows, org-wide sharing restrictions, and agent catalog auditing.",
-    "evidence_outputs": [
-      "agent-registry",
-      "approval-register",
-      "sharing-policy-audit"
-    ],
-    "control_count": 5,
-    "code": "ALG",
     "documentation_pages": [
       "architecture.md",
       "deployment-guide.md",

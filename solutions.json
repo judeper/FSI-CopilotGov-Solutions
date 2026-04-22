@@ -1,6 +1,6 @@
 {
   "schemaVersion": "0.1.0",
-  "generatedAt": "2026-04-22T00:03:42Z",
+  "generatedAt": "2026-04-22T00:44:07Z",
   "solutions": [
     {
       "id": "01-copilot-readiness-scanner",
@@ -324,23 +324,6 @@
         "tuning-requests",
         "model-inventory",
         "risk-assessments"
-      ]
-    },
-    {
-      "id": "19-agent-lifecycle-governance",
-      "slug": "19-agent-lifecycle-governance",
-      "tier": 2,
-      "name": "Agent Lifecycle and Deployment Governance",
-      "version": "0.1.0",
-      "domain": "operations-analytics",
-      "summary": "Provides a governance framework for Copilot Studio agent request and approval workflows, org-wide sharing restrictions, and agent catalog auditing.",
-      "repoPath": "solutions/19-agent-lifecycle-governance",
-      "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/tree/main/solutions/19-agent-lifecycle-governance",
-      "prerequisites": [],
-      "verification": [
-        "agent-registry",
-        "approval-register",
-        "sharing-policy-audit"
       ]
     }
   ]
