@@ -4,6 +4,8 @@
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
+> 🌍 **Jurisdictional scope.** DORA (Regulation (EU) 2022/2554) is **EU regulation**. The companion FSI-CopilotGov framework is scoped to **US financial services**. This solution is provided for US-headquartered organizations with EU operations or subsidiaries subject to DORA, and for organizations operating directly in the EU. Organizations operating exclusively in the US can disregard this solution. Use of this solution does not on its own satisfy DORA obligations — coordinate with EU legal counsel for jurisdiction-specific requirements.
+
 ## Overview
 
 The DORA Operational Resilience Monitor (DRM) provides an operational-resilience monitoring and evidence pattern for Microsoft 365 Copilot in regulated financial-services environments. The repository implementation uses a local stub or operator-supplied sample payload for Copilot-dependent service health, classifies ICT incidents against a DORA-aligned incident taxonomy, records resilience test evidence, and publishes operational-risk dashboard feeds that can be consumed by solution 12-regulatory-compliance-dashboard. DRM supports compliance with DORA, OCC 2011-12, and the FFIEC IT Handbook by improving visibility, escalation readiness, and evidence quality for Copilot dependencies.
