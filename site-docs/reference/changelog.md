@@ -3,6 +3,21 @@
 All notable changes to FSI-CopilotGov-Solutions are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## v0.5.0
+
+### Added
+- Control 2.16 (Federated Copilot Connector and Model Context Protocol (MCP) Governance) added to `controls-master.json`, `control-coverage.json`, and `frameworks-master.json` (GLBA 501(b), FFIEC IT Handbook, DORA) for parity with the FSI-CopilotGov framework — solution count remains 19; framework now tracks 58 controls.
+
+### Changed
+- Updated `validate-contracts.py` expected control count from 57 to 58.
+- Updated `README.md` and `docs/reference/control-coverage.md` to reflect 58 controls and the new 2.16 row.
+- READMEs aligned with `solution-config.yml` and catalog versions: solution 01 (0.3.0 → 0.2.0), solutions 08, 10, 13 (0.2.0 → 0.1.0).
+- Fixed broken relative link in `solutions/17-sharepoint-permissions-drift/docs/prerequisites.md`.
+- Added `runtime-hardening-audit.md` and `runtime-hardening-findings.md` to `mkdocs.yml` Reference nav.
+
+### Removed
+- Orphan `solutions/19-agent-lifecycle-governance/` folder and all metadata references (catalog, coverage, frameworks, playbooks map, mkdocs nav, solution-config). The canonical Solution 19 (Copilot Tuning Governance) was already in place from v0.4.0; the obsolete directory and slug were leftover from earlier scaffolding.
+
 ## v0.4.0
 
 ### Added

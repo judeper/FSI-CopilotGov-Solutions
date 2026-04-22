@@ -397,27 +397,6 @@
         "prerequisites",
         "troubleshooting"
       ]
-    },
-    "19-agent-lifecycle-governance": {
-      "display_name": "Agent Lifecycle and Deployment Governance",
-      "track": "C",
-      "domain": "operations-analytics",
-      "priority": "P0",
-      "version": "v0.1.0",
-      "controls": [
-        "1.13",
-        "2.13",
-        "2.14",
-        "4.1",
-        "4.13"
-      ],
-      "documentation_pages": [
-        "architecture",
-        "deployment-guide",
-        "evidence-export",
-        "prerequisites",
-        "troubleshooting"
-      ]
     }
   }
 }

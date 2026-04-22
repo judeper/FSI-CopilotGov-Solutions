@@ -23,7 +23,6 @@ Each solution ships an evidence-export pattern that supports consistent examinat
 | SharePoint Permissions Drift Detection | drift-report, baseline-snapshot, reversion-log | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook, SOX 302/404 | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook, nist-sp-800-53 |
 | Entra Access Reviews Automation | access-review-definitions, review-decisions, applied-actions | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook, SOX 302/404 | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
 | Copilot Tuning Governance | tuning-requests, model-inventory, risk-assessments | GLBA 501(b), OCC 2011-12, SR 11-7, Interagency AI Guidance | glba-501b, occ-2011-12, sr-11-7, interagency-ai-guidance, eu-ai-act |
-| Agent Lifecycle and Deployment Governance | agent-registry, approval-register, sharing-policy-audit | FINRA 3110, SEC Reg S-P, GLBA 501(b), SOX 302/404, OCC 2011-12, FFIEC IT Handbook, Interagency AI Guidance, DORA | finra-3110, sec-reg-sp, glba-501b, sox-302-404, occ-2011-12, ffiec-it-handbook, interagency-ai-guidance, dora |
 
 Unified evidence export is orchestrated through `scripts/deployment/Export-CopilotGovernanceEvidence.ps1` and validated with `scripts/deployment/Test-EvidenceIntegrity.ps1`.
 

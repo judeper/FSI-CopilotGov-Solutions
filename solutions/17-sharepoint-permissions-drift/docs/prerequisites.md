@@ -51,7 +51,7 @@ For unattended (service account) operation, register an Azure AD application wit
 
 ## Upstream Dependency
 
-This solution builds on [Solution 02 — Oversharing Risk Assessment](../../solutions/02-oversharing-risk-assessment/). Verify that Solution 02 has been deployed or reviewed before proceeding.
+This solution builds on [Solution 02 — Oversharing Risk Assessment](../02-oversharing-risk-assessment/). Verify that Solution 02 has been deployed or reviewed before proceeding.
 
 The Solution 02 site inventory output provides context for risk scoring. If Solution 02 output is not available, Solution 17 operates independently but without oversharing risk context.
 

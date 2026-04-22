@@ -50,8 +50,7 @@
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
-      "14-communication-compliance-config",
-      "19-agent-lifecycle-governance"
+      "14-communication-compliance-config"
     ]
   },
   {
@@ -174,8 +173,7 @@
       "12-regulatory-compliance-dashboard",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews",
-      "19-agent-lifecycle-governance"
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -276,6 +274,9 @@
       "1.10",
       "1.12",
       "1.13",
+      "1.14",
+      "1.15",
+      "1.16",
       "2.1",
       "2.2",
       "2.3",
@@ -289,6 +290,7 @@
       "2.12",
       "2.13",
       "2.14",
+      "2.16",
       "3.7",
       "3.10",
       "4.1",
@@ -300,10 +302,7 @@
       "4.10",
       "4.11",
       "4.12",
-      "4.13",
-      "1.14",
-      "1.15",
-      "1.16"
+      "4.13"
     ],
     "solutions": [
       "01-copilot-readiness-scanner",
@@ -322,8 +321,7 @@
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
       "18-entra-access-reviews",
-      "19-copilot-tuning-governance",
-      "19-agent-lifecycle-governance"
+      "19-copilot-tuning-governance"
     ]
   },
   {
@@ -383,8 +381,7 @@
       "15-pages-notebooks-gap-monitor",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews",
-      "19-agent-lifecycle-governance"
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -424,8 +421,7 @@
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor",
-      "19-copilot-tuning-governance",
-      "19-agent-lifecycle-governance"
+      "19-copilot-tuning-governance"
     ]
   },
   {
@@ -482,11 +478,14 @@
       "1.11",
       "1.12",
       "1.13",
+      "1.14",
+      "1.15",
       "2.3",
       "2.8",
       "2.9",
       "2.13",
       "2.15",
+      "2.16",
       "3.13",
       "4.1",
       "4.3",
@@ -499,9 +498,7 @@
       "4.10",
       "4.11",
       "4.12",
-      "4.13",
-      "1.14",
-      "1.15"
+      "4.13"
     ],
     "solutions": [
       "01-copilot-readiness-scanner",
@@ -516,8 +513,7 @@
       "13-dora-resilience-monitor",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews",
-      "19-agent-lifecycle-governance"
+      "18-entra-access-reviews"
     ]
   },
   {
@@ -543,8 +539,7 @@
       "01-copilot-readiness-scanner",
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
-      "19-copilot-tuning-governance",
-      "19-agent-lifecycle-governance"
+      "19-copilot-tuning-governance"
     ]
   },
   {
@@ -574,6 +569,7 @@
       "2.9",
       "2.13",
       "2.14",
+      "2.16",
       "3.7",
       "3.10",
       "3.12",
@@ -589,8 +585,7 @@
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
-      "13-dora-resilience-monitor",
-      "19-agent-lifecycle-governance"
+      "13-dora-resilience-monitor"
     ],
     "traceability_note": "Controls consolidate the DORA Article 9, 17, 18, and reporting claims already documented in solutions 05, 07, 10, 11, 12, and 13 until upstream control references carry direct DORA article citations."
   },
