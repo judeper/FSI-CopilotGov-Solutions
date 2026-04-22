@@ -27,7 +27,7 @@ This repository contains documentation-first governance solution scaffolds for M
 | 07 | Conditional Access Policy Automation for Copilot | P1 | B | 2.3, 2.6, 2.9 |
 | 08 | License Governance and ROI Tracker | P1 | C | 1.9, 4.5, 4.6, 4.8 |
 | 09 | Copilot Feature Management Controller | P1 | C | 2.6, 4.1, 4.2, 4.3, 4.4, 4.12, 4.13 |
-| 10 | Copilot Connector and Plugin Governance | P1 | C | 1.13, 2.13, 2.14, 4.13 |
+| 10 | Copilot Connector and Plugin Governance | P1 | C | 1.13, 2.13, 2.14, 2.16, 4.13 |
 | 11 | Risk-Tiered Rollout Automation | P0 | C | 1.9, 1.11, 1.12, 4.12 |
 | 12 | Regulatory Compliance Dashboard | P0 | C | 3.7, 3.8, 3.12, 3.13, 4.5, 4.7 |
 | 13 | DORA Operational Resilience Monitor | P1 | D | 2.7, 4.9, 4.10, 4.11 |

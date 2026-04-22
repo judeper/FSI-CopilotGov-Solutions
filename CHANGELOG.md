@@ -3,6 +3,15 @@
 All notable changes to FSI-CopilotGov-Solutions are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+- **Drift correction:** `README.md` now reports 243 playbooks (was 228) and "all 19 solution folders" (was 18). `AGENTS.md` solution-10 control coverage row now correctly lists `1.13, 2.13, 2.14, 2.16, 4.13` (Control 2.16 was missing).
+- Added `.claude/` and `.codex/` to `.gitignore` (untracked dev tooling artifacts).
+
+### Notes
+- Doc-only release; `data/*.json` (canonical control/solution metadata) unchanged from v0.5.0. No FSI-CopilotGov repin required.
+
 ## v0.5.0
 
 ### Added

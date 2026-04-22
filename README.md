@@ -2,7 +2,7 @@
 
 Governance solution scaffolds and documentation patterns for the [FSI-CopilotGov](https://github.com/judeper/FSI-CopilotGov) framework.
 
-This repository translates the framework's 58 controls and 228 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
+This repository translates the framework's 58 controls and 243 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
 
 ## What This Repository Contains
 
@@ -94,7 +94,7 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 
 1. **Preflight contract gate** — freeze templates, shared contracts, mappings, and validation rules.
 2. **Repository foundation** — bootstrap docs, site generation, workflows, and reusable modules.
-3. **Full solution scaffold** — create all 18 solution folders with consistent placeholders and delivery checklists.
+3. **Full solution scaffold** — create all 19 solution folders with consistent placeholders and delivery checklists.
 4. **Fleet execution** — implement track-specific logic only after the shared contracts are stable.
 5. **Integration and publication** — aggregate evidence, validate docs, and publish the site.
 

@@ -9,6 +9,8 @@ venv/
 .cache/
 site/
 .DS_Store
+.claude/
+.codex/
 .claude/settings.local.json
 coverage.xml
 allTestResults.xml
