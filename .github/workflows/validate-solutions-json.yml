@@ -47,9 +47,9 @@ jobs:
       - name: Build solutions-graph.json (drift check)
         run: |
           python scripts/build_solutions_graph.py
-          if ! git diff --quiet -- solutions-graph.json; then
+          if ! git diff --quiet -I '"generatedAt"' -- solutions-graph.json; then
             echo "::error::solutions-graph.json is stale. Run 'python scripts/build_solutions_graph.py' and commit."
-            git --no-pager diff -- solutions-graph.json | head -100
+            git --no-pager diff -I '"generatedAt"' -- solutions-graph.json | head -100
             exit 1
           fi
       - name: Validate solutions-graph.json
