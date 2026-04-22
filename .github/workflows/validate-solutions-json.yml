@@ -5,18 +5,32 @@ on:
   pull_request:
     paths:
       - 'solutions.json'
+      - 'solutions-graph.json'
       - 'data/**'
       - 'solutions/**'
+      - 'README.md'
+      - 'AGENTS.md'
       - 'scripts/validate_solutions_json.py'
+      - 'scripts/build_solutions_graph.py'
+      - 'scripts/validate_solutions_graph.py'
+      - 'scripts/verify_readme_counts.py'
+      - 'scripts/solutions-graph.schema.json'
       - '.github/workflows/validate-solutions-json.yml'
   push:
     branches:
       - main
     paths:
       - 'solutions.json'
+      - 'solutions-graph.json'
       - 'data/**'
       - 'solutions/**'
+      - 'README.md'
+      - 'AGENTS.md'
       - 'scripts/validate_solutions_json.py'
+      - 'scripts/build_solutions_graph.py'
+      - 'scripts/validate_solutions_graph.py'
+      - 'scripts/verify_readme_counts.py'
+      - 'scripts/solutions-graph.schema.json'
 
 jobs:
   validate:
@@ -26,5 +40,20 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install jsonschema
+        run: pip install jsonschema
       - name: Validate solutions.json
         run: python scripts/validate_solutions_json.py
+      - name: Build solutions-graph.json (drift check)
+        run: |
+          python scripts/build_solutions_graph.py
+          if ! git diff --quiet -- solutions-graph.json; then
+            echo "::error::solutions-graph.json is stale. Run 'python scripts/build_solutions_graph.py' and commit."
+            git --no-pager diff -- solutions-graph.json | head -100
+            exit 1
+          fi
+      - name: Validate solutions-graph.json
+        run: python scripts/validate_solutions_graph.py
+      - name: Verify README/AGENTS counts
+        run: python scripts/verify_readme_counts.py
+
