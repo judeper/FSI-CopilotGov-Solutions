@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-04-22
+
+### Added
+- **Solution 20: Generative AI Model Governance Monitor** — doc-first scaffold for Control 3.8a (Generative AI Model Governance) covering SR 11-7 / SR 26-2 / NIST AI RMF / ISO 42001 crosswalk evidence collection.
+- **Solution 21: Cross-Tenant Agent Federation Auditor** — doc-first scaffold for Control 2.17 (Cross-Tenant Agent Federation) covering Entra Agent ID trust, MCP federated server attestation, and Copilot Studio multi-tenant publishing.
+- **Solution 22: Pages and Notebooks Retention Tracker** — doc-first scaffold for Control 3.14 (Copilot Pages and Notebooks Retention and Provenance) covering branch-aware Pages retention, Notebook section-level coverage, and Loop component provenance.
+- **Solution 23: Copilot Studio Agent Lifecycle Tracker** — doc-first scaffold for Control 4.14 (Copilot Studio Agent Lifecycle) covering authoring → testing → publishing → versioning → deprecation evidence.
+- Solution catalog updated to 23 entries; solutions-graph.json now references 4 new framework controls.
+
+### Changed
+- README.md and AGENTS.md solution tables updated to 23 solutions.
+
 ## v0.6.0
 
 ### Added

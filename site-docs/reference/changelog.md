@@ -3,6 +3,44 @@
 All notable changes to FSI-CopilotGov-Solutions are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+## [0.7.0] - 2026-04-22
+
+### Added
+- **Solution 20: Generative AI Model Governance Monitor** — doc-first scaffold for Control 3.8a (Generative AI Model Governance) covering SR 11-7 / SR 26-2 / NIST AI RMF / ISO 42001 crosswalk evidence collection.
+- **Solution 21: Cross-Tenant Agent Federation Auditor** — doc-first scaffold for Control 2.17 (Cross-Tenant Agent Federation) covering Entra Agent ID trust, MCP federated server attestation, and Copilot Studio multi-tenant publishing.
+- **Solution 22: Pages and Notebooks Retention Tracker** — doc-first scaffold for Control 3.14 (Copilot Pages and Notebooks Retention and Provenance) covering branch-aware Pages retention, Notebook section-level coverage, and Loop component provenance.
+- **Solution 23: Copilot Studio Agent Lifecycle Tracker** — doc-first scaffold for Control 4.14 (Copilot Studio Agent Lifecycle) covering authoring → testing → publishing → versioning → deprecation evidence.
+- Solution catalog updated to 23 entries; solutions-graph.json now references 4 new framework controls.
+
+### Changed
+- README.md and AGENTS.md solution tables updated to 23 solutions.
+
+## v0.6.0
+
+### Added
+- **`solutions-graph.json`** (canonical, generated): cross-solution graph derived from `solutions.json` + `data/solution-catalog.json`. Surfaces per-solution `controlCoverage`, `tier`, `domain`, `docFileCount`, plus a `framework_controls_referenced` union and tier counts. Source of truth for downstream drift gates.
+- **`scripts/build_solutions_graph.py`** — stdlib-only generator for `solutions-graph.json`.
+- **`scripts/validate_solutions_graph.py`** + **`scripts/solutions-graph.schema.json`** — JSON Schema 2020-12 validation plus business-rule checks (no duplicate IDs, counts namespace integrity, controlCoverage ⊆ framework_controls_referenced).
+- **`scripts/verify_readme_counts.py`** — pins hand-typed CG-framework counts ("58 controls and 243 playbooks") in `README.md` to a `CG_FRAMEWORK_COUNTS` constant. CI fails on prose drift; constant is updated in lockstep with FSI-CopilotGov framework-count bumps.
+- CI: `validate-solutions-json.yml` now also (1) regenerates `solutions-graph.json` and fails on drift, (2) validates against schema, (3) runs README-count verification.
+
+### Notes
+- Doc-only release. `data/*.json` and `solutions.json` unchanged from v0.5.1; no FSI-CopilotGov repin required for content. (FSI-CopilotGov will still bump its `solutions-lock.json` PINNED_REF to `v0.6.0` to consume the new graph.)
+
+## v0.5.1
+
+### Added
+- DORA jurisdictional scope clarifier callout in `solutions/13-dora-resilience-monitor/README.md` documenting that Solution 13 ships as US/EU dual-utility; US-only deployments may scope down per their own risk posture.
+
+### Fixed
+- **Drift correction:** `README.md` now reports 243 playbooks (was 228) and "all 19 solution folders" (was 18). `AGENTS.md` solution-10 control coverage row now correctly lists `1.13, 2.13, 2.14, 2.16, 4.13` (Control 2.16 was missing).
+- Added `.claude/` and `.codex/` to `.gitignore` (untracked dev tooling artifacts).
+
+### Notes
+- Doc-only release; `data/*.json` (canonical control/solution metadata) unchanged from v0.5.0. No FSI-CopilotGov repin required for content (CG ships v1.5.1 with PINNED_REF=v0.5.1 only to anchor the DORA scope language across repos).
+
 ## v0.5.0
 
 ### Added

@@ -37,6 +37,10 @@ This repository contains documentation-first governance solution scaffolds for M
 | 17 | SharePoint Permissions Drift Detection | P1 | A | 1.2, 1.4, 1.6, 2.5 |
 | 18 | Entra Access Reviews Automation | P1 | A | 1.2, 1.6, 2.5, 2.12 |
 | 19 | Copilot Tuning Governance | P1 | A | 1.16, 3.8 |
+| 20 | Generative AI Model Governance Monitor | P1 | D | 3.8a, 3.8, 3.1, 3.11, 3.12 |
+| 21 | Cross-Tenant Agent Federation Auditor | P1 | B | 2.17, 2.16, 1.10, 2.13, 2.14, 4.13 |
+| 22 | Pages and Notebooks Retention Tracker | P1 | D | 3.14, 3.2, 3.3, 3.11, 2.11 |
+| 23 | Copilot Studio Agent Lifecycle Tracker | P1 | C | 4.14, 4.13, 1.10, 1.16, 4.5, 4.12 |
 
 ## Directory Structure
 

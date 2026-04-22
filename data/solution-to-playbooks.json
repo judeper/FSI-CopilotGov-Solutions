@@ -2458,5 +2458,160 @@
         ]
       }
     ]
+  },
+  {
+    "solution": "20-generative-ai-model-governance-monitor",
+    "display_name": "Generative AI Model Governance Monitor",
+    "framework_ids": [
+      "occ-2011-12",
+      "sr-11-7",
+      "interagency-ai-guidance"
+    ],
+    "controls": [
+      {
+        "control_id": "3.8a",
+        "title": "Generative AI Model Risk Management",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.8",
+        "title": "AI Model Governance and Risk Assessment",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.1",
+        "title": "AI Acceptable Use Policy",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.11",
+        "title": "Third-Party AI Provider Risk Assessment",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.12",
+        "title": "AI Incident Response and Reporting",
+        "playbooks": []
+      }
+    ]
+  },
+  {
+    "solution": "21-cross-tenant-agent-federation-auditor",
+    "display_name": "Cross-Tenant Agent Federation Auditor",
+    "framework_ids": [
+      "finra-3110",
+      "sec-reg-sp",
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
+    "controls": [
+      {
+        "control_id": "2.17",
+        "title": "Cross-Tenant Agent Federation",
+        "playbooks": []
+      },
+      {
+        "control_id": "2.16",
+        "title": "Plugin and Connector Governance",
+        "playbooks": []
+      },
+      {
+        "control_id": "1.10",
+        "title": "Agent Identity Lifecycle",
+        "playbooks": []
+      },
+      {
+        "control_id": "2.13",
+        "title": "Connector Authorization Boundary",
+        "playbooks": []
+      },
+      {
+        "control_id": "2.14",
+        "title": "Plugin Trust Boundary",
+        "playbooks": []
+      },
+      {
+        "control_id": "4.13",
+        "title": "Studio Publishing Controls",
+        "playbooks": []
+      }
+    ]
+  },
+  {
+    "solution": "22-pages-notebooks-retention-tracker",
+    "display_name": "Pages and Notebooks Retention Tracker",
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a4",
+      "sox-302-404"
+    ],
+    "controls": [
+      {
+        "control_id": "3.14",
+        "title": "Copilot Pages and Notebooks Retention and Provenance",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.2",
+        "title": "Sensitivity and Lifecycle Governance for Collaborative Artifacts",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.3",
+        "title": "Records Retention for Copilot Artifacts",
+        "playbooks": []
+      },
+      {
+        "control_id": "3.11",
+        "title": "Third-Party AI Provider Risk Assessment",
+        "playbooks": []
+      },
+      {
+        "control_id": "2.11",
+        "title": "Information Barriers and Data Boundary",
+        "playbooks": []
+      }
+    ]
+  },
+  {
+    "solution": "23-copilot-studio-lifecycle-tracker",
+    "display_name": "Copilot Studio Agent Lifecycle Tracker",
+    "framework_ids": [
+      "finra-3110",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
+    "controls": [
+      {
+        "control_id": "4.14",
+        "title": "Copilot Studio Agent Lifecycle",
+        "playbooks": []
+      },
+      {
+        "control_id": "4.13",
+        "title": "Studio Publishing Controls",
+        "playbooks": []
+      },
+      {
+        "control_id": "1.10",
+        "title": "Agent Identity Lifecycle",
+        "playbooks": []
+      },
+      {
+        "control_id": "1.16",
+        "title": "Copilot Tuning Eligibility and Governance",
+        "playbooks": []
+      },
+      {
+        "control_id": "4.5",
+        "title": "License and Entitlement Governance",
+        "playbooks": []
+      },
+      {
+        "control_id": "4.12",
+        "title": "Feature Rollout Controls",
+        "playbooks": []
+      }
+    ]
   }
 ]

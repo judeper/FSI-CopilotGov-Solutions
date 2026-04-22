@@ -1,0 +1,49 @@
+{
+  "solution": "23-copilot-studio-lifecycle-tracker",
+  "displayName": "Copilot Studio Agent Lifecycle Tracker",
+  "solutionCode": "CSLT",
+  "version": "v0.1.0",
+  "track": "C",
+  "priority": "P1",
+  "primaryControls": [
+    "4.14",
+    "4.13"
+  ],
+  "supportingControls": [
+    "1.10",
+    "1.16",
+    "4.5",
+    "4.12"
+  ],
+  "regulations": [
+    "FINRA Rule 3110",
+    "SOX 302/404",
+    "FFIEC IT Examination Handbook"
+  ],
+  "framework_ids": [
+    "finra-3110",
+    "sox-302-404",
+    "ffiec-it-handbook"
+  ],
+  "evidenceOutputs": [
+    "agent-lifecycle-inventory",
+    "publishing-approval-log",
+    "version-history",
+    "deprecation-evidence"
+  ],
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\23-copilot-studio-lifecycle-tracker",
+    "monitoredEnvironments": [
+      "development",
+      "test",
+      "production"
+    ],
+    "lifecycleStages": [
+      "authoring",
+      "testing",
+      "publishing",
+      "versioning",
+      "deprecation"
+    ]
+  }
+}

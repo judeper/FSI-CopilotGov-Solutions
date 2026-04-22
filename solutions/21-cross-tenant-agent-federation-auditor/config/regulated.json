@@ -1,0 +1,38 @@
+{
+  "solution": "21-cross-tenant-agent-federation-auditor",
+  "tier": "regulated",
+  "primaryControls": ["2.17", "2.16"],
+  "supportingControls": ["1.10", "2.13", "2.14", "4.13"],
+  "federationReviewCadenceDays": 7,
+  "mcpTrustAttestationRequired": true,
+  "mcpAttestationRevalidationRequired": true,
+  "agentIdSigningRequired": true,
+  "agentIdKeyRotationTrackingEnabled": true,
+  "crossTenantAuditLogRetentionDays": 1825,
+  "evidenceRetentionDays": 1825,
+  "notificationMode": "strict",
+  "copilotStudioPublishing": {
+    "allowMultiTenant": true,
+    "requireApprovedAudienceList": true,
+    "blockUnreviewedTargetTenants": true,
+    "requireSecondPartyApproval": true
+  },
+  "mcpAttestation": {
+    "verifySigningKey": true,
+    "maxAttestationAgeDays": 14,
+    "requireScopeReview": true,
+    "requireExternalAttestor": false,
+    "alertOnAttestationStale": true
+  },
+  "agentIdRotation": {
+    "maxKeyAgeDays": 90,
+    "requireDualKeyDuringRotation": true,
+    "alertOnRotationOverdue": true
+  },
+  "auditAggregation": {
+    "exportToImmutableStorage": true,
+    "storageAccountEnvVar": "IMMUTABLE_STORAGE_ACCOUNT",
+    "containerName": "ctaf-evidence",
+    "retentionPolicyDays": 1825
+  }
+}

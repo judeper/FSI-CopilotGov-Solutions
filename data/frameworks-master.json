@@ -50,7 +50,9 @@
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
-      "14-communication-compliance-config"
+      "14-communication-compliance-config",
+      "21-cross-tenant-agent-federation-auditor",
+      "23-copilot-studio-lifecycle-tracker"
     ]
   },
   {
@@ -86,7 +88,8 @@
       "15-pages-notebooks-gap-monitor",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews"
+      "18-entra-access-reviews",
+      "22-pages-notebooks-retention-tracker"
     ]
   },
   {
@@ -136,7 +139,8 @@
       "06-audit-trail-manager",
       "09-feature-management-controller",
       "12-regulatory-compliance-dashboard",
-      "15-pages-notebooks-gap-monitor"
+      "15-pages-notebooks-gap-monitor",
+      "22-pages-notebooks-retention-tracker"
     ]
   },
   {
@@ -173,7 +177,8 @@
       "12-regulatory-compliance-dashboard",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews"
+      "18-entra-access-reviews",
+      "21-cross-tenant-agent-federation-auditor"
     ]
   },
   {
@@ -321,7 +326,8 @@
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
       "18-entra-access-reviews",
-      "19-copilot-tuning-governance"
+      "19-copilot-tuning-governance",
+      "21-cross-tenant-agent-federation-auditor"
     ]
   },
   {
@@ -381,7 +387,9 @@
       "15-pages-notebooks-gap-monitor",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews"
+      "18-entra-access-reviews",
+      "22-pages-notebooks-retention-tracker",
+      "23-copilot-studio-lifecycle-tracker"
     ]
   },
   {
@@ -421,7 +429,8 @@
       "11-risk-tiered-rollout",
       "12-regulatory-compliance-dashboard",
       "13-dora-resilience-monitor",
-      "19-copilot-tuning-governance"
+      "19-copilot-tuning-governance",
+      "20-generative-ai-model-governance-monitor"
     ]
   },
   {
@@ -442,7 +451,8 @@
     ],
     "solutions": [
       "12-regulatory-compliance-dashboard",
-      "19-copilot-tuning-governance"
+      "19-copilot-tuning-governance",
+      "20-generative-ai-model-governance-monitor"
     ]
   },
   {
@@ -513,7 +523,9 @@
       "13-dora-resilience-monitor",
       "16-item-level-oversharing-scanner",
       "17-sharepoint-permissions-drift",
-      "18-entra-access-reviews"
+      "18-entra-access-reviews",
+      "21-cross-tenant-agent-federation-auditor",
+      "23-copilot-studio-lifecycle-tracker"
     ]
   },
   {
@@ -539,7 +551,8 @@
       "01-copilot-readiness-scanner",
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
-      "19-copilot-tuning-governance"
+      "19-copilot-tuning-governance",
+      "20-generative-ai-model-governance-monitor"
     ]
   },
   {

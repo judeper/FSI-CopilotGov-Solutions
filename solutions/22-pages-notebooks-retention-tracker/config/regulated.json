@@ -1,0 +1,38 @@
+{
+  "solution": "22-pages-notebooks-retention-tracker",
+  "tier": "regulated",
+  "controls": ["3.14", "3.2", "3.3", "3.11", "2.11"],
+  "evidenceRetentionDays": 2555,
+  "pagesRetentionDays": 2555,
+  "notebookRetentionDays": 2555,
+  "branchingAuditMode": "full-with-preservation-lock",
+  "branchingAuditRequired": true,
+  "loopProvenanceRequired": true,
+  "preservationLockRequired": true,
+  "signedLineageRequired": true,
+  "retentionLabelCoverage": {
+    "minimumCoveragePct": 100,
+    "alertOnGap": true,
+    "requireLabelInheritanceCheck": true,
+    "requirePreservationLockOnInScopeRecords": true
+  },
+  "wormStorage": {
+    "enabled": true,
+    "storageAccountEnvVar": "PNRT_IMMUTABLE_STORAGE_ACCOUNT",
+    "containerName": "pnrt-evidence",
+    "retentionPolicyDays": 2555,
+    "alignedWithRule": "SEC Rule 17a-4(f) WORM expectations for in-scope records"
+  },
+  "supervisoryReview": {
+    "enabled": true,
+    "reviewerRole": "Designated Supervisor",
+    "reviewWindowDays": 30
+  },
+  "powerAutomateFlow": {
+    "description": "PNRT regulated inventory, gap-alert, preservation-lock, and supervisory-review flow - documentation-first",
+    "triggerType": "scheduled",
+    "scheduleIntervalHours": 6,
+    "includesGapAlert": true,
+    "includesSupervisoryReviewQueue": true
+  }
+}

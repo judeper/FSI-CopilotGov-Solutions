@@ -1,0 +1,44 @@
+{
+  "solution": "20-generative-ai-model-governance-monitor",
+  "displayName": "Generative AI Model Governance Monitor",
+  "solutionCode": "GMG",
+  "version": "v0.1.0",
+  "track": "D",
+  "priority": "P1",
+  "phase": 4,
+  "primaryControls": [
+    "3.8a",
+    "3.8"
+  ],
+  "supportingControls": [
+    "3.1",
+    "3.11",
+    "3.12"
+  ],
+  "regulations": [
+    "Federal Reserve SR 11-7",
+    "OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)",
+    "Interagency AI Guidance (2023)"
+  ],
+  "framework_ids": [
+    "occ-2011-12",
+    "sr-11-7",
+    "interagency-ai-guidance"
+  ],
+  "evidenceOutputs": [
+    "copilot-model-inventory",
+    "validation-summary",
+    "ongoing-monitoring-log",
+    "third-party-due-diligence"
+  ],
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\20-generative-ai-model-governance-monitor",
+    "modelProvider": "Microsoft",
+    "trackedModels": [
+      "Microsoft 365 Copilot",
+      "Copilot Chat",
+      "Copilot Agents"
+    ],
+    "modelRiskCommittee": "GMG-model-risk-committee"
+  }
+}

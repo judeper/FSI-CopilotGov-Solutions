@@ -8,7 +8,7 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 
 - A shared contract layer for governance tiers, solution naming, evidence export, and dashboard integration
 - Root deployment utilities, documentation-build automation, and validation workflows
-- Nineteen solution folders aligned to the solution backlog identified in the planning report
+- Twenty-three solution folders aligned to the solution backlog identified in the planning report
 - Machine-readable mappings that connect solutions back to FSI-CopilotGov controls, playbooks, and regulations
 
 ## Solution Catalog
@@ -34,6 +34,10 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 | 17 | [SharePoint Permissions Drift Detection](./solutions/17-sharepoint-permissions-drift/README.md) | P1 | A | 1.2, 1.4, 1.6, 2.5 |
 | 18 | [Entra Access Reviews Automation](./solutions/18-entra-access-reviews/README.md) | P1 | A | 1.2, 1.6, 2.5, 2.12 |
 | 19 | [Copilot Tuning Governance](./solutions/19-copilot-tuning-governance/README.md) | P1 | A | 1.16, 3.8 |
+| 20 | [Generative AI Model Governance Monitor](./solutions/20-generative-ai-model-governance-monitor/README.md) | P1 | D | 3.8a, 3.8, 3.1, 3.11, 3.12 |
+| 21 | [Cross-Tenant Agent Federation Auditor](./solutions/21-cross-tenant-agent-federation-auditor/README.md) | P1 | B | 2.17, 2.16, 1.10, 2.13, 2.14, 4.13 |
+| 22 | [Pages and Notebooks Retention Tracker](./solutions/22-pages-notebooks-retention-tracker/README.md) | P1 | D | 3.14, 3.2, 3.3, 3.11, 2.11 |
+| 23 | [Copilot Studio Agent Lifecycle Tracker](./solutions/23-copilot-studio-lifecycle-tracker/README.md) | P1 | C | 4.14, 4.13, 1.10, 1.16, 4.5, 4.12 |
 
 ## Implementation Depth
 
@@ -63,6 +67,10 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 | 17 | SharePoint Permissions Drift | ✅ | ❌ | Representative sample data | PnP PowerShell, Graph |
 | 18 | Entra Access Reviews Automation | ✅ | ❌ | Representative sample data | Graph, Entra ID |
 | 19 | Copilot Tuning Governance | ✅ | ❌ | Representative sample data | M365 Admin, Graph |
+| 20 | Generative AI Model Governance Monitor | ✅ | ❌ | Representative sample data | Model Risk Committee, Microsoft attestations |
+| 21 | Cross-Tenant Agent Federation Auditor | ✅ | ❌ | Representative sample data | Entra Agent ID, Copilot Studio, MCP |
+| 22 | Pages and Notebooks Retention Tracker | ✅ | ❌ | Representative sample data | Purview, SharePoint, OneNote, Loop |
+| 23 | Copilot Studio Agent Lifecycle Tracker | ✅ | ❌ | Representative sample data | Power Platform Admin, Copilot Studio |
 
 ## Connectivity Readiness
 
@@ -89,12 +97,16 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 | 17 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 18 | ✅ | — | — | — | — | ✅ | SharePoint |
 | 19 | ✅ | — | — | — | — | — | M365 Admin |
+| 20 | — | — | — | — | — | — | Model Risk Committee workflow |
+| 21 | ✅ | — | — | — | — | ✅ | Copilot Studio, MCP |
+| 22 | — | — | — | — | ✅ | — | SharePoint, OneNote, Loop |
+| 23 | — | — | — | — | — | — | Power Platform Admin |
 
 ## Delivery Model
 
 1. **Preflight contract gate** — freeze templates, shared contracts, mappings, and validation rules.
 2. **Repository foundation** — bootstrap docs, site generation, workflows, and reusable modules.
-3. **Full solution scaffold** — create all 19 solution folders with consistent placeholders and delivery checklists.
+3. **Full solution scaffold** — create all 23 solution folders with consistent placeholders and delivery checklists.
 4. **Fleet execution** — implement track-specific logic only after the shared contracts are stable.
 5. **Integration and publication** — aggregate evidence, validate docs, and publish the site.
 

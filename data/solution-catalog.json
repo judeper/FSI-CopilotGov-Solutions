@@ -1149,5 +1149,235 @@
       "prerequisites.md",
       "troubleshooting.md"
     ]
+  },
+  {
+    "id": "20",
+    "slug": "20-generative-ai-model-governance-monitor",
+    "display_name": "Generative AI Model Governance Monitor",
+    "track": "D",
+    "domain": "regulatory-resilience",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell"
+    ],
+    "primary_controls": [
+      "3.8a",
+      "3.8"
+    ],
+    "supporting_controls": [
+      "3.1",
+      "3.11",
+      "3.12"
+    ],
+    "regulations": [
+      "Federal Reserve SR 11-7",
+      "OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)",
+      "Interagency AI Guidance (2023)"
+    ],
+    "framework_ids": [
+      "occ-2011-12",
+      "sr-11-7",
+      "interagency-ai-guidance"
+    ],
+    "summary": "Provides a documentation-first model risk management monitoring pattern for Copilot, applying SR 11-7 / OCC Bulletin 2011-12 principles to fill the generative AI exclusion in SR 26-2 / OCC Bulletin 2026-13 and align with NIST AI RMF 1.0 and ISO/IEC 42001.",
+    "evidence_outputs": [
+      "copilot-model-inventory",
+      "validation-summary",
+      "ongoing-monitoring-log",
+      "third-party-due-diligence"
+    ],
+    "dependencies": [],
+    "controls": [
+      "3.8a",
+      "3.8",
+      "3.1",
+      "3.11",
+      "3.12"
+    ],
+    "control_count": 5,
+    "code": "GMG",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "21",
+    "slug": "21-cross-tenant-agent-federation-auditor",
+    "display_name": "Cross-Tenant Agent Federation Auditor",
+    "track": "B",
+    "domain": "security-compliance",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell"
+    ],
+    "primary_controls": [
+      "2.17",
+      "2.16"
+    ],
+    "supporting_controls": [
+      "1.10",
+      "2.13",
+      "2.14",
+      "4.13"
+    ],
+    "regulations": [
+      "FINRA Rule 3110",
+      "SEC Regulation S-P",
+      "GLBA Title V (Privacy)",
+      "FFIEC IT Examination Handbook"
+    ],
+    "framework_ids": [
+      "finra-3110",
+      "sec-reg-sp",
+      "glba-501b",
+      "ffiec-it-handbook"
+    ],
+    "summary": "Documentation-first auditor for cross-tenant Copilot agent invocation, Microsoft Entra Agent ID federated trust, MCP federated server attestation, and multi-tenant Copilot Studio publishing controls.",
+    "evidence_outputs": [
+      "agent-federation-inventory",
+      "cross-tenant-trust-assessment",
+      "mcp-trust-relationship-log",
+      "agent-id-attestation-evidence"
+    ],
+    "dependencies": [],
+    "controls": [
+      "2.17",
+      "2.16",
+      "1.10",
+      "2.13",
+      "2.14",
+      "4.13"
+    ],
+    "control_count": 6,
+    "code": "CTAF",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "22",
+    "slug": "22-pages-notebooks-retention-tracker",
+    "display_name": "Pages and Notebooks Retention Tracker",
+    "track": "D",
+    "domain": "regulatory-resilience",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell"
+    ],
+    "primary_controls": [
+      "3.14",
+      "3.2"
+    ],
+    "supporting_controls": [
+      "3.3",
+      "3.11",
+      "2.11"
+    ],
+    "regulations": [
+      "FINRA Rule 4511",
+      "SEC Rule 17a-4",
+      "SOX 302/404"
+    ],
+    "framework_ids": [
+      "finra-4511",
+      "sec-17a4",
+      "sox-302-404"
+    ],
+    "summary": "Documentation-first tracker for Copilot Pages branch-aware retention, OneNote Notebook section-level retention coverage, and Loop component provenance, supporting records-management evidence collection for collaborative Copilot artifacts.",
+    "evidence_outputs": [
+      "pages-retention-inventory",
+      "notebook-retention-log",
+      "loop-component-lineage",
+      "branching-event-log"
+    ],
+    "dependencies": [],
+    "controls": [
+      "3.14",
+      "3.2",
+      "3.3",
+      "3.11",
+      "2.11"
+    ],
+    "control_count": 5,
+    "code": "PNRT",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
+  },
+  {
+    "id": "23",
+    "slug": "23-copilot-studio-lifecycle-tracker",
+    "display_name": "Copilot Studio Agent Lifecycle Tracker",
+    "track": "C",
+    "domain": "operations-analytics",
+    "priority": "P1",
+    "phase": 3,
+    "version": "v0.1.0",
+    "solution_type": [
+      "PowerShell"
+    ],
+    "primary_controls": [
+      "4.14",
+      "4.13"
+    ],
+    "supporting_controls": [
+      "1.10",
+      "1.16",
+      "4.5",
+      "4.12"
+    ],
+    "regulations": [
+      "FINRA Rule 3110",
+      "SOX 302/404",
+      "FFIEC IT Examination Handbook"
+    ],
+    "framework_ids": [
+      "finra-3110",
+      "sox-302-404",
+      "ffiec-it-handbook"
+    ],
+    "summary": "Documentation-first governance tracker for the Copilot Studio agent lifecycle \u2014 authoring, testing, publishing approval, version history, and deprecation evidence \u2014 packaged for supervisory and audit review.",
+    "evidence_outputs": [
+      "agent-lifecycle-inventory",
+      "publishing-approval-log",
+      "version-history",
+      "deprecation-evidence"
+    ],
+    "dependencies": [],
+    "controls": [
+      "4.14",
+      "4.13",
+      "1.10",
+      "1.16",
+      "4.5",
+      "4.12"
+    ],
+    "control_count": 6,
+    "code": "CSLT",
+    "documentation_pages": [
+      "architecture.md",
+      "deployment-guide.md",
+      "evidence-export.md",
+      "prerequisites.md",
+      "troubleshooting.md"
+    ]
   }
 ]

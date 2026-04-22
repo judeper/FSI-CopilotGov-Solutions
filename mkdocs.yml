@@ -157,6 +157,13 @@ nav:
         - Evidence Export: solutions/07-conditional-access-automation/evidence-export.md
         - Prerequisites: solutions/07-conditional-access-automation/prerequisites.md
         - Troubleshooting: solutions/07-conditional-access-automation/troubleshooting.md
+      - Cross-Tenant Agent Federation Auditor:
+        - solutions/21-cross-tenant-agent-federation-auditor/index.md
+        - Architecture: solutions/21-cross-tenant-agent-federation-auditor/architecture.md
+        - Deployment Guide: solutions/21-cross-tenant-agent-federation-auditor/deployment-guide.md
+        - Evidence Export: solutions/21-cross-tenant-agent-federation-auditor/evidence-export.md
+        - Prerequisites: solutions/21-cross-tenant-agent-federation-auditor/prerequisites.md
+        - Troubleshooting: solutions/21-cross-tenant-agent-federation-auditor/troubleshooting.md
     - Operations and Analytics:
       - License Governance and ROI Tracker:
         - solutions/08-license-governance-roi/index.md
@@ -193,6 +200,13 @@ nav:
         - Evidence Export: solutions/12-regulatory-compliance-dashboard/evidence-export.md
         - Prerequisites: solutions/12-regulatory-compliance-dashboard/prerequisites.md
         - Troubleshooting: solutions/12-regulatory-compliance-dashboard/troubleshooting.md
+      - Copilot Studio Agent Lifecycle Tracker:
+        - solutions/23-copilot-studio-lifecycle-tracker/index.md
+        - Architecture: solutions/23-copilot-studio-lifecycle-tracker/architecture.md
+        - Deployment Guide: solutions/23-copilot-studio-lifecycle-tracker/deployment-guide.md
+        - Evidence Export: solutions/23-copilot-studio-lifecycle-tracker/evidence-export.md
+        - Prerequisites: solutions/23-copilot-studio-lifecycle-tracker/prerequisites.md
+        - Troubleshooting: solutions/23-copilot-studio-lifecycle-tracker/troubleshooting.md
     - Regulatory Resilience:
       - DORA Operational Resilience Monitor:
         - solutions/13-dora-resilience-monitor/index.md
@@ -222,6 +236,20 @@ nav:
         - Evidence Export: solutions/19-copilot-tuning-governance/evidence-export.md
         - Prerequisites: solutions/19-copilot-tuning-governance/prerequisites.md
         - Troubleshooting: solutions/19-copilot-tuning-governance/troubleshooting.md
+      - Generative AI Model Governance Monitor:
+        - solutions/20-generative-ai-model-governance-monitor/index.md
+        - Architecture: solutions/20-generative-ai-model-governance-monitor/architecture.md
+        - Deployment Guide: solutions/20-generative-ai-model-governance-monitor/deployment-guide.md
+        - Evidence Export: solutions/20-generative-ai-model-governance-monitor/evidence-export.md
+        - Prerequisites: solutions/20-generative-ai-model-governance-monitor/prerequisites.md
+        - Troubleshooting: solutions/20-generative-ai-model-governance-monitor/troubleshooting.md
+      - Pages and Notebooks Retention Tracker:
+        - solutions/22-pages-notebooks-retention-tracker/index.md
+        - Architecture: solutions/22-pages-notebooks-retention-tracker/architecture.md
+        - Deployment Guide: solutions/22-pages-notebooks-retention-tracker/deployment-guide.md
+        - Evidence Export: solutions/22-pages-notebooks-retention-tracker/evidence-export.md
+        - Prerequisites: solutions/22-pages-notebooks-retention-tracker/prerequisites.md
+        - Troubleshooting: solutions/22-pages-notebooks-retention-tracker/troubleshooting.md
   - Reference:
     - reference/index.md
     - Architecture: reference/architecture.md

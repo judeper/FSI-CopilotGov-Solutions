@@ -1,0 +1,21 @@
+{
+  "solution": "21-cross-tenant-agent-federation-auditor",
+  "tier": "baseline",
+  "primaryControls": ["2.17", "2.16"],
+  "supportingControls": ["1.10", "2.13", "2.14", "4.13"],
+  "federationReviewCadenceDays": 90,
+  "mcpTrustAttestationRequired": false,
+  "agentIdSigningRequired": false,
+  "agentIdKeyRotationTrackingEnabled": false,
+  "crossTenantAuditLogRetentionDays": 90,
+  "evidenceRetentionDays": 90,
+  "notificationMode": "summary",
+  "copilotStudioPublishing": {
+    "allowMultiTenant": true,
+    "requireApprovedAudienceList": false
+  },
+  "mcpAttestation": {
+    "verifySigningKey": false,
+    "maxAttestationAgeDays": 180
+  }
+}

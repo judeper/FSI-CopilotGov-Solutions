@@ -23,6 +23,10 @@ Each solution ships an evidence-export pattern that supports consistent examinat
 | SharePoint Permissions Drift Detection | drift-report, baseline-snapshot, reversion-log | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook, SOX 302/404 | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook, nist-sp-800-53 |
 | Entra Access Reviews Automation | access-review-definitions, review-decisions, applied-actions | GLBA 501(b), SEC Reg S-P, FINRA 4511, FFIEC IT Handbook, SOX 302/404 | finra-4511, sec-reg-sp, glba-501b, sox-302-404, ffiec-it-handbook |
 | Copilot Tuning Governance | tuning-requests, model-inventory, risk-assessments | GLBA 501(b), OCC 2011-12, SR 11-7, Interagency AI Guidance | glba-501b, occ-2011-12, sr-11-7, interagency-ai-guidance, eu-ai-act |
+| Generative AI Model Governance Monitor | copilot-model-inventory, validation-summary, ongoing-monitoring-log, third-party-due-diligence | Federal Reserve SR 11-7, OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management), Interagency AI Guidance (2023) | occ-2011-12, sr-11-7, interagency-ai-guidance |
+| Cross-Tenant Agent Federation Auditor | agent-federation-inventory, cross-tenant-trust-assessment, mcp-trust-relationship-log, agent-id-attestation-evidence | FINRA Rule 3110, SEC Regulation S-P, GLBA Title V (Privacy), FFIEC IT Examination Handbook | finra-3110, sec-reg-sp, glba-501b, ffiec-it-handbook |
+| Pages and Notebooks Retention Tracker | pages-retention-inventory, notebook-retention-log, loop-component-lineage, branching-event-log | FINRA Rule 4511, SEC Rule 17a-4, SOX 302/404 | finra-4511, sec-17a4, sox-302-404 |
+| Copilot Studio Agent Lifecycle Tracker | agent-lifecycle-inventory, publishing-approval-log, version-history, deprecation-evidence | FINRA Rule 3110, SOX 302/404, FFIEC IT Examination Handbook | finra-3110, sox-302-404, ffiec-it-handbook |
 
 Unified evidence export is orchestrated through `scripts/deployment/Export-CopilotGovernanceEvidence.ps1` and validated with `scripts/deployment/Test-EvidenceIntegrity.ps1`.
 

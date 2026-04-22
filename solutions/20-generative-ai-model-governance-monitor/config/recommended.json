@@ -1,0 +1,22 @@
+{
+  "solution": "20-generative-ai-model-governance-monitor",
+  "tier": "recommended",
+  "controls": ["3.8a", "3.8", "3.1", "3.11", "3.12"],
+  "model_inventory_review_cadence_days": 180,
+  "monitoring_log_retention_days": 1095,
+  "validation_assessment_required": "adapted-sr-11-7",
+  "third_party_review_cadence_days": 180,
+  "ongoingMonitoring": {
+    "samplingCadence": "monthly",
+    "outputSamplingEnabled": true,
+    "outputSampleSize": 50,
+    "userFeedbackReviewEnabled": true,
+    "driftIndicatorReviewEnabled": true
+  },
+  "independentChallenge": {
+    "enabled": false,
+    "challengeReviewerRole": "model-risk-officer"
+  },
+  "evidenceRetentionDays": 1095,
+  "notificationMode": "standard"
+}

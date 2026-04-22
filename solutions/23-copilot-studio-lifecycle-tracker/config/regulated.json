@@ -1,0 +1,38 @@
+{
+  "solution": "23-copilot-studio-lifecycle-tracker",
+  "tier": "regulated",
+  "controls": ["4.14", "4.13", "1.10", "1.16", "4.5", "4.12"],
+  "publishingApprovalRequired": true,
+  "dualApproverRequired": true,
+  "versioningRetentionDays": 2555,
+  "deprecationNoticeDays": 90,
+  "lifecycleReviewCadenceDays": 30,
+  "inventoryPollingIntervalHours": 1,
+  "evidenceRetentionDays": 2555,
+  "notificationMode": "strict",
+  "publishingApprovalLog": {
+    "enabled": true,
+    "captureReviewerIdentity": true,
+    "captureChangeSummary": true,
+    "minimumApprovers": 2,
+    "requireSupervisoryReview": true,
+    "supervisoryRoleEnvVar": "CSLT_SUPERVISORY_REVIEWER_ROLE"
+  },
+  "deprecationEvidence": {
+    "enabled": true,
+    "requireCustomerNotification": true,
+    "notificationLeadTimeDays": 90,
+    "requireRecordsRetentionConfirmation": true
+  },
+  "lifecycleReview": {
+    "overdueAlertEnabled": true,
+    "reminderDaysBeforeDue": 30,
+    "escalationDaysAfterDue": 7
+  },
+  "evidenceImmutability": {
+    "enabled": true,
+    "storageAccountEnvVar": "CSLT_IMMUTABLE_STORAGE_ACCOUNT",
+    "containerName": "cslt-evidence",
+    "retentionPolicyDays": 2555
+  }
+}

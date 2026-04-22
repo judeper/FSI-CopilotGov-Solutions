@@ -1,0 +1,24 @@
+{
+  "solution": "22-pages-notebooks-retention-tracker",
+  "tier": "recommended",
+  "controls": ["3.14", "3.2", "3.3", "3.11", "2.11"],
+  "evidenceRetentionDays": 2555,
+  "pagesRetentionDays": 2555,
+  "notebookRetentionDays": 2555,
+  "branchingAuditMode": "full",
+  "branchingAuditRequired": true,
+  "loopProvenanceRequired": true,
+  "preservationLockRequired": false,
+  "signedLineageRequired": false,
+  "retentionLabelCoverage": {
+    "minimumCoveragePct": 95,
+    "alertOnGap": true,
+    "requireLabelInheritanceCheck": true
+  },
+  "powerAutomateFlow": {
+    "description": "PNRT daily inventory refresh and gap-alert flow - documentation-first",
+    "triggerType": "scheduled",
+    "scheduleIntervalHours": 12,
+    "includesGapAlert": true
+  }
+}

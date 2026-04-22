@@ -1,0 +1,58 @@
+{
+  "solution": "22-pages-notebooks-retention-tracker",
+  "displayName": "Pages and Notebooks Retention Tracker",
+  "solutionCode": "PNRT",
+  "version": "v0.1.0",
+  "controls": [
+    "3.14",
+    "3.2",
+    "3.3",
+    "3.11",
+    "2.11"
+  ],
+  "primaryControls": [
+    "3.14",
+    "3.2"
+  ],
+  "supportingControls": [
+    "3.3",
+    "3.11",
+    "2.11"
+  ],
+  "track": "D",
+  "priority": "P1",
+  "phase": 4,
+  "regulations": [
+    "FINRA Rule 4511",
+    "SEC Rule 17a-4",
+    "SOX 302/404"
+  ],
+  "framework_ids": [
+    "finra-4511",
+    "sec-17a4",
+    "sox-302-404"
+  ],
+  "evidenceOutputs": [
+    "pages-retention-inventory",
+    "notebook-retention-log",
+    "loop-component-lineage",
+    "branching-event-log"
+  ],
+  "defaults": {
+    "evidenceOutputPath": ".\\artifacts\\22-pages-notebooks-retention-tracker",
+    "monitoredArtifactTypes": [
+      "Copilot Pages",
+      "OneNote Notebooks",
+      "Loop Components"
+    ],
+    "loopWorkspaceSeeds": [
+      "Default Org Workspace",
+      "Finance Workspace",
+      "Compliance Workspace"
+    ],
+    "samplePageCount": 6,
+    "sampleNotebookCount": 4,
+    "sampleLoopComponentCount": 5,
+    "sampleBranchingEventCount": 4
+  }
+}

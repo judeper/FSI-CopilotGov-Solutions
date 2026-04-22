@@ -1,0 +1,22 @@
+{
+  "solution": "23-copilot-studio-lifecycle-tracker",
+  "tier": "baseline",
+  "controls": ["4.14", "4.13", "1.10", "1.16", "4.5", "4.12"],
+  "publishingApprovalRequired": false,
+  "dualApproverRequired": false,
+  "versioningRetentionDays": 365,
+  "deprecationNoticeDays": 30,
+  "lifecycleReviewCadenceDays": 180,
+  "inventoryPollingIntervalHours": 24,
+  "evidenceRetentionDays": 365,
+  "notificationMode": "summary",
+  "publishingApprovalLog": {
+    "enabled": true,
+    "captureReviewerIdentity": true,
+    "captureChangeSummary": false
+  },
+  "deprecationEvidence": {
+    "enabled": true,
+    "requireCustomerNotification": false
+  }
+}

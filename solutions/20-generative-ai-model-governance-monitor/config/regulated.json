@@ -1,0 +1,35 @@
+{
+  "solution": "20-generative-ai-model-governance-monitor",
+  "tier": "regulated",
+  "controls": ["3.8a", "3.8", "3.1", "3.11", "3.12"],
+  "model_inventory_review_cadence_days": 90,
+  "monitoring_log_retention_days": 2555,
+  "validation_assessment_required": "adapted-sr-11-7-with-independent-challenge",
+  "third_party_review_cadence_days": 90,
+  "ongoingMonitoring": {
+    "samplingCadence": "continuous-sampled",
+    "outputSamplingEnabled": true,
+    "outputSampleSize": 200,
+    "userFeedbackReviewEnabled": true,
+    "driftIndicatorReviewEnabled": true,
+    "escalationThresholds": {
+      "highRiskOutputRatePct": 1,
+      "userComplaintRatePct": 2
+    }
+  },
+  "independentChallenge": {
+    "enabled": true,
+    "challengeReviewerRole": "independent-model-validator",
+    "annualChallengeRequired": true
+  },
+  "modelRiskCommittee": {
+    "approvalRequiredForUseExpansion": true,
+    "quarterlyReviewRequired": true
+  },
+  "evidenceRetentionDays": 2555,
+  "evidenceImmutability": {
+    "enabled": true,
+    "storageAccountEnvVar": "GMG_IMMUTABLE_STORAGE_ACCOUNT"
+  },
+  "notificationMode": "strict"
+}
