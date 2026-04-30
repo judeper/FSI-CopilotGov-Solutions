@@ -70,10 +70,14 @@ def main() -> None:
             "url": f"https://github.com/judeper/FSI-CopilotGov-Solutions/tree/main/solutions/{slug}",
             "prerequisites": [],
             "verification": s.get("evidence_outputs", []) or [],
+            "tiersSupported": s.get("tiers_supported", []),
+            "tierRecommended": s.get("tier_recommended"),
+            "tierMaturity": s.get("tier_maturity"),
+            "maturity": s.get("maturity"),
         })
 
     doc = {
-        "schemaVersion": "0.1.0",
+        "schemaVersion": "0.2.0",
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "solutions": solutions,
     }

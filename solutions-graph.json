@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-22T16:39:02Z",
+  "schemaVersion": "1.1.0",
+  "generatedAt": "2026-04-29T23:34:51Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -23,7 +23,15 @@
         "1.7",
         "1.9"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "02-oversharing-risk-assessment",
@@ -39,7 +47,15 @@
         "2.12",
         "2.5"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "03-sensitivity-label-auditor",
@@ -53,7 +69,15 @@
         "3.11",
         "3.12"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "04-finra-supervision-workflow",
@@ -66,7 +90,15 @@
         "3.5",
         "3.6"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "05-dlp-policy-governance",
@@ -79,7 +111,15 @@
         "3.10",
         "3.12"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "06-audit-trail-manager",
@@ -94,7 +134,15 @@
         "3.2",
         "3.3"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "07-conditional-access-automation",
@@ -107,7 +155,15 @@
         "2.6",
         "2.9"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "08-license-governance-roi",
@@ -121,7 +177,15 @@
         "4.6",
         "4.8"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "09-feature-management-controller",
@@ -138,7 +202,15 @@
         "4.3",
         "4.4"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "10-connector-plugin-governance",
@@ -152,7 +224,15 @@
         "2.14",
         "4.13"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "11-risk-tiered-rollout",
@@ -166,7 +246,15 @@
         "1.9",
         "4.12"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "12-regulatory-compliance-dashboard",
@@ -182,7 +270,15 @@
         "4.5",
         "4.7"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "13-dora-resilience-monitor",
@@ -196,7 +292,15 @@
         "4.11",
         "4.9"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "14-communication-compliance-config",
@@ -211,7 +315,15 @@
         "3.6",
         "3.9"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "15-pages-notebooks-gap-monitor",
@@ -225,7 +337,15 @@
         "3.2",
         "3.3"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "16-item-level-oversharing-scanner",
@@ -240,7 +360,15 @@
         "1.6",
         "2.5"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "17-sharepoint-permissions-drift",
@@ -254,7 +382,15 @@
         "1.6",
         "2.5"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "18-entra-access-reviews",
@@ -268,7 +404,15 @@
         "2.12",
         "2.5"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "19-copilot-tuning-governance",
@@ -280,7 +424,15 @@
         "1.16",
         "3.8"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "20-generative-ai-model-governance-monitor",
@@ -295,7 +447,15 @@
         "3.8",
         "3.8a"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "21-cross-tenant-agent-federation-auditor",
@@ -311,7 +471,15 @@
         "2.17",
         "4.13"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "22-pages-notebooks-retention-tracker",
@@ -326,7 +494,15 @@
         "3.2",
         "3.3"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "23-copilot-studio-lifecycle-tracker",
@@ -342,7 +518,15 @@
         "4.14",
         "4.5"
       ],
-      "docFileCount": 8
+      "docFileCount": 8,
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     }
   ],
   "framework_controls_referenced": [

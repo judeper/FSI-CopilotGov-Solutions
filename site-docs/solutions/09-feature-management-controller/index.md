@@ -38,6 +38,8 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 - ❌ Does not manage Baseline Security Mode (BSM) simulation or enforcement
 - ❌ Does not govern third-party model providers (Anthropic Claude, xAI)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 ```text
@@ -138,6 +140,9 @@ Use `-BaselineOnly` during first deployment if the tenant has not yet approved a
 Detailed requirements are listed in [docs/prerequisites.md](prerequisites.md).
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 7 control(s) are **evidence-export-ready** in scaffold form: 2.6, 4.1, 4.12, 4.13, 4.2, 4.3, 4.4.
 
 | Control | Requirement | FMC implementation support |
 |---------|-------------|----------------------------|

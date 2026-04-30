@@ -38,6 +38,8 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Regulatory context
 
 - SEC 17a-3 and SEC 17a-4 require firms to preserve books and records for defined periods and to maintain non-rewriteable, non-erasable retention where applicable.
@@ -114,6 +116,9 @@ The Power Automate flow is documentation-first in this repository. The expected 
 - Route notifications to the compliance operations owner and solution mailbox.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 5 control(s) are **evidence-export-ready** in scaffold form: 3.1, 3.11, 3.12, 3.2, 3.3.
 
 | Control | Focus | How this solution supports the control |
 |---------|-------|----------------------------------------|

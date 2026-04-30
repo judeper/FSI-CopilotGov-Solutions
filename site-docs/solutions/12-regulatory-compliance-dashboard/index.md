@@ -31,6 +31,8 @@ This solution supports compliance with FINRA 4511, FINRA 3110, SEC 17a-4, OCC 20
 - ❌ Does not aggregate evidence from upstream solutions automatically (aggregation patterns are documented for customer implementation)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 ```text
@@ -87,6 +89,10 @@ Deployment is intentionally staged:
 - Microsoft 365 E5 Compliance if Purview-backed evidence references are required.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 6 control(s) are **evidence-export-ready** in scaffold form: 3.12, 3.13, 3.7, 3.8, 4.5, 4.7.
+> 2 control(s) is/are **documentation-only** (listed in metadata but not yet exercised by scripts/tests in this scaffold): 2.10, 2.7.
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|

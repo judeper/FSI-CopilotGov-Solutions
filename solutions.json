@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "0.1.0",
-  "generatedAt": "2026-04-22T16:39:02Z",
+  "schemaVersion": "0.2.0",
+  "generatedAt": "2026-04-29T23:34:50Z",
   "solutions": [
     {
       "id": "01-copilot-readiness-scanner",
@@ -17,7 +17,15 @@
         "readiness-scorecard",
         "data-hygiene-findings",
         "remediation-plan"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "02-oversharing-risk-assessment",
@@ -35,7 +43,15 @@
         "remediation-queue",
         "site-owner-attestations",
         "sensitivity-label-coverage"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "03-sensitivity-label-auditor",
@@ -52,7 +68,15 @@
         "label-coverage-report",
         "label-gap-findings",
         "remediation-manifest"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "04-finra-supervision-workflow",
@@ -69,7 +93,15 @@
         "supervision-queue-snapshot",
         "review-disposition-log",
         "sampling-summary"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "05-dlp-policy-governance",
@@ -86,7 +118,15 @@
         "dlp-policy-baseline",
         "policy-drift-findings",
         "exception-attestations"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "06-audit-trail-manager",
@@ -103,7 +143,15 @@
         "audit-log-completeness",
         "retention-policy-state",
         "ediscovery-readiness-package"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "07-conditional-access-automation",
@@ -120,7 +168,15 @@
         "ca-policy-state",
         "drift-alert-summary",
         "access-exception-register"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "08-license-governance-roi",
@@ -137,7 +193,15 @@
         "license-utilization-report",
         "roi-scorecard",
         "reallocation-recommendations"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "09-feature-management-controller",
@@ -154,7 +218,15 @@
         "feature-state-baseline",
         "rollout-ring-history",
         "drift-findings"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "10-connector-plugin-governance",
@@ -171,7 +243,15 @@
         "connector-inventory",
         "approval-register",
         "data-flow-attestations"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "11-risk-tiered-rollout",
@@ -188,7 +268,15 @@
         "wave-readiness-log",
         "approval-history",
         "rollout-health-dashboard"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "12-regulatory-compliance-dashboard",
@@ -205,7 +293,15 @@
         "control-status-snapshot",
         "framework-coverage-matrix",
         "dashboard-export"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "regulated",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "13-dora-resilience-monitor",
@@ -222,7 +318,15 @@
         "service-health-log",
         "incident-register",
         "resilience-test-results"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "14-communication-compliance-config",
@@ -239,7 +343,15 @@
         "policy-template-export",
         "reviewer-queue-metrics",
         "lexicon-update-log"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "15-pages-notebooks-gap-monitor",
@@ -256,7 +368,15 @@
         "gap-findings",
         "compensating-control-log",
         "preservation-exception-register"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "16-item-level-oversharing-scanner",
@@ -273,7 +393,15 @@
         "item-oversharing-findings",
         "risk-scored-report",
         "remediation-actions"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "17-sharepoint-permissions-drift",
@@ -290,7 +418,15 @@
         "drift-report",
         "baseline-snapshot",
         "reversion-log"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "18-entra-access-reviews",
@@ -307,7 +443,15 @@
         "access-review-definitions",
         "review-decisions",
         "applied-actions"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "19-copilot-tuning-governance",
@@ -324,7 +468,15 @@
         "tuning-requests",
         "model-inventory",
         "risk-assessments"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "20-generative-ai-model-governance-monitor",
@@ -342,7 +494,15 @@
         "validation-summary",
         "ongoing-monitoring-log",
         "third-party-due-diligence"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "21-cross-tenant-agent-federation-auditor",
@@ -360,7 +520,15 @@
         "cross-tenant-trust-assessment",
         "mcp-trust-relationship-log",
         "agent-id-attestation-evidence"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "22-pages-notebooks-retention-tracker",
@@ -378,7 +546,15 @@
         "notebook-retention-log",
         "loop-component-lineage",
         "branching-event-log"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     },
     {
       "id": "23-copilot-studio-lifecycle-tracker",
@@ -396,7 +572,15 @@
         "publishing-approval-log",
         "version-history",
         "deprecation-evidence"
-      ]
+      ],
+      "tiersSupported": [
+        "baseline",
+        "recommended",
+        "regulated"
+      ],
+      "tierRecommended": "recommended",
+      "tierMaturity": "active",
+      "maturity": "documentation-first-scaffold"
     }
   ]
 }

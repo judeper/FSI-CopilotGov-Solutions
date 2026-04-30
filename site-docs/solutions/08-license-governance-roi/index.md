@@ -41,6 +41,8 @@ Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot
 - ❌ Does not track PAYG message pack consumption or high-usage user monitoring
 - ❌ Does not capture Copilot Dashboard satisfaction or intent metrics
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 ```text
@@ -121,6 +123,9 @@ The deployment flow assumes a customer-managed Power BI workspace and dataset. N
 - PowerShell 7 and the documented Microsoft Graph modules on the automation host.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 1.9, 4.5, 4.6, 4.8.
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|

@@ -1,0 +1,63 @@
+name: Lint Python
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**/*.py'
+      - 'pyproject.toml'
+      - 'requirements*.txt'
+      - '.github/workflows/lint-python.yml'
+  pull_request:
+    paths:
+      - 'scripts/**/*.py'
+      - 'pyproject.toml'
+      - 'requirements*.txt'
+      - '.github/workflows/lint-python.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Ruff check (lint)
+        run: ruff check scripts
+
+      - name: Ruff format check (warn-only during rollout)
+        # TODO: remove continue-on-error once formatting rollout is complete.
+        continue-on-error: true
+        run: ruff format --check scripts
+
+      - name: Detect pytest tests under scripts/
+        id: detect_tests
+        shell: bash
+        run: |
+          if [ -d scripts/tests ] || \
+             find scripts -type f \( -name 'test_*.py' -o -name '*_test.py' \) | grep -q .; then
+            echo "has_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_tests=false" >> "$GITHUB_OUTPUT"
+            echo "No pytest tests found under scripts/ (no scripts/tests directory and no test_*.py / *_test.py files). Skipping pytest."
+          fi
+
+      - name: Install pytest
+        if: steps.detect_tests.outputs.has_tests == 'true'
+        run: pip install pytest
+
+      - name: Run pytest
+        if: steps.detect_tests.outputs.has_tests == 'true'
+        run: pytest scripts

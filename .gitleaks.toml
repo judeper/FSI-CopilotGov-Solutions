@@ -1,0 +1,20 @@
+# gitleaks configuration for FSI-CopilotGov-Solutions
+# Extends the default ruleset (use the default config as a base by not setting [extend]).
+# Allowlist below covers documented sample / representative-data cases that the
+# default `generic-api-key` rule flags.
+
+title = "FSI-CopilotGov-Solutions gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documentation-first sample data and tooling artifacts"
+paths = [
+  '''(.*?)(_test|test|tests|fixtures?|samples?|scaffold)(.*?)\.(ps1|psm1|json|md)$''',
+  '''\.tools[/\\].*''',
+  '''\.gitleaks-report\.json$''',
+]
+# Allow inline `gitleaks:allow` annotations (already honored by gitleaks by default,
+# listed here for explicit documentation of the policy).
+regexTarget = "match"

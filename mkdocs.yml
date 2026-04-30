@@ -250,10 +250,14 @@ nav:
         - Evidence Export: solutions/22-pages-notebooks-retention-tracker/evidence-export.md
         - Prerequisites: solutions/22-pages-notebooks-retention-tracker/prerequisites.md
         - Troubleshooting: solutions/22-pages-notebooks-retention-tracker/troubleshooting.md
+  - Security:
+    - Managed Identity Standard: security/managed-identity-standard.md
+    - Threat Model: security/threat-model.md
   - Reference:
     - reference/index.md
     - Architecture: reference/architecture.md
     - Control Coverage: reference/control-coverage.md
+    - Data Classification Matrix: reference/data-classification.md
     - Examination Readiness: reference/examination-readiness.md
     - Shared Modules Contract: reference/shared-modules-contract.md
     - Runtime Hardening Audit: reference/runtime-hardening-audit.md

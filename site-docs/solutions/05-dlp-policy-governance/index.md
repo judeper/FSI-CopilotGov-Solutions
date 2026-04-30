@@ -14,6 +14,9 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 
 ## Related Controls
 
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 3 control(s) are **evidence-export-ready** in scaffold form: 2.1, 3.10, 3.12.
+
 - 2.1 - DLP coverage for Copilot workloads and sensitive content paths
 - 3.10 - Policy monitoring and drift review
 - 3.12 - Evidence collection and exception attestation
@@ -38,6 +41,8 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not configure Adaptive Protection policies (Insider Risk Management integration with DLP is documented as a complementary capability)
+
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
 
 ## Prerequisites
 

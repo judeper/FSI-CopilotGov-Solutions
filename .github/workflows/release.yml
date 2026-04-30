@@ -1,0 +1,144 @@
+name: Release (SBOM + Attestations)
+
+# Builds release artifacts:
+#   - CycloneDX SBOM for Python dependencies (requirements-docs.txt)
+#   - CycloneDX SBOM for repository contents (anchore/sbom-action)
+#   - RELEASE-MANIFEST.txt with SHA-256 of every tracked file
+# Generates build-provenance attestations for each SBOM and publishes a
+# GitHub release with the artifacts attached.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name to use for a manual dry-run release (e.g. v0.0.0-test). Leave blank to skip release publishing.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    name: Build SBOMs, attest, and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install CycloneDX generator
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "cyclonedx-bom>=4,<6"
+
+      - name: Generate Python dependency SBOM (requirements-docs.txt)
+        if: hashFiles('requirements-docs.txt') != ''
+        run: |
+          cyclonedx-py requirements \
+            -i requirements-docs.txt \
+            -o sbom-python-docs.cdx.json \
+            --output-format JSON
+
+      - name: Generate Python project SBOM (pyproject.toml)
+        if: hashFiles('pyproject.toml') != ''
+        run: |
+          # Best-effort: cyclonedx-py 'environment' subcommand can fail when no
+          # lockfile exists. We tolerate failure here so a missing lockfile does
+          # not block the release.
+          cyclonedx-py environment \
+            -o sbom-python-project.cdx.json \
+            --output-format JSON || \
+            echo "::notice::No environment SBOM produced (no lockfile installed)."
+
+      - name: Generate repository-content SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom-repo.cdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Generate RELEASE-MANIFEST.txt (SHA-256 of every tracked file)
+        run: python scripts/gen-release-manifest.py
+
+      - name: List generated artifacts
+        run: ls -la sbom-*.cdx.json RELEASE-MANIFEST.txt 2>/dev/null || true
+
+      - name: Attest Python dependency SBOM
+        if: hashFiles('sbom-python-docs.cdx.json') != ''
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: sbom-python-docs.cdx.json
+          push-to-registry: false
+
+      - name: Attest Python project SBOM
+        if: hashFiles('sbom-python-project.cdx.json') != ''
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: sbom-python-project.cdx.json
+          push-to-registry: false
+
+      - name: Attest repository-content SBOM
+        if: hashFiles('sbom-repo.cdx.json') != ''
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: sbom-repo.cdx.json
+          push-to-registry: false
+
+      - name: Attest release manifest
+        if: hashFiles('RELEASE-MANIFEST.txt') != ''
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: RELEASE-MANIFEST.txt
+          push-to-registry: false
+
+      - name: Extract latest CHANGELOG section as release notes
+        id: notes
+        run: |
+          python - <<'PY'
+          import os, re, pathlib
+          p = pathlib.Path("CHANGELOG.md")
+          notes = ""
+          if p.exists():
+              text = p.read_text(encoding="utf-8")
+              # Match the first H2 section that is not "[Unreleased]".
+              sections = re.split(r"^## ", text, flags=re.MULTILINE)
+              for sec in sections[1:]:
+                  header = sec.splitlines()[0].strip()
+                  if header.lower().startswith("[unreleased]"):
+                      continue
+                  notes = "## " + sec.strip() + "\n"
+                  break
+          out = pathlib.Path("RELEASE-NOTES.md")
+          out.write_text(notes or "_No CHANGELOG section found._\n", encoding="utf-8")
+          print(f"Wrote {out} ({len(notes)} chars)")
+          PY
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.tag != '')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          body_path: RELEASE-NOTES.md
+          draft: ${{ github.event_name == 'workflow_dispatch' }}
+          files: |
+            sbom-python-docs.cdx.json
+            sbom-python-project.cdx.json
+            sbom-repo.cdx.json
+            RELEASE-MANIFEST.txt
+          fail_on_unmatched_files: false

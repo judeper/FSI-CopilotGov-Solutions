@@ -34,6 +34,8 @@ Configuration tiers allow institutions to start with tuning disabled (baseline),
 - ❌ Does not replace organizational model risk management programs or third-party model validation tools
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md) for the component diagram, data flow, tuning lifecycle, and governance gate details.
@@ -71,6 +73,9 @@ Deploy this solution before enabling Copilot Tuning in any tenant. Start with th
 | `tests\19-CopilotTuningGovernance.Tests.ps1` | Pester validation for structure, content, and script syntax |
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 1 control(s) is **evidence-export-ready** in scaffold form: 1.16.
 
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|
