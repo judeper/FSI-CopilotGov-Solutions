@@ -2,7 +2,7 @@
   "solution": "20-generative-ai-model-governance-monitor",
   "displayName": "Generative AI Model Governance Monitor",
   "solutionCode": "GMG",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "track": "D",
   "priority": "P1",
   "phase": 4,
@@ -29,6 +29,7 @@
     "copilot-model-inventory",
     "validation-summary",
     "ongoing-monitoring-log",
+    "content-safety-and-guardrails",
     "third-party-due-diligence"
   ],
   "defaults": {
@@ -37,8 +38,87 @@
     "trackedModels": [
       "Microsoft 365 Copilot",
       "Copilot Chat",
-      "Copilot Agents"
+      "Copilot Agents",
+      "Microsoft Foundry project model deployments",
+      "Azure OpenAI deployments",
+      "Foundry partner/community provider models"
     ],
+    "trackedModelSources": [
+      {
+        "sourceId": "m365-copilot",
+        "modelSource": "microsoft365copilot",
+        "provider": "Microsoft",
+        "modelFamily": "Microsoft 365 Copilot",
+        "modelName": "Microsoft 365 Copilot",
+        "modelVersion": "release-wave-reference",
+        "deploymentType": "microsoft365service",
+        "regionOrCloud": "Microsoft 365 tenant region",
+        "lifecycleStatus": "generally-available",
+        "owner": "gmg-m365-copilot-owner@example.com (sample value)",
+        "materialityTier": "medium",
+        "attestationFreshnessDays": 365,
+        "contentSafetyProfile": "purview-and-copilot-built-in-controls"
+      },
+      {
+        "sourceId": "copilot-agents",
+        "modelSource": "microsoft365copilot",
+        "provider": "Microsoft",
+        "modelFamily": "Copilot Agents",
+        "modelName": "Copilot Agents",
+        "modelVersion": "agent-version-or-release-reference",
+        "deploymentType": "microsoft365agent",
+        "regionOrCloud": "Microsoft 365 tenant region",
+        "lifecycleStatus": "approved-for-inventory",
+        "owner": "gmg-agent-owner@example.com (sample value)",
+        "materialityTier": "medium",
+        "attestationFreshnessDays": 180,
+        "contentSafetyProfile": "purview-and-copilot-built-in-controls"
+      },
+      {
+        "sourceId": "foundry-azure-openai",
+        "modelSource": "azureopenai",
+        "provider": "Microsoft / OpenAI",
+        "modelFamily": "GPT family (sample)",
+        "modelName": "Azure OpenAI deployment registered in Microsoft Foundry",
+        "modelVersion": "deployment-version-or-model-id",
+        "deploymentType": "foundry-direct-model",
+        "regionOrCloud": "Azure region or Azure Government region",
+        "lifecycleStatus": "ga-or-preview-per-deployment",
+        "owner": "gmg-foundry-owner@example.com (sample value)",
+        "materialityTier": "high",
+        "attestationFreshnessDays": 180,
+        "contentSafetyProfile": "azure-ai-content-safety-required"
+      },
+      {
+        "sourceId": "foundry-partner-community",
+        "modelSource": "partner",
+        "provider": "Foundry partner/community provider",
+        "modelFamily": "Anthropic, Mistral, xAI, Meta, DeepSeek, Hugging Face, or other approved provider",
+        "modelName": "Approved Foundry catalog model (sample)",
+        "modelVersion": "provider-model-version",
+        "deploymentType": "foundry-partner-or-community-model",
+        "regionOrCloud": "Azure region or cloud availability per provider",
+        "lifecycleStatus": "approved-for-evaluation-or-production",
+        "owner": "gmg-provider-owner@example.com (sample value)",
+        "materialityTier": "high",
+        "attestationFreshnessDays": 90,
+        "contentSafetyProfile": "azure-ai-content-safety-required"
+      }
+    ],
+    "contentSafetyDefaults": {
+      "contentSafetyResourceStatus": "required-for-foundry-and-azure-openai-scope",
+      "promptShields": "record-enabled-disabled-and-policy-id",
+      "groundednessDetection": "record-where-supported",
+      "protectedMaterialDetection": "record-where-supported",
+      "filterThresholds": {
+        "hate": "medium",
+        "sexual": "medium",
+        "violence": "medium",
+        "selfHarm": "medium"
+      },
+      "reviewCadenceDays": 90,
+      "exceptionRegister": "GMG-content-safety-exceptions"
+    },
     "modelRiskCommittee": "GMG-model-risk-committee"
   }
 }

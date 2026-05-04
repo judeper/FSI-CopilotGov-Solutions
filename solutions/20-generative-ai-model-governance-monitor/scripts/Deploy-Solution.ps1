@@ -1,16 +1,19 @@
 <#
 .SYNOPSIS
-    Deploys the Generative AI Model Governance Monitor (GMG) for Microsoft 365 Copilot.
+    Deploys the Generative AI Model Governance Monitor (GMG) documentation-first manifest.
 
 .DESCRIPTION
     Documentation-first deployment script. Generates a tier-aware deployment manifest
-    that captures the model inventory review cadence, validation requirement, ongoing
-    monitoring cadence, and third-party review cadence for Microsoft 365 Copilot under
-    a generative AI model risk management program. The script does not connect to live
-    Microsoft 365 services and uses representative sample configuration only.
+    that records the model inventory review cadence, validation requirement, ongoing
+    monitoring cadence, content safety and guardrail review expectation, and third-party
+    review cadence for Microsoft 365 Copilot, Copilot agents, Microsoft Foundry projects,
+    Azure OpenAI or Foundry deployments, and approved Foundry partner/community model
+    sources under a generative AI model risk management program. The script does not
+    connect to live Microsoft 365 or Azure services and uses representative sample
+    configuration only.
 
-    Applies SR 11-7 / OCC Bulletin 2011-12 model risk principles to Copilot during the
-    period in which SR 26-2 / OCC Bulletin 2026-13 explicitly exclude generative AI.
+    Applies SR 11-7 / OCC Bulletin 2011-12 model risk principles to generative AI during
+    the period in which SR 26-2 / OCC Bulletin 2026-13 explicitly exclude generative AI.
 
 .PARAMETER ConfigurationTier
     Governance tier: baseline, recommended, or regulated.
@@ -29,7 +32,7 @@
     Primary Controls: 3.8a, 3.8
     Supporting Controls: 3.1, 3.11, 3.12
     Regulations: SR 26-2 / OCC Bulletin 2026-13, SR 11-7 / OCC Bulletin 2011-12 (interim genAI principles), NIST AI RMF 1.0, ISO/IEC 42001
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -51,6 +54,9 @@ $configuration = Get-GmgConfiguration -Tier $ConfigurationTier
 Test-GmgConfiguration -Configuration $configuration
 
 $resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
+$defaults = [System.Collections.IDictionary]$configuration.defaults
+$trackedModelSources = if ($defaults.Contains('trackedModelSources')) { $defaults.trackedModelSources } else { @() }
+$contentSafetyDefaults = if ($defaults.Contains('contentSafetyDefaults')) { $defaults.contentSafetyDefaults } else { [ordered]@{} }
 
 $deploymentManifest = [pscustomobject]@{
     solution                            = $configuration.solution
@@ -66,6 +72,8 @@ $deploymentManifest = [pscustomobject]@{
     regulations                         = $configuration.regulations
     framework_ids                       = $configuration.framework_ids
     trackedModels                       = $configuration.defaults.trackedModels
+    trackedModelSources                 = $trackedModelSources
+    contentSafetyDefaults               = $contentSafetyDefaults
     modelProvider                       = $configuration.defaults.modelProvider
     modelRiskCommittee                  = $configuration.defaults.modelRiskCommittee
     model_inventory_review_cadence_days = $configuration.model_inventory_review_cadence_days
@@ -78,7 +86,7 @@ $deploymentManifest = [pscustomobject]@{
     notificationMode                    = $configuration.notificationMode
     evidenceRetentionDays               = $configuration.evidenceRetentionDays
     runtimeMode                         = 'local-stub'
-    warning                             = 'Documentation-first manifest. Scripts use representative sample data and do not connect to live Microsoft 365 services.'
+    warning                             = 'Documentation-first manifest. Scripts use representative sample data and do not connect to live Microsoft 365 or Azure services.'
     deploymentTimestamp                 = (Get-Date).ToString('o')
     outputPath                          = $resolvedOutputPath
 }
@@ -94,9 +102,9 @@ else {
 }
 
 Write-Host (
-    "Deployment summary: GMG tier [{0}] tracks {1} Copilot model entries; inventory review every {2} days; third-party review every {3} days." -f
+    "Deployment summary: GMG tier [{0}] tracks {1} sample model source entries; inventory review every {2} days; third-party review every {3} days." -f
     $ConfigurationTier,
-    @($configuration.defaults.trackedModels).Count,
+    @($trackedModelSources).Count,
     $configuration.model_inventory_review_cadence_days,
     $configuration.third_party_review_cadence_days
 )

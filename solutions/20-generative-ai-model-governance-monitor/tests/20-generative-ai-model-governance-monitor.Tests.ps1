@@ -62,13 +62,20 @@ Describe 'GMG - Configuration Validation' {
             @($defaultConfig.primaryControls) | Should -Contain '3.8a'
             @($defaultConfig.primaryControls) | Should -Contain '3.8'
         }
-        It 'cites SR 11-7 / OCC Bulletin 2011-12 (interim genAI principles)' {
-            @($defaultConfig.regulations) | Should -Contain 'SR 11-7 / OCC Bulletin 2011-12 (interim genAI principles)'
+        It 'cites Federal Reserve SR 11-7 and OCC Bulletin 2011-12 model risk guidance' {
+            @($defaultConfig.regulations) | Should -Contain 'Federal Reserve SR 11-7'
+            @($defaultConfig.regulations) | Should -Contain 'OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)'
         }
-        It 'lists all four evidence outputs' {
-            foreach ($e in @('copilot-model-inventory', 'validation-summary', 'ongoing-monitoring-log', 'third-party-due-diligence')) {
+        It 'lists all five evidence outputs' {
+            foreach ($e in @('copilot-model-inventory', 'validation-summary', 'ongoing-monitoring-log', 'content-safety-and-guardrails', 'third-party-due-diligence')) {
                 @($defaultConfig.evidenceOutputs) | Should -Contain $e
             }
+        }
+        It 'lists structured model sources and content safety defaults' {
+            @($defaultConfig.defaults.trackedModelSources).Count | Should -BeGreaterOrEqual 4
+            @($defaultConfig.defaults.trackedModelSources.modelSource) | Should -Contain 'azureopenai'
+            @($defaultConfig.defaults.trackedModelSources.modelSource) | Should -Contain 'partner'
+            $defaultConfig.defaults.contentSafetyDefaults.promptShields | Should -Not -BeNullOrEmpty
         }
     }
 
@@ -130,10 +137,11 @@ Describe 'GMG - Documentation Validation' {
         $readme | Should -Match '3\.8'
     }
     It 'architecture.md references SR 11-7' { $architecture | Should -Match 'SR 11-7' }
-    It 'evidence-export.md references all four outputs' {
+    It 'evidence-export.md references all five outputs' {
         $evidenceExport | Should -Match 'copilot-model-inventory'
         $evidenceExport | Should -Match 'validation-summary'
         $evidenceExport | Should -Match 'ongoing-monitoring-log'
+        $evidenceExport | Should -Match 'content-safety-and-guardrails'
         $evidenceExport | Should -Match 'third-party-due-diligence'
     }
 }
