@@ -3,7 +3,7 @@
 ## Delivery Summary
 
 - Solution: Regulatory Compliance Dashboard
-- Version: v0.1.0
+- Version: v0.1.1
 - Track: C
 - Priority: P0
 
@@ -43,7 +43,7 @@
 
 ## Dashboard Validation
 
-- [ ] Power BI dataset is bound to the Dataverse tables and refreshes without credential errors.
+- [ ] Power BI semantic model is bound to the Dataverse tables and refreshes without credential errors.
 - [ ] Control status RAG visuals show the expected implemented, partial, and monitor-only scoring.
 - [ ] Evidence freshness thresholds are set for the selected tier and produce the expected stale evidence alerts.
 - [ ] Framework coverage matrix includes the enabled regulatory frameworks for the selected tier.

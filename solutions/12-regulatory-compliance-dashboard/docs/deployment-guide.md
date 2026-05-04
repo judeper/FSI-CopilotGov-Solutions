@@ -2,7 +2,7 @@
 
 ## Deployment Sequence
 
-This solution is deployed after the evidence-producing solutions it depends on. Use the steps below to stage Dataverse, flows, and the documentation-led Power BI dataset in a controlled order.
+This solution is deployed after the evidence-producing solutions it depends on. Use the steps below to stage Dataverse, flows, and the documentation-led Power BI semantic model in a controlled order.
 
 ## Verify Dependency Solutions
 
@@ -25,7 +25,7 @@ Import the Dataverse solution components that define the dashboard storage layer
 - `fsi_cg_rcd_finding`
 - `fsi_cg_rcd_evidence`
 
-Verify table creation before proceeding. The deployment script documents these table contracts, but environment administrators should create or import them in Dataverse before connecting the Power BI dataset.
+Verify table creation before proceeding. The deployment script documents these table contracts, but environment administrators should create or import them in Dataverse before connecting the Power BI semantic model.
 
 ## Step 2: Configure Environment Variables
 
@@ -76,22 +76,22 @@ Expected outputs:
 
 Use `-WhatIf` for change review before writing artifacts.
 
-## Step 5: Import Power BI Template and Configure Dataset
+## Step 5: Import Power BI Template and Configure Semantic Model
 
-This repository does not store a binary `.pbix` or `.pbit`. Instead, use the documented template specification from `docs\architecture.md` to create or update the Power BI report with these dataset tables:
+This repository does not store a binary `.pbix` or `.pbit`. Instead, use the documented template specification from `docs\architecture.md` to create or update the Power BI report with these semantic model tables:
 
 - `ControlMaster`
 - `ImplementationStatus`
 - `EvidenceLog`
 - `RegulatoryMapping`
 
-Configure dataset relationships, DAX measures, and report pages for executive summary, control RAG, evidence freshness, regulatory coverage, and examination readiness.
+Configure semantic model relationships, DAX measures, and report pages for executive summary, control RAG, evidence freshness, regulatory coverage, and examination readiness.
 
-## Step 6: Configure Data Refresh Schedule
+## Step 6: Configure Semantic Model Refresh Schedule
 
-Configure scheduled refresh after the dataset is bound:
+Configure scheduled refresh after the semantic model is bound:
 
-- Daily full refresh for the dashboard dataset
+- Daily full refresh for the dashboard semantic model
 - Hourly freshness status recalculation for evidence age flags
 - On-demand refresh before generating examination readiness packages
 
