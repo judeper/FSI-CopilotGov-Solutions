@@ -82,8 +82,8 @@ function Test-GraphConnectivity {
         endpoints = @(
             '/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled'
             '/v1.0/subscribedSkus'
-            "/beta/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
-            "/beta/reports/getMicrosoft365CopilotUsageUserCounts(period='D30')"
+            "/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
+            "/v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')"
         )
         graphContext = $context
         notes = 'This script validates the required connectivity plan. Replace the stub with live Connect-MgGraph or equivalent tenant-auth logic during implementation.'
@@ -194,7 +194,7 @@ function Set-LicenseGovernanceBaseline {
 try {
     $configuration = Get-SolutionConfiguration -Tier $ConfigurationTier
     $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
-    $graphScopes = @('Reports.Read.All', 'Directory.Read.All', 'User.Read.All')
+    $graphScopes = @('Reports.Read.All', 'LicenseAssignment.Read.All', 'User.Read.All')
     $graphConnectivity = Test-GraphConnectivity -TenantId $TenantId -Scopes $graphScopes
     $licenseInventory = @(Get-LicenseInventory -Configuration $configuration -GraphConnectivity $graphConnectivity)
     $baseline = Set-LicenseGovernanceBaseline -Configuration $configuration -TierDefinition $tierDefinition -LicenseInventory $licenseInventory -Environment $Environment

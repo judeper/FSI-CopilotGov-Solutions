@@ -55,12 +55,12 @@ function Get-CopilotUsageReport {
     )
 
     return @(
-        [pscustomobject]@{ userPrincipalName = 'alex.morgan@contoso.com'; department = 'Treasury'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-3).ToString('yyyy-MM-dd'); copilotActions30D = 74; vivaImpactScore = 0.82; riskTier = 'medium' }
-        [pscustomobject]@{ userPrincipalName = 'jamie.lee@contoso.com'; department = 'Retail Banking'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-9).ToString('yyyy-MM-dd'); copilotActions30D = 42; vivaImpactScore = 0.67; riskTier = 'low' }
-        [pscustomobject]@{ userPrincipalName = 'pat.owens@contoso.com'; department = 'Finance'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-31).ToString('yyyy-MM-dd'); copilotActions30D = 3; vivaImpactScore = 0.19; riskTier = 'medium' }
-        [pscustomobject]@{ userPrincipalName = 'chris.evans@contoso.com'; department = 'Internal Audit'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-45).ToString('yyyy-MM-dd'); copilotActions30D = 0; vivaImpactScore = 0.05; riskTier = 'high' }
-        [pscustomobject]@{ userPrincipalName = 'dana.ross@contoso.com'; department = 'Operations'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-16).ToString('yyyy-MM-dd'); copilotActions30D = 12; vivaImpactScore = 0.54; riskTier = 'medium' }
-        [pscustomobject]@{ userPrincipalName = 'samir.patel@contoso.com'; department = 'Wealth Management'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-61).ToString('yyyy-MM-dd'); copilotActions30D = 1; vivaImpactScore = 0.08; riskTier = 'low' }
+        [pscustomobject]@{ userPrincipalName = 'alex.morgan@contoso.com'; department = 'Treasury'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-3).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.82; riskTier = 'medium' }
+        [pscustomobject]@{ userPrincipalName = 'jamie.lee@contoso.com'; department = 'Retail Banking'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-9).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.67; riskTier = 'low' }
+        [pscustomobject]@{ userPrincipalName = 'pat.owens@contoso.com'; department = 'Finance'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-31).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.19; riskTier = 'medium' }
+        [pscustomobject]@{ userPrincipalName = 'chris.evans@contoso.com'; department = 'Internal Audit'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-45).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.05; riskTier = 'high' }
+        [pscustomobject]@{ userPrincipalName = 'dana.ross@contoso.com'; department = 'Operations'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-16).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.54; riskTier = 'medium' }
+        [pscustomobject]@{ userPrincipalName = 'samir.patel@contoso.com'; department = 'Wealth Management'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-61).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.08; riskTier = 'low' }
     )
 }
 
@@ -100,12 +100,7 @@ function Measure-LicenseUtilization {
 
     $totalSeats = @($UsageReport).Count
     $activeSeats = $totalSeats - @($InactiveSeats).Count
-    $averageActions = if ($totalSeats -gt 0) {
-        [math]::Round((($UsageReport | Measure-Object -Property copilotActions30D -Average).Average), 2)
-    }
-    else {
-        0
-    }
+    $enabledSeats = @($UsageReport | Where-Object { $_.accountEnabled }).Count
 
     $averageImpact = if ($totalSeats -gt 0) {
         [math]::Round((($UsageReport | Measure-Object -Property vivaImpactScore -Average).Average), 2)
@@ -124,11 +119,11 @@ function Measure-LicenseUtilization {
     return [pscustomobject]@{
         totalSeats = $totalSeats
         activeSeats = $activeSeats
+        enabledSeats = $enabledSeats
         inactiveSeats = @($InactiveSeats).Count
         utilizationRatePct = $utilizationPct
         reallocationTriggerUtilizationPct = $ThresholdPct
         atOrAboveThreshold = ($utilizationPct -ge $ThresholdPct)
-        averageCopilotActions30D = $averageActions
         averageVivaImpactScore = $averageImpact
         estimatedRecoverableCostUsd = (@($InactiveSeats).Count * $AnnualizedCostPerSeatUsd)
     }
@@ -153,7 +148,7 @@ try {
             department = $seat.department
             riskTier = $seat.riskTier
             lastActivityDate = $seat.lastActivityDate
-            copilotActions30D = $seat.copilotActions30D
+            accountEnabled = $seat.accountEnabled
             recommendedAction = if ($seat.riskTier -eq 'high') { 'Retain pending control-owner review' } else { 'Reallocate after manager approval' }
             annualizedRecoverableCostUsd = [int]$configuration.defaults.annualizedCostPerSeatUsd
         }
@@ -185,7 +180,7 @@ try {
         graphEndpoints = @(
             '/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled'
             '/v1.0/subscribedSkus'
-            "/beta/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
+            "/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
         )
         metrics = $metrics
         inactiveSeats = $flaggedSeats

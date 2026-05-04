@@ -11,7 +11,7 @@ License Governance and ROI Tracker provides a structured operating model for Cop
 | Microsoft Graph           |      | Dependency: 11-risk-tiered-rollout   |
 | - /v1.0/users             |      | - protected users                    |
 | - /v1.0/subscribedSkus    |      | - rollout wave and risk tier         |
-| - /beta/reports/...       |      +-------------------+------------------+
+| - /v1.0/copilot/reports   |      +-------------------+------------------+
 +-------------+-------------+                          |
               |                                        |
               v                                        v
@@ -61,8 +61,8 @@ Additional ROI input: Viva Insights exports or curated analyst-provided extracts
 |----------|----------------|-------|
 | `GET https://graph.microsoft.com/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled` | Identify licensed user population, departments, and active accounts for governance review. | Used to align seat holders to business units and reviewer routing. |
 | `GET https://graph.microsoft.com/v1.0/subscribedSkus` | Inventory Microsoft 365 Copilot SKU availability and consumed units. | Supports seat planning, chargeback, and license optimization controls. |
-| `GET https://graph.microsoft.com/beta/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')` | Retrieve user-level Copilot activity detail for inactivity and utilization analysis. | Response is typically a downloadable report payload; schedule accordingly. |
-| `GET https://graph.microsoft.com/beta/reports/getMicrosoft365CopilotUsageUserCounts(period='D30')` | Capture aggregate active-user counts for management trend reporting. | Useful for Power BI trend cards and consistency checks. |
+| `GET https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')` | Retrieve most recent activity data for enabled Microsoft 365 Copilot users for inactivity and utilization analysis. | Response is a report stream; tracking per-user Copilot prompt counts across tenants is not supported. |
+| `GET https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')` | Retrieve the aggregated number of active and enabled Microsoft 365 Copilot users for management trend reporting. | Useful for Power BI trend cards and consistency checks. |
 
 ## Viva Insights ROI Signal Handling
 
@@ -75,7 +75,7 @@ The repository does not include a `.pbix` file. Instead, the solution documents 
 | Dataset table | Purpose | Example fields |
 |---------------|---------|----------------|
 | `LicenseInventorySnapshot` | Stores SKU counts and allocation totals from `subscribedSkus`. | SnapshotDate, SkuName, PurchasedSeats, AssignedSeats, AvailableSeats |
-| `CopilotUsageDetail` | Stores user-level usage detail from Copilot reports. | UserPrincipalName, Department, LastActivityDate, CopilotActions30D, UtilizationBand |
+| `CopilotUsageDetail` | Stores user-level usage detail from Copilot reports. | UserPrincipalName, Department, LastActivityDate, AccountEnabled, UtilizationBand |
 | `VivaImpactSignals` | Stores optional ROI signals from Viva Insights or curated scorecards. | BusinessUnit, VivaImpactScore, EstimatedHoursSaved, ScenarioCoveragePct |
 | `RiskTierAssignments` | Stores dependency output from solution `11-risk-tiered-rollout`. | UserPrincipalName, RiskTier, RolloutWave, ExceptionRequired |
 | `ReallocationRecommendations` | Stores action-ready review records for governance meetings. | UserPrincipalName, RecommendedAction, AnnualizedRecoverableCostUsd, ManagerApprovalRequired |
@@ -129,7 +129,7 @@ Organizations may choose between individual pay-as-you-go billing at $0.01 per m
 
 ### Azure Cost Management Integration Pattern
 
-PAYG charges for Copilot appear in the linked Azure subscription and are visible through Azure Cost Management. This solution documents the tagging and filtering conventions recommended for financial-services organizations, including the use of the `m365copilotchat` cost-tracking tag, departmental cost-center tags, and budget alert rules. Budget alerts help meet OCC 2011-12 expectations for technology expense oversight by notifying governance teams when consumption approaches defined thresholds.
+PAYG charges for Copilot appear in the linked Azure subscription and are visible through Azure Cost Management. This solution documents the tagging and filtering conventions recommended for financial-services organizations, including the use of the `m365copilotchat` cost-tracking tag, departmental cost-center tags, and budget alert rules. Budget alerts help meet OCC 2011-12 expectations for technology expense oversight by notifying governance teams when consumption approaches defined thresholds; they do not enforce a hard budget limit or prevent usage beyond the budget.
 
 ### High-Usage User Visibility and Alerting
 

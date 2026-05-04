@@ -1,7 +1,7 @@
 {
   "solution": "08-license-governance-roi",
   "displayName": "License Governance and ROI Tracker",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "controls": [
     "1.9",
     "4.5",
