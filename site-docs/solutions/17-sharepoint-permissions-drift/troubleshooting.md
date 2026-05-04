@@ -6,7 +6,7 @@
 
 **Actions:**
 1. Verify the service account has SharePoint Administrator role or equivalent
-2. Confirm the Azure AD application registration has `Sites.Read.All` permission
+2. Confirm the Microsoft Entra ID application registration has `Sites.Read.All` permission
 3. Check that Conditional Access policies do not block the service account
 4. Ensure `PnP.PowerShell` module is version 2.3.0 or later
 5. Test connectivity manually: `Connect-PnPOnline -Url "https://contoso.sharepoint.com" -Interactive`
@@ -57,7 +57,7 @@
 **Symptoms:** Drift items are queued to `pending-approvals.json` but approvers do not receive notification emails.
 
 **Actions:**
-1. Verify `Mail.Send` permission is granted on the Azure AD application registration
+1. Verify `Mail.Send` permission is granted on the Microsoft Entra ID application registration
 2. Confirm the sender mailbox is licensed and not blocked
 3. Check the `approvers` list in `config/auto-revert-policy.json` for valid email addresses
 4. Review Exchange Online message trace for delivery issues

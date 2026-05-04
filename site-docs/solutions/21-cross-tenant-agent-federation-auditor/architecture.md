@@ -2,17 +2,17 @@
 
 ## Solution Overview
 
-The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first auditor that records federation posture for Microsoft 365 Copilot agents, Microsoft Entra Agent IDs, and MCP federated servers exposed across organizational boundaries. The repository implementation produces sample inventories and attestation evidence so that delivery teams can model cross-tenant agent risk before live tenant integration is wired.
+The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first auditor that records federation posture for Microsoft 365 Copilot agents, Microsoft Entra Agent IDs, and MCP server connections exposed across organizational boundaries. The repository implementation produces sample inventories and review evidence so that delivery teams can model cross-tenant agent risk before live tenant integration is wired.
 
 ## Component Diagram
 
 ```text
 +---------------------------------------------------------------+
 | Sources reviewed by CTAF (live targets, sample data today)    |
-| - Copilot Studio multi-tenant publishing settings             |
-| - Microsoft Entra Agent ID registrations                      |
-| - Entra External Identities cross-tenant access settings      |
-| - MCP federated server attestations                           |
+| - Copilot Studio channels, authentication, and sharing         |
+| - Microsoft Entra Agent ID identities and blueprints           |
+| - Entra External Identities cross-tenant access settings       |
+| - MCP server connection and authentication settings            |
 +------------------------------+--------------------------------+
                                |
                                v
@@ -20,8 +20,8 @@ The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first audito
 | Monitor-Compliance.ps1                                        |
 | - Federation Inventory Collector (sample)                     |
 | - Cross-Tenant Trust Assessor (sample)                        |
-| - MCP Attestation Reader (sample)                             |
-| - Agent ID Attestation Reader (sample)                        |
+| - MCP Connection Review Reader (sample)                       |
+| - Agent ID Governance Reader (sample)                         |
 +------------------------------+--------------------------------+
                                |
                                v
@@ -38,15 +38,15 @@ The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first audito
 ## Data Flow
 
 1. `Monitor-Compliance.ps1` reads tier configuration from `config/<tier>.json` and `config/default-config.json` via `CtafConfig.psm1`.
-2. The script generates sample federation inventory, cross-tenant trust, MCP attestation, and Agent ID attestation records that mirror the contract that a future live integration would produce.
+2. The script generates sample federation inventory, cross-tenant trust, MCP connection review, and Agent ID identity-governance records that mirror the contract that a future live integration would produce.
 3. `Export-Evidence.ps1` serializes records into four JSON artifacts and writes a `.sha256` companion for each artifact.
-4. Optional downstream consumption: a future enterprise dashboard (out of scope for this stub) may aggregate the JSON outputs.
+4. Optional downstream consumption: a future enterprise dashboard (out of scope for this stub) may display the JSON outputs.
 
 ## Integration Points (Future)
 
-- Microsoft Graph beta endpoints for cross-tenant access policy enumeration.
-- Copilot Studio admin API for multi-tenant publishing audit (when generally available).
-- MCP server `/.well-known` attestation endpoints for signing-key verification.
+- Microsoft Graph v1.0 `/policies/crossTenantAccessPolicy/partners` endpoint for cross-tenant access policy partner enumeration.
+- Copilot Studio channel, authentication, and organization sharing review patterns.
+- MCP server URL, Streamable transport, API key/OAuth authentication, tool approval, and allow-list review.
 
 ## Security Considerations
 

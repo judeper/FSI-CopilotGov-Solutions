@@ -1,12 +1,12 @@
 # Regulatory Compliance Dashboard
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P0 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P0 | **Track:** C
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-The Regulatory Compliance Dashboard documents the single-pane-of-glass operating model for FSI Copilot governance posture. It documents the aggregation pattern for consolidating control evidence into Dataverse and Power BI; customers must deploy Dataverse connections and Power BI workspace bindings to enable live dashboarding. In the repository state it provides seeded control-status snapshots, fallback monitoring output, and Power BI dataset specifications so control owners, audit teams, and executives can review the intended design before implementation.
+The Regulatory Compliance Dashboard documents the single-pane-of-glass operating model for FSI Copilot governance posture. It documents the aggregation pattern for consolidating control evidence into Dataverse and Power BI; customers must deploy Dataverse connections and Power BI workspace bindings to enable live dashboarding. In the repository state it provides seeded control-status snapshots, fallback monitoring output, and Power BI semantic model specifications so control owners, audit teams, and executives can review the intended design before implementation.
 
 This solution supports compliance with FINRA 4511, FINRA 3110, SEC 17a-4, OCC 2011-12, DORA, and GLBA 501(b) by presenting consolidated evidence rather than making direct control changes. Examination readiness improves as more upstream solutions publish current evidence packages and package hashes.
 
@@ -25,7 +25,7 @@ This solution supports compliance with FINRA 4511, FINRA 3110, SEC 17a-4, OCC 20
 > **Important:** This solution provides governance scaffolds, templates, and documentation-first
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
-- ❌ Does not deploy Power BI reports or dashboards (dashboard specifications and dataset designs are documented, not deployed)
+- ❌ Does not deploy Power BI reports or dashboards (dashboard specifications and semantic model designs are documented, not deployed)
 - ❌ Does not connect to Dataverse APIs (table schemas and seed data are provided for manual deployment)
 - ❌ Does not deploy Power Automate flows (evidence aggregation and freshness monitoring flows are documented, not exported)
 - ❌ Does not aggregate evidence from upstream solutions automatically (aggregation patterns are documented for customer implementation)
@@ -45,7 +45,7 @@ This solution supports compliance with FINRA 4511, FINRA 3110, SEC 17a-4, OCC 20
           +---------> RCD-EvidenceAggregator flow -------+                                dashboard-export packages
 ```
 
-The diagram above illustrates the documented target-state architecture; the repository does not deploy these integrations automatically. The dashboard design also supports evidence from solutions 13-15 as those solutions are deployed. Power BI assets are documentation-led — this repository defines the dataset, measures, pages, and row-level security expectations without including binary `.pbix` or `.pbit` files — and all repository outputs should be treated as seeded reference artifacts rather than a live aggregator.
+The diagram above illustrates the documented target-state architecture; the repository does not deploy these integrations automatically. The dashboard design also supports evidence from solutions 13-15 as those solutions are deployed. Power BI assets are documentation-led — this repository defines the semantic model tables, measures, pages, and row-level security expectations without including binary `.pbix` or `.pbit` files — and all repository outputs should be treated as seeded reference artifacts rather than a live aggregator.
 
 ## Quick Start
 
@@ -63,11 +63,11 @@ The diagram above illustrates the documented target-state architecture; the repo
 | `scripts\Deploy-Solution.ps1` | Validates dependencies, inventories upstream evidence, seeds Dataverse table contracts, and writes the initial control status snapshot seed. |
 | `scripts\Monitor-Compliance.ps1` | Calculates maturity score, checks evidence freshness, and returns a structured dashboard health object from a seeded or fallback snapshot. |
 | `scripts\Export-Evidence.ps1` | Publishes documentation-first control status, framework coverage, and dashboard export metadata using the shared evidence package contract. |
-| `config\default-config.json` | Defines shared defaults, Dataverse table names, Power BI dataset tables, regulatory frameworks, and maturity score weights. |
+| `config\default-config.json` | Defines shared defaults, Dataverse table names, Power BI semantic model tables, regulatory frameworks, and maturity score weights. |
 | `config\baseline.json` | Baseline tier with daily aggregation, 48 hour freshness threshold, and FINRA plus OCC coverage only. |
 | `config\recommended.json` | Recommended tier with daily aggregation, 25 hour freshness threshold, all six primary regulatory frameworks, and maturity scoring enabled. |
 | `config\regulated.json` | Regulated tier with hourly freshness checks, automatic examination packaging, strict retention, and optional SOX 404 coverage. |
-| `docs\architecture.md` | Documents the end-to-end design for Dataverse, flows, Power BI dataset, DAX measures, and dependency integrations. |
+| `docs\architecture.md` | Documents the end-to-end design for Dataverse, flows, Power BI semantic model, DAX measures, and dependency integrations. |
 | `tests\12-regulatory-compliance-dashboard.Tests.ps1` | Validates required files, script help, parameter presence, configuration content, and PowerShell syntax. |
 
 ## Deployment
@@ -77,7 +77,7 @@ Deployment is intentionally staged:
 1. Prepare Dataverse tables and environment variables.
 2. Deploy the three Power Automate flows that aggregate evidence, monitor freshness, and package examination output.
 3. Run the deployment script to seed the baseline status table and generate the manifest used by Power BI.
-4. Build the Power BI report from the documented template specification, then configure dataset refresh and row-level security.
+4. Build the Power BI report from the documented template specification, then configure semantic model refresh and row-level security.
 
 ## Prerequisites
 
@@ -85,8 +85,8 @@ Deployment is intentionally staged:
 - Power BI Pro or Premium Per User licensing for authors and workspace administrators.
 - Dataverse capacity of at least 1 GB for baseline, finding, and evidence tables.
 - Power Automate Premium licensing for scheduled aggregation and freshness monitoring.
-- Power BI Admin and Dataverse System Administrator permissions for deployment operators.
-- Microsoft 365 E5 Compliance if Purview-backed evidence references are required.
+- Fabric administrator or Power Platform administrator rights for tenant-wide Fabric/Power BI settings, Power BI workspace Admin rights for workspace operations, and Dataverse System Administrator or System Customizer permissions as required.
+- Microsoft Purview Suite, Microsoft 365 E5/A5/G5, or the eligible Purview add-on/licensing required for the specific Purview Compliance Manager templates or evidence features in use.
 
 ## Related Controls
 

@@ -1,6 +1,6 @@
 # Conditional Access Policy Automation for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P1 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -12,7 +12,7 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 
 ## What this solution does
 
-- Targets Microsoft 365 Copilot and Copilot Studio application IDs in Conditional Access policies.
+- Targets the Microsoft Graph `Office365` Conditional Access app-suite value, which Microsoft Learn lists as including Enterprise Copilot Platform, and reserves individual app IDs for tenant-verified use.
 - Generates tier-aware policy templates for baseline, recommended, and regulated deployments.
 - Documents and prepares tier-aware Conditional Access policy patterns for low, medium, and high risk-tier users and administrators.
 - Prepares a JSON baseline template of approved policy state for change-control and drift monitoring.
@@ -37,8 +37,8 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 
 | Application | App ID | Purpose in this solution |
 |-------------|--------|--------------------------|
-| Microsoft 365 Copilot (Enterprise Copilot Platform) | `fb8d773d-7ef8-4ec0-a117-179f88add510` | Primary Conditional Access target for Copilot user access; requires service principal registration via `New-MgServicePrincipal` |
-| Copilot Studio | `7df0a125-d3be-4c96-aa54-591f83ff541c` | Optional secondary target for makers and administrators |
+| Microsoft 365 / Office 365 app suite | `Office365` | Primary Microsoft Graph Conditional Access target; Microsoft Learn lists Enterprise Copilot Platform within this app suite |
+| Tenant-verified individual app IDs | Tenant service-principal `appId` values | Optional secondary targets after administrator validation; do not use the Microsoft Flow Service app ID as a Copilot Studio target |
 
 ## Regulatory context
 
@@ -73,7 +73,7 @@ Typical drift scenarios include:
 - MFA removed from a medium or high risk policy.
 - Compliant-device requirements disabled outside the approved change window.
 - Named-location assignments changed for regulated users.
-- Copilot app IDs removed or replaced in a policy target.
+- The `Office365` target or tenant-verified app IDs removed or replaced in a policy target.
 
 ## Exception register
 
@@ -142,7 +142,7 @@ This solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article
 ## Known limitations
 
 - Conditional Access policy creation requires Microsoft Entra ID P1 or P2 licensing, and risk-based policies require Microsoft Entra ID P2.
-- Copilot app targeting requires Microsoft 365 E3 or E5 licensing with the appropriate Copilot entitlement.
+- Microsoft 365 Copilot requires an eligible prerequisite subscription plan plus the Microsoft 365 Copilot add-on or entitlement; Microsoft 365 E3 and E5 are examples, not the complete prerequisite list.
 - Conditional Access policy evaluation can take about 5 minutes after a change before the new state is consistently enforced.
 - Named-location strategies still require tenant-specific design for branch offices, vendors, and break-glass accounts.
 - This solution documents Graph API deployment commands, but production execution still requires administrator review and tenant connectivity.

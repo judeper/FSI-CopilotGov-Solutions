@@ -25,7 +25,7 @@ Resolution steps:
 Symptoms:
 
 - Flow import fails or connections show as unhealthy.
-- The dashboard dataset cannot read the Dataverse tables.
+- The dashboard semantic model cannot read the Dataverse tables.
 
 Common causes:
 
@@ -38,9 +38,9 @@ Resolution steps:
 1. Open the target environment and repair Dataverse, Power BI, and storage connection references.
 2. Confirm the `DataverseUrl` value matches the environment configuration.
 3. Validate that the operator has Dataverse System Administrator or equivalent rights.
-4. Re-run the flow connection test and refresh the dataset credentials.
+4. Re-run the flow connection test and refresh the semantic model credentials.
 
-## Power BI dataset refresh failures
+## Power BI semantic model refresh failures
 
 Symptoms:
 
@@ -49,13 +49,13 @@ Symptoms:
 
 Common causes:
 
-- Dataset credentials are not bound after report publication.
-- Table names in the dataset do not match `fsi_cg_rcd_baseline`, `fsi_cg_rcd_finding`, and `fsi_cg_rcd_evidence`.
-- Row-level security roles were changed without republishing the dataset.
+- Semantic model credentials are not bound after report publication.
+- Table names in the semantic model do not match `fsi_cg_rcd_baseline`, `fsi_cg_rcd_finding`, and `fsi_cg_rcd_evidence`.
+- Row-level security roles were changed without republishing the semantic model.
 
 Resolution steps:
 
-1. Confirm the dataset points to the expected Dataverse tables.
+1. Confirm the semantic model points to the expected Dataverse tables.
 2. Refresh credentials and test the connection in the Power BI service.
 3. Re-apply RLS roles and confirm membership is correct.
 4. Trigger a manual refresh and confirm the refresh history is clean before enabling schedules.
@@ -115,4 +115,4 @@ Resolution steps:
 1. Update the evidence source configuration to include the missing solution.
 2. Run the missing solution's `Export-Evidence.ps1` script and confirm the package is current.
 3. Re-run `RCD-EvidenceAggregator` and confirm the rows are written to `fsi_cg_rcd_evidence`.
-4. Refresh the Power BI dataset and verify the matrix updates.
+4. Refresh the Power BI semantic model and verify the matrix updates.

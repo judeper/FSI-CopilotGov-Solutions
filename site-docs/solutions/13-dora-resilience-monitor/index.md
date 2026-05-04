@@ -1,6 +1,6 @@
 # DORA Operational Resilience Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -123,19 +123,19 @@ All evidence packages are written as JSON with SHA-256 companion files and are a
 
 ## Roadmap Awareness
 
-The 2026 Release Wave 1 (April–September 2026) introduces several capabilities relevant to DORA operational resilience monitoring:
+The 2026 Release Wave 1 (April–September 2026) describes several roadmap capabilities relevant to DORA operational resilience monitoring:
 
-- Real-time risk assessment capabilities in Copilot Studio for automated governance workflows
-- AI-powered governance agents for tenant monitoring and compliance alerting
-- Enhanced service health analytics integration
+- Admin controls for agent security and real-time risk assessment in Copilot Studio
+- AI-powered governance agents that automate tenant monitoring and remediation
+- Enhanced visibility into usage patterns, Copilot credit consumption, and connector dependencies
 
-These features are in preview or rolling out through September 2026. As they reach general availability, this solution's architecture and monitoring patterns may be extended to incorporate them. Customers should evaluate Wave 1 features against their DORA ICT risk management framework requirements as they become available.
+These roadmap capabilities are in preview or rolling out through September 2026. As they reach general availability, this solution's architecture and monitoring patterns may be extended to incorporate them. Customers should evaluate Wave 1 features against their DORA ICT risk management framework requirements as they become available.
 
 ## Known Limitations
 
 - DRM is primarily a monitoring and evidence solution. It does not perform automated service remediation or tenant failover orchestration.
 - Default monitoring output is produced from a local stub or `DRM_SERVICE_HEALTH_SAMPLE_JSON`; live Microsoft Graph polling still requires tenant authentication wiring outside the repository.
 - Control 2.7 remains monitor-only until tenant geo settings and approved-region data sources are connected.
-- Control 4.11 remains monitor-only until a Microsoft Sentinel workspace, data connector, and alert rules are provisioned outside this solution.
+- Control 4.11 remains monitor-only until a Microsoft Sentinel workspace, applicable data connector (currently preview per Microsoft Learn), and customer-defined alert rules are provisioned outside this solution.
 - Control 4.10 is partial because resilience documentation and test tracking are included, but automated failover validation requires additional tenant-specific engineering.
 - The documented Power Automate flow is not deployed by script in this version and must be configured manually from the deployment guide.

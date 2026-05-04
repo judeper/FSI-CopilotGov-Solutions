@@ -11,11 +11,11 @@
 - Power BI Pro or Premium Per User licenses for report authors and workspace admins
 - Dataverse capacity of at least 1 GB for baseline, finding, and evidence tables
 - Power Automate Premium licensing for scheduled aggregation and monitoring flows
-- Microsoft 365 E5 Compliance when Purview evidence references are required
+- Microsoft Purview Suite, Microsoft 365 E5/A5/G5, or the eligible Purview add-on/licensing required for the Purview Compliance Manager templates or evidence features in scope
 
 ## Required Permissions
 
-- Power BI Admin or equivalent workspace administration rights
+- Fabric administrator or Power Platform administrator rights for tenant-wide settings, plus Power BI workspace Admin rights for the target workspace
 - Dataverse System Administrator or a role that can create tables, connections, and environment variables
 - Permission to manage Power Automate connection references
 - Access to the target Power Platform environment and related service connections

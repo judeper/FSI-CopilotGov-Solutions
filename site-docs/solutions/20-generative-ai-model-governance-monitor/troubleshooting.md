@@ -26,7 +26,7 @@ Get-ChildItem scripts\*.ps1 | ForEach-Object {
 
 ### Script reports representative sample data
 
-This is expected. v0.1.0 is documentation-first. Live integration with Microsoft Graph, Purview, or Sentinel is deferred.
+This is expected. v0.1.1 is documentation-first. Live integration with Microsoft Graph, Microsoft Purview, Microsoft Foundry, Azure OpenAI, Azure AI Content Safety, or Sentinel is deferred.
 
 ## Evidence Issues
 
@@ -48,11 +48,11 @@ If export fails because the output path is invalid:
 
 ### Why does GMG cite SR 11-7 / OCC Bulletin 2011-12 if it has been superseded?
 
-SR 26-2 / OCC Bulletin 2026-13 supersede SR 11-7 and OCC Bulletin 2011-12 for traditional models, but explicitly exclude generative AI from their scope. Per supervisory guidance, the SR 11-7 / OCC Bulletin 2011-12 model risk principles continue to be applied to generative AI as an interim approach. GMG documents this interim applicability so the firm can show how it maintains model-risk discipline for Copilot during the exclusion period.
+SR 26-2 / OCC Bulletin 2026-13 supersede SR 11-7 and OCC Bulletin 2011-12 for traditional models, but explicitly exclude generative AI from their scope. Per supervisory guidance, the SR 11-7 / OCC Bulletin 2011-12 model risk principles continue to be applied to generative AI as an interim approach. GMG documents this interim applicability so the firm can show how it maintains model-risk discipline for Copilot, Microsoft Foundry, Azure OpenAI, and approved provider model deployments during the exclusion period.
 
 ### Does running GMG satisfy SR 11-7?
 
-No. GMG aids in meeting model inventory, validation, and ongoing monitoring elements of SR 11-7 / OCC Bulletin 2011-12 for Copilot, but it does not on its own satisfy any regulatory obligation. The firm's model risk officer and validation team must perform their own validation work and review.
+No. GMG aids in meeting model inventory, validation, ongoing monitoring, and guardrail review elements of SR 11-7 / OCC Bulletin 2011-12 for in-scope generative AI models, but it does not on its own satisfy any regulatory obligation. The firm's model risk officer and validation team must perform their own validation work and review.
 
 ## Common Error Messages
 

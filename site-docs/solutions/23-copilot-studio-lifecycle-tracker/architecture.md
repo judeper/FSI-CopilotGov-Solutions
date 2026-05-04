@@ -2,14 +2,14 @@
 
 ## Solution Overview
 
-The Copilot Studio Agent Lifecycle Tracker (CSLT) provides a documentation-first pattern for governing the full lifecycle of Microsoft Copilot Studio agents in regulated US financial-services environments. It records agent inventory, publishing approval, version history, and deprecation evidence to support FFIEC IT Handbook (Operations Booklet), FINRA Rule 3110 (supervisory systems and WSPs), OCC Bulletin 2023-17 (Third-Party Risk Management), and Sarbanes-Oxley §§302/404 change-control documentation where applicable to ICFR.
+The Copilot Studio Agent Lifecycle Tracker (CSLT) provides a documentation-first pattern for governing Microsoft Copilot Studio agent lifecycle evidence in regulated US financial-services environments. It records agent inventory, publishing approval, version/change records, and deprecation evidence, and aligns the local evidence pattern with Microsoft Agent 365 centralized registry and lifecycle-governance context where licensed. These records support FFIEC IT Handbook (Operations Booklet), FINRA Rule 3110 (supervisory systems and WSPs), OCC Bulletin 2023-17 (Third-Party Risk Management), and Sarbanes-Oxley §§302/404 change-control documentation where applicable to ICFR.
 
 ## Component Diagram
 
 ```text
 +---------------------------------------------------------------+
-| Power Platform Admin / Copilot Studio Management API          |
-| (target integration; current version uses local stub)         |
+| Microsoft Agent 365 registry + Power Platform metadata APIs   |
+| (target integrations; current version uses local stub)        |
 +------------------------------+--------------------------------+
                                |
                                v
@@ -27,7 +27,7 @@ The Copilot Studio Agent Lifecycle Tracker (CSLT) provides a documentation-first
 +------------+-------------+        +-------------+-------------+
 | Approval Log Store       |        | Version & Deprecation     |
 | Reviewer identity, tier  |        | History Store             |
-| approval requirements    |        | Publish, rollback, sunset |
+| approval requirements    |        | Publish, change, sunset   |
 +------------+-------------+        +-------------+-------------+
              |                                    |
              +-----------------+------------------+
@@ -45,7 +45,7 @@ The Copilot Studio Agent Lifecycle Tracker (CSLT) provides a documentation-first
 
 ## Data Flow
 
-1. The Power Platform admin and Copilot Studio management surfaces can expose agent inventory, publishing events, and version history through documented APIs when a live implementation is wired.
+1. Microsoft Agent 365 provides centralized agent registry and lifecycle-governance context where licensed; Power Platform API or SDK surfaces can provide environment and resource metadata when a live implementation is wired and supported source fields are mapped.
 2. `scripts/Monitor-Compliance.ps1` currently consumes a local stub or operator-supplied sample payload, normalizes agent records, and applies tier-specific approval and review requirements.
 3. The publishing approval recorder enforces, for the selected tier, whether approval is required and whether dual-approver evidence must be present.
 4. The lifecycle review evaluator flags agents whose last review timestamp is older than the configured cadence.
@@ -55,7 +55,7 @@ The Copilot Studio Agent Lifecycle Tracker (CSLT) provides a documentation-first
 
 ### Agent Inventory Collector
 
-The Agent Inventory Collector is intended to query the Power Platform admin and Copilot Studio management surfaces for agents across the configured environments. The current repository version uses a local stub with representative sample data. Customer must configure Power Platform admin API authentication and endpoint binding for live inventory collection.
+The Agent Inventory Collector is intended to reconcile Microsoft Agent 365 registry context where licensed with Power Platform environment and resource metadata across configured environments. The current repository version uses a local stub with representative sample data. Customers must configure supported API or SDK authentication, endpoint binding, and RBAC role assignments before live inventory collection.
 
 ### Publishing Approval Recorder
 
@@ -75,15 +75,20 @@ The Evidence Packager creates `agent-lifecycle-inventory`, `publishing-approval-
 
 ## Integration Points
 
-### Power Platform Admin API
+### Microsoft Agent 365 registry
 
-- Purpose: Retrieve Copilot Studio agent inventory and management metadata across environments
+- Purpose: Use Microsoft control-plane context for centralized agent registry, lifecycle management, access control, and compliance where licensed
+- Status: Documented integration target; current repository version uses a local stub
+
+### Power Platform REST API/SDK metadata
+
+- Purpose: Retrieve environment and resource metadata for Copilot Studio agents when supported endpoints and RBAC assignments are configured
 - Status: Documented integration target; current repository version uses a local stub
 
 ### Microsoft Purview Audit (optional)
 
 - Purpose: Optional enrichment with Copilot Studio audit-log signals where Purview is licensed and configured
-- Status: Documented; not implemented in v0.1.0
+- Status: Documented; not implemented in v0.1.1
 
 ## Dataverse Tables
 
@@ -96,7 +101,7 @@ The solution reserves the following Dataverse table names for structured persist
 
 ## Security Considerations
 
-- Use least-privilege Power Platform admin and Entra ID permissions for the monitoring identity.
+- Use least-privilege Microsoft Agent 365, Power Platform, Entra ID, and Purview permissions for the monitoring identity.
 - Store client secrets or certificates in an approved secret-management platform rather than in repository files.
 - Restrict access to publishing approval and deprecation evidence because change records may contain reviewer identities and sensitive operational details.
 - Preserve evidence immutability for regulated deployments using the immutable storage settings defined in `config/regulated.json`.

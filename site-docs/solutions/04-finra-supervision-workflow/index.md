@@ -1,6 +1,6 @@
 # FINRA Supervision Workflow for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P0 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P0 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -52,8 +52,8 @@ Use this solution as a control implementation pattern that supports compliance w
 See [docs\prerequisites.md](prerequisites.md) for the full list. Minimum prerequisites are:
 
 - Power Apps Premium and Power Automate Premium for Dataverse tables and cloud flows.
-- Microsoft 365 E5 Compliance for Microsoft Purview Communication Compliance signals.
-- Power Platform Admin, Purview Compliance Admin, and Global Reader access for deployment validation.
+- Eligible Communication Compliance licensing for scoped users, such as Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with the Advanced Compliance add-on.
+- Power Platform administrator, Global Reader, and the Communication Compliance Admins role group or an approved Compliance Administrator role/role group for deployment validation.
 - Microsoft Entra ID groups for supervisory principals, escalation recipients, and service identities.
 - PowerShell 7 or later for deployment, monitoring, and evidence export scripts.
 
@@ -78,8 +78,8 @@ Recommended Dataverse ownership model:
 The implementation uses four manual Power Automate cloud flows:
 
 1. Ingest Flagged Items
-   - Trigger: scheduled poll or event-driven connector action that reads flagged Copilot prompt and response items from Microsoft Purview Communication Compliance.
-   - Actions: normalize source metadata, classify zone and tier, create a SupervisionQueue row, and append a SupervisionLog action of `ingested`.
+   - Trigger: customer-validated handoff from Communication Compliance, such as a report export, audit-log review, or a Power Automate flow launched from a Communication Compliance alert.
+   - Actions: receive exported or alert-context item metadata, classify zone and tier, create a SupervisionQueue row, and append a SupervisionLog action of `ingested`.
 
 2. Assignment Flow
    - Trigger: when a new SupervisionQueue row is created.
@@ -99,11 +99,12 @@ See [docs\architecture.md](architecture.md) and [docs\deployment-guide.md](deplo
 
 1. Review [docs\prerequisites.md](prerequisites.md) and confirm licensing, roles, network access, and Microsoft Entra ID group membership.
 2. Create Dataverse tables and columns in the target environment as described in [docs\deployment-guide.md](deployment-guide.md).
-3. Create connection references named `fsi_cr_fsw_purview` and `fsi_cr_fsw_dataverse`.
-4. Set environment variables such as `fsi_ev_fsw_purviewpolicyid` and `fsi_ev_fsw_environmenturl`.
-5. Run `scripts\Deploy-Solution.ps1` to generate the deployment manifest and configuration stubs for the chosen tier.
-6. Build the four Power Automate flows manually and test queue routing, review completion, and escalation behavior.
-7. Run `scripts\Monitor-Compliance.ps1` and `scripts\Export-Evidence.ps1` to validate readiness and produce evidence artifacts.
+3. Validate the supported Communication Compliance handoff before building ingestion; if using Power Automate, use an alert-context flow launched from Communication Compliance rather than a scheduled polling connector.
+4. Create connection references named `fsi_cr_fsw_handoff` (only for the validated handoff source) and `fsi_cr_fsw_dataverse`.
+5. Set environment variables such as `fsi_ev_fsw_purviewpolicyid` and `fsi_ev_fsw_environmenturl`.
+6. Run `scripts\Deploy-Solution.ps1` to generate the deployment manifest and configuration stubs for the chosen tier.
+7. Build the four Power Automate flows manually and test queue routing, review completion, and escalation behavior.
+8. Run `scripts\Monitor-Compliance.ps1` and `scripts\Export-Evidence.ps1` to validate readiness and produce evidence artifacts.
 
 ## Evidence Export
 

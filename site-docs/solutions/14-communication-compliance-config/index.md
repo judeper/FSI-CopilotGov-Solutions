@@ -1,6 +1,6 @@
 # Microsoft Purview Communication Compliance Configurator
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -50,7 +50,7 @@ See [docs/architecture.md](architecture.md) for the detailed data flow and integ
 
 ## Quick Start
 
-1. Review [Prerequisites](prerequisites.md) and confirm Microsoft Purview Communication Compliance licensing and reviewer roles.
+1. Review [Prerequisites](prerequisites.md) and confirm Microsoft Purview Suite or eligible Office 365 licensing plus Communication Compliance role-group assignments.
 2. Review and customize tier settings under `config\default-config.json` and the selected tier file.
 3. Generate a deployment manifest with `scripts\Deploy-Solution.ps1 -ConfigurationTier regulated -TenantId <tenant-guid> -WhatIf`.
 4. Publish the generated policy templates manually in the Microsoft Purview compliance portal.
@@ -84,8 +84,8 @@ Deploy this solution by generating the tier-aware policy templates with `Deploy-
 
 ## Prerequisites
 
-- Microsoft Purview Communication Compliance licensing such as Microsoft 365 E5 Compliance or an equivalent add-on.
-- Reviewer and administrator roles for Microsoft Purview Communication Compliance, Compliance Administrator, and read-only auditors.
+- Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 E5, or Office 365 E3 with the Advanced Compliance add-on should cover users governed by Communication Compliance policies.
+- Administrator access through the `Communication Compliance Admins` role group or Compliance Administrator, reviewer access through `Communication Compliance Analysts` or `Communication Compliance Investigators`, and read-only access through `Communication Compliance Viewers` where appropriate.
 - Legal and compliance review of supervised lexicon words before publication.
 - `04-finra-supervision-workflow` deployed first so escalation procedures are documented.
 - Access to repository shared modules under `scripts\common\`.

@@ -29,8 +29,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [0.7.1] - 2026-05-04
 
-### Fixed
-- Cross-cutting accuracy review wording for Microsoft 365 Copilot Tuning early access preview eligibility, Microsoft Entra ID terminology, Microsoft Purview portal naming, Teams connector deprecation guidance, and Conditional Access administration guidance.
+### Fixed — Accuracy review cycle (PRs #192–#217)
+
+Comprehensive accuracy review against Microsoft Learn (2026-05-04 snapshot) covering all 23 solutions plus cross-cutting wording. 186 GitHub issues filed in Phase 1; 177 fixed across 24 per-solution PRs and 1 metadata reconciler PR; 9 deferred (3 needing tenant binding, 6 still-unverifiable Microsoft Learn claims documented in `artifacts-review/_summary/reverify-2026-05-04.md`).
+
+- **Cross-cutting wording** (PR #209): Microsoft 365 Copilot Tuning early access preview eligibility, Microsoft Entra ID terminology, Microsoft Purview portal naming, Teams connector deprecation guidance, Conditional Access administration guidance, root README + CHANGELOG.
+- **Per-solution remediations** (PRs #193–#216): all 23 solutions had their READMEs, docs, scripts, tests, and CHANGELOGs updated for current Microsoft Learn guidance — patch version bumps applied (v0.2.0 → v0.2.1 / v0.1.0 → v0.1.1 across the catalog).
+- **Audit-trail evidence** (PR #192): `artifacts-review/<slug>/review-2026-05-04.md` per-area reports, re-verify log, and postflight summary committed to repo for examination evidence.
+- **Metadata reconciliation** (PR #217): `data/solution-catalog.json` and `scripts/solution-config.yml` version fields synchronized with the bumped solution READMEs (post-tier-metadata schema preserved from `[Unreleased]`).
+- **Deferred issues** (open backlog): #73, #75 (sol 23 rollback / version-history — needs tenant binding), #101 (sol 02 PnP.PowerShell — needs manual research), plus 6 still-unverifiable Microsoft Learn URLs absorbed into the re-verify log.
 
 ## [0.7.0] - 2026-04-22
 

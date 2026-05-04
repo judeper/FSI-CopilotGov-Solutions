@@ -2,17 +2,25 @@
 
 ## Licensing
 
-- Microsoft 365 E5 or E5 Compliance for Purview DLP capabilities used to monitor Copilot workloads
-- Microsoft 365 Copilot licensing for the users and workloads being reviewed
+- Microsoft 365 E5 or E5 Compliance for Purview DLP capabilities used to monitor the Microsoft 365 Copilot and Copilot Chat policy location and complementary workload DLP baselines
+- Microsoft 365 Copilot licensing for the users and Copilot experiences being reviewed
 - Power Automate Premium if the exception approval workflow is deployed in production
 
 ## Roles
 
-At least one of the following roles should be assigned to the operators managing this solution:
+Accounts that create or edit DLP policies to safeguard Microsoft 365 Copilot and Copilot Chat should use one of the current Microsoft Learn roles or role groups:
 
-- Compliance Administrator
-- Security Reader
-- DLP Compliance Management
+- Entra AI Admin
+- Purview Data Security AI Admin
+- Purview Data Security AI Admins
+- Purview Compliance Administrator
+- Purview Compliance Data Administrator
+- Purview Information Protection
+- Purview Information Protection Admin
+- Purview Security Administrator
+- Entra Global Admin
+
+For least-privilege operations, keep Security Reader-style access limited to read-only review and confirm tenant-tested read permissions before using it for evidence review.
 
 Power Automate deployment can also require a Power Platform environment admin or flow owner depending on tenant design.
 

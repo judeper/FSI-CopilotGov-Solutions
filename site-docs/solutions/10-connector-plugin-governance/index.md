@@ -1,6 +1,6 @@
 # Copilot Connector and Plugin Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -42,7 +42,7 @@ The **Copilot Control System** in the Microsoft 365 admin center serves as the c
 ```text
 +--------------------------+      +--------------------------+      +--------------------------+
 | Power Platform Admin API | ---> | CPG-ConnectorInventory   | ---> | Risk classification      |
-| Microsoft Graph inventory|      | daily inventory flow     |      | low/medium/high/blocked  |
+| Agent Registry metadata |      | daily inventory flow     |      | low/medium/high/blocked  |
 +--------------------------+      +--------------------------+      +--------------------------+
              |                                                                  |
              v                                                                  v
@@ -115,7 +115,7 @@ Key deployment stages:
 
 - Solution `09-feature-management-controller` deployed in the same governance program.
 - Power Platform Administrator access for connector enumeration and DLP verification.
-- Microsoft 365 Global Admin access for Teams app policy and plugin deployment review.
+- AI Administrator role preferred for Microsoft 365 admin center agent and plugin governance; Global Administrator is reserved for tasks that explicitly require it.
 - Dataverse System Administrator access for solution import and table administration.
 - Power Automate Premium licensing for approval workflows and scheduled inventory runs.
 - A security reviewer mailbox or distribution group to receive approval workflow tasks.
@@ -153,6 +153,6 @@ Key deployment stages:
 
 ## Known Limitations
 
-- Copilot Studio plugins and declarative agents can require separate tenant and Teams app policy configuration outside this solution package.
-- Microsoft AppSource metadata and Microsoft Graph inventory can require manual reconciliation for custom plugin publishers.
+- Copilot Studio tools/actions and declarative agents can require separate tenant and Teams app policy configuration outside this solution package.
+- Microsoft 365 admin center Agent Registry and agent details metadata, AppSource metadata, and Microsoft Graph Agent Registry APIs (preview) can require manual reconciliation for custom plugin publishers.
 - Risk classification supports compliance with governance objectives, but exceptional business context still requires human review before approval.

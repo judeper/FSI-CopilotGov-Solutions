@@ -1,6 +1,6 @@
 # Risk-Tiered Rollout Automation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P0 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P0 | **Track:** C
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -102,7 +102,9 @@ Detailed deployment steps, sample commands, and rollback actions are documented 
 
 - `01-copilot-readiness-scanner` is deployed and has produced a recent readiness evidence package.
 - Microsoft 365 E3 or E5 licensing plus Microsoft 365 Copilot licenses are available for the intended wave size.
-- Required Microsoft Graph permissions are approved: `User.ReadWrite.All` and `Directory.Read.All`.
+- The Microsoft Entra **Usage location** property is populated for targeted users before they are added to wave-based license-assignment groups.
+- Required Microsoft Graph license-assignment permission is approved: `LicenseAssignment.ReadWrite.All` for group assignment (`POST /groups/{id}/assignLicense`) or direct user assignment (`POST /users/{id | userPrincipalName}/assignLicense`).
+- Delegated license-assignment operators hold a supported Microsoft Entra role, such as Directory Writers, License Administrator, or User Administrator; group-based assignment also supports Groups Administrator.
 - Power Automate Premium is licensed for approval and orchestration flows.
 - Dataverse capacity is available for `fsi_cg_rtr_baseline`, `fsi_cg_rtr_finding`, and `fsi_cg_rtr_evidence`.
 - A Change Advisory Board or equivalent change-governance body is defined for regulated wave approvals.

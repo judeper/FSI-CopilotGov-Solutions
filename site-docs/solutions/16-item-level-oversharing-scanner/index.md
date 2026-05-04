@@ -1,6 +1,6 @@
 # Item-Level Oversharing Scanner
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -96,7 +96,7 @@ Solution 16 depends on the site-level oversharing assessment from solution 02 to
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|
 | 1.2 | Primary | Detects item-level oversharing within SharePoint document libraries and prepares governed remediation actions |
-| 1.3 | Primary | Supports Restricted SharePoint Search planning by identifying overshared items that should be limited |
+| 1.3 | Primary | Supports temporary Restricted SharePoint Search or Restricted Content Discovery planning by identifying sites and items needing permission cleanup; RSS is site-scoped, short-term, and does not change permissions |
 | 1.4 | Primary | Supports semantic index governance by surfacing items with permissions that exceed intended Copilot grounding scope |
 | 1.6 | Supporting | Supplements site-level permission audits with granular item-level anomaly detection |
 | 2.5 | Primary | Promotes data minimization by identifying and remediating item-level permissions that are broader than necessary |

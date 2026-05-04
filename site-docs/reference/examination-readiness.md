@@ -28,6 +28,8 @@ Each solution ships an evidence-export pattern that supports consistent examinat
 | Pages and Notebooks Retention Tracker | pages-retention-inventory, notebook-retention-log, loop-component-lineage, branching-event-log | FINRA Rule 4511, SEC Rule 17a-4, SOX 302/404 | finra-4511, sec-17a4, sox-302-404 |
 | Copilot Studio Agent Lifecycle Tracker | agent-lifecycle-inventory, publishing-approval-log, version-history, deprecation-evidence | FINRA Rule 3110, SOX 302/404, FFIEC IT Examination Handbook | finra-3110, sox-302-404, ffiec-it-handbook |
 
+> **Copilot Tuning caveat:** The Copilot Tuning Governance evidence-output pattern assumes Microsoft 365 Copilot Tuning (early access preview) availability in eligible tenants with at least 5,000 Microsoft 365 Copilot licenses.
+
 Unified evidence export is orchestrated through `scripts/deployment/Export-CopilotGovernanceEvidence.ps1` and validated with `scripts/deployment/Test-EvidenceIntegrity.ps1`.
 
 Framework playbook links published into `site-docs/` are pinned to `FSI-CopilotGov` commit `e0fb7b769529dcc008cc2066402cdabae4f369cf`.

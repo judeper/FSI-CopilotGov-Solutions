@@ -39,9 +39,9 @@ The script generates:
 
 Review `ca-policy-templates.json` before creating policies. Confirm:
 
-- Copilot app IDs are correct.
+- Target resources use the `Office365` app-suite value or tenant-verified app IDs.
 - Grant controls align with the selected tier.
-- Named locations are tenant-specific and approved.
+- Named-location labels are tenant-specific and approved, and Graph-ready `namedLocationIds` contain tenant object IDs before execution.
 - Emergency access accounts are handled outside the default template.
 
 ## Step 4: Create or update Conditional Access policies
@@ -50,14 +50,15 @@ Create or update policies manually in the Entra admin center or by using the gen
 
 Manual path:
 
-1. Go to Entra admin center.
-2. Open Protection > Conditional Access.
-3. Create or update policies that target the Copilot app IDs.
+1. Go to the Microsoft Entra admin center.
+2. Browse to **Entra ID** > **Conditional Access** > **Policies**.
+3. Create or update policies that target the `Office365` app suite or tenant-verified app IDs.
 4. Enable MFA, compliant-device, and named-location controls based on the selected tier.
 
 Graph path:
 
 - Review `graph-api-commands.ps1`.
+- Confirm any policy marked `requiresTenantNamedLocationIds` has tenant named-location object IDs before execution; generated commands skip those policies until IDs are populated.
 - Connect with `Policy.Read.All` and `Policy.ReadWrite.ConditionalAccess`.
 - Run commands only after change approval is recorded.
 

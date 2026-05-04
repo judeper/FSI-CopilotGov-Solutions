@@ -1,6 +1,6 @@
 # Sensitivity Label Coverage Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -37,8 +37,9 @@ See `docs\architecture.md` for the component diagram, Graph data flow, workload 
 ## Prerequisites
 
 - Sensitivity label taxonomy is finalized in Microsoft Purview.
-- Microsoft Purview Information Protection licensing is confirmed for the target tenant.
-- Microsoft Graph permissions for label and workload data collection are approved.
+- Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing is confirmed for the target tenant where sensitivity labeling features are used.
+- Microsoft Graph permissions distinguish delegated label enumeration (`InformationProtectionPolicy.Read`) from application label enumeration (`InformationProtectionPolicy.Read.All`), and tenant plans note that organization label definition enumeration currently uses Microsoft Graph beta.
+- SharePoint and OneDrive label extraction uses approved `Files.Read.All`; any approved bulk assignment scenario also needs protected API validation plus `Files.ReadWrite.All` or `Sites.ReadWrite.All`.
 - `01-copilot-readiness-scanner` baseline outputs are complete.
 - `02-oversharing-risk-assessment` initial findings are available for cross-reference.
 - See `docs\prerequisites.md` for detailed requirements.
@@ -138,8 +139,8 @@ Power Automate is documentation-first in this version. The solution documents tw
 ## Known Limitations
 
 - Microsoft Purview auto-labeling policies can process a maximum of 100,000 files per day per tenant, so large FSI tenants usually need staged remediation waves or supplementary automation.
-- The `assignSensitivityLabel` API requires the correct Microsoft 365 and Purview licensing, plus approved permissions for bulk application scenarios.
+- The `assignSensitivityLabel` API is a protected SharePoint and OneDrive Microsoft Graph API for files at rest; approved bulk application scenarios require protected API validation beyond permission consent, least-privileged `Files.ReadWrite.All` or `Sites.ReadWrite.All`, long-running operation handling, and use in the Global service, which Microsoft Learn lists as the documented available cloud for this API.
 - Exchange coverage can lag if required message-level label metadata is not consistently exposed through the chosen collection method.
 - This version focuses on monitoring, evidence production, and remediation planning; it does not claim automatic enforcement across every workload.
-- Microsoft is replacing the parent/sublabel hierarchy with a label groups model. Forced auto-migration runs December 2025 through May 2026 and is irreversible. The solution's taxonomy snapshot should be updated to capture label group membership after migration.
+- Microsoft is replacing parent labels with label groups. Migration is irreversible; automatic migration applies only in documented cases, and other tenants should migrate when the Microsoft Purview portal banner is available. The solution's taxonomy snapshot should be updated to record label group membership after migration.
 - Service-side auto-labeling can now override existing lower-priority labels on files (previously only emails). Remediation manifests should account for this capability.

@@ -3,18 +3,18 @@
 ## Microsoft 365 Licensing
 
 - Microsoft 365 Copilot licenses must be available for the users or cohorts included in the governance review.
-- Viva Insights licenses are required if the customer expects the ROI scorecard to include Viva-based impact measurements.
+- Copilot Dashboard and Viva impact feature availability should be validated against the tenant license counts if the customer expects the ROI scorecard to include Viva-based impact measurements.
 - Power BI Pro or Power BI Premium Per User is required for report publishing, workspace collaboration, and scheduled refresh.
 
 ## Required Microsoft Graph Permissions
 
 Grant tenant-admin consent for the following Graph application permissions:
 
-- `Reports.Read.All`
-- `Directory.Read.All`
-- `User.Read.All`
+- `Reports.Read.All` for Copilot usage reports
+- `LicenseAssignment.Read.All` for license inventory via `subscribedSkus`
+- `User.Read.All` for user inventory
 
-These permissions support user inventory, Copilot usage reporting, and license inventory planning. They should be assigned only to approved automation identities.
+Use `Directory.Read.All` only as a higher-privileged alternative when already approved. These permissions support user inventory, Copilot usage reporting, and license inventory planning. They should be assigned only to approved automation identities.
 
 ## PowerShell and Module Requirements
 

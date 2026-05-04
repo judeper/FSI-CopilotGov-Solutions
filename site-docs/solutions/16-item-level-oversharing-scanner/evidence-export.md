@@ -76,7 +76,7 @@ This artifact demonstrates that findings are being prioritized and acted upon wi
 | Control | Status | Notes |
 |---------|--------|-------|
 | 1.2 | partial | Item-level detection extends site-level coverage but requires tenant PnP connectivity for full enumeration |
-| 1.3 | monitor-only | Supports Restricted SharePoint Search planning by identifying overshared items but does not enforce tenant state |
+| 1.3 | monitor-only | Supports temporary Restricted SharePoint Search or Restricted Content Discovery planning by identifying sites/items for permission cleanup; RSS is not a security boundary, does not change permissions, and is not intended for long-term use |
 | 1.4 | partial | Semantic index governance is supported through item-level findings and risk prioritization |
 | 1.6 | monitor-only | Permission model anomalies at the item level are surfaced and scored for follow-up |
 | 2.5 | partial | Data minimization is supported through detection and approval-gated remediation of overshared items |

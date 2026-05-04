@@ -50,7 +50,7 @@
 
 **Actions**
 
-- Confirm the environment type and Microsoft Purview Data Loss Prevention policies
+- Confirm the environment type and Power Platform data policies in the Power Platform admin center; treat Microsoft Purview DLP as a separate sensitive-data control
 - Use the documentation-first design to map an approved replacement connector or routing method
 - Delay notification enablement until the environment is approved
 
