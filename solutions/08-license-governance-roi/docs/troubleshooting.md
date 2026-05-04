@@ -27,7 +27,7 @@
 
 **Likely cause**
 
-- The automation identity does not have tenant-admin consent for `Reports.Read.All`, `Directory.Read.All`, or `User.Read.All`.
+- The automation identity does not have tenant-admin consent for `Reports.Read.All`, `LicenseAssignment.Read.All`, or `User.Read.All`, or it relies on `Directory.Read.All` without higher-privilege approval.
 
 **Remediation**
 

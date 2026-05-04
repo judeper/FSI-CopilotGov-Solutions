@@ -3,7 +3,7 @@
 ## Delivery Summary
 
 - Solution: License Governance and ROI Tracker
-- Version: v0.1.0
+- Version: v0.1.1
 - Track: C
 - Priority: P1
 - Dependency: 11-risk-tiered-rollout
@@ -45,8 +45,8 @@
 ## Customer Validation
 
 - [ ] Confirm Microsoft 365 Copilot licenses exist for the intended population and that seat counts align to finance-approved budgets.
-- [ ] Confirm Viva Insights data is licensed and available if the customer wants the ROI scorecard populated beyond Microsoft 365 usage signals.
-- [ ] Confirm Graph permissions `Reports.Read.All`, `Directory.Read.All`, and `User.Read.All` have tenant admin consent.
+- [ ] Confirm Copilot Dashboard and Viva impact feature availability for the tenant license counts if the customer wants the ROI scorecard populated beyond Microsoft 365 usage signals.
+- [ ] Confirm Graph permissions `Reports.Read.All`, `LicenseAssignment.Read.All`, and `User.Read.All` have tenant admin consent; document `Directory.Read.All` only as a higher-privileged alternative when already approved.
 - [ ] Confirm the selected governance tier matches the customer operating model for inactivity thresholds and notification strictness.
 - [ ] Confirm exception handling rules for high-risk or protected users inherited from solution `11-risk-tiered-rollout`.
 - [ ] Confirm Power BI workspace ownership, dataset refresh ownership, and report consumer access model.

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.1.1] - 2026-05-04
+
+- Corrected Microsoft Graph Copilot report endpoint references to the current `/v1.0/copilot/reports` paths.
+- Updated license inventory permission guidance to prefer least-privileged `LicenseAssignment.Read.All` for `subscribedSkus`.
+- Clarified Copilot Dashboard/Viva impact availability, PAYG budget alerts, and sample-only utilization metrics.
+
 ## v0.2.0
 
 - Added consumption-based billing governance: PAYG message metering, message pack tracking, billing policy assignment, Azure Cost Management integration, and high-usage user monitoring patterns.

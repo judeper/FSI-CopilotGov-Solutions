@@ -5,7 +5,7 @@
 Before running the solution scripts, confirm the following:
 
 - Microsoft 365 Copilot license inventory is known and finance-approved for the scoped population.
-- Required Graph permissions are approved: `Reports.Read.All`, `Directory.Read.All`, `User.Read.All`.
+- Required Graph permissions are approved: `Reports.Read.All`, `LicenseAssignment.Read.All`, and `User.Read.All`; use `Directory.Read.All` only as a higher-privileged alternative when already approved.
 - The target tenant has a documented owner for reallocation decisions and exception approvals.
 - The dependency output from `11-risk-tiered-rollout` is available or an alternate protected-user list has been defined.
 - Power BI workspace ownership, dataset refresh ownership, and retention expectations are documented.
@@ -20,11 +20,12 @@ Choose one of the following supported authentication patterns for Microsoft Grap
 1. Create or identify an Entra ID app registration for LGR automation.
 2. Grant application permissions for:
    - `Reports.Read.All`
-   - `Directory.Read.All`
+   - `LicenseAssignment.Read.All` for license inventory via `subscribedSkus`
    - `User.Read.All`
-3. Grant tenant admin consent.
-4. Store the application secret or certificate outside the repository in the customer-approved secret store.
-5. Record the tenant identifier that will be passed to `Deploy-Solution.ps1`.
+3. Use `Directory.Read.All` only as a higher-privileged alternative when already approved.
+4. Grant tenant admin consent.
+5. Store the application secret or certificate outside the repository in the customer-approved secret store.
+6. Record the tenant identifier that will be passed to `Deploy-Solution.ps1`.
 
 ### Option B: Service principal used by an automation platform
 
