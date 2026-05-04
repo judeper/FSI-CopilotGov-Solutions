@@ -1,0 +1,58 @@
+[
+  {
+    "file": "solutions\\08-license-governance-roi\\README.md",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/94",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\README.md — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\DELIVERY-CHECKLIST.md",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/96",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\DELIVERY-CHECKLIST.md — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\docs\\architecture.md",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/98",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\docs\\architecture.md — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\docs\\deployment-guide.md",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/100",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\docs\\deployment-guide.md — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\docs\\prerequisites.md",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/102",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\docs\\prerequisites.md — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\docs\\troubleshooting.md",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/104",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\docs\\troubleshooting.md — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\scripts\\Deploy-Solution.ps1",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/106",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\scripts\\Deploy-Solution.ps1 — accuracy review (2026-05-04)"
+  },
+  {
+    "file": "solutions\\08-license-governance-roi\\scripts\\Monitor-Compliance.ps1",
+    "action": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/108",
+    "number": null,
+    "title": "[08] solutions\\08-license-governance-roi\\scripts\\Monitor-Compliance.ps1 — accuracy review (2026-05-04)"
+  }
+]

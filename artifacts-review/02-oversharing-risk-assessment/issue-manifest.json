@@ -1,0 +1,52 @@
+[
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\DELIVERY-CHECKLIST.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\DELIVERY-CHECKLIST.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__DELIVERY-CHECKLIST.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\README.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\README.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__README.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\architecture.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\architecture.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__docs__architecture.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\deployment-guide.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\deployment-guide.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__docs__deployment-guide.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\evidence-export.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\evidence-export.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__docs__evidence-export.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\prerequisites.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\prerequisites.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__docs__prerequisites.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\troubleshooting.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\troubleshooting.md \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__docs__troubleshooting.md.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\scripts\\Deploy-Solution.ps1",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\scripts\\Deploy-Solution.ps1 \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__scripts__Deploy-Solution.ps1.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\scripts\\Export-Evidence.ps1",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\scripts\\Export-Evidence.ps1 \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__scripts__Export-Evidence.ps1.md"
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\scripts\\Monitor-Compliance.ps1",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\scripts\\Monitor-Compliance.ps1 \u2014 accuracy review (2026-05-04)",
+    "body_file": "C:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\02-oversharing-risk-assessment\\issues\\solutions__02-oversharing-risk-assessment__scripts__Monitor-Compliance.ps1.md"
+  }
+]

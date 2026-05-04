@@ -1,0 +1,86 @@
+[
+  {
+    "title": "[09] solutions/09-feature-management-controller/README.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/README.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/6",
+    "number": 6,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/CHANGELOG.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/CHANGELOG.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/9",
+    "number": 9,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/DELIVERY-CHECKLIST.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/DELIVERY-CHECKLIST.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/10",
+    "number": 10,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/docs/architecture.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/docs/architecture.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/12",
+    "number": 12,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/docs/deployment-guide.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/docs/deployment-guide.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/13",
+    "number": 13,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/docs/evidence-export.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/docs/evidence-export.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/14",
+    "number": 14,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/docs/prerequisites.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/docs/prerequisites.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/15",
+    "number": 15,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/docs/troubleshooting.md — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/docs/troubleshooting.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/16",
+    "number": 16,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/config/default-config.json — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/config/default-config.json",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/17",
+    "number": 17,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/config/baseline.json — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/config/baseline.json",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/18",
+    "number": 18,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/config/recommended.json — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/config/recommended.json",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/20",
+    "number": 20,
+    "action": "created"
+  },
+  {
+    "title": "[09] solutions/09-feature-management-controller/config/regulated.json — accuracy review (2026-05-04)",
+    "file": "solutions/09-feature-management-controller/config/regulated.json",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/23",
+    "number": 23,
+    "action": "created"
+  }
+]
