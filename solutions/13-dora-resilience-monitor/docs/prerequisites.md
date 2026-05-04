@@ -11,8 +11,11 @@
 
 The Entra application used by DRM should be granted only the permissions required for monitoring and evidence support.
 
-- `ServiceHealth.Read.All` for Microsoft Graph service-health access
-- `SecurityEvents.Read.All` for Graph-based operational and security event enrichment where available
+- `ServiceHealth.Read.All` for Microsoft Graph service-health access to `/admin/serviceAnnouncement/healthOverviews`
+- Optional Microsoft Graph Security enrichment permissions must align to the specific API in use:
+  - `SecurityAlert.Read.All` for `/security/alerts_v2`
+  - `SecurityIncident.Read.All` for `/security/incidents`
+  - `SecurityEvents.Read.All` only for implementations that intentionally call the deprecated legacy `/security/alerts` API
 
 Admin consent is typically required before these permissions can be used in production.
 
@@ -26,10 +29,10 @@ Admin consent is typically required before these permissions can be used in prod
 ## PowerShell Requirements
 
 - PowerShell 7.2 or later
-- `Microsoft.Graph.Reports`
-- `ExchangeOnlineManagement`
+- `Microsoft.Graph.Authentication` or the full `Microsoft.Graph` PowerShell SDK for `Connect-MgGraph` and `Invoke-MgGraphRequest` service-health polling
+- `ExchangeOnlineManagement` only if the customer adds optional Exchange-specific checks beyond the Microsoft Graph service-health REST endpoint
 
-If the target operating model uses certificate-based authentication or broader Graph automation, install the supporting Microsoft Graph authentication module approved by the customer security team.
+If the target operating model uses certificate-based authentication or broader Graph automation, confirm the approved Microsoft Graph authentication approach with the customer security team.
 
 ## Network Requirements
 
@@ -57,6 +60,6 @@ DRM depends on shared repository components:
 
 ## Recommended
 
-- Microsoft Sentinel workspace with Copilot activity logs
+- Microsoft Sentinel workspace with customer-defined ingestion for Copilot Studio/Purview audit events available through the Office 365 Management API, plus documented custom table and analytics rule names if enrichment is enabled
 - Defined escalation list for service-health incidents and resilience-test exceptions
 - Approved evidence-retention location for JSON and SHA-256 artifacts

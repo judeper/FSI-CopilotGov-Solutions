@@ -2,7 +2,7 @@
   "solution": "13-dora-resilience-monitor",
   "displayName": "DORA Operational Resilience Monitor",
   "solutionCode": "DRM",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "controls": [
     "2.7",
     "4.9",

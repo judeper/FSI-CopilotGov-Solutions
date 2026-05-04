@@ -41,7 +41,7 @@
     Solution: DORA Operational Resilience Monitor (DRM)
     Controls:  2.7, 4.9, 4.10, 4.11
     Regulations: DORA, OCC 2011-12, FFIEC IT Handbook
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
