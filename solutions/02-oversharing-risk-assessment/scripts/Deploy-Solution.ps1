@@ -5,8 +5,8 @@ Deploys the Oversharing Risk Assessment and Remediation solution.
 .DESCRIPTION
 Loads the solution default configuration plus the selected governance tier,
 checks for upstream output from solution 01-copilot-readiness-scanner,
-records a placeholder SharePoint Advanced Management license validation,
-marks Restricted SharePoint Search readiness when configured, and writes a
+records a placeholder SharePoint Advanced Management feature-entitlement validation,
+marks temporary Restricted SharePoint Search readiness when configured, and writes a
 deployment manifest for auditability.
 
 .PARAMETER ConfigurationTier
@@ -56,7 +56,7 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module (Join-Path $PSScriptRoot 'SharedUtilities.psm1') -Force
 
-function Test-SharePointAdvancedManagementLicense {
+function Test-SharePointAdvancedManagementEntitlement {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -66,18 +66,24 @@ function Test-SharePointAdvancedManagementLicense {
         [string]$TenantId
     )
 
-    $status = if ($env:ORA_ASSUME_SAM_LICENSE -eq '1') { 'verified' } else { 'manual-check-required' }
+    $assumeEntitlement = $env:ORA_ASSUME_SAM_ENTITLEMENT -eq '1' -or $env:ORA_ASSUME_SAM_LICENSE -eq '1'
+    $status = if ($assumeEntitlement) { 'verified' } else { 'manual-check-required' }
     $notes = if ($status -eq 'verified') {
-        'ORA_ASSUME_SAM_LICENSE=1 was supplied for stub validation.'
+        'ORA_ASSUME_SAM_ENTITLEMENT=1 or ORA_ASSUME_SAM_LICENSE=1 was supplied for stub validation.'
     }
     else {
-        'Validate SharePoint Advanced Management licensing in the tenant before production deployment.'
+        'Validate the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license before production deployment.'
     }
 
     return [pscustomobject]@{
-        Requirement = 'SharePoint Advanced Management'
+        Requirement = 'SharePoint Advanced Management feature entitlement'
         TenantId = $TenantId
         Status = $status
+        BaseLicenseRequirement = 'Office 365 E3/E5/A5 or Microsoft 365 E1/E3/E5/A5'
+        EntitlementPaths = @(
+            'Microsoft 365 Copilot license assigned to at least one user'
+            'Standalone Microsoft SharePoint Advanced Management license'
+        )
         Notes = $notes
     }
 }
@@ -129,18 +135,18 @@ function Resolve-RestrictedSharePointSearchState {
         }
     }
 
-    $status = if ($ScanMode -eq 'AutoRemediate') { 'planned-enforce' } else { 'planned-enable' }
+    $status = if ($ScanMode -eq 'AutoRemediate') { 'planned-temporary-enable-with-approval' } else { 'planned-temporary-enable' }
 
     return [pscustomobject]@{
         Enabled = $true
         Status = $status
-        Notes = 'Placeholder action only. Validate search scoping with SharePoint administrators before enforcement.'
+        Notes = 'Temporary planning placeholder only. Restricted SharePoint Search is limited to 100 allowed sites, is not a security boundary, does not change permissions, and documents that allowed-list membership is not the only way content can appear in search or Copilot responses.'
     }
 }
 
 $configuration = Get-Configuration -ConfigurationTier $ConfigurationTier -ScriptRoot $PSScriptRoot
 $upstreamCheck = Test-UpstreamReadinessOutput -DependencyName $configuration.upstreamDependency
-$licenseCheck = Test-SharePointAdvancedManagementLicense -Configuration $configuration -TenantId $TenantId
+$licenseCheck = Test-SharePointAdvancedManagementEntitlement -Configuration $configuration -TenantId $TenantId
 $restrictedSearchState = Resolve-RestrictedSharePointSearchState -Configuration $configuration -ScanMode $ScanMode
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)

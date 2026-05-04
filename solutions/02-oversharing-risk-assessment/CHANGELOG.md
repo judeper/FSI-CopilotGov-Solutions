@@ -4,6 +4,14 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [v0.2.1] - 2026-05-04
+
+### Changed
+
+- Updated SharePoint Advanced Management prerequisite language to include the Microsoft 365 Copilot entitlement path and standalone license path.
+- Replaced current-state DSPM for AI references with Microsoft Purview Data Security Posture Management (DSPM) guidance and classic-DSPM caveats where relevant.
+- Clarified Restricted SharePoint Search limitations, sensitivity-label governance semantics, Power Platform data policy troubleshooting, and Microsoft Graph sensitivity-label extraction behavior.
+
 ## [v0.2.0] - 2026-03-07
 
 ### Added

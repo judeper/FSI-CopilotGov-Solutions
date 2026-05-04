@@ -12,8 +12,8 @@ Before deploying, confirm that solution 01-copilot-readiness-scanner has already
 
 Review [prerequisites.md](prerequisites.md) and confirm:
 
-- SharePoint Advanced Management licensing is available or formally documented as a gap
-- DSPM for AI prerequisites are understood
+- SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license, or the gap is formally documented
+- Microsoft Purview Data Security Posture Management (DSPM) prerequisites are understood for the target scenarios
 - Required admin roles are assigned
 - Network access to SharePoint REST API and Graph API is available
 
@@ -43,10 +43,12 @@ Example detect-only deployment:
 Expected outcomes:
 
 - Selected configuration is merged and validated
-- A placeholder SharePoint Advanced Management license check is recorded
+- A placeholder SharePoint Advanced Management feature-entitlement check is recorded
 - Upstream dependency status is captured
 - A deployment manifest is written to the output path
-- Restricted SharePoint Search is marked for enablement when configured
+- Temporary Restricted SharePoint Search planning is recorded with the current Microsoft limitations when configured
+
+Restricted SharePoint Search planning must document that Microsoft describes it as a short-term measure with an allowed list of up to 100 SharePoint sites. It is not a security boundary, does not change SharePoint permissions, and documents that allowed-list membership is not the only way content can appear in search or Copilot responses.
 
 ## 5. Execute the Initial Scan in Detect-Only Mode
 
@@ -124,7 +126,7 @@ If deployment settings need to be reversed:
 
 1. Revert to the previous tier JSON or set `remediationMode` back to `detectOnly`
 2. Disable or pause Power Automate notification flows
-3. Revert any planned Restricted SharePoint Search configuration changes
+3. Revert any temporary Restricted SharePoint Search configuration changes, then confirm search and Copilot experiences rely on standard permission-based access
 4. Archive the evidence from the failed or rolled-back window for audit traceability
 5. Re-run `Monitor-Compliance.ps1` in detect-only mode to confirm the tenant is back to the intended state
 

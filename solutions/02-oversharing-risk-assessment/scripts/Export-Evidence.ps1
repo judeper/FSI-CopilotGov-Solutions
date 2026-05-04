@@ -241,8 +241,8 @@ $artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'oversharing-findi
 $artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'remediation-queue.json') -Content @($remediationQueue) -ArtifactName 'remediation-queue' -ArtifactType 'remediation-queue'
 $artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'site-owner-attestations.json') -Content @($siteOwnerAttestations) -ArtifactName 'site-owner-attestations' -ArtifactType 'site-owner-attestations'
 
-# Sensitivity label coverage from actual Microsoft Purview Information Protection data
-$defaultLabelRecommendation = 'Apply Microsoft Purview Information Protection sensitivity labels to all sites containing regulated data to restrict Microsoft 365 Copilot content surfacing.'
+# Sensitivity label coverage is a governance signal; configured label protections determine AI-app handling.
+$defaultLabelRecommendation = 'Configure Microsoft Purview Information Protection sensitivity labels and protection settings for regulated data; treat label coverage as a governance signal because Copilot honors permissions and label-based protections such as encryption, where users need VIEW and EXTRACT rights.'
 $totalSitesScanned = if ($null -ne $labelCoverage) { [int]$labelCoverage.TotalSitesScanned } else { [Math]::Max(@($oversharingFindings).Count, 1) }
 $sitesWithLabels = if ($null -ne $labelCoverage) { [int]$labelCoverage.SitesWithLabels } else { 0 }
 $labelCoveragePercent = if ($null -ne $labelCoverage) { [double]$labelCoverage.LabelCoveragePercent } else { 0.0 }
@@ -263,12 +263,12 @@ $controls = @(
     [pscustomobject]@{
         controlId = '1.2'
         status = 'partial'
-        notes = 'DSPM for AI covers the top 100 sites only; tenant-wide coverage still requires local monitoring and remediation workflow tuning.'
+        notes = 'Microsoft Purview Data Security Posture Management (DSPM) can provide native signals; the classic DSPM for AI default weekly data risk assessment covers the top 100 SharePoint sites by usage, so tenant-wide coverage still requires local monitoring and remediation workflow tuning.'
     }
     [pscustomobject]@{
         controlId = '1.3'
         status = 'monitor-only'
-        notes = 'Restricted SharePoint Search readiness is documented and tracked but not enforced directly by this script.'
+        notes = 'Temporary Restricted SharePoint Search planning is documented and tracked, but this script does not modify tenant state.'
     }
     [pscustomobject]@{
         controlId = '1.4'

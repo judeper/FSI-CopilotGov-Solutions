@@ -2,8 +2,8 @@
 
 ## Platform and Licensing
 
-- SharePoint Advanced Management licensing is required for the intended production posture. If licensing is not available, document the limitation before enabling this solution.
-- Microsoft 365 E5 Compliance, or an equivalent licensing combination that enables DSPM for AI investigations, should be available for the tenant.
+- SharePoint Advanced Management feature entitlement for the intended production posture requires an eligible base license plus either a Microsoft 365 Copilot license assigned to at least one user in the organization or a standalone Microsoft SharePoint Advanced Management license. If neither entitlement path is available, document the limitation before enabling this solution.
+- Microsoft Purview Data Security Posture Management (DSPM) prerequisites should be validated for the selected scenarios, including appropriate permissions, Microsoft Purview auditing, Microsoft 365 Copilot user licensing for Copilot and agents, and any Edge, device onboarding, browser extension, or pay-as-you-go billing requirements that apply.
 - The target tenant should already have a defined Copilot pilot or rollout scope so findings can be prioritized against real exposure risk.
 
 ## Required Administrative Roles
@@ -55,7 +55,7 @@ When these modules are not present (e.g., standalone or documentation-first usag
 The execution environment must be able to reach:
 
 - SharePoint REST API endpoints
-- Microsoft Graph API endpoints
+- Microsoft Graph API endpoints, including approval for driveItem `extractSensitivityLabels` permissions such as `Files.Read.All` or `Sites.Read.All` when item-level label extraction is enabled
 - Tenant admin endpoints needed for sharing and search configuration review
 
 If the environment uses proxy inspection or outbound restrictions, test API connectivity before the initial scan window.

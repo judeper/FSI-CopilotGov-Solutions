@@ -75,7 +75,7 @@ SharePoint is the primary workload because most Copilot grounding risk in M365 c
 
 - Site collections with broad sharing or inherited access sprawl
 - Libraries and folders linked to regulated business processes
-- High-value sites surfaced by DSPM for AI or upstream readiness findings
+- High-value sites surfaced by Microsoft Purview Data Security Posture Management (DSPM) or upstream readiness findings
 
 ### OneDrive
 
