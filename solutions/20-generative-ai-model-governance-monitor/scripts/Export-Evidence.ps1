@@ -1,15 +1,15 @@
 <#
 .SYNOPSIS
-    Exports the four GMG documentation-first evidence artifacts.
+    Exports the five GMG documentation-first evidence artifacts.
 
 .DESCRIPTION
-    Builds copilot-model-inventory, validation-summary, ongoing-monitoring-log, and
-    third-party-due-diligence JSON artifacts using the monitoring snapshot from
-    Monitor-Compliance.ps1. Each artifact is paired with a SHA-256 sidecar file. This
-    script is documentation-first and uses representative sample data. The exported
-    package supports compliance with SR 11-7 / OCC Bulletin 2011-12 model risk
-    principles for generative AI as applied during the SR 26-2 / OCC Bulletin 2026-13
-    generative AI exclusion period.
+    Builds copilot-model-inventory, validation-summary, ongoing-monitoring-log,
+    content-safety-and-guardrails, and third-party-due-diligence JSON artifacts using
+    the monitoring snapshot from Monitor-Compliance.ps1. Each artifact is paired with
+    a SHA-256 sidecar file. This script is documentation-first and uses representative
+    sample data. The exported package supports compliance with SR 11-7 / OCC Bulletin
+    2011-12 model risk principles for generative AI as applied during the SR 26-2 /
+    OCC Bulletin 2026-13 generative AI exclusion period.
 
 .PARAMETER ConfigurationTier
     Governance tier: baseline, recommended, or regulated.
@@ -31,7 +31,7 @@
 
 .NOTES
     Solution: Generative AI Model Governance Monitor (GMG)
-    Version: v0.1.0
+    Version: v0.1.1
     Documentation-first: scripts use representative sample data.
 #>
 [CmdletBinding()]
@@ -110,6 +110,11 @@ $monitoringArtifact['retentionDays'] = $configuration.monitoring_log_retention_d
 $monitoringArtifact['records'] = @($snapshot.MonitoringObservations)
 $monitoringFile = New-GmgArtifactFile -Path (Join-Path $resolvedOutputPath ("ongoing-monitoring-log-{0}.json" -f $ConfigurationTier)) -Content $monitoringArtifact
 
+Write-Verbose 'Building content-safety-and-guardrails artifact.'
+$contentSafetyArtifact = [ordered]@{} + $baseEnvelope
+$contentSafetyArtifact['records'] = @($snapshot.ContentSafetyAndGuardrails)
+$contentSafetyFile = New-GmgArtifactFile -Path (Join-Path $resolvedOutputPath ("content-safety-and-guardrails-{0}.json" -f $ConfigurationTier)) -Content $contentSafetyArtifact
+
 Write-Verbose 'Building third-party-due-diligence artifact.'
 $thirdPartyArtifact = [ordered]@{} + $baseEnvelope
 $thirdPartyArtifact['reviewCadenceDays'] = $configuration.third_party_review_cadence_days
@@ -118,17 +123,18 @@ $thirdPartyFile = New-GmgArtifactFile -Path (Join-Path $resolvedOutputPath ("thi
 
 $controls = @(
     [pscustomobject]@{ controlId = '3.8a'; status = 'partial';      notes = 'Generative AI MRM scaffold present; live integration deferred. SR 11-7 / OCC 2011-12 interim principles applied to fill the SR 26-2 / OCC 2026-13 generative AI exclusion.' },
-    [pscustomobject]@{ controlId = '3.8';  status = 'partial';      notes = 'AI model governance and risk assessment evidence captured from sample data; firm validation work still required.' },
-    [pscustomobject]@{ controlId = '3.1';  status = 'monitor-only'; notes = 'Acceptable use linkage documented through inventory intended-use field.' },
-    [pscustomobject]@{ controlId = '3.11'; status = 'partial';      notes = 'Third-party review cadence captured; vendor evidence references are sample placeholders.' },
-    [pscustomobject]@{ controlId = '3.12'; status = 'monitor-only'; notes = 'Monitoring observations include escalation field; live AI incident response integration deferred.' }
+    [pscustomobject]@{ controlId = '3.8';  status = 'partial';      notes = 'AI model governance and risk assessment evidence represented from sample data; firm validation work still required.' },
+    [pscustomobject]@{ controlId = '3.1';  status = 'monitor-only'; notes = 'Acceptable use linkage documented through inventory intended-use and guardrail profile fields.' },
+    [pscustomobject]@{ controlId = '3.11'; status = 'partial';      notes = 'Third-party review cadence represented; vendor evidence references are sample placeholders.' },
+    [pscustomobject]@{ controlId = '3.12'; status = 'monitor-only'; notes = 'Monitoring observations include escalation field and guardrail exception references; live AI incident response integration deferred.' }
 )
 
 $artifacts = @(
-    [pscustomobject]@{ name = 'copilot-model-inventory';      type = 'json'; path = $inventoryFile.Path;   hash = $inventoryFile.Hash },
-    [pscustomobject]@{ name = 'validation-summary';           type = 'json'; path = $validationFile.Path;  hash = $validationFile.Hash },
-    [pscustomobject]@{ name = 'ongoing-monitoring-log';       type = 'json'; path = $monitoringFile.Path;  hash = $monitoringFile.Hash },
-    [pscustomobject]@{ name = 'third-party-due-diligence';    type = 'json'; path = $thirdPartyFile.Path;  hash = $thirdPartyFile.Hash }
+    [pscustomobject]@{ name = 'copilot-model-inventory';       type = 'json'; path = $inventoryFile.Path;     hash = $inventoryFile.Hash },
+    [pscustomobject]@{ name = 'validation-summary';            type = 'json'; path = $validationFile.Path;    hash = $validationFile.Hash },
+    [pscustomobject]@{ name = 'ongoing-monitoring-log';        type = 'json'; path = $monitoringFile.Path;    hash = $monitoringFile.Hash },
+    [pscustomobject]@{ name = 'content-safety-and-guardrails'; type = 'json'; path = $contentSafetyFile.Path; hash = $contentSafetyFile.Hash },
+    [pscustomobject]@{ name = 'third-party-due-diligence';     type = 'json'; path = $thirdPartyFile.Path;    hash = $thirdPartyFile.Hash }
 )
 
 $packageSummary = [ordered]@{
@@ -146,7 +152,7 @@ $packageSummary = [ordered]@{
     }
     summary   = [ordered]@{
         overallStatus  = 'partial'
-        recordCount    = (@($snapshot.InventoryRecords).Count + @($snapshot.ValidationRecords).Count + @($snapshot.MonitoringObservations).Count + 1)
+        recordCount    = (@($snapshot.InventoryRecords).Count + @($snapshot.ValidationRecords).Count + @($snapshot.MonitoringObservations).Count + @($snapshot.ContentSafetyAndGuardrails).Count + @($snapshot.ThirdPartyReview).Count)
         findingCount   = 0
         exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
     }

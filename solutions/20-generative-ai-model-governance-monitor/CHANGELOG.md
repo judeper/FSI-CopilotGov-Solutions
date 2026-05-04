@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.1 — 2026-05-04
+
+### Changed
+- Broadened the documentation-first inventory scope to include Microsoft Foundry, Azure OpenAI or Foundry deployments, and approved Foundry partner/community provider sources.
+- Added content safety and guardrail evidence coverage for Azure AI Content Safety, Prompt Shields, groundedness, protected-material, filter-threshold, exception, and review-cadence evidence where applicable.
+- Updated representative configuration, evidence export scripts, and smoke tests for five evidence artifacts.
 ## v0.1.0 — 2026-04-22
 
 ### Added
