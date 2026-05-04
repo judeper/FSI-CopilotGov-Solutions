@@ -62,11 +62,11 @@
     {
       "featureId": "teams-copilot-chat",
       "displayName": "Copilot in Teams chat",
-      "sourceSystem": "Teams admin center",
+      "sourceSystem": "Microsoft 365 Copilot app inventory",
       "category": "teams-experiences",
       "expectedEnabled": true,
       "expectedRing": "Early Adopters",
-      "riskNote": "Scoped to trained pilot users with supervisory review."
+      "riskNote": "Scoped to trained pilot users with supervisory review; Teams chat/channel admin control remains documentation-first unless a current Learn source is cited."
     },
     {
       "featureId": "teams-copilot-meetings",
@@ -79,9 +79,15 @@
     }
   ],
   "webGroundingPolicy": {
-    "enforceExclusionList": true,
-    "requireAuthoritativeSourceDesignation": true,
+    "adminControl": "Cloud Policy service - Allow web search in Copilot",
     "webSearchEnabled": true,
-    "excludedDomainCategories": ["social-media", "personal-storage"]
+    "policyScope": "approved rollout groups",
+    "customerGovernanceMetadata": {
+      "excludedDomainCategories": [
+        "social-media",
+        "personal-storage"
+      ],
+      "authoritativeSourceDesignation": "planning-metadata-only"
+    }
   }
 }

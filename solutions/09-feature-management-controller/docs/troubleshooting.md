@@ -4,7 +4,7 @@
 
 | Symptom | Likely cause | Remediation |
 |---------|--------------|-------------|
-| Graph collection fails with `403 Forbidden` when reading `/policies/featureRolloutPolicies`. | The operator does not have Microsoft 365 Global Administrator rights or the delegated app is missing `Policy.ReadWrite.FeatureRollout`. | Reconfirm the role assignment, add the missing Graph permission, grant admin consent if required, and rerun the deployment script. |
+| Feature inventory includes Entra staged authentication rollout records. | An unrelated Microsoft Graph feature rollout policy source was included in the Copilot feature baseline. | Remove those records from FMC, keep Entra staged rollout documentation separate, and use documented Copilot admin surfaces for the baseline. |
 | Teams Copilot settings are missing from the inventory. | Teams Administrator rights are missing, or the Teams policy export was not refreshed before the run. | Refresh the Teams policy export, confirm Teams Administrator access, and rerun inventory collection. |
 | Power Platform Copilot settings show as unmanaged. | The target environment in Power Platform admin center does not match the environment referenced during deployment. | Verify the environment name passed to `-Environment`, update the tier configuration if necessary, and rerun baseline capture. |
 | Drift alerts keep firing after an approved feature change. | The baseline was not refreshed after the approved ring promotion or restriction. | Capture a new baseline with `Deploy-Solution.ps1`, store the approval reference, and rerun `Monitor-Compliance.ps1`. |

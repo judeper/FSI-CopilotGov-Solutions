@@ -3,10 +3,11 @@
 Deploys the Copilot Feature Management Controller operating model.
 
 .DESCRIPTION
-Loads the selected governance tier, establishes a stub Microsoft Graph context,
-collects the current Copilot feature inventory, captures a feature-state baseline,
-plans rollout ring assignments, and documents Power Automate flow deployment
-intent for the Copilot Feature Management Controller solution.
+Loads the selected governance tier, prepares documentation-first admin context
+metadata, collects the tier-defined Copilot feature inventory, captures a
+feature-state baseline, plans rollout ring assignments, and documents Power
+Automate flow deployment intent for the Copilot Feature Management Controller
+solution.
 
 The script is documentation-first for Power Automate assets. It writes deployment
 artifacts that describe the baseline, rollout plan, and flow metadata so the
@@ -19,7 +20,7 @@ The governance tier to deploy. Valid values are baseline, recommended, and regul
 Directory where deployment artifacts are written.
 
 .PARAMETER TenantId
-Tenant identifier or primary tenant domain used for the Graph connection context.
+Tenant identifier or primary tenant domain used for documentation-first admin context metadata.
 
 .PARAMETER Environment
 Target environment label such as Sandbox, UAT, or Production.
@@ -126,16 +127,24 @@ function Connect-FmcGraphContext {
         [string]$Environment
     )
 
-    $context = New-CopilotGovGraphContext -TenantId $TenantId -Scopes $GraphConfig.requiredScopes
+    $scopes = @()
+    if ($GraphConfig.ContainsKey('requiredScopes') -and $GraphConfig.requiredScopes) {
+        $scopes = @($GraphConfig.requiredScopes)
+    }
+    $context = New-CopilotGovGraphContext -TenantId $TenantId -Scopes $scopes
+    $endpoint = $null
+    if ($GraphConfig.ContainsKey('endpoint') -and -not [string]::IsNullOrWhiteSpace([string]$GraphConfig.endpoint)) {
+        $endpoint = [string]$GraphConfig.endpoint
+    }
 
     return [pscustomobject]@{
         tenantId    = $context.TenantId
         scopes      = $context.Scopes
         connectedAt = $context.ConnectedAt
-        endpoint    = $GraphConfig.endpoint
+        endpoint    = $endpoint
         environment = $Environment
         mode        = 'stub'
-        notes       = 'Stub Graph context prepared for rollout policy collection.'
+        notes       = 'Placeholder admin context prepared; no Microsoft Graph Copilot feature-rollout endpoint is configured.'
     }
 }
 

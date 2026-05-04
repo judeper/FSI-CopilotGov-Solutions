@@ -4,7 +4,7 @@
 
 - Solution: Copilot Feature Management Controller
 - Solution Code: FMC
-- Version: v0.1.0
+- Version: v0.1.1
 - Track: C
 - Domain: operations-analytics
 - Priority: P1
@@ -41,9 +41,9 @@
 
 ## Feature Management Validation
 
-- [ ] Confirm Microsoft Graph beta rollout policy access to `/policies/featureRolloutPolicies`.
-- [ ] Confirm Teams admin center policy ownership and export path for Teams Copilot settings.
-- [ ] Confirm Power Platform Admin coverage for Copilot in Power Apps and Power Automate.
+- [ ] Confirm access to documented Copilot admin surfaces: Microsoft 365 admin center Copilot settings, Teams meeting/event policy exports, Cloud Policy service `Allow web search in Copilot`, and Power Platform admin center Copilot settings.
+- [ ] Confirm Teams admin center policy ownership and export path for documented Teams meeting/event and calling Copilot settings.
+- [ ] Confirm Power Platform admin center coverage for Power Apps Copilot and the documented tenant-level limitation for Power Automate Copilot.
 - [ ] Validate Preview Ring is limited to 5 percent of approved users.
 - [ ] Validate Early Adopters ring is limited to 15 percent of approved users.
 - [ ] Validate General Availability and Restricted ring logic matches the selected tier.

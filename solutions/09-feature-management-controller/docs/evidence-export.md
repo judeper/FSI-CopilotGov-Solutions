@@ -8,7 +8,7 @@ FMC evidence packages are intended to show how Copilot features are inventoried,
 
 | Evidence artifact | Description | Typical fields | Source systems | Controls |
 |-------------------|-------------|----------------|----------------|----------|
-| `feature-state-baseline` | Approved baseline of Copilot feature state at the time of deployment or review. | `featureId`, `displayName`, `sourceSystem`, `expectedEnabled`, `expectedRing`, `approvalReference`, `capturedAt` | Microsoft 365 Admin Center, Graph rollout policies, Teams admin center, Power Platform Admin API | 2.6, 4.1, 4.2, 4.3 |
+| `feature-state-baseline` | Approved baseline of Copilot feature state at the time of deployment or review. | `featureId`, `displayName`, `sourceSystem`, `expectedEnabled`, `expectedRing`, `approvalReference`, `capturedAt` | Microsoft 365 admin center, Cloud Policy service web-search policy, Teams admin center meeting/event policy exports, Power Platform admin center settings and exports | 2.6, 4.1, 4.2, 4.3 |
 | `rollout-ring-history` | History of feature promotion, restriction, rollback, or exception approval. | `changeId`, `featureId`, `sourceRing`, `targetRing`, `requestedBy`, `approvedBy`, `changedAt`, `changeTicket` | Deployment summary, Power Automate flow metadata, change records | 4.3, 4.12 |
 | `drift-findings` | Deviations between approved baseline and observed state, including severity and remediation status. | `findingId`, `featureId`, `driftType`, `severity`, `baselineValue`, `observedValue`, `detectedAt`, `remediationStatus` | Compliance monitor output, Dataverse findings table | 4.4, 4.12, 4.13 |
 

@@ -1,11 +1,11 @@
 # Changelog
 
-## v0.2.0
+## [v0.1.1] - 2026-05-04
 
-- Added web grounding governance capabilities: domain exclusion list management, authoritative source designation, and web search policy configuration templates.
-- Updated README features table and scope boundaries to include web grounding controls.
-- Added web grounding governance section to architecture documentation.
-- Added web grounding policy settings to all tier configuration files.
+- Corrected Copilot feature source guidance to remove Microsoft Graph featureRolloutPolicies from FMC inventory and rollout planning.
+- Reframed web grounding governance around the documented `Allow web search in Copilot` Cloud Policy control, with domain and source lists treated as customer-defined planning metadata.
+- Updated Teams and Power Platform source labels to distinguish documented Teams meeting/event controls, Teams chat inventory limitations, and Power Automate tenant-level support.
+- Bumped documentation-first solution metadata from v0.1.0 to v0.1.1.
 
 ## v0.1.0
 
