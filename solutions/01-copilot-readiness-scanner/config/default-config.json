@@ -2,7 +2,7 @@
   "solution": "01-copilot-readiness-scanner",
   "solutionCode": "CRS",
   "displayName": "Copilot Readiness Assessment Scanner",
-  "version": "v0.2.0",
+  "version": "v0.2.1",
   "controls": [
     "1.1",
     "1.5",

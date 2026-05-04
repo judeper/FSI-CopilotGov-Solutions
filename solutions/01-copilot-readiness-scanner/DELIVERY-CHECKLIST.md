@@ -4,7 +4,7 @@
 
 - Solution: Copilot Readiness Assessment Scanner
 - Solution Code: CRS
-- Version: v0.2.0
+- Version: v0.2.1
 - Track: A
 - Priority: P0
 - Evidence Outputs: readiness-scorecard, data-hygiene-findings, remediation-plan

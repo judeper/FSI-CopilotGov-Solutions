@@ -273,6 +273,7 @@ try {
 
     $null = Import-SharedModule -ModuleName 'GraphAuth.psm1'
     $null = New-CopilotGovGraphContext -TenantId $TenantId -Scopes @(
+        'LicenseAssignment.Read.All',
         'Organization.Read.All',
         'Directory.Read.All',
         'Reports.Read.All'

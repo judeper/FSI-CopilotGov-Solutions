@@ -1,0 +1,28 @@
+{
+  "slug": "01-copilot-readiness-scanner",
+  "branch": "accuracy-review/2026-05-04-remediation/01-copilot-readiness-scanner",
+  "deltas": [
+    {
+      "issue": 41,
+      "finding_id": "version-bump",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[slug=01-copilot-readiness-scanner].version",
+      "current_value": "v0.2.0",
+      "proposed_value": "v0.2.1",
+      "rationale": "Patch bump for solution 01 documentation accuracy remediations; README and in-scope version surfaces are updated to v0.2.1 in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 41,
+      "finding_id": "version-bump",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions.01-copilot-readiness-scanner.version",
+      "current_value": "v0.2.0",
+      "proposed_value": "v0.2.1",
+      "rationale": "Patch bump for solution 01 documentation accuracy remediations; README and in-scope version surfaces are updated to v0.2.1 in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

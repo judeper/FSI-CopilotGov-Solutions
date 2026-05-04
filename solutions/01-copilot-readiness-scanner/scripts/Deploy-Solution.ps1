@@ -110,6 +110,7 @@ function Test-GraphConnectivityPlaceholder {
 
     Import-SharedModule -ModuleName 'GraphAuth.psm1'
     $context = New-CopilotGovGraphContext -TenantId $TenantId -Scopes @(
+        'LicenseAssignment.Read.All',
         'Organization.Read.All',
         'Directory.Read.All',
         'AuditLog.Read.All'
