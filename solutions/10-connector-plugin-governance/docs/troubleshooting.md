@@ -6,13 +6,15 @@
 
 - Expected connectors are missing from `cpg-connector-inventory.json`
 - Custom connectors appear in Power Platform but not in the exported manifest
-- Graph connector or plugin related app registrations are missing from review output
+- Agent, plugin, or tool metadata is missing from Agent Registry or agent details review output
+- Custom connector or API authentication app registrations are missing from review output
 
 **Common causes**
 
 - The script was pointed at the wrong Power Platform environment ID
 - The Power Platform Administrator account lacks access to the target environment
-- Microsoft Graph inventory permissions were not approved for the reviewer or service principal
+- Microsoft 365 admin center Agent Registry access or approved Microsoft Graph Agent Registry API access was not available to the reviewer or service principal
+- Entra app registration review access was not approved for custom connector or API authentication dependencies
 - Custom connectors were created in a different environment or solution layer
 
 **Resolution**
@@ -20,7 +22,8 @@
 1. Confirm the `-Environment` parameter value and rerun `Deploy-Solution.ps1`.
 2. Validate Power Platform Admin API permissions for the target admin account.
 3. Review environment specific custom connectors and ensure they were published.
-4. Compare connector results to Microsoft Graph app registration inventory for missing plugin dependencies.
+4. Compare agent, plugin, and tool metadata to Microsoft 365 admin center Agents > All agents > Registry and agent details output; if Microsoft Graph Agent Registry APIs are used, document the preview and AI Admin role caveats.
+5. Compare custom connector or API authentication dependencies to Entra app registration and admin-consent inventory.
 
 ## Approval flow notifications not sending
 

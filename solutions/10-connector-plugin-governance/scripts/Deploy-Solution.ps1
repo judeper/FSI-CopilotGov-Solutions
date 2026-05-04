@@ -3,9 +3,11 @@
 Builds the deployment manifest for Copilot Connector and Plugin Governance.
 
 .DESCRIPTION
-Models the Power Platform Admin API inventory path, simulates connector and
-plugin enumeration, applies risk classification for the selected governance tier, seeds
-approval requests, and generates data-flow attestation records. The script is intentionally
+Models the Power Platform Admin API connector inventory path, Microsoft 365 admin
+center Agent Registry / Microsoft Graph Agent Registry APIs (preview) metadata for
+agent and plugin records, and separate Entra app registration dependency review.
+It applies risk classification for the selected governance tier, seeds approval requests,
+and generates data-flow attestation records. The script is intentionally
 documentation-first for the Power Automate and Dataverse assets that support this solution
 and supports WhatIf so regulated environments can preview changes before operational rollout.
 
@@ -198,7 +200,7 @@ function Get-ConnectorInventory {
             allowsExternalEgress = $true
             supportsFinancialData = $false
             requestedBusinessOwner = 'Enterprise Service Desk'
-            inventorySource = 'Microsoft Graph'
+            inventorySource = 'Microsoft 365 admin center Agent Registry / Microsoft Graph Agent Registry APIs (preview)'
             environment = $Environment
             tenantId = $TenantId
             lastSeen = $discoveredAt.AddHours(-2).ToString('o')
@@ -230,7 +232,7 @@ function Get-ConnectorInventory {
             allowsExternalEgress = $true
             supportsFinancialData = $false
             requestedBusinessOwner = 'Unknown'
-            inventorySource = 'Microsoft Graph'
+            inventorySource = 'Microsoft 365 admin center Agent Registry / Microsoft Graph Agent Registry APIs (preview)'
             environment = $Environment
             tenantId = $TenantId
             lastSeen = $discoveredAt.AddHours(-4).ToString('o')
@@ -399,10 +401,18 @@ try {
         status = 'documented-stub'
     }
 
-    $graphInventory = [pscustomobject]@{
-        service = 'Microsoft Graph'
+    $agentRegistryInventory = [pscustomobject]@{
+        service = 'Microsoft 365 admin center Agent Registry / Microsoft Graph Agent Registry APIs (preview)'
         tenantId = $TenantId
-        scope = 'App registrations and plugin inventory'
+        scope = 'Agent Registry and Agent Details metadata for agents and plugins'
+        role = 'AI Administrator'
+        status = 'documented-stub'
+    }
+
+    $entraAppRegistrationInventory = [pscustomobject]@{
+        service = 'Microsoft Entra app registrations'
+        tenantId = $TenantId
+        scope = 'Custom connector and API authentication dependencies'
         status = 'documented-stub'
     }
 
@@ -487,7 +497,8 @@ try {
         }
         discovery = @{
             powerPlatformAdminApi = $adminApiConnection
-            microsoftGraph = $graphInventory
+            agentRegistry = $agentRegistryInventory
+            entraAppRegistrations = $entraAppRegistrationInventory
         }
         powerAutomateFlows = @($config.Default.powerAutomateFlows)
         dataverseTables = $tableContracts

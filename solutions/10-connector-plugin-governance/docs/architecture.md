@@ -7,7 +7,7 @@ Copilot Connector and Plugin Governance uses a documentation-first architecture 
 ```text
 +--------------------+    +--------------------+    +--------------------+    +--------------------+
 | Connector Discovery| -> | Risk Classifier    | -> | Approval Router    | -> | Dataverse Registry |
-| Admin API + Graph  |    | low/med/high/block |    | security/CISO/DLP  |    | baseline/finding   |
+| Admin API + Registry |  | low/med/high/block |    | security/CISO/DLP  |    | baseline/finding   |
 +--------------------+    +--------------------+    +--------------------+    +--------------------+
                                                                                          |
                                                                                          v
@@ -28,7 +28,7 @@ Copilot Connector and Plugin Governance uses a documentation-first architecture 
 | Component | Technology | Responsibility |
 |-----------|------------|----------------|
 | Connector Discovery | Power Platform Admin API | Enumerates environment connectors, connector metadata, and policy-relevant identifiers used by Copilot or agent workflows. |
-| Plugin and app inventory | Microsoft Graph | Captures app registration and plugin context for Graph Connectors, AppSource plugins, and custom deployment references. |
+| Agent Registry and app inventory | Microsoft 365 admin center Agent Registry; Microsoft Graph Agent Registry APIs (preview); Entra app registrations | Documents agent and plugin metadata separately from app registration dependencies used for custom connector or API authentication. |
 | Risk Classifier | `Deploy-Solution.ps1` and config JSON | Applies low, medium, high, or blocked treatment based on publisher trust, certification, data-flow boundaries, and access to financial systems. |
 | Approval Router | Power Automate flow `CPG-ApprovalRouter` | Routes requests through security review, then CISO or DLP review, before recording approval or denial. |
 | Dataverse Registry | Dataverse tables | Stores approved baseline records, findings for unapproved or risky integrations, and evidence-ready data-flow attestations. |
@@ -60,7 +60,7 @@ The solution uses the required naming convention `fsi_cg_{solution}_{purpose}` a
 ## Discovery and Classification Logic
 
 1. `CPG-ConnectorInventory` or `Deploy-Solution.ps1` models the Power Platform Admin API inventory path for connector enumeration.
-2. Microsoft Graph inventory supplements discovery for app registrations and plugin dependencies that are not obvious from connector metadata alone.
+2. Microsoft 365 admin center Agent Registry and agent details metadata supplement discovery for agent and plugin context; Entra app registration inventory is reviewed separately for custom connector or API authentication dependencies, and Microsoft Graph Agent Registry APIs remain preview when used programmatically.
 3. The risk classifier uses the configured risk categories:
    - `low` for Microsoft-built connectors with no external data egress
    - `medium` for certified third-party connectors with limited external reach
