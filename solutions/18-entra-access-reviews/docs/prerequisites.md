@@ -2,20 +2,21 @@
 
 ## Platform and Licensing
 
-- Entra ID Governance P2 licensing is required for access review creation and management. If licensing is not available, document the limitation before enabling this solution.
-- Microsoft 365 E5 Compliance, or an equivalent licensing combination that enables access review features, should be available for the tenant.
+- Microsoft Entra ID Governance or Microsoft Entra Suite subscriptions are required for many access review capabilities. If licensing is not available, document the limitation before enabling this solution.
+- For application or group access review scenarios where Microsoft Learn lists additional options, validate Microsoft Entra ID P2 or Enterprise Mobility + Security (EMS) E5 coverage as applicable.
 - The target tenant should already have a defined Copilot pilot or rollout scope so access reviews can be prioritized against real exposure risk.
 
 ## Required Administrative Roles
 
 At least one of the following roles should be assigned to the operator, depending on the task being performed:
 
-- Global Admin
-- Identity Governance Admin
-- User Admin
-- SharePoint Admin (for resolving site owner information)
+- Global Administrator (break-glass use)
+- Identity Governance Administrator
+- User Administrator
+- Privileged Role Administrator (for role-assignable groups or role reviews)
+- SharePoint Administrator (for resolving site owner information and group-to-site mappings)
 
-For access review creation and management, Identity Governance Admin is the recommended least-privilege role.
+For access review creation and management of groups or applications, User Administrator or Identity Governance Administrator is the recommended least-privilege role.
 
 ## Required Microsoft Graph Permissions
 
@@ -48,7 +49,7 @@ Solution 02-oversharing-risk-assessment must complete a risk-scored scan before 
 The execution environment must be able to reach:
 
 - Microsoft Graph API endpoints (`https://graph.microsoft.com`)
-- Entra ID authentication endpoints (`https://login.microsoftonline.com`)
+- Microsoft Entra ID authentication endpoints (`https://login.microsoftonline.com`)
 - SharePoint REST API endpoints (for site owner resolution)
 
 If the environment uses proxy inspection or outbound restrictions, test API connectivity before the initial deployment window.

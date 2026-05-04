@@ -24,8 +24,8 @@
 **Actions**
 
 - Verify the app registration has `AccessReview.ReadWrite.All` application permission
-- Confirm a Global Admin or Privileged Role Admin has granted admin consent
-- Check the app registration in Entra ID for pending consent requests
+- Confirm an authorized administrator has granted consent: Privileged Role Administrator for Microsoft Graph application permissions, or Cloud Application Administrator, AI Administrator, or Application Administrator where supported for delegated consent
+- Check the app registration in Microsoft Entra ID for pending consent requests
 
 ## Error: Graph API throttling during bulk review creation
 
@@ -37,7 +37,7 @@
 **Actions**
 
 - Reduce the number of sites per batch
-- Start with HIGH-risk sites only before expanding to MEDIUM and LOW
+- Start with resources mapped to HIGH-risk sites before expanding to MEDIUM and LOW
 - The shared `Invoke-CopilotGovGraphRequest` function includes retry and backoff handling
 - Run bulk creation during a lower-usage window
 
@@ -50,7 +50,7 @@
 
 **Actions**
 
-- Verify the operator has SharePoint Admin rights
+- Verify the operator has SharePoint Administrator rights
 - Confirm Sites.Read.All permission is granted for the app registration
 - Check that site ownership is assigned and current in SharePoint admin center
 - Update site owner information before re-running review creation
@@ -78,14 +78,14 @@
 
 **Actions**
 
-- Verify the operator has sufficient permissions to modify site membership
+- Verify the operator has sufficient permissions to apply decisions on the reviewed Microsoft Entra resource
 - Confirm the review instance status allows decision application
-- Check that the site has not been deleted or restructured since the review was created
+- Check that the mapped group, access package, or site association has not been deleted or restructured since the review was created
 - Review the error log for specific Graph API error details
 
 ## Tip: Start with a small pilot set
 
-Run the first execution with a small number of HIGH-risk sites so reviewer assignment, notification delivery, and decision collection can be validated before scaling to hundreds of sites.
+Run the first execution with a small number of resources mapped to HIGH-risk sites so reviewer assignment, notification delivery, and decision collection can be validated before scaling to hundreds of sites.
 
 ## Tip: Monitor review expiry proactively
 

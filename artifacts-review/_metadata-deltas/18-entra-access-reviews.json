@@ -1,0 +1,28 @@
+{
+  "slug": "18-entra-access-reviews",
+  "branch": "accuracy-review/2026-05-04-remediation/18-entra-access-reviews",
+  "deltas": [
+    {
+      "issue": 124,
+      "finding_id": "version-bump",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[id=18].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump — README and solution-local version surfaces were updated to v0.1.1 in this PR; catalog must mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 124,
+      "finding_id": "version-bump",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions[18-entra-access-reviews].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump — README and solution-local version surfaces were updated to v0.1.1 in this PR; solution config must mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

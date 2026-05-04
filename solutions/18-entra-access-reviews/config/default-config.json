@@ -1,7 +1,7 @@
 {
   "solution": "18-entra-access-reviews",
   "displayName": "Entra Access Reviews Automation",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "solutionCode": "EAR",
   "track": "A",
   "priority": "P1",
@@ -30,7 +30,7 @@
     "notificationChannel": "EAR-governance-alerts",
     "dashboardFeedEnabled": true
   },
-  "reviewScope": "site-members-and-guests",
+  "reviewScope": "group-transitive-members",
   "autoApplyDecisions": false,
   "enableEscalation": true,
   "escalationThresholdHours": 48,

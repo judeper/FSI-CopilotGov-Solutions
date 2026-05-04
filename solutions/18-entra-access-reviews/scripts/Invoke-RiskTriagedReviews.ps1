@@ -4,12 +4,12 @@ Orchestrates the full access review lifecycle: risk read, create, collect, apply
 
 .DESCRIPTION
 Coordinates the end-to-end risk-triaged access review workflow by reading risk scores
-from solution 02 output, creating access reviews for HIGH-risk sites first, collecting
+from solution 02 output, creating access reviews for resources mapped to HIGH-risk sites first, collecting
 review results, applying completed decisions, and exporting evidence packages.
 Scripts use representative sample data and do not connect to live Microsoft 365 services.
 
 .PARAMETER TenantId
-Azure AD tenant GUID.
+Microsoft Entra ID tenant GUID.
 
 .PARAMETER ClientId
 Application (client) ID for app-only authentication.

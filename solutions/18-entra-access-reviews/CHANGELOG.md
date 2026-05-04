@@ -4,6 +4,15 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [v0.1.1] - 2026-05-04
+
+### Fixed
+
+- Corrected Microsoft Entra access review scope language to focus on groups and access packages associated with SharePoint access.
+- Updated licensing and administrator role prerequisites to match current Microsoft Learn terminology.
+- Corrected the access review applyDecisions endpoint and monthly recurrence pattern.
+- Replaced legacy identity-brand parameter help text with Microsoft Entra ID branding.
+
 ## [v0.1.0]
 
 ### Added
@@ -22,5 +31,5 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 
 ### Notes
 
-- All scripts use representative sample data and do not connect to live Entra ID or Microsoft Graph services.
+- All scripts use representative sample data and do not connect to live Microsoft Entra ID or Microsoft Graph services.
 - Control statuses remain `partial` and `monitor-only` until tenant-specific API integration is fully connected.

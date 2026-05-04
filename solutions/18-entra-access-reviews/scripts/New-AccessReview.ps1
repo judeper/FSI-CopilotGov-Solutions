@@ -1,19 +1,19 @@
 <#
 .SYNOPSIS
-Creates Entra ID Access Reviews for SharePoint site members via Microsoft Graph API.
+Creates Microsoft Entra ID Access Reviews for group memberships associated with SharePoint access via Microsoft Graph.
 
 .DESCRIPTION
 Reads site risk scores from solution 02-oversharing-risk-assessment output (or accepts a
 site list as input), creates access review definitions prioritized by risk tier (HIGH first,
-then MEDIUM, then LOW), sets review scope to SharePoint site members and guests, assigns
-the site owner as reviewer with compliance officer fallback, and sets duration and recurrence
+then MEDIUM, then LOW), sets review scope to group direct or transitive members that grant SharePoint access, assigns
+the mapped resource owner as reviewer with compliance officer fallback, and sets duration and recurrence
 from the review schedule configuration.
 
 Uses POST /identityGovernance/accessReviews/definitions to create review definitions.
 Scripts use representative sample data and do not connect to live Microsoft 365 services.
 
 .PARAMETER TenantId
-Azure AD tenant GUID.
+Microsoft Entra ID tenant GUID.
 
 .PARAMETER ClientId
 Application (client) ID for app-only authentication.
@@ -137,13 +137,15 @@ function New-ReviewDefinition {
     }
 
     $reviewer = if ($Site.owner) { $Site.owner } else { $Schedule.fallbackReviewer }
+    $reviewStartDate = Get-Date
 
     $reviewBody = [ordered]@{
         displayName = "Access Review - $($Site.siteUrl) [$RiskTier]"
-        descriptionForAdmins = "Risk-triaged access review for SharePoint site members. Risk tier: $RiskTier."
-        descriptionForReviewers = "Please review whether each user still requires access to this SharePoint site."
+        descriptionForAdmins = "Risk-triaged access review for group membership associated with SharePoint access. Risk tier: $RiskTier."
+        descriptionForReviewers = "Please review whether each user still requires access through this group or access package."
         scope = [ordered]@{
-            query = "/groups/$($Site.groupId)/members"
+            '@odata.type' = '#microsoft.graph.accessReviewQueryScope'
+            query = "/groups/$($Site.groupId)/transitiveMembers"
             queryType = 'MicrosoftGraph'
         }
         reviewers = @(
@@ -165,10 +167,11 @@ function New-ReviewDefinition {
                 pattern = [ordered]@{
                     type = 'absoluteMonthly'
                     interval = [math]::Ceiling($cadence.frequencyDays / 30)
+                    dayOfMonth = [int]$reviewStartDate.Day
                 }
                 range = [ordered]@{
                     type = 'noEnd'
-                    startDate = (Get-Date).ToString('yyyy-MM-dd')
+                    startDate = $reviewStartDate.ToString('yyyy-MM-dd')
                 }
             }
         }
@@ -187,7 +190,7 @@ function New-ReviewDefinition {
                 reviewFrequencyDays = $cadence.frequencyDays
                 reviewDurationDays = $cadence.durationDays
                 reviewer = $reviewer
-                scope = 'site-members-and-guests'
+                scope = 'group-transitive-members'
                 createdAt = (Get-Date).ToString('o')
                 status = 'created'
             }
@@ -201,7 +204,7 @@ function New-ReviewDefinition {
                 reviewFrequencyDays = $cadence.frequencyDays
                 reviewDurationDays = $cadence.durationDays
                 reviewer = $reviewer
-                scope = 'site-members-and-guests'
+                scope = 'group-transitive-members'
                 createdAt = (Get-Date).ToString('o')
                 status = 'failed'
                 error = $_.Exception.Message
@@ -216,7 +219,7 @@ function New-ReviewDefinition {
         reviewFrequencyDays = $cadence.frequencyDays
         reviewDurationDays = $cadence.durationDays
         reviewer = $reviewer
-        scope = 'site-members-and-guests'
+        scope = 'group-transitive-members'
         createdAt = (Get-Date).ToString('o')
         status = 'sample-data'
     }
@@ -258,7 +261,7 @@ foreach ($tier in $tierOrder) {
         continue
     }
 
-    Write-Verbose "Creating access reviews for $($tierSites.Count) $tier-risk sites."
+    Write-Verbose "Creating access reviews for $($tierSites.Count) resources mapped to $tier-risk sites."
 
     foreach ($site in $tierSites) {
         $definition = New-ReviewDefinition -Site $site -Schedule $schedule -RiskTier $tier -GraphContext $graphContext
