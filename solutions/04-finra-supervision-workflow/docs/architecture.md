@@ -51,7 +51,7 @@ This architecture supports compliance with supervisory review requirements by se
 ### Flows
 
 - Ingest Flagged Items
-  - Reads flagged Microsoft Purview Communication Compliance items for Copilot prompts and responses.
+  - Receives customer-validated Communication Compliance alert-context or exported items for Copilot prompts and responses.
   - Normalizes metadata and creates queue and log entries.
 - Assignment Flow
   - Routes queue items to supervisory principals by zone and tier.
@@ -86,6 +86,12 @@ This architecture supports compliance with supervisory review requirements by se
                                |
                                v
 +---------------------------------------------------------------+
+| Customer-validated handoff                                     |
+| Alert Power Automate flow, report export, or audit-log review  |
++------------------------------+--------------------------------+
+                               |
+                               v
++---------------------------------------------------------------+
 | Power Automate layer                                            |
 | 1. Ingest Flagged Items                                         |
 | 2. Assignment Flow                                              |
@@ -112,14 +118,15 @@ This architecture supports compliance with supervisory review requirements by se
 
 ## Data flows
 
-1. Purview flags a Copilot-assisted communication.
-2. Ingest Flagged Items creates a queue item and initial log entry.
-3. Assignment Flow applies zone and tier routing using SupervisionConfig.
-4. Supervisory principals review items from SupervisionQueue.
-5. Review Complete Flow writes outcomes and notes, then appends final actions to SupervisionLog.
-6. Escalation Flow monitors open items and records warning or breach actions.
-7. Export-Evidence.ps1 reads configuration or Dataverse data and writes evidence artifacts.
-8. Evidence files and `.sha256` companions are archived in the firm's records repository.
+1. Communication Compliance flags a Copilot-assisted communication.
+2. A customer-validated handoff provides alert-context, exported, or audit-log metadata to Ingest Flagged Items.
+3. Ingest Flagged Items creates a queue item and initial log entry.
+4. Assignment Flow applies zone and tier routing using SupervisionConfig.
+5. Supervisory principals review items from SupervisionQueue.
+6. Review Complete Flow writes outcomes and notes, then appends final actions to SupervisionLog.
+7. Escalation Flow monitors open items and records warning or breach actions.
+8. Export-Evidence.ps1 reads configuration or Dataverse data and writes evidence artifacts.
+9. Evidence files and `.sha256` companions are archived in the firm's records repository.
 
 ## Design considerations
 

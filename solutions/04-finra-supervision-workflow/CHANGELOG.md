@@ -4,6 +4,13 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this project follows Semantic Versioning.
 
+## [v0.2.1] - 2026-05-04
+
+### Fixed
+- Updated Communication Compliance license and role guidance to use current Microsoft Purview terminology.
+- Reframed ingestion guidance around customer-validated alert, export, or audit-log handoffs instead of unsupported scheduled polling.
+- Updated live Dataverse export guidance to use configured EntitySet names for Web API collection paths.
+
 ## [0.2.0] - 2026-03-07
 
 ### Added

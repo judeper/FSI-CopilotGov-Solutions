@@ -7,14 +7,16 @@ Symptoms:
 - No `ingested` rows are written to `fsi_cg_fsw_log`.
 
 Checks:
-- Confirm the Purview policy is enabled and includes Copilot prompts and responses.
-- Confirm `fsi_cr_fsw_purview` resolves successfully in the target environment.
-- Confirm the trigger account can read the policy scope and the environment variables are populated.
+- Confirm the Communication Compliance policy is enabled and includes Copilot prompts and responses.
+- Confirm the customer-validated handoff produced an alert-context item, report export, or audit-log record for the requested period.
+- If the handoff uses a connection reference, confirm `fsi_cr_fsw_handoff` resolves successfully in the target environment.
+- Confirm the trigger or import account has approved Communication Compliance role-group access and the environment variables are populated.
 
 Resolution:
-- Reauthenticate the connection reference.
+- Validate the handoff in Microsoft Purview before rerunning ingestion.
+- Reauthenticate the validated handoff connection reference if one is used.
 - Re-save the flow after updating environment variables.
-- Run a test ingestion with a known flagged sample item.
+- Run a test ingestion with a known alert-context or exported sample item.
 
 ## SLA breach not alerting
 
@@ -61,19 +63,22 @@ Resolution:
 - Review environment-level security role assignments.
 - Reopen the connection reference after role changes.
 
-## Microsoft Purview Communication Compliance API access issues
+## Microsoft Purview Communication Compliance handoff issues
 
 Symptoms:
-- Purview policy data cannot be read or no flagged items are returned.
+- The validated handoff does not provide alert-context, exported, or audit-log items for ingestion.
+- Expected flagged items are not available in the supervisory queue.
 
 Checks:
-- Confirm the account has Purview Compliance Admin rights.
+- Confirm the account is in the Communication Compliance Admins role group, Communication Compliance role group, or an approved Compliance Administrator role/role group.
 - Confirm the policy ID in `fsi_ev_fsw_purviewpolicyid` matches the approved policy.
 - Confirm the policy has produced cases or alerts for the requested period.
+- If using Power Automate, confirm the flow is launched from a Communication Compliance alert action rather than scheduled polling.
 
 Resolution:
 - Update the environment variable with the correct policy ID.
-- Validate policy scope and signal sources in Purview.
+- Validate policy scope and signal sources in Microsoft Purview.
+- Re-run or re-export the approved handoff source, then import the item metadata into Dataverse.
 - Coordinate with compliance operations if the policy was recently modified.
 
 ## Sampling rate misconfiguration

@@ -30,8 +30,8 @@
   ],
   "connectionReferences": [
     {
-      "name": "fsi_cr_fsw_purview",
-      "service": "purview-communication-compliance",
+      "name": "fsi_cr_fsw_handoff",
+      "service": "customer-validated-communication-compliance-handoff",
       "required": true
     },
     {
@@ -62,23 +62,26 @@
     {
       "displayName": "SupervisionQueue",
       "logicalName": "fsi_cg_fsw_queue",
+      "entitySetName": "fsi_cg_fsw_queues",
       "purpose": "Flagged communication review queue."
     },
     {
       "displayName": "SupervisionLog",
       "logicalName": "fsi_cg_fsw_log",
+      "entitySetName": "fsi_cg_fsw_logs",
       "purpose": "Append-only reviewer action log."
     },
     {
       "displayName": "SupervisionConfig",
       "logicalName": "fsi_cg_fsw_config",
+      "entitySetName": "fsi_cg_fsw_configs",
       "purpose": "Zone and tier review configuration."
     }
   ],
   "powerAutomateFlows": [
     {
       "name": "Ingest Flagged Items",
-      "purpose": "Collect flagged Copilot communications from Purview."
+      "purpose": "Receive exported or alert-context Communication Compliance items from a customer-validated handoff."
     },
     {
       "name": "Assignment Flow",

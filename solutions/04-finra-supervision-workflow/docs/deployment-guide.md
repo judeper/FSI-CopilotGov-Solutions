@@ -68,9 +68,9 @@ Create table `fsi_cg_fsw_config` with at least these columns:
 
 ### 3.1 Ingest Flagged Items
 
-1. Create a scheduled or event-driven cloud flow.
-2. Use `fsi_cr_fsw_purview` for Purview actions and `fsi_cr_fsw_dataverse` for Dataverse actions.
-3. Read flagged Copilot communications from the approved Purview policy.
+1. Validate the Communication Compliance handoff with compliance operations before building the flow. Supported patterns include report exports, audit-log review, or a Power Automate flow launched from a Communication Compliance alert.
+2. Use `fsi_cr_fsw_handoff` only for the validated handoff source and `fsi_cr_fsw_dataverse` for Dataverse actions.
+3. Receive exported or alert-context Copilot communication metadata; do not configure unsupported scheduled polling of policy matches.
 4. Map source metadata into `fsi_cg_fsw_queue`.
 5. Write an `ingested` entry to `fsi_cg_fsw_log`.
 
