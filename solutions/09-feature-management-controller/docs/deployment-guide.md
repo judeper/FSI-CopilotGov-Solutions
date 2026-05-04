@@ -23,10 +23,10 @@ Review:
 
 Before running the deployment script, verify:
 
-- Microsoft 365 Global Administrator access or delegated `Policy.ReadWrite.FeatureRollout`
-- Teams Administrator access for Teams Copilot policies
-- Power Platform Administrator access
-- Graph scopes listed in [prerequisites.md](prerequisites.md)
+- Microsoft 365 Global Administrator, Copilot Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
+- Teams Administrator access for documented Teams meeting/event and calling policy exports
+- Power Platform Administrator access for Copilot settings and administrative exports
+- Cloud Policy service access for the `Allow web search in Copilot` policy
 - Dataverse capacity for baseline, findings, and evidence records
 
 ## Step 3: Prepare the target environment

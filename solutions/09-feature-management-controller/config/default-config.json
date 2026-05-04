@@ -2,7 +2,7 @@
   "solution": "09-feature-management-controller",
   "solutionCode": "FMC",
   "displayName": "Copilot Feature Management Controller",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P1",
@@ -74,29 +74,25 @@
   },
   "driftAlertThreshold": 3,
   "graph": {
-    "endpoint": "https://graph.microsoft.com/beta/policies/featureRolloutPolicies",
-    "requiredScopes": [
-      "Policy.Read.All",
-      "Policy.ReadWrite.FeatureRollout",
-      "Directory.Read.All",
-      "Reports.Read.All"
-    ]
+    "endpoint": null,
+    "requiredScopes": [],
+    "notes": "No Microsoft Graph Copilot feature-rollout endpoint is configured by default; FMC uses documented admin surfaces and tier-defined templates."
   },
   "teamsAdmin": {
     "policySource": "Teams admin center",
     "policyAreas": [
-      "Teams meetings",
-      "Teams chat",
-      "Teams app policies"
+      "Teams meetings and events",
+      "Teams calling policies"
     ],
     "requiresTeamsAdministrator": true
   },
   "powerPlatform": {
-    "adminApi": "Power Platform Admin API",
+    "adminSurface": "Power Platform admin center Copilot settings and administrative exports",
     "coverage": [
       "Power Apps Copilot",
-      "Power Automate Copilot"
+      "Power Automate Copilot tenant-level settings"
     ],
+    "powerAutomateLimitation": "Power Automate Copilot disablement is documented as tenant-level where environment-level support is unavailable.",
     "documentationFirst": true
   },
   "dataverse": {
@@ -133,10 +129,13 @@
     "mode": "summary"
   },
   "webGroundingGovernance": {
-    "domainExclusionEnabled": true,
-    "excludedDomains": [],
-    "authoritativeSourceSites": [],
+    "adminControl": "Cloud Policy service - Allow web search in Copilot",
     "webSearchPolicy": "group-controlled",
-    "auditWebGroundingChanges": true
+    "auditWebSearchPolicyChanges": true,
+    "customerDefinedMetadata": {
+      "excludedDomainCategories": [],
+      "authoritativeSourceReviewNotes": [],
+      "notes": "Planning metadata only; not modeled as Microsoft 365 Copilot admin controls unless a current Microsoft Learn source is added."
+    }
   }
 }

@@ -51,25 +51,26 @@
     {
       "featureId": "teams-copilot-chat",
       "displayName": "Copilot in Teams chat",
-      "sourceSystem": "Teams admin center",
+      "sourceSystem": "Microsoft 365 Copilot app inventory",
       "category": "teams-experiences",
       "expectedEnabled": true,
       "expectedRing": "Early Adopters",
-      "riskNote": "Limited to trained pilot users until supervision review is complete."
+      "riskNote": "Limited to trained pilot users until supervision review is complete; Teams chat/channel admin control remains documentation-first unless a current Learn source is cited."
     },
     {
       "featureId": "power-automate-copilot-designer",
       "displayName": "Copilot in Power Automate designer",
-      "sourceSystem": "Power Platform Admin API",
+      "sourceSystem": "Power Platform admin center tenant-level setting",
       "category": "power-platform-copilot",
       "expectedEnabled": false,
       "expectedRing": "Restricted",
-      "riskNote": "Held in restricted state during the baseline tier."
+      "riskNote": "Held in restricted state during the baseline tier; Power Automate Copilot disablement is documented as tenant-level where environment-level support is unavailable."
     }
   ],
   "webGroundingPolicy": {
-    "enforceExclusionList": false,
-    "requireAuthoritativeSourceDesignation": false,
-    "webSearchEnabled": true
+    "adminControl": "Cloud Policy service - Allow web search in Copilot",
+    "webSearchEnabled": true,
+    "policyScope": "baseline pilot groups",
+    "customerDefinedMetadataOnly": true
   }
 }

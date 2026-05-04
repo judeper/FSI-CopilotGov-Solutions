@@ -65,11 +65,11 @@
     {
       "featureId": "teams-copilot-chat",
       "displayName": "Copilot in Teams chat",
-      "sourceSystem": "Teams admin center",
+      "sourceSystem": "Microsoft 365 Copilot app inventory",
       "category": "teams-experiences",
       "expectedEnabled": true,
       "expectedRing": "Early Adopters",
-      "riskNote": "Scoped due to supervision and communication retention requirements."
+      "riskNote": "Scoped due to supervision and communication retention requirements; Teams chat/channel admin control remains documentation-first unless a current Learn source is cited."
     },
     {
       "featureId": "teams-copilot-meetings",
@@ -83,20 +83,20 @@
     {
       "featureId": "power-apps-copilot-maker",
       "displayName": "Copilot for Power Apps makers",
-      "sourceSystem": "Power Platform Admin API",
+      "sourceSystem": "Power Platform admin center settings/export",
       "category": "power-platform-copilot",
       "expectedEnabled": true,
       "expectedRing": "Early Adopters",
-      "riskNote": "Enabled only for approved builders with environment-level review."
+      "riskNote": "Enabled only for approved builders with documented Power Platform admin center review."
     },
     {
       "featureId": "power-automate-copilot-designer",
       "displayName": "Copilot in Power Automate designer",
-      "sourceSystem": "Power Platform Admin API",
+      "sourceSystem": "Power Platform admin center tenant-level setting",
       "category": "power-platform-copilot",
       "expectedEnabled": true,
       "expectedRing": "Preview Ring",
-      "riskNote": "Kept in pilot until workflow output review is stable."
+      "riskNote": "Kept in pilot with tenant-level setting review; Power Automate Copilot environment-level disablement is not represented as available."
     },
     {
       "featureId": "third-party-plugin-execution",
@@ -109,10 +109,16 @@
     }
   ],
   "webGroundingPolicy": {
-    "enforceExclusionList": true,
-    "requireAuthoritativeSourceDesignation": true,
+    "adminControl": "Cloud Policy service - Allow web search in Copilot",
     "webSearchEnabled": false,
-    "mandatoryAuthoritativeSourceReview": true,
-    "excludedDomainCategories": ["social-media", "personal-storage", "unverified-news"]
+    "policyScope": "regulated groups",
+    "customerGovernanceMetadata": {
+      "excludedDomainCategories": [
+        "social-media",
+        "personal-storage",
+        "unverified-news"
+      ],
+      "mandatoryAuthoritativeSourceReview": "local-governance-metadata-only"
+    }
   }
 }

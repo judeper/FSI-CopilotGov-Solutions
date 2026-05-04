@@ -1,0 +1,28 @@
+{
+  "slug": "09-feature-management-controller",
+  "branch": "accuracy-review/2026-05-04-remediation/09-feature-management-controller",
+  "deltas": [
+    {
+      "issue": 6,
+      "finding_id": "VERSION-BUMP",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[slug=09-feature-management-controller].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump \u2014 README, checklist, and default config version updated to v0.1.1 in this PR; catalog should mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 6,
+      "finding_id": "VERSION-BUMP",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions[09-feature-management-controller].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump \u2014 solution-local version surfaces updated to v0.1.1 in this PR; shared solution config should mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

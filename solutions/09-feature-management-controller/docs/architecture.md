@@ -10,7 +10,7 @@ Copilot Feature Management Controller (FMC) provides a centralized operating mod
 +------------------------------+    +----------------------+    +------------------+    +----------------------+
 | Feature Inventory Collector  | -> | Baseline Comparator  | -> | Drift Detector   | -> | Alert / Remediation  |
 |------------------------------|    |----------------------|    |------------------|    |----------------------|
-| - Graph beta rollout policy  |    | - Approved settings  |    | - Mismatch score |    | - Teams notification |
+| - M365 admin settings   |    | - Approved settings  |    | - Mismatch score |    | - Teams notification |
 | - Teams policy exports       |    | - Ring assignments   |    | - Drift type     |    | - Change task        |
 | - Power Platform settings    |    | - Dataverse baseline |    | - Severity band  |    | - Rollback planning  |
 +------------------------------+    +----------------------+    +------------------+    +----------------------+
@@ -22,10 +22,10 @@ Copilot Feature Management Controller (FMC) provides a centralized operating mod
 
 The collector normalizes Copilot feature state from the following administrative surfaces:
 
-- **Microsoft Graph beta:** `https://graph.microsoft.com/beta/policies/featureRolloutPolicies`
-- **Microsoft 365 Admin Center:** feature policy and app-specific Copilot enablement settings
-- **Teams admin center:** Teams meeting, chat, or app policy settings that control Copilot exposure
-- **Power Platform Admin API:** environment and maker-facing Copilot settings for Power Apps and Power Automate
+- **Microsoft 365 admin center:** feature policy and app-specific Copilot enablement settings
+- **Cloud Policy service:** the documented `Allow web search in Copilot` policy state and group scope
+- **Teams admin center:** documented Teams meeting/event and calling policy settings; Teams chat/channel Copilot inventory remains documentation-first unless a current admin control is cited
+- **Power Platform admin center:** Copilot settings and administrative exports for Power Apps, with Power Automate Copilot interpreted through the documented tenant-level limitation
 
 Each collected feature record is tagged with:
 
@@ -70,9 +70,10 @@ The alerting layer converts drift findings into actionable outputs:
 
 | Integration | Role in FMC | Notes |
 |-------------|-------------|-------|
-| Microsoft Graph beta `/policies/featureRolloutPolicies` | Source of rollout policy state and ring definition references | Used for inventory collection and planned ring updates. |
-| Teams admin center | Source for Teams-specific Copilot policy coverage | Often requires export, documentation, or scripted collection depending on tenant tooling. |
-| Power Platform Admin API | Source for Copilot in Power Apps and Power Automate settings | Used to confirm whether maker and runtime Copilot experiences align to approved tiers. |
+| Microsoft 365 admin center | Source for Microsoft 365 Copilot feature and app settings | Used as the primary documented source for tenant Copilot feature inventory. |
+| Cloud Policy service | Source for `Allow web search in Copilot` policy state and scope | Used to document whether web search is allowed for approved user groups. |
+| Teams admin center | Source for documented Teams meeting/event and calling policy coverage | Teams chat/channel Copilot inventory is documentation-first unless a current admin control is cited. |
+| Power Platform admin center | Source for Copilot settings and administrative exports for Power Apps and tenant-level Power Automate settings | Power Automate Copilot environment-level disablement is not represented as available where Microsoft Learn says it is unavailable. |
 | Dataverse | Persistent store for baseline, findings, and evidence metadata | Table names follow the FMC naming convention. |
 | Power Automate | Notification and operational orchestration | Documentation-first until production import is approved. |
 
@@ -94,9 +95,9 @@ The alerting layer converts drift findings into actionable outputs:
 
 ## Deployment Flow
 
-1. Read tier configuration and required scopes.
-2. Create a Graph context for the tenant and target environment.
-3. Collect current Copilot feature state from supported admin surfaces.
+1. Read tier configuration and required admin surfaces.
+2. Prepare documentation-first admin context metadata for the tenant and target environment.
+3. Collect or document current Copilot feature state from supported admin surfaces.
 4. Generate or refresh the approved baseline snapshot.
 5. Apply or document rollout ring changes based on tier policy.
 6. Deploy or document Power Automate flows.
@@ -111,39 +112,31 @@ The alerting layer converts drift findings into actionable outputs:
 
 ## Web Grounding Governance
 
-FMC extends feature management governance to cover Copilot web grounding controls, including domain exclusion lists, authoritative source designation, and web search policy enforcement. These capabilities are documentation-first governance patterns; live configuration is performed in the Microsoft 365 admin center.
+FMC extends feature management governance to cover the documented `Allow web search in Copilot` policy in Cloud Policy service. The repository models web-search policy state and group scope; live configuration remains a tenant activity performed through Microsoft admin tooling.
 
-### Domain Exclusion Configuration
+### Documented Web Search Policy
 
-Administrators can maintain a blocklist of external web domains that Copilot should not reference when generating grounded responses. The domain exclusion governance pattern documents:
+The `Allow web search in Copilot` policy controls whether Copilot can use public web content during response generation. FMC governance templates document:
 
-- How to define and maintain the excluded domain list in the Microsoft 365 admin center
-- Categorization of excluded domains (for example, social media, personal storage, unverified news)
-- Tier-appropriate exclusion policies: baseline tiers may leave the exclusion list unenforced, while regulated tiers apply strict blocklists and disable web search entirely
-- Change tracking and approval workflows for domain exclusion list updates
-
-### Authoritative Source Designation
-
-Organizations can designate specific SharePoint sites as authoritative sources so that Copilot prioritizes internal, curated content over external web results. The governance pattern documents:
-
-- How to register authoritative SharePoint sites in the Microsoft 365 admin center
-- Review cadence for authoritative source lists to help meet content accuracy and relevance requirements
-- Tier-appropriate policies: recommended tiers require authoritative source designation, and regulated tiers add mandatory periodic review of designated sites
-- Integration with the feature baseline comparator to detect drift when authoritative source configuration changes
-
-### Web Search Policy Integration
-
-The "Allow web search" policy controls whether Copilot can query external web sources during response generation. FMC governance templates document:
-
-- Group-controlled web search enablement aligned to rollout ring definitions
+- Group-controlled web-search policy state aligned to rollout ring definitions
 - Regulated tier guidance that recommends disabling web search for populations handling sensitive or material non-public information
-- Baseline and recommended tier guidance that permits web search with appropriate domain exclusion controls
+- Baseline and recommended tier guidance that permits web search only where policy scope and approval are documented
+
+### Customer-Defined Web Grounding Metadata
+
+Domain categories, excluded domains, and authoritative-source review notes are treated as customer-defined planning metadata in FMC. They are useful for local review and change discussion, but they are not represented as Microsoft 365 Copilot admin controls unless a current Microsoft Learn source is added.
+
+The metadata pattern documents:
+
+- Categorization of domains or source sites for internal review
+- Review cadence to help meet content accuracy and relevance expectations
+- Approval workflow notes for customer-defined web grounding decisions
 
 ### Relationship to Feature Management Model
 
 Web grounding governance extends the existing FMC baseline, drift detection, and change tracking model:
 
-- Domain exclusion lists and authoritative source designations are tracked as feature baseline settings alongside rollout ring assignments
-- Changes to web grounding configuration are subject to the same change approval and notification workflows as other feature policy updates
-- Drift detection covers unexpected changes to excluded domains, authoritative sources, or web search policy state
-- Evidence export includes web grounding configuration snapshots for supervisory review
+- Web-search policy state and scope are tracked as feature baseline settings alongside rollout ring assignments
+- Customer-defined web grounding metadata is tracked separately from Microsoft admin control state
+- Changes to documented policy state are subject to the same change approval and notification workflows as other feature policy updates
+- Evidence export includes web-search policy state and local governance metadata for supervisory review
