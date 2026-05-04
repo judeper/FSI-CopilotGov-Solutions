@@ -12,30 +12,33 @@
 - Verify that Copilot Pages or Microsoft Loop are enabled in the tenant.
 - Re-run the monitoring script with the expected tenant context and confirm the output path is writable.
 
-## Retention Policy Not Applying to Copilot Pages
+## Retention Policy Not Applying to Copilot Pages or Notebooks
 
 **Possible causes**
-- The Page is stored in a Loop-backed workspace that does not inherit the expected retention behavior at creation time.
+- The retention policy is not configured for All SharePoint Sites and does not include the relevant SharePoint Embedded container.
 - The tenant retention policy has not propagated yet.
-- The underlying SharePoint location is not the one assumed by the records team.
+- The underlying user-owned SharePoint Embedded container is not the location assumed by the records team.
+- A departed-user or legal-hold process did not add the required container before deletion or review.
 
 **Recommended actions**
-- Treat the condition as an open gap until verified.
-- Use the compensating control log to document manual export and supervisory review procedures.
+- Confirm the policy scope with Records Management and SharePoint administrators; current Microsoft guidance states Purview retention policies configured for All SharePoint Sites are enforced for Copilot Pages and Notebooks.
+- Record the container URL, policy scope, and validation evidence before closing the item.
+- Use the compensating control log to document manual export and supervisory review procedures if policy scope cannot be demonstrated.
 - Record the issue in the preservation exception register if books-and-records impact exists.
-- Monitor Microsoft release notes for changes to Copilot Pages or Loop retention support.
 
-## Microsoft Purview eDiscovery Search Missing Loop Content
+## Microsoft Purview eDiscovery Search Missing Loop or Page Content
 
 **Possible causes**
-- Loop workspace content is not yet surfaced consistently for the search workflow being used.
-- The case scope does not include the correct site or workspace location.
-- Legal hold procedures were designed around Exchange or Teams content and did not account for Loop-backed content.
+- The case scope does not include the correct SharePoint Embedded container, site, or workspace location.
+- Full-text search within `.page` or `.loop` files in Purview review sets is not available.
+- Review/export licensing or Premium case setup is not in place for the workflow being used.
+- Legal hold procedures were designed around Exchange or Teams content and did not account for per-user SharePoint Embedded container inclusion.
 
 **Recommended actions**
-- Confirm the tenant configuration and case scope with the Microsoft Purview eDiscovery team.
-- Use manual exports and case-file documentation while native coverage is under review.
-- Update the gap status only after the tenant has been retested against the new platform behavior.
+- Confirm the case scope, collection, review, and export settings with the Microsoft Purview eDiscovery team.
+- Add the required SharePoint Embedded container URL manually for legal hold or case scope where applicable.
+- Use supported export options and document the review-set full-text limitation if the investigation requires text search inside `.page` or `.loop` files.
+- Update the gap status only after the tenant has been retested against the documented platform behavior.
 
 ## Compensating Control Not Accepted by Examiner
 
@@ -64,9 +67,9 @@
 ## Microsoft Loop vs Copilot Pages distinction
 
 **Clarification**
-- Copilot Pages is the user-facing collaboration experience.
-- Microsoft Loop provides the fluid content and workspace model used by many Pages scenarios.
-- A tenant may show different retention or Microsoft Purview eDiscovery behavior depending on whether the content is evaluated as a Page, a Loop component, or a SharePoint-backed artifact.
+- Copilot Pages and Copilot Notebooks are independent of Loop, but they can use the same user-owned SharePoint Embedded container as Loop My workspace.
+- Loop components, Loop workspaces, Copilot Pages, and Copilot Notebooks can have different admin policies, licensing requirements, and compliance limitations.
+- A tenant may show different retention or Microsoft Purview eDiscovery behavior depending on whether the content is evaluated as a Page, a Notebook, a Loop component, or a SharePoint-backed artifact.
 
 **Recommended actions**
 - Document the exact storage and discovery path being assessed.

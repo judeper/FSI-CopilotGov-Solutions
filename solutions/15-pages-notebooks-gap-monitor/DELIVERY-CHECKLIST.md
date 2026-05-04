@@ -4,16 +4,16 @@
 
 - Solution: Copilot Pages and Notebooks Compliance Gap Monitor
 - Solution code: PNGM
-- Version: v0.1.0
+- Version: v0.1.1
 - Track: D
 - Priority: P2
 - Dependency: 06-audit-trail-manager
 - Evidence outputs: gap-findings, compensating-control-log, preservation-exception-register
-- Delivery objective: establish a documentation-led gap monitor for Copilot Pages, Loop-based content, and notebook preservation risks
+- Delivery objective: establish a documentation-led monitor for Copilot Pages, Copilot Notebooks, SharePoint Embedded, and Loop validation items and documented limitations
 
 ## Pre-Deployment
 
-- [ ] Compliance team briefed on current Copilot Pages and Notebooks retention, sharing, and Microsoft Purview eDiscovery gaps
+- [ ] Compliance team briefed on current Copilot Pages and Notebooks supported capabilities, documented limitations, sharing considerations, and Microsoft Purview eDiscovery validation items
 - [ ] Legal team reviewed the preservation exception approach for SEC 17a-4 and FINRA 4511 scenarios
 - [ ] Dependency solution 06-audit-trail-manager deployed and validated
 - [ ] Tenant decision recorded for baseline, recommended, or regulated tier
@@ -29,9 +29,9 @@
 
 ## Deployment Steps
 
-1. [ ] Run baseline monitoring to inventory current gap conditions.
-2. [ ] Review discovered gaps and confirm severity, owner, and regulatory mappings.
-3. [ ] Assign compensating controls for each open gap.
+1. [ ] Run baseline monitoring to inventory current validation items and documented limitations.
+2. [ ] Review discovered items and confirm severity, owner, and regulatory mappings.
+3. [ ] Assign compensating controls for each open limitation or validation item.
 4. [ ] Obtain legal and compliance review for any preservation exceptions.
 5. [ ] Run `scripts/Deploy-Solution.ps1` to initialize the gap register and deployment manifest.
 6. [ ] Configure the Power Automate flow or equivalent review workflow for ongoing gap monitoring.
@@ -40,7 +40,7 @@
 
 ## Post-Deployment Validation
 
-- [ ] Gap register populated with the initial known gaps
+- [ ] Gap register populated with supported-but-validate items and documented limitations
 - [ ] Compensating control entries documented with owners, approvers, and review dates
 - [ ] Preservation exception register signed or left in draft pending formal approval
 - [ ] Output artifacts written to the expected output path
@@ -50,7 +50,7 @@
 ## Evidence Review
 
 - [ ] `gap-findings` present and current
-- [ ] `compensating-control-log` present and linked to open gaps
+- [ ] `compensating-control-log` present and linked to open limitations or validation items
 - [ ] `preservation-exception-register` present with rationale and review history
 - [ ] Evidence package JSON and SHA-256 hash file generated
 - [ ] Control status entries reviewed for 2.11, 3.2, 3.3, and 3.11
