@@ -2,7 +2,7 @@
   "solution": "14-communication-compliance-config",
   "solutionCode": "CCC",
   "displayName": "Microsoft Purview Communication Compliance Configurator",
-  "version": "v0.1.0",
+  "version": "v0.2.1",
   "status": "documentation-first",
   "track": "D",
   "priority": "P1",

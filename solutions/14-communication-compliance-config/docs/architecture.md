@@ -135,33 +135,33 @@ These tables are intended for configuration baselines, supervisory findings, and
 
 ## Insider Risk Management for AI Usage
 
-Microsoft Purview Insider Risk Management now supports detection of risky AI prompts and responses in M365 Copilot interactions. This capability helps meet control 2.10 (Insider Risk Detection for Copilot Usage Patterns) by providing indicators that surface when users submit sensitive prompts or receive AI-generated responses that may violate organizational policy.
+Microsoft Purview Insider Risk Management supports Risky AI usage policy templates for Microsoft 365 Copilot, Microsoft Copilot, and agents. This capability helps meet control 2.10 (Insider Risk Detection for Copilot Usage Patterns) by providing indicators that surface when users submit sensitive prompts or receive AI-generated responses that may violate organizational policy.
 
 Key capabilities documented by this solution:
 
-- **Risky AI usage indicators** — IRM policy templates reference built-in indicators for sensitive prompt content, unusual prompt volume, and AI-generated response patterns that may warrant supervisory review.
+- **Risky AI usage indicators** — IRM Risky AI usage policy templates can detect user browsing activities to generative AI websites and user prompts or AI responses containing sensitive information or risky intent in Microsoft 365 Copilot, Microsoft Copilot, and agents.
 - **Adaptive Protection correlation** — Insider Risk Management assigns dynamic risk scores to users based on detected activity. The solution documents how Adaptive Protection risk levels can inform communication compliance reviewer prioritization and escalation decisions.
 - **Policy template guidance** — The solution provides documentation-first policy templates for configuring IRM indicators targeting Copilot interactions. Policy creation and indicator activation require manual configuration in the Microsoft Purview portal.
 - **Cross-control integration** — IRM AI usage detection supports compliance with control 2.10 and complements the communication compliance policies documented under controls 3.4 and 3.6 by correlating insider risk signals with supervisory review workflows.
 
 IRM policy configuration is outside the scope of this solution's deployment scripts. The solution documents the recommended policy structure, indicator selection, and Adaptive Protection thresholds for customer implementation.
 
-## Video Recap Compliance Artifacts
+## Teams Intelligent Recap and Audio Recap Compliance Artifacts
 
-Copilot video recap for Teams meetings (March 2026) creates AI-generated video highlights from recorded meetings. These highlights are derived from the source meeting recording and transcript stored in OneDrive for Business or SharePoint. Video recaps represent a new category of AI-generated communication artifact that must be addressed in financial services compliance programs.
+Teams Intelligent recap uses AI to provide meeting and call recap experiences such as AI meeting notes, recommended tasks, timeline markers, meeting chapters and topics, and audio recap when licensing and transcription prerequisites are met. Audio recaps provide podcast-like summaries for selected meetings and are stored for 60 days in the user's OneDrive under `Documents` > `Recordings` > `AudioRecaps`.
 
 Compliance implications documented by this solution:
 
-- **FINRA Rule 3110 supervision** — Video recaps constitute AI-generated summaries of supervised communications. The solution documents patterns for including video recap artifacts in communication compliance policy scope so that supervisory review covers AI-generated meeting highlights alongside traditional transcript review.
-- **SEC Rule 17a-4 retention** — Video recap artifacts are subject to the same record retention requirements as the source meeting recordings and transcripts. The solution documents that existing recording and transcript retention policies in Microsoft Purview govern the video recap lifecycle; separate retention policies for video recaps are not required when source artifact retention is already configured.
-- **Source artifact dependency** — Video recaps rely on meeting recordings and transcripts. If a recording is deleted or a retention policy expires the source content, the corresponding video recap is no longer available. The solution documents this dependency for compliance planning.
-- **Communication compliance policy scope** — The solution documents the pattern for extending communication compliance supervision to include video recap content. This helps meet FINRA 3110 requirements by providing a framework for reviewer access to AI-generated meeting highlights within existing supervisory workflows.
+- **FINRA Rule 3110 supervision** — Intelligent recap outputs can represent AI-generated summaries of supervised meeting and call communications. The solution documents patterns for considering recap outputs in supervisory operating procedures alongside recordings and transcripts where customer policies authorize reviewer access.
+- **SEC Rule 17a-4 retention** — Teams recordings and transcripts require retention coverage through the documented Purview retention locations, and audio recaps require separate validation because they are stored in OneDrive for 60 days. The solution documents retention-planning checks rather than assuming recap artifacts inherit source recording or transcript retention.
+- **Source artifact dependency** — Intelligent recap requires transcription, and the full meeting recap experience depends on recording being allowed for users. The solution documents these prerequisites for compliance planning and evidence review.
+- **Communication compliance policy scope** — The solution documents policy and reviewer-access considerations for AI meeting notes, recommended tasks, chapters/topics, and audio recap outputs. This helps meet FINRA 3110 requirements by providing a framework for supervisory review planning within existing workflows.
 
-Video recap artifact management and retention enforcement are outside the scope of this solution. The solution documents governance patterns and policy considerations for customer implementation.
+Teams Intelligent recap and audio recap artifact management and retention enforcement are outside the scope of this solution. The solution documents governance patterns and policy considerations for customer implementation.
 
 ## Security
 
-- Reviewer access should be limited to Microsoft Purview Communication Compliance analysts, investigators, and approved supervisors.
+- Reviewer access should be limited to `Communication Compliance Analysts`, `Communication Compliance Investigators`, and approved supervisors.
 - DLP integration should be reviewed so sensitive communications remain governed during review workflows.
 - Audit log retention should cover policy publication, reviewer actions, lexicon updates, and evidence exports.
 - Escalation procedures should align to least-privilege access and documented supervisory authority.
