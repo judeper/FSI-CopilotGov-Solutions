@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.1.1] - 2026-05-04
+
+- Updated license-assignment prerequisites to use least-privileged Microsoft Graph permission guidance, delegated Microsoft Entra role requirements, and Usage location preparation.
+- Corrected the Microsoft 365 Copilot SKU part number in the default configuration.
+
 ## v0.1.0
 
 - Replaced scaffold text with solution-specific guidance for risk-tiered Copilot rollout operations in financial-services environments.
