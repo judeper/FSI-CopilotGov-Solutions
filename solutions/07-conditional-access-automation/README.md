@@ -31,6 +31,8 @@ This solution is scoped to Conditional Access controls for Copilot access. It de
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Copilot application targets
 
 | Application | App ID | Purpose in this solution |
@@ -123,6 +125,9 @@ See `docs\deployment-guide.md` for the detailed workflow.
 | `tests\07-conditional-access-automation.Tests.ps1` | Pester validation for docs, configs, and scripts |
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 3 control(s) are **evidence-export-ready** in scaffold form: 2.3, 2.6, 2.9.
 
 | Control | Objective | Regulations | Evidence |
 |---------|-----------|-------------|----------|

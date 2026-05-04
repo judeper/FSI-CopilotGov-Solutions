@@ -36,6 +36,8 @@ Integration with solution 02 provides the upstream oversharing findings that dri
 - ❌ Does not replace Entra ID Governance licensing or Privileged Identity Management workflows
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 See [docs/architecture.md](architecture.md) for the component diagram, data flow, review lifecycle, and integration points with upstream solutions.
@@ -85,6 +87,9 @@ Deploy this solution after upstream oversharing risk assessment has completed an
 Solution 18 depends on risk-scored site output from solution 02-oversharing-risk-assessment. The risk scores drive prioritization so that HIGH-risk sites receive access reviews first and at the highest cadence. The deployment workflow checks for upstream evidence so reviews are anchored to documented oversharing findings.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 1.2, 1.6, 2.12, 2.5.
 
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|

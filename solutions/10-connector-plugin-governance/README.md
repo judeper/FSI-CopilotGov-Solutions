@@ -35,6 +35,8 @@ The **Copilot Control System** in the Microsoft 365 admin center serves as the c
 - ❌ Does not cover Agent 365 platform governance, Entra Agent ID security controls, or agent pinning (v1.3+ framework features pending solution update)
 - ❌ Does not govern third-party model provider integrations
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 ```text
@@ -119,6 +121,10 @@ Key deployment stages:
 - A security reviewer mailbox or distribution group to receive approval workflow tasks.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 1.13, 2.13, 2.14, 4.13.
+> 1 control(s) is/are **documentation-only** (listed in metadata but not yet exercised by scripts/tests in this scaffold): 2.16.
 
 | Control | Why it matters | Solution response |
 |---------|----------------|------------------|

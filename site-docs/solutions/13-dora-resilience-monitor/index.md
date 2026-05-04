@@ -43,6 +43,8 @@ The DORA Operational Resilience Monitor (DRM) provides an operational-resilience
 - ❌ Does not cover NYDFS Part 500 cybersecurity incident reporting requirements (framework_ids updated, solution content pending)
 - ❌ Does not cover FINRA 4370 business continuity plan testing requirements (framework_ids updated, solution content pending)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 The solution uses PowerShell scripts for deployment, monitoring, and evidence export; configuration files for tier-specific policy; and documentation-first guidance for optional workflow automation. See [docs/architecture.md](architecture.md) for the component diagram, data flow, integration points, and security considerations.
@@ -92,6 +94,9 @@ Deploy DRM by selecting the target governance tier, generating the deployment ma
 - Optional Microsoft Sentinel workspace and dashboard dependency 12-regulatory-compliance-dashboard when centralized risk reporting is required
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 2.7, 4.10, 4.11, 4.9.
 
 | Control | Title |
 |---------|-------|

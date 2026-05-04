@@ -26,6 +26,7 @@
 
 ### Overstated: Solution 01 README Line 11
 
+<!-- fsi-lang:allow="performs graph api scanning" reason="audit document quotes overstated phrasing verbatim to recommend correction" -->
 **Claim:** "Performs Graph API-based scanning across licensing, identity, security, compliance, governance, and Copilot configuration domains."
 
 **Reality:**
@@ -84,6 +85,7 @@ grep -n "Purview|Compliance|DLP|Label" scripts/common/PurviewHelpers.psm1
 
 ### Overstated: Solution 11 Deployment Claims
 
+<!-- fsi-lang:allow="sequences license assignment" reason="audit document quotes overstated phrasing verbatim to recommend correction" -->
 **Claim:** "Risk-tiered Rollout Automation sequences Copilot license assignment" with "License Assigner" and "wave orchestration."
 
 **Status Header:** "Detailed design and deployment stubs"
@@ -370,7 +372,7 @@ It 'export-evidence produces real artifact, not template' {
 | `solutions/04-finra-supervision-workflow/README.md` | Line 7 uses "routing" as if live (but actually docs-first) | Already accurate (says "documentation-first") | OK |
 | `solutions/11-risk-tiered-rollout/README.md` | Line 9 implies license assignment occurs | Clarify: "Stages manifest for license assignment; requires manual execution" | HIGH |
 | `solutions/12-regulatory-compliance-dashboard/README.md` | Line 8 implies "aggregates evidence" into Power BI | Clarify: "Documents aggregation pattern; Power BI assets are documentation-first" | HIGH |
-| `solutions/13-dora-resilience-monitor/README.md` | Line 20 says "Captures workload health snapshots through Graph" | Clarify: "Designed for service health polling; v0.1.0 uses stub data" | MEDIUM |
+| `solutions/13-dora-resilience-monitor/README.md` | Line 20 says "Captures workload health snapshots through Graph" | Clarify: "Designed for service health polling; v0.1.0 uses stub data" | MEDIUM | <!-- fsi-lang:allow="captures snapshots through graph" reason="audit row quotes overstated phrasing for recommended correction" -->
 
 ### Priority 2: Architecture Documentation Accuracy
 
@@ -412,10 +414,10 @@ It 'export-evidence produces real artifact, not template' {
 
 | Solution | False/Overstated Claim | Current State | Recommended Language |
 |----------|------------------------|---------------|----------------------|
-| 01 | "Performs Graph API-based scanning" | Stub with test data | "Provides scanning framework; current version uses sample data for testing" |
+| 01 | "Performs Graph API-based scanning" | Stub with test data | "Provides scanning framework; current version uses sample data for testing" | <!-- fsi-lang:allow="performs graph api scanning" reason="audit row quotes overstated phrasing for recommended correction" -->
 | 04 | "Routes flagged communications" | Documentation-first flows | ACCURATE (already labeled doc-first) |
-| 11 | "Sequences Copilot license assignment" | Manifest generator | "Prepares wave manifests; requires manual license assignment" |
-| 12 | "Aggregates evidence into Power BI" | Dataverse schema + doc-first flows | "Documents aggregation pattern; Power BI bindings are customer-deployed" |
+| 11 | "Sequences Copilot license assignment" | Manifest generator | "Prepares wave manifests; requires manual license assignment" | <!-- fsi-lang:allow="sequences license assignment" reason="audit row quotes overstated phrasing for recommended correction" -->
+| 12 | "Aggregates evidence into Power BI" | Dataverse schema + doc-first flows | "Documents aggregation pattern; Power BI bindings are customer-deployed" | <!-- fsi-lang:allow="aggregates evidence into power bi" reason="audit row quotes overstated phrasing for recommended correction" -->
 | 13 | "Monitors M365 service health" | Stub with test data | "Provides monitoring structure; v0.1.0 includes Graph integration points" |
 
 ---

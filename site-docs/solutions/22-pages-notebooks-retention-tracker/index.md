@@ -40,6 +40,8 @@ The Pages and Notebooks Retention Tracker (PNRT) is a documentation-first soluti
 - ❌ Does not satisfy FINRA Rule 4511(a) on its own; books-and-records retention requires coordinated controls across storage, supervision, and access
 - ❌ Does not deploy Power Automate flows or Dataverse tables (referenced as documentation-first patterns)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Prerequisites
 
 Review [docs/prerequisites.md](prerequisites.md) for the required admin roles, PowerShell modules, and Microsoft 365 prerequisites before deploying this solution.

@@ -31,6 +31,8 @@ The design focuses on the highest-risk FSI exposure scenarios: customer PII, tra
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md) for the component diagram, workload data flow, remediation modes, and Power Automate integration pattern.
@@ -75,6 +77,10 @@ Deploy this solution in detect-only mode first so stakeholders can review oversh
 Solution 02 depends on the baseline inventory and readiness outputs from solution 01-copilot-readiness-scanner. The deployment workflow checks for upstream evidence so oversharing scans can be prioritized against workloads that already show Copilot readiness, broad collaboration patterns, or unresolved data hygiene concerns.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 6 control(s) are **evidence-export-ready** in scaffold form: 1.2, 1.3, 1.4, 1.6, 2.12, 2.5.
+> 1 control(s) is/are **documentation-only** (listed in metadata but not yet exercised by scripts/tests in this scaffold): 3.10.
 
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|

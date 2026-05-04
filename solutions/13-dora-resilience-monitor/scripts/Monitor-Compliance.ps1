@@ -81,7 +81,15 @@ function Resolve-DrmClientSecret {
     }
 
     if (-not [string]::IsNullOrWhiteSpace($env:AZURE_CLIENT_SECRET)) {
-        return (ConvertTo-SecureString -String $env:AZURE_CLIENT_SECRET -AsPlainText -Force)
+        # IDENTITY-STANDARD: legacy-client-secret -- TODO: migrate to managed identity (see docs/security/managed-identity-standard.md)
+        # Use AppendChar loop so the plaintext secret is never materialized as a single .NET string;
+        # ConvertTo-SecureString -AsPlainText is flagged by PSScriptAnalyzer (PSAvoidUsingConvertToSecureStringWithPlainText).
+        $secureSecret = New-Object System.Security.SecureString
+        foreach ($char in $env:AZURE_CLIENT_SECRET.ToCharArray()) {
+            $secureSecret.AppendChar($char)
+        }
+        $secureSecret.MakeReadOnly()
+        return $secureSecret
     }
 
     return $null

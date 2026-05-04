@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "solution_id": "04-finra-supervision-workflow",
+  "flow_name": "Copilot Supervision Review",
+  "flow_id": "supervision-review",
+  "sample": true,
+  "trigger": {
+    "kind": "recurrence",
+    "details": "Hourly recurrence trigger that polls the supervision queue for new Copilot interactions flagged for principal review."
+  },
+  "connectors": [
+    {"name": "Office 365 Outlook", "kind": "sharedoffice365"},
+    {"name": "Microsoft Teams", "kind": "sharedteams"},
+    {"name": "SharePoint", "kind": "sharedsharepointonline"},
+    {"name": "HTTP with Microsoft Entra ID", "kind": "sharedhttpwithentra"}
+  ],
+  "actions": [
+    {"name": "Get Pending Supervision Items", "type": "http"},
+    {"name": "Apply To Each Pending Item", "type": "apply_to_each"},
+    {"name": "Evaluate Risk Tier", "type": "condition"},
+    {"name": "Notify Principal Reviewer", "type": "office365_send_email"},
+    {"name": "Post Teams Adaptive Card", "type": "teams_post_card"},
+    {"name": "Append Supervision Evidence Row", "type": "sharepoint_create_item"},
+    {"name": "Mark Item As Routed", "type": "http"}
+  ],
+  "condition_branches": [
+    {
+      "name": "Evaluate Risk Tier",
+      "yes": ["Notify Principal Reviewer", "Post Teams Adaptive Card", "Append Supervision Evidence Row", "Mark Item As Routed"],
+      "no": ["Mark Item As Routed"]
+    }
+  ],
+  "error_handling": {
+    "configured_run_after": true,
+    "scope_pattern": "try-catch"
+  },
+  "retry_policy": {
+    "type": "exponential",
+    "count": 4,
+    "interval": "PT20S"
+  },
+  "naming_pattern": "^[A-Z][A-Za-z0-9 ]+$",
+  "evidence_outputs": [
+    "supervision-review-log.csv",
+    "principal-attestation-summary.json"
+  ],
+  "notes": "Representative sample contract for Solution 04. Values are illustrative; no live Power Automate flow is bound to this contract."
+}

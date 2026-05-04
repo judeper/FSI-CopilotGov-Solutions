@@ -1,0 +1,28 @@
+# Pinned FSI-CopilotGov Framework Reference
+#
+# This file records the FSI-CopilotGov framework commit that this repository's
+# control mappings, evidence schema, and regulatory traceability are validated
+# against. The same commit SHA is mirrored in scripts/traceability.py
+# (FRAMEWORK_REPO_REF) and is enforced by scripts/validate-documentation.py,
+# which fails the build if any documentation links to FSI-CopilotGov on `main`
+# or `master` instead of the pinned ref.
+#
+# Format (whitespace-tolerant; lines starting with `#` are comments):
+#   framework_repo: judeper/FSI-CopilotGov
+#   framework_ref:  <40-char commit SHA>
+#   framework_tag:  <semver tag if available, otherwise `none`>
+#   pinned_at:      <ISO 8601 date when this pin was last updated>
+#   notes:          <free-form>
+
+framework_repo: judeper/FSI-CopilotGov
+framework_ref:  e0fb7b769529dcc008cc2066402cdabae4f369cf
+framework_tag:  none
+pinned_at:      2026-04-29
+notes: |
+  Operator action: when bumping this pin, also update
+  scripts/traceability.py (FRAMEWORK_REPO_REF) and run
+  `python scripts/validate-documentation.py` to confirm no documentation
+  references the framework on `main` or `master`.
+  Prefer pinning to a release tag once FSI-CopilotGov publishes signed,
+  semver-ed releases; fall back to a commit SHA only when no tag is yet
+  available for the validated state.
