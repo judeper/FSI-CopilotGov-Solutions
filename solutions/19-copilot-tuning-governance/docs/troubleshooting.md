@@ -4,15 +4,17 @@
 
 **Symptoms**
 
-- Copilot Tuning options do not appear in M365 Admin Center
-- Tuning API endpoints return 404 or feature-not-enabled errors
+- Copilot Tuning settings do not appear in the Microsoft 365 admin center Copilot control system
+- Eligible users cannot see tuning options in Agent Builder after creating an agent from a tunable template
+- Users cannot submit tuning access requests for admin review
 
 **Actions**
 
-- Confirm the organization has 5,000 or more Microsoft 365 Copilot licenses
-- Verify the Copilot Tuning feature has been enabled for the tenant by Microsoft
-- Check Microsoft 365 Admin Center for feature availability announcements
-- Contact Microsoft support if the license threshold is met but the feature is unavailable
+- Confirm the tenant is included in an eligible early access, Frontier, or public preview rollout
+- Confirm the organization has at least 5,000 Microsoft 365 Copilot licenses during public preview
+- Verify Copilot Tuning availability settings in the Microsoft 365 admin center: enabled for all users, enabled for specific users or groups, or disabled
+- If the tenant is using a limited rollout, confirm the user or Microsoft Entra security group is included in the allowed tuning audience
+- Contact Microsoft support or the Microsoft account team if the license threshold and preview enrollment are met but Copilot Tuning settings are unavailable
 
 ## Error: Configuration file not found
 
@@ -56,11 +58,11 @@
 
 ## Tip: Start with baseline tier
 
-Run the initial deployment with the baseline tier (tuning disabled) to validate governance controls, evidence export, and monitoring scripts before enabling tuning in any capacity. This allows stakeholders to review the governance framework without introducing model risk.
+Run the initial deployment with the baseline tier to validate governance controls, evidence export, and monitoring scripts before expanding tuning availability. In eligible preview tenants, use the Microsoft 365 admin center to disable tuning or limit it to approved pilot users or groups because the repository configuration does not change tenant availability settings.
 
-## Tip: Validate approval workflow before enabling tuning
+## Tip: Validate approval workflow before expanding tuning access
 
-Confirm that model risk management stakeholders have reviewed and approved the tuning approval workflow documented in [architecture.md](architecture.md) before switching from baseline to recommended or regulated tiers. The approval chain should be tested with a sample tuning request before production use.
+Confirm that model risk management stakeholders have reviewed and approved the tuning approval workflow documented in [architecture.md](architecture.md) before switching from baseline to recommended or regulated tiers. The approval chain should be tested with a sample tuning request before approved preview users receive broader tuning access.
 
 ## Tip: Monitor risk reassessment cadence
 

@@ -5,8 +5,8 @@ Monitors Copilot Tuning governance compliance status and reports coverage gaps.
 .DESCRIPTION
 Loads the solution configuration, checks tuning governance compliance status
 including approval workflow adherence, model inventory completeness, and risk
-reassessment cadence. Uses representative sample data when tenant APIs are
-unavailable.
+reassessment cadence. Uses representative sample data when tenant-specific
+integrations are unavailable.
 
 .PARAMETER ConfigurationTier
 Selects the governance tier to apply. Supported values are baseline,

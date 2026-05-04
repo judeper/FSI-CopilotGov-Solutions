@@ -146,11 +146,11 @@ function Test-CopilotLicenseThreshold {
         'CTG_ASSUME_LICENSE_THRESHOLD=1 was supplied for stub validation.'
     }
     else {
-        'Validate that the tenant has 5,000 or more Copilot licenses before enabling Copilot Tuning.'
+        'Validate early access preview availability, Microsoft 365 admin center visibility, and at least 5,000 Microsoft 365 Copilot licenses during public preview before expanding Copilot Tuning access.'
     }
 
     return [pscustomobject]@{
-        Requirement = 'Copilot License Threshold (5,000+)'
+        Requirement = 'Copilot Tuning Preview Eligibility'
         TenantId = $TenantId
         Status = $status
         Notes = $notes

@@ -2,7 +2,7 @@
 
 ## Platform and Licensing
 
-- Microsoft 365 Copilot licensing with a minimum of 5,000 seats is required for Copilot Tuning eligibility. If the organization does not meet this threshold, document the limitation before enabling this solution.
+- Microsoft 365 Copilot Tuning is an early access preview capability with limited customer availability. During public preview, only tenants with at least 5,000 Microsoft 365 Copilot licenses are eligible, and Copilot Tuning settings must be visible in the Microsoft 365 admin center before tenant-specific governance decisions proceed.
 - Microsoft 365 E5 or equivalent licensing should be available for the tenant to support compliance and governance features.
 - The target tenant should already have a defined Copilot rollout scope so tuning governance can be aligned with active deployment.
 
@@ -10,11 +10,11 @@
 
 At least one of the following roles should be assigned to the operator, depending on the task being performed:
 
-- Global Admin
-- Copilot Admin
-- Compliance Admin (for evidence review and regulatory alignment tasks)
+- AI Administrator for Microsoft 365 Copilot, AI-related enterprise services, and agent administration tasks
+- Compliance Administrator for evidence review and regulatory alignment tasks
+- Global Administrator only for exceptional tasks that require broader tenant privileges
 
-For tuning governance management, Copilot Admin is the recommended least-privilege role once Microsoft makes it available for Tuning administration.
+For tuning governance management, AI Administrator is the recommended least-privilege role for Copilot and agent administration. Global Administrator should be reserved for scenarios that still require high-privilege tenant administration.
 
 ## Model Risk Management Stakeholders
 
