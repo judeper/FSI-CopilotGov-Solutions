@@ -17,7 +17,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P0",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "1.1",
         "1.5",
@@ -38,7 +38,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P0",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "1.2",
         "1.3",
@@ -60,7 +60,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "1.5",
         "2.2",
@@ -80,7 +80,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P0",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "3.4",
         "3.5",
@@ -99,7 +99,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P1",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "2.1",
         "3.10",
@@ -118,7 +118,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P0",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "3.1",
         "3.2",
@@ -139,7 +139,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P1",
-      "version": "v0.2.0",
+      "version": "v0.2.1",
       "controls": [
         "2.3",
         "2.6",
@@ -158,7 +158,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.9",
         "4.5",
@@ -178,7 +178,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "2.6",
         "4.1",
@@ -201,7 +201,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.13",
         "2.13",
@@ -221,7 +221,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P0",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.9",
         "1.11",
@@ -241,7 +241,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P0",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "3.7",
         "3.8",
@@ -263,7 +263,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "2.7",
         "4.9",
@@ -283,7 +283,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.2.1",
       "controls": [
         "2.10",
         "3.4",
@@ -304,7 +304,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P2",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "2.11",
         "3.2",
@@ -324,7 +324,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.2",
         "1.3",
@@ -345,7 +345,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.2",
         "1.4",
@@ -365,7 +365,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.2",
         "1.6",
@@ -385,7 +385,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "1.16",
         "3.8"
@@ -403,7 +403,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "3.8a",
         "3.8",
@@ -424,7 +424,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "2.17",
         "2.16",
@@ -446,7 +446,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "3.14",
         "3.2",
@@ -467,7 +467,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P1",
-      "version": "v0.1.0",
+      "version": "v0.1.1",
       "controls": [
         "4.14",
         "4.13",
