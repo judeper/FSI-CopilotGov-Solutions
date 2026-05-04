@@ -2,7 +2,7 @@
   "solution": "22-pages-notebooks-retention-tracker",
   "displayName": "Pages and Notebooks Retention Tracker",
   "solutionCode": "PNRT",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "controls": [
     "3.14",
     "3.2",

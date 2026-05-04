@@ -4,8 +4,9 @@
 
 .DESCRIPTION
     Builds the four PNRT evidence artifacts (pages-retention-inventory,
-    notebook-retention-log, loop-component-lineage, branching-event-log) from the
-    monitoring snapshot and writes JSON files plus SHA-256 companion hashes.
+    notebook-retention-log, loop-component-lineage, and branching-event-log as
+    internal sample lineage) from the monitoring snapshot and writes JSON files
+    plus SHA-256 companion hashes.
     Helps meet retention recordkeeping expectations under SEC Rule 17a-4 (where
     applicable to broker-dealer required records), FINRA Rule 4511(a), and
     Sarbanes-Oxley §§302/404 (where applicable to ICFR).
@@ -30,7 +31,7 @@
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding()]
 param(
@@ -121,22 +122,23 @@ $loopArtifact.signedLineageRequired = [bool]$configuration.signedLineageRequired
 $loopArtifact.records = @($snapshot.LoopComponents)
 $loopFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("loop-component-lineage-{0}.json" -f $ConfigurationTier)) -Content $loopArtifact
 
-Write-Verbose 'Building branching-event-log artifact.'
+Write-Verbose 'Building branching-event-log internal sample lineage artifact.'
 $branchingArtifact = [ordered]@{} + $baseEnvelope
-$branchingArtifact.auditMode = $configuration.branchingAuditMode
-$branchingArtifact.records = @($snapshot.BranchingEvents)
+$branchingArtifact.internalSampleLineageMode = $configuration.branchingAuditMode
+$branchingArtifact.documentedEvidence = @('Purview audit logs', 'Version history export in Purview or Graph API where documented')
+$branchingArtifact.records = @($snapshot.InternalSampleLineageEvents)
 $branchingFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("branching-event-log-{0}.json" -f $ConfigurationTier)) -Content $branchingArtifact
 
 $controls = @(
     [pscustomobject]@{
         controlId = '3.14'
         status = 'partial'
-        notes = 'Pages and Notebook retention coverage is documented through sample inventory; live Graph and Purview integration is required to confirm production retention assignment.'
+        notes = 'Pages and OneNote section retention coverage is documented through sample inventory; live SharePoint Embedded, documented Graph DriveItem/export, and Purview integration is required to confirm production retention coverage.'
     },
     [pscustomobject]@{
         controlId = '3.2'
         status = 'partial'
-        notes = 'Lifecycle metadata for Pages and Loop components is recorded; live integration is required for full evidence.'
+        notes = 'Lifecycle, version-history, and provenance metadata for Pages and Loop components is documented; live integration is required for full evidence.'
     },
     [pscustomobject]@{
         controlId = '3.3'
@@ -146,12 +148,12 @@ $controls = @(
     [pscustomobject]@{
         controlId = '3.11'
         status = 'monitor-only'
-        notes = 'Branching and lineage records support eDiscovery and legal-hold readiness; live hold placement is out of scope for this solution.'
+        notes = 'Purview audit/version-history context and internal sample lineage support eDiscovery and legal-hold readiness; live hold placement is out of scope for this solution.'
     },
     [pscustomobject]@{
         controlId = '2.11'
         status = 'partial'
-        notes = 'Branching event log records sample lifecycle transitions; live audit ingestion requires Microsoft Graph activity APIs.'
+        notes = 'Branching-event-log records internal sample lineage only; production audit evidence should come from Purview audit-log search/export and documented Graph DriveItem/export or version-history capabilities.'
     }
 )
 
@@ -162,7 +164,7 @@ $artifacts = @(
     [pscustomobject]@{ name = 'branching-event-log'; type = 'json'; path = $branchingFile.Path; hash = $branchingFile.Hash }
 )
 
-$recordCount = @($snapshot.Pages).Count + @($snapshot.Notebooks).Count + @($snapshot.LoopComponents).Count + @($snapshot.BranchingEvents).Count
+$recordCount = @($snapshot.Pages).Count + @($snapshot.Notebooks).Count + @($snapshot.LoopComponents).Count + @($snapshot.InternalSampleLineageEvents).Count
 $exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
 
 $summary = [pscustomobject]@{

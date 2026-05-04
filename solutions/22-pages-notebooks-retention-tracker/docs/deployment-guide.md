@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Review [docs/prerequisites.md](prerequisites.md) before deployment. PNRT assumes Microsoft 365 with Copilot, OneNote, and Loop enabled, an Entra ID application registration with read-only scopes, and PowerShell 7.2 or later.
+Review [docs/prerequisites.md](prerequisites.md) before deployment. PNRT assumes Microsoft 365 Copilot licensing for in-scope users, OneNote, Loop, SharePoint Online, SharePoint Embedded admin access where required, an Entra ID application registration with read-only scopes, and PowerShell 7.2 or later.
 
 ## Step 1: Clone and Configure
 
@@ -21,9 +21,9 @@ $env:AZURE_CLIENT_ID = '<app-registration-guid>'
 
 Choose the governance tier that matches the operating model and review `config/<tier-name>.json` together with `config/default-config.json`.
 
-- `baseline`: 365-day retention defaults, summary branching audit, optional Loop provenance
-- `recommended`: 7-year retention defaults, full branching audit, required Loop provenance, retention-label inheritance check
-- `regulated`: 7-year retention with preservation-lock expectations, signed Loop lineage, supervisory-review queue, WORM storage settings aligned to SEC Rule 17a-4(f) for in-scope records
+- `baseline`: 365-day retention defaults, Purview audit summary, internal sample lineage mode, optional Loop provenance
+- `recommended`: 7-year retention defaults, Purview audit/version-history evidence, internal sample lineage mode, required Loop provenance, supported retention-label/policy checks
+- `regulated`: 7-year retention with preservation-lock expectations for in-scope records, signed sample lineage, supervisory-review queue, WORM storage settings aligned to SEC Rule 17a-4(f) for in-scope records
 
 Confirm the following before deployment:
 
@@ -47,10 +47,10 @@ If the preview is acceptable, rerun without `-WhatIf` to write the deployment ma
 
 Review the output for:
 
-- Pages inventory with retention labels and mutability state
-- Notebook retention assignment summary
+- Pages inventory with retention-policy coverage, limited retention-label evidence, and version-history context
+- OneNote section/folder retention coverage grouped by Notebook metadata
 - Loop component provenance records
-- Branching event records for the sample period
+- Branching-event-log records that are clearly marked as repository-only internal sample lineage with Purview audit/version-history context
 
 ## Step 5: Configure the Documentation-First Power Automate Flow
 
