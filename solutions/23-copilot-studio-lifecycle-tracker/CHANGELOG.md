@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [v0.1.1] - 2026-05-04
+
+### Changed
+- Added Microsoft Agent 365 registry and lifecycle-governance context to the README and architecture guidance.
+- Clarified Power Platform API permission, RBAC, and PowerShell runtime prerequisites for future live integration.
+- Qualified Copilot Studio publish/version evidence language and customer-supplied rollback references.
+
 ## v0.1.0 - 2025-01-15
 
 ### Added

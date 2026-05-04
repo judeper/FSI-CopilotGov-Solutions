@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Review [docs/prerequisites.md](prerequisites.md) before deployment. The deployment script assumes Power Platform admin access for the live integration target, an Entra ID application registration where authentication is later wired in, and PowerShell 7.2 or later.
+Review [docs/prerequisites.md](prerequisites.md) before deployment. The repository scaffold scripts run in PowerShell 7.2 or later and generate local manifests/evidence from sample data. Future live integration should distinguish the runtime: `Microsoft.PowerApps.Administration.PowerShell` requires Windows PowerShell 5.x and is incompatible with PowerShell 6.0 and later, while PowerShell 7+ implementations should use Power Platform REST API/SDK patterns with delegated permissions and RBAC role assignments.
 
 ## Step 1: Clone and Configure
 
