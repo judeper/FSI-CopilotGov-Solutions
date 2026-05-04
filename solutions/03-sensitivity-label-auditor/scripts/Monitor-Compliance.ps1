@@ -105,6 +105,7 @@ function Get-ResolvedConfiguration {
         prioritySites = @($defaultConfig.prioritySites)
         remediationManifestMaxItems = [int]$defaultConfig.remediationManifestMaxItems
         graphApiVersion = $defaultConfig.graphApiVersion
+        sensitivityLabelDefinitionsApiVersion = $defaultConfig.sensitivityLabelDefinitionsApiVersion
         coverageThreshold = $defaultConfig.coverageThreshold
         tierSettings = $tierConfig
     }
@@ -338,7 +339,7 @@ function Get-SharePointLabelCoverage {
         [int]$MaxItemsPerWorkload
     )
 
-    return New-WorkloadCoverageResult -Configuration $Configuration -Workload 'sharePoint' -BaseTotalItems 40000 -BaseCoveragePercent 86.5 -ItemLimit $MaxItemsPerWorkload -SourceEndpoints @('/sites/{site-id}/drives', '/drives/{drive-id}/items/{item-id}', '/security/informationProtection/sensitivityLabels') -CoverageNotes 'SharePoint coverage uses drive item metadata and sensitivity label references exposed through Microsoft Graph.'
+    return New-WorkloadCoverageResult -Configuration $Configuration -Workload 'sharePoint' -BaseTotalItems 40000 -BaseCoveragePercent 86.5 -ItemLimit $MaxItemsPerWorkload -SourceEndpoints @('/sites/{site-id}/drives', '/drives/{drive-id}/items/{item-id}/extractSensitivityLabels', '/beta/security/informationProtection/sensitivityLabels') -CoverageNotes 'SharePoint coverage uses driveItem extractSensitivityLabels results for supported files and beta label definitions for tier mapping.'
 }
 
 function Get-OneDriveLabelCoverage {
@@ -350,7 +351,7 @@ function Get-OneDriveLabelCoverage {
         [int]$MaxItemsPerWorkload
     )
 
-    return New-WorkloadCoverageResult -Configuration $Configuration -Workload 'oneDrive' -BaseTotalItems 25000 -BaseCoveragePercent 82.2 -ItemLimit $MaxItemsPerWorkload -SourceEndpoints @('/users/{user-id}/drive', '/drives/{drive-id}/items/{item-id}', '/security/informationProtection/sensitivityLabels') -CoverageNotes 'OneDrive coverage highlights business-user stores that may contain customer or supervisory data outside shared repositories.'
+    return New-WorkloadCoverageResult -Configuration $Configuration -Workload 'oneDrive' -BaseTotalItems 25000 -BaseCoveragePercent 82.2 -ItemLimit $MaxItemsPerWorkload -SourceEndpoints @('/users/{user-id}/drive', '/drives/{drive-id}/items/{item-id}/extractSensitivityLabels', '/beta/security/informationProtection/sensitivityLabels') -CoverageNotes 'OneDrive coverage uses driveItem extractSensitivityLabels results for supported files and highlights business-user stores that may contain customer or supervisory data outside shared repositories.'
 }
 
 function Get-ExchangeLabelCoverage {
@@ -362,7 +363,7 @@ function Get-ExchangeLabelCoverage {
         [int]$MaxItemsPerWorkload
     )
 
-    return New-WorkloadCoverageResult -Configuration $Configuration -Workload 'exchange' -BaseTotalItems 60000 -BaseCoveragePercent 79.8 -ItemLimit $MaxItemsPerWorkload -SourceEndpoints @('/users/{user-id}/messages', '/security/informationProtection/sensitivityLabels') -CoverageNotes 'Exchange coverage is derived from message-level label metadata and may lag if mailbox labeling signals are incomplete.'
+    return New-WorkloadCoverageResult -Configuration $Configuration -Workload 'exchange' -BaseTotalItems 60000 -BaseCoveragePercent 79.8 -ItemLimit $MaxItemsPerWorkload -SourceEndpoints @('tenant-approved Purview audit/activity export', '/users/{user-id}/messages?$expand=singleValueExtendedProperties', '/beta/security/informationProtection/sensitivityLabels') -CoverageNotes 'Exchange coverage must come from a tenant-approved Purview audit/activity export, documented Internet message headers, or documented extended-property extraction because Graph messages do not expose a first-class sensitivity-label field.'
 }
 
 function Measure-LabelCoverage {
@@ -639,6 +640,7 @@ $coverageReportObj = [pscustomobject]@{
         tenantId = $TenantId
         tier = $configuration.tier
         graphApiVersion = $configuration.graphApiVersion
+        sensitivityLabelDefinitionsApiVersion = $configuration.sensitivityLabelDefinitionsApiVersion
         generatedAt = (Get-Date).ToString('s')
     }
     overall = $overallCoverage

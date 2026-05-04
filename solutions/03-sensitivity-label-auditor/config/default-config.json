@@ -2,7 +2,7 @@
   "solution": "03-sensitivity-label-auditor",
   "solutionCode": "SLA",
   "displayName": "Sensitivity Label Coverage Auditor",
-  "version": "v0.2.0",
+  "version": "v0.2.1",
   "controls": [
     "1.5",
     "2.2",
@@ -94,5 +94,6 @@
   },
   "prioritySites": [],
   "remediationManifestMaxItems": 500,
-  "graphApiVersion": "v1.0"
+  "graphApiVersion": "v1.0",
+  "sensitivityLabelDefinitionsApiVersion": "beta"
 }

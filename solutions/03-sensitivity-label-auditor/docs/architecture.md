@@ -35,9 +35,9 @@ Sensitivity Label Coverage Auditor is a monitoring-first solution that measures 
             |                                             |
             v                                             v
 +--------------------+      +--------------------+   +--------------------+
-| SharePoint items   |      | OneDrive items     |   | Exchange messages  |
-| Graph drive items  |      | Graph drive items  |   | Graph mail items   |
-| contentLabel data  |      | contentLabel data  |   | contentLabel data  |
+| SharePoint files   |      | OneDrive files     |   | Exchange evidence   |
+| Graph drive action |      | Graph drive action |   | Purview export      |
+| label assignments  |      | label assignments  |   | headers/properties  |
 +--------------------+      +--------------------+   +--------------------+
             \                    |                     /
              \                   |                    /
@@ -73,10 +73,10 @@ Sensitivity Label Coverage Auditor is a monitoring-first solution that measures 
 ## Data Flow
 
 1. `scripts\Deploy-Solution.ps1` loads the selected governance tier, records a snapshot of the configured label taxonomy, and confirms upstream dependencies are available.
-2. `scripts\Monitor-Compliance.ps1` is designed to query Microsoft Graph coverage sources for:
-   - SharePoint and OneDrive drive items plus `contentLabel` metadata
-   - Exchange messages and associated label metadata
-   - Sensitivity label definitions needed for tier mapping
+2. `scripts\Monitor-Compliance.ps1` is designed to query approved coverage sources for:
+   - SharePoint and OneDrive drive items through `driveItem: extractSensitivityLabels`, using returned `sensitivityLabelAssignment` values for supported file types and documenting locked, encrypted, or unsupported files as limitations
+   - Exchange message labeling evidence from a tenant-approved Purview audit/activity export, documented Internet message headers, or documented extended-property collection pattern because Microsoft Graph message resources do not expose a first-class sensitivity-label field
+   - Sensitivity label definitions needed for tier mapping through Microsoft Graph beta `/security/informationProtection/sensitivityLabels`, with beta change-management caveats
 3. The coverage calculator converts raw counts into workload metrics:
    - labeled count
    - unlabeled count
