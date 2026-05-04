@@ -4,14 +4,14 @@
 
 ### Data layer
 
-- Microsoft 365 Unified Audit Log (UAL) with CopilotInteraction and AIInteraction events.
+- Microsoft 365 Unified Audit Log (UAL) with `CopilotInteraction` events for Microsoft-developed Copilot interactions.
 - Microsoft Purview retention policies and retention labels for Copilot interaction artifacts.
 - Microsoft Purview eDiscovery cases, holds, custodians, and preservation state.
 
 ### Processing layer
 
 - `Check-AuditLogCompleteness` and related operational validation steps for audit capture.
-- `Set-RetentionPolicy` or equivalent Purview policy deployment actions.
+- Microsoft Purview portal or Security & Compliance PowerShell actions such as `Set-RetentionCompliancePolicy` and `Set-RetentionComplianceRule`.
 - `scripts\Deploy-Solution.ps1`, `scripts\Monitor-Compliance.ps1`, and `scripts\Export-Evidence.ps1` for manifests, monitoring, and evidence export.
 
 ### Reporting layer
@@ -38,7 +38,7 @@
 | Microsoft 365 Unified |
 | Audit Log             |
 | CopilotInteraction    |
-| AIInteraction         |
+| FileAccessed context  |
 +-----------+-----------+
             |
             +------------------------------+

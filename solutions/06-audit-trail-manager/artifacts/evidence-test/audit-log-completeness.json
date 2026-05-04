@@ -8,19 +8,17 @@
   "periodEnd": "2026-01-31",
   "ualStatus": {
     "enabledCheck": "check",
-    "auditLevel": "Standard",
+    "auditLevel": "Audit (Standard)",
     "validationCommand": "Check-AuditLogCompleteness",
-    "latencyNote": "UAL results may lag by up to 24 hours."
+    "latencyNote": "Microsoft does not guarantee a specific audit record return time; core services typically appear within 60-90 minutes, while other services can take longer."
   },
   "requiredEventTypes": [
     "CopilotInteraction",
-    "AIInteraction",
-    "SharePointFileAccess"
+    "FileAccessed"
   ],
   "capturedEventTypes": [
     "CopilotInteraction",
-    "AIInteraction",
-    "SharePointFileAccess"
+    "FileAccessed"
   ],
   "sampleCounts": [
     {
@@ -29,12 +27,7 @@
       "status": "pending-tenant-query"
     },
     {
-      "eventType": "AIInteraction",
-      "sampleCount": 0,
-      "status": "pending-tenant-query"
-    },
-    {
-      "eventType": "SharePointFileAccess",
+      "eventType": "FileAccessed",
       "sampleCount": 0,
       "status": "pending-tenant-query"
     }

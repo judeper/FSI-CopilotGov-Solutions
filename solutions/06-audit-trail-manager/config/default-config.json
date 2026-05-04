@@ -2,7 +2,7 @@
   "solution": "06-audit-trail-manager",
   "solutionCode": "ATM",
   "displayName": "Copilot Interaction Audit Trail Manager",
-  "version": "v0.2.0",
+  "version": "v0.2.1",
   "status": "documentation-first",
   "track": "B",
   "priority": "P0",
@@ -35,8 +35,7 @@
   "defaults": {
     "auditEventTypes": [
       "CopilotInteraction",
-      "AIInteraction",
-      "SharePointFileAccess"
+      "FileAccessed"
     ],
     "retentionPeriods": {
       "unit": "days",
@@ -48,8 +47,8 @@
       }
     },
     "auditLevelRequired": [
-      "Standard",
-      "Advanced"
+      "Audit (Standard)",
+      "Audit (Premium)"
     ],
     "ediscoveryHoldRequired": true,
     "unifiedAuditLogEnabled": "check",
@@ -59,8 +58,7 @@
       "ediscovery-readiness-package"
     ],
     "graphPermissions": [
-      "AuditLog.Read.All",
-      "RecordsManagement.Read.All"
+      "AuditLogsQuery.Read.All"
     ],
     "notificationChannel": "atm-governance-alerts",
     "evidenceOutputPath": ".\\artifacts\\atm",

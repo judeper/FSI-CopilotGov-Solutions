@@ -128,7 +128,7 @@ $auditArtifact = [ordered]@{
         enabledCheck = $ualStatusFlag
         auditLevel = $tierConfig.auditLevel
         validationCommand = 'Check-AuditLogCompleteness'
-        latencyNote = 'UAL results may lag by up to 24 hours.'
+        latencyNote = 'Microsoft does not guarantee a specific audit record return time; core services typically appear within 60-90 minutes, while other services can take longer.'
     }
     requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
     capturedEventTypes = @($tierConfig.auditEventTypes)
@@ -153,7 +153,7 @@ $retentionArtifact = [ordered]@{
                 configuredDays = $item.configuredDays
                 minimumDays = $item.minimumDays
                 meetsMinimum = $item.meetsMinimum
-                workloadScope = @('Exchange', 'SharePoint', 'Teams', 'Microsoft365Copilot')
+                workloadScope = @('Exchange', 'SharePoint', 'Teams', 'Microsoft Copilot experiences')
             }
         }
     )

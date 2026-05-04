@@ -2,7 +2,7 @@
 
 ## Licensing
 
-- Microsoft 365 E5 or Microsoft 365 E5 Compliance for Microsoft Purview Audit, retention, and Microsoft Purview eDiscovery capabilities.
+- Microsoft 365 E5, Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), or Microsoft 365 E5 eDiscovery and Audit add-on for Microsoft Purview Audit, retention, and Microsoft Purview eDiscovery capabilities.
 - Power BI Pro for dashboard publication, sharing, and refresh management.
 
 ## Roles
@@ -11,7 +11,7 @@ The deployment team should have the following roles assigned as appropriate:
 
 - Compliance Administrator
 - eDiscovery Manager
-- Audit Log Reader
+- Audit Reader
 - Global Reader
 
 ## PowerShell modules
@@ -32,8 +32,8 @@ Install-Module Microsoft.Graph -Scope CurrentUser
 
 Approve and document the following permissions for the service principal or delegated workflow used by the solution:
 
-- `AuditLog.Read.All`
-- `RecordsManagement.Read.All`
+- `AuditLogsQuery.Read.All` or the least-privileged service-specific `AuditLogsQuery-*` permission for the selected workload
+- Document records-management permissions separately only if tenant-specific retention automation is later implemented
 
 ## Tenant requirements
 

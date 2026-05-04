@@ -85,10 +85,10 @@ $retentionPolicies = foreach ($property in $defaultConfig.defaults.retentionPeri
         requiredMinimumDays = $minimumDays
         configuredDays = $configuredDays
         meetsMinimum = ($configuredDays -ge $minimumDays)
-        workloads = @('Exchange', 'SharePoint', 'Teams', 'Microsoft365Copilot')
+        workloads = @('Exchange', 'SharePoint', 'Teams', 'Microsoft Copilot experiences')
         targetArtifacts = @($defaultConfig.defaults.auditEventTypes)
         retentionLabelRequired = [bool]$tierConfig.retentionLabelRequired
-        policyApplication = 'Apply through Microsoft Purview Data Lifecycle Management or the approved Set-RetentionPolicy process.'
+        policyApplication = 'Apply through the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as New-RetentionCompliancePolicy, Set-RetentionCompliancePolicy, and New/Set-RetentionComplianceRule.'
         wormNote = if ($regKey -eq 'SEC_17a4') {
             if ($tierConfig.PSObject.Properties.Name -contains 'wormDocumentationRequired' -and $tierConfig.wormDocumentationRequired) {
                 'Document non-rewriteable, non-erasable storage support through a third-party archive or Azure Immutable Storage.'
@@ -126,7 +126,7 @@ $auditRequirements = [ordered]@{
         allowedAuditLevels = @($defaultConfig.defaults.auditLevelRequired)
         requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
         graphPermissions = @($defaultConfig.defaults.graphPermissions)
-        latencyNote = 'UAL results may lag by up to 24 hours.'
+        latencyNote = 'Microsoft does not guarantee a specific audit record return time; core services typically appear within 60-90 minutes, while other services can take longer.'
     }
 }
 
