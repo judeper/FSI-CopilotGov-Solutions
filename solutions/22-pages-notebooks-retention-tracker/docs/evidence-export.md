@@ -4,7 +4,7 @@
 
 ### pages-retention-inventory
 
-Inventory of Copilot Pages with retention metadata and mutability state.
+Inventory of Copilot Pages with storage/container, retention-policy, limited retention-label, Purview audit, and version-history metadata. Microsoft Learn notes that retention labels cannot be viewed or applied directly from a Copilot Page.
 
 **Schema fields**
 
@@ -12,22 +12,24 @@ Inventory of Copilot Pages with retention metadata and mutability state.
 - `title`: Page title
 - `owner`: Page owner UPN or display name
 - `createdAt` / `lastModifiedAt`: lifecycle timestamps
-- `retentionLabel`: Microsoft Purview retention label assigned to the Page
+- `retentionLabel`: Microsoft Purview retention label resolved from supported OneDrive, SharePoint, Loop, or Purview paths; manual application from Copilot Pages is limited
 - `retentionDays`: configured retention period for the tier
-- `mutabilityState`: `editable`, `branched`, `locked`, or `preserved`
-- `branchingParentPageId`: parent Page when the record was branched
+- `versionEvidenceStatus`: sample status for Purview audit-log or version-history evidence
+- `internalSampleState`: repository-only sample taxonomy; not a Microsoft 365 Copilot Pages lifecycle state
+- `internalSampleParentPageId`: optional parent reference for repository-only sample lineage
 
 ### notebook-retention-log
 
-OneNote Notebook retention-policy assignment and inheritance lineage.
+OneNote section and folder retention-policy coverage, grouped by Notebook metadata. Microsoft Learn states that OneNote pages inherit retention settings from their parent section file.
 
 **Schema fields**
 
-- `notebookId`
-- `displayName`
-- `parentContainer`: SharePoint site or OneDrive library
+- `sectionId`: OneNote section file identifier
+- `sectionDisplayName`: OneNote section display name
+- `notebookId` / `displayName`: Notebook grouping metadata
+- `parentContainer`: SharePoint site, OneDrive library, or folder that stores the section file
 - `retentionLabel`
-- `retentionPolicySource`: `direct`, `inherited`, or `none`
+- `retentionPolicySource`: `section-label`, `folder-inherited`, `policy-inherited`, or `none`
 - `retentionDays`
 - `lastReviewedAt`
 
@@ -47,17 +49,19 @@ Provenance for Loop components embedded in Copilot Pages or chats.
 
 ### branching-event-log
 
-Page branching, fork, and mutability transition events.
+Repository-only internal sample lineage rows plus documented Purview audit/version-history context. The artifact name is retained for compatibility; the rows are not Microsoft 365 branch, fork, or mutability events.
 
 **Schema fields**
 
 - `eventId`
 - `sourcePageId`
 - `targetPageId`
-- `eventType`: `branch`, `fork`, `merge`, `lock`, or `preserve`
+- `eventType`: `sample-internal-derive`, `sample-internal-copy`, `sample-internal-consolidate`, `sample-internal-review`, or `sample-internal-retention-check`
 - `actor`
 - `occurredAt`
-- `auditMode`: `summary` or `full` based on tier
+- `taxonomySource`: identifies PNRT internal sample taxonomy, not Microsoft 365 product events
+- `documentedEvidence`: Purview audit logs or version history reference
+- `internalSampleLineageMode`: `summary`, `full`, or tier-specific sample mode
 
 ## Package Contract
 
@@ -74,12 +78,12 @@ The package contract contains:
 
 | Control | Primary Evidence | How PNRT Helps Meet the Control |
 |---------|------------------|---------------------------------|
-| 3.14 | `pages-retention-inventory`, `notebook-retention-log` | Records retention-label coverage and lifecycle metadata for Copilot Pages and OneNote Notebooks |
-| 3.2 | `pages-retention-inventory`, `loop-component-lineage` | Documents lifecycle and provenance for collaborative Copilot artifacts |
-| 3.3 | `notebook-retention-log` | Surfaces retention-policy inheritance and gaps for Microsoft Purview alignment |
-| 3.11 | `branching-event-log`, `loop-component-lineage` | Provides eDiscovery and legal-hold readiness context for Pages, Notebooks, and Loop components |
-| 2.11 | `branching-event-log` | Audit and supervisory traceability for Copilot artifact lifecycle events |
+| 3.14 | `pages-retention-inventory`, `notebook-retention-log` | Records retention-policy coverage, limited retention-label evidence, and section-level OneNote coverage for Copilot Pages and Notebook content |
+| 3.2 | `pages-retention-inventory`, `loop-component-lineage` | Documents lifecycle, version-history context, and provenance for collaborative Copilot artifacts |
+| 3.3 | `notebook-retention-log` | Surfaces section/folder retention-policy coverage and gaps for Microsoft Purview alignment |
+| 3.11 | `branching-event-log`, `loop-component-lineage` | Provides Purview audit/version-history context and internal sample lineage for eDiscovery and legal-hold readiness |
+| 2.11 | `branching-event-log` | Documents audit-log and supervisory traceability context for Copilot artifact lifecycle review |
 
 ## Examiner Notes
 
-PNRT packages the technical metadata needed to demonstrate retention coverage and lineage for Copilot collaborative artifacts. It does not export the underlying record content and does not place legal holds. Records-management and compliance teams should add narrative coverage assessments, supervisory-review evidence, and any preservation-lock confirmations before sharing with examiners. Use of PNRT does not on its own satisfy SEC Rule 17a-4 (which applies only to specific broker-dealer required records), FINRA Rule 4511(a), or Sarbanes-Oxley §§302/404.
+PNRT packages the technical metadata needed to demonstrate retention coverage, Purview audit/version-history context, and internal sample lineage for Copilot collaborative artifacts. It does not export the underlying record content and does not place legal holds. Records-management and compliance teams should add narrative coverage assessments, supervisory-review evidence, and any preservation-lock confirmations before sharing with examiners. Use of PNRT does not on its own satisfy SEC Rule 17a-4 (which applies only to specific broker-dealer required records), FINRA Rule 4511(a), or Sarbanes-Oxley §§302/404.

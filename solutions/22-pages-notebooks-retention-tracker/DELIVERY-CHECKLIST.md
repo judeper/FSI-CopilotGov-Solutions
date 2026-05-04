@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | Pages and Notebooks Retention Tracker |
 | Solution Code | PNRT |
-| Version | v0.1.0 |
+| Version | v0.1.1 |
 | Track | D |
 | Priority | P1 |
 | Primary Controls | 3.14, 3.2 |
@@ -26,9 +26,9 @@
 ## Configuration Review
 
 - [ ] `config/default-config.json` reviewed for default evidence path, monitored container types, and Loop workspace seeds.
-- [ ] `config/baseline.json` reviewed for summary branching audit and 365-day retention defaults.
-- [ ] `config/recommended.json` reviewed for full branching audit and 7-year retention defaults.
-- [ ] `config/regulated.json` reviewed for preservation-lock expectations and signed lineage settings.
+- [ ] `config/baseline.json` reviewed for Purview audit summary, internal sample lineage mode, and 365-day retention defaults.
+- [ ] `config/recommended.json` reviewed for Purview audit/version-history evidence, internal sample lineage mode, and 7-year retention defaults.
+- [ ] `config/regulated.json` reviewed for preservation-lock expectations and signed lineage settings for repository sample lineage.
 - [ ] Required environment variables are documented for tenant ID, client ID, and any Purview workspace references.
 
 ## Deployment Steps
@@ -43,16 +43,16 @@
 
 - [ ] Deployment manifest is present in `artifacts/` and reflects the selected tier.
 - [ ] Pages-retention-inventory artifact is present and lists representative Page records.
-- [ ] Notebook-retention-log artifact is present and lists representative Notebook records.
+- [ ] Notebook-retention-log artifact is present and lists representative OneNote section/folder coverage grouped by Notebook metadata.
 - [ ] Loop-component-lineage artifact is present and links each component to a parent container.
-- [ ] Branching-event-log artifact is present and records sample branching transitions.
+- [ ] Branching-event-log artifact is present, clearly labels repository-only internal sample lineage, and documents Purview audit/version-history context.
 - [ ] Each JSON evidence file has a matching `.sha256` companion file.
 - [ ] Control status entries are populated for 3.14, 3.2, 3.3, 3.11, and 2.11.
 
 ## Customer Handover
 
 - [ ] README reviewed with the customer records-management, compliance, and supervision stakeholders.
-- [ ] Live Microsoft Graph, Loop, and Purview integration insertion points are documented for future development.
+- [ ] Documented SharePoint Embedded, Microsoft Graph DriveItem/export where supported, Purview audit/retention, and Cloud Policy/SharePoint admin insertion points are documented for future development.
 - [ ] Evidence retention and storage responsibilities are confirmed.
 - [ ] Customer acknowledges that PNRT does not on its own satisfy SEC Rule 17a-4 or FINRA Rule 4511(a).
 

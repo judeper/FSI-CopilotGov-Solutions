@@ -1,0 +1,28 @@
+{
+  "slug": "22-pages-notebooks-retention-tracker",
+  "branch": "accuracy-review/2026-05-04-remediation/22-pages-notebooks-retention-tracker",
+  "deltas": [
+    {
+      "issue": 111,
+      "finding_id": "version-bump-catalog",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[id=22].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump for PNRT accuracy-remediation fixes; README, CHANGELOG, default-config, checklist, and script help now use v0.1.1 in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 111,
+      "finding_id": "version-bump-config-yml",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions[slug=22-pages-notebooks-retention-tracker].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump for PNRT accuracy-remediation fixes; shared solution configuration must mirror the in-scope solution version.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

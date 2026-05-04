@@ -4,8 +4,8 @@
 
 .DESCRIPTION
     Tier-aware deployment script that builds a PNRT deployment manifest covering Copilot
-    Pages retention settings, OneNote Notebook retention coverage, branching audit mode,
-    and Loop component provenance expectations. Helps meet records retention and supervisory
+    Pages retention settings, OneNote section/folder retention coverage, internal sample
+    lineage mode, and Loop component provenance expectations. Helps meet records retention and supervisory
     expectations under SEC Rule 17a-4 (where applicable to broker-dealer required records),
     FINRA Rule 4511(a), and Sarbanes-Oxley §§302/404 (where applicable to ICFR).
 
@@ -33,7 +33,7 @@
     Solution: Pages and Notebooks Retention Tracker (PNRT)
     Primary Controls: 3.14, 3.2
     Supporting Controls: 3.3, 3.11, 2.11
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -92,7 +92,8 @@ $deploymentManifest = [pscustomobject]@{
     monitoredArtifactTypes = @($configuration.defaults.monitoredArtifactTypes)
     pagesRetentionDays = $configuration.pagesRetentionDays
     notebookRetentionDays = $configuration.notebookRetentionDays
-    branchingAuditMode = $configuration.branchingAuditMode
+    internalSampleLineageMode = $configuration.branchingAuditMode
+    documentedEvidenceSurfaces = @('SharePoint Embedded containers', 'Purview audit logs', 'Purview retention policies and limited labels', 'Graph DriveItem/export where documented')
     loopProvenanceRequired = [bool]$configuration.loopProvenanceRequired
     preservationLockRequired = [bool]$configuration.preservationLockRequired
     signedLineageRequired = [bool]$configuration.signedLineageRequired
@@ -101,10 +102,10 @@ $deploymentManifest = [pscustomobject]@{
     supervisoryReview = $configuration.supervisoryReview
     powerAutomateFlow = $configuration.powerAutomateFlow
     dataverseTables = [ordered]@{
-        pageInventory = 'fsi_cg_pnrt_page_inventory'
-        notebookInventory = 'fsi_cg_pnrt_notebook_inventory'
-        loopComponent = 'fsi_cg_pnrt_loop_component'
-        branchingEvent = 'fsi_cg_pnrt_branching_event'
+        pageInventory = 'fsicgpnrtpageinventory'
+        notebookInventory = 'fsicgpnrtnotebookinventory'
+        loopComponent = 'fsicgpnrtloopcomponent'
+        internalSampleLineageEvent = 'fsicgpnrtinternallineageevent'
     }
     connectionReferences = $connectionReferences
     environmentVariables = $environmentVariables
@@ -123,7 +124,7 @@ else {
 }
 
 Write-Host (
-    "Deployment summary: PNRT tier [{0}] - Pages retention {1} days, Notebook retention {2} days, branching audit [{3}], Loop provenance required: {4}." -f
+    "Deployment summary: PNRT tier [{0}] - Pages retention {1} days, OneNote section retention {2} days, internal sample lineage mode [{3}], Loop provenance required: {4}." -f
     $ConfigurationTier,
     $configuration.pagesRetentionDays,
     $configuration.notebookRetentionDays,
