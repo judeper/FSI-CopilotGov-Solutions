@@ -2,9 +2,11 @@
 
 ## [Unreleased]
 
-## v0.2.0
+## [v0.1.1] - 2026-05-04
 
-- Added roadmap awareness section referencing 2026 Release Wave 1 AI governance capabilities relevant to DORA monitoring.
+- Corrected roadmap awareness wording to match Microsoft Learn release-plan terminology for 2026 Release Wave 1 governance capabilities.
+- Added Sentinel preview, customer-defined ingestion, and Microsoft Graph permission caveats for operational-resilience enrichment.
+- Normalized Microsoft Graph service-health status values before incident classification.
 
 ## v0.1.0 - 2025-01-15
 

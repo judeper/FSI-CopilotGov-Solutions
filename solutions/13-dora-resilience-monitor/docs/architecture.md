@@ -86,7 +86,7 @@ The Evidence Packager creates `service-health-log`, `incident-register`, and `re
 
 ### Power Automate Flow
 
-The Power Automate Flow is documentation-first in v0.1.0. The solution describes a scheduled flow that can read monitoring output, route service alerts, create follow-up tasks, and notify resilience stakeholders, but the flow is not deployed automatically by the scripts in this repository.
+The Power Automate Flow is documentation-first in v0.1.1. The solution describes a scheduled flow that can read monitoring output, route service alerts, create follow-up tasks, and notify resilience stakeholders, but the flow is not deployed automatically by the scripts in this repository.
 
 ## Integration Points
 
@@ -99,8 +99,9 @@ The Power Automate Flow is documentation-first in v0.1.0. The solution describes
 ### Microsoft Sentinel Workspace
 
 - Purpose: Optional enrichment of Copilot incident context and correlation with security or operational alerts
-- Expected workspace data: Copilot activity logs and alert rules such as `DORACopilotOutage` and `CopilotResilienceFailure`
-- Example KQL starting point:
+- Expected workspace data: customer-defined Sentinel ingestion for Copilot Studio/Purview audit events. Microsoft Learn documents these events in Purview and availability through the Office 365 Management API; this scaffold does not create a default Sentinel table.
+- Customer-defined examples: custom table `CopilotActivity_CL` and analytics rules such as `DORACopilotOutage` and `CopilotResilienceFailure`, only when the tenant implementation defines and deploys them.
+- Example KQL starting point, only after tenant-specific ingestion populates `CopilotActivity_CL`:
 
 ```kusto
 CopilotActivity_CL

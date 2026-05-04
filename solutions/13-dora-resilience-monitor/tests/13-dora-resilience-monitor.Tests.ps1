@@ -235,6 +235,38 @@ Describe 'DORA Operational Resilience Monitor - Runtime honesty validation' {
         @($monitorResult.ServiceHealthSummary | Select-Object -ExpandProperty Source -Unique) | Should -Contain 'local-graph-stub'
     }
 
+    It 'Monitor-Compliance.ps1 treats Microsoft Graph serviceOperational samples as non-incident' {
+        $originalSamplePayload = $env:DRM_SERVICE_HEALTH_SAMPLE_JSON
+
+        try {
+            $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = '[{"service":"Microsoft Graph","status":"serviceOperational","downtimeMinutes":0,"affectedUserPct":0,"impactDescription":"Graph service is operational."}]'
+            $monitorResult = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'graph-operational') -TenantId '' -ClientId '' 3>$null
+
+            $monitorResult.RuntimeMode | Should -Be 'sample-json'
+            @($monitorResult.IncidentFindings).Count | Should -Be 0
+            ($monitorResult.ServiceHealthSummary | Select-Object -First 1).Status | Should -Be 'serviceOperational'
+        }
+        finally {
+            if ($null -ne $originalSamplePayload) { $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = $originalSamplePayload } else { Remove-Item Env:DRM_SERVICE_HEALTH_SAMPLE_JSON -ErrorAction SilentlyContinue }
+        }
+    }
+
+    It 'Monitor-Compliance.ps1 treats Microsoft Graph serviceDegradation samples as open incidents' {
+        $originalSamplePayload = $env:DRM_SERVICE_HEALTH_SAMPLE_JSON
+
+        try {
+            $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = '[{"service":"Microsoft Graph","status":"serviceDegradation","downtimeMinutes":5,"affectedUserPct":5,"impactDescription":"Representative service degradation."}]'
+            $monitorResult = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'graph-degradation') -TenantId '' -ClientId '' 3>$null
+
+            $monitorResult.RuntimeMode | Should -Be 'sample-json'
+            @($monitorResult.IncidentFindings).Count | Should -Be 1
+            ($monitorResult.IncidentFindings | Select-Object -First 1).status | Should -Be 'open'
+        }
+        finally {
+            if ($null -ne $originalSamplePayload) { $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = $originalSamplePayload } else { Remove-Item Env:DRM_SERVICE_HEALTH_SAMPLE_JSON -ErrorAction SilentlyContinue }
+        }
+    }
+
     It 'Export-Evidence.ps1 keeps stub-backed incident reporting below implemented' {
         $originalSamplePayload = $env:DRM_SERVICE_HEALTH_SAMPLE_JSON
         $originalTenant = $env:AZURE_TENANT_ID

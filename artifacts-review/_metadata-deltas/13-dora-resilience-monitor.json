@@ -1,0 +1,28 @@
+{
+  "slug": "13-dora-resilience-monitor",
+  "branch": "accuracy-review/2026-05-04-remediation/13-dora-resilience-monitor",
+  "deltas": [
+    {
+      "issue": 140,
+      "finding_id": "version-sync-1",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[id=13].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump for Phase 2 accuracy-review remediations; README and in-scope solution version surfaces are updated to v0.1.1 in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 140,
+      "finding_id": "version-sync-2",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions.13-dora-resilience-monitor.version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump for Phase 2 accuracy-review remediations; README and in-scope solution version surfaces are updated to v0.1.1 in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

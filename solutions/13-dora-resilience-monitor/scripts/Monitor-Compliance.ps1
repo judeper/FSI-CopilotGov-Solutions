@@ -36,7 +36,7 @@
 
 .NOTES
     Solution: DORA Operational Resilience Monitor (DRM)
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding()]
 param(
@@ -87,6 +87,55 @@ function Resolve-DrmClientSecret {
     return $null
 }
 
+function Get-DrmServiceHealthStatusProfile {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [string]$Status
+    )
+
+    $statusText = if ([string]::IsNullOrWhiteSpace($Status)) { 'unknown' } else { $Status.Trim() }
+    $statusKey = $statusText.ToLowerInvariant()
+    $healthyStatuses = @('healthy', 'serviceoperational')
+    $closedStatuses = @('servicerestored', 'restored', 'resolved', 'verifyingservice', 'falsepositive', 'postincidentreviewpublished', 'mitigated', 'mitigatedexternal', 'resolvedexternal')
+    $activeIssueStatuses = @('degraded', 'advisory', 'interruption', 'investigating', 'servicedegradation', 'serviceinterruption', 'restoringservice', 'extendedrecovery', 'investigationsuspended', 'confirmed', 'reported')
+
+    if ($healthyStatuses -contains $statusKey) {
+        return [pscustomobject]@{
+            NormalizedStatus = 'Healthy'
+            IsClassifiable = $false
+            IsOpenIncident = $false
+            EscalatesMinorThreshold = $false
+        }
+    }
+
+    if ($closedStatuses -contains $statusKey) {
+        return [pscustomobject]@{
+            NormalizedStatus = 'Resolved'
+            IsClassifiable = $false
+            IsOpenIncident = $false
+            EscalatesMinorThreshold = $false
+        }
+    }
+
+    if ($activeIssueStatuses -contains $statusKey) {
+        return [pscustomobject]@{
+            NormalizedStatus = 'ActiveIssue'
+            IsClassifiable = $true
+            IsOpenIncident = $true
+            EscalatesMinorThreshold = $true
+        }
+    }
+
+    return [pscustomobject]@{
+        NormalizedStatus = $statusText
+        IsClassifiable = $true
+        IsOpenIncident = $true
+        EscalatesMinorThreshold = $false
+    }
+}
+
 function Get-ServiceHealthStatus {
     [CmdletBinding()]
     param(
@@ -119,10 +168,19 @@ function Get-ServiceHealthStatus {
                 $affectedUserPct = if ($entry.Contains('affectedUserPct')) { [double]$entry.affectedUserPct } else { 0 }
                 $impactDescription = if ($entry.Contains('impactDescription')) { [string]$entry.impactDescription } else { 'Sample service-health event.' }
                 $isCritical = if ($entry.Contains('isCritical')) { [bool]$entry.isCritical } else { $serviceName -in $criticalServices }
+                $status = if ($entry.Contains('status')) {
+                    [string]$entry.status
+                }
+                elseif ($entry.Contains('serviceHealthStatus')) {
+                    [string]$entry.serviceHealthStatus
+                }
+                else {
+                    'Degraded'
+                }
 
                 [pscustomobject]@{
                     Service = $serviceName
-                    Status = if ($entry.Contains('status')) { [string]$entry.status } else { 'Degraded' }
+                    Status = $status
                     IncidentId = if ($entry.Contains('incidentId')) { [string]$entry.incidentId } else { $null }
                     DetectedAt = $detectedAt
                     LastUpdated = $lastUpdated
@@ -204,7 +262,8 @@ function Invoke-DoraSeverityClassification {
         [hashtable]$SeverityThresholds
     )
 
-    if ([string]$HealthRecord.Status -eq 'Healthy') {
+    $statusProfile = Get-DrmServiceHealthStatusProfile -Status ([string]$HealthRecord.Status)
+    if (-not [bool]$statusProfile.IsClassifiable) {
         return $null
     }
 
@@ -228,9 +287,9 @@ function Invoke-DoraSeverityClassification {
         $classificationNote = 'Partial degradation or sustained impact met the significant threshold.'
     }
     elseif ([double]$HealthRecord.DowntimeMinutes -ge [double]$minorThreshold.downtimeMinutes -or [double]$HealthRecord.AffectedUserPct -ge [double]$minorThreshold.affectedUserPct) {
-        if ([string]$HealthRecord.Status -match 'Degraded|Advisory|Interruption|Investigating') {
+        if ([bool]$statusProfile.EscalatesMinorThreshold) {
             $severity = 'significant'
-            $classificationNote = 'Status indicates degradation and at least one minor numeric threshold was met; upgraded to significant.'
+            $classificationNote = 'Status indicates an active Graph service-health issue and at least one minor numeric threshold was met; upgraded to significant.'
         }
         else {
             $severity = 'minor'
@@ -245,7 +304,7 @@ function Invoke-DoraSeverityClassification {
         "DRM-$((Get-Date -Format 'yyyyMMddHHmmss'))-$($HealthRecord.Service -replace '[^A-Za-z0-9]', '')"
     }
 
-    $incidentState = if ([string]$HealthRecord.Status -match 'Resolved|Restored') { 'resolved' } else { 'open' }
+    $incidentState = if ([bool]$statusProfile.IsOpenIncident) { 'open' } else { 'resolved' }
 
     return [pscustomobject]@{
         incidentId = $incidentIdentifier
