@@ -27,6 +27,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - All changes are documentation-first — scripts continue to use representative sample data; no runtime tenant binding.
 - Working tree is staged for operator review; release tagging is deferred.
 
+## [0.7.1] - 2026-05-04
+
+### Fixed
+- Cross-cutting accuracy review wording for Microsoft 365 Copilot Tuning early access preview eligibility, Microsoft Entra ID terminology, Microsoft Purview portal naming, Teams connector deprecation guidance, and Conditional Access administration guidance.
+
 ## [0.7.0] - 2026-04-22
 
 ### Added
@@ -81,7 +86,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ## v0.4.0
 
 ### Added
-- Solution 19: Copilot Tuning Governance — governs Copilot Tuning lifecycle for 5,000+ license organizations covering data selection, access controls, output supervision, audit trails, and OCC SR 11-7 model risk alignment.
+- Solution 19: Copilot Tuning Governance — governs Microsoft 365 Copilot Tuning (early access preview) lifecycle for eligible tenants with at least 5,000 Microsoft 365 Copilot licenses, covering data selection, access controls, output supervision, audit trails, and OCC SR 11-7 model risk alignment.
 - Controls 1.14 (Item-Level Permission Scanning), 1.15 (SharePoint Permissions Drift Detection), 1.16 (Copilot Tuning Governance) added to `controls-master.json` — framework now tracks 57 controls.
 - Six new regulatory frameworks added to `frameworks-master.json`: NIST SP 800-53, NYDFS Part 500, FINRA 4370, FINRA 4530, EU AI Act, Colorado AI Act.
 - Playbook mappings for controls 1.14 and 1.15 added to solutions 16 and 17 respectively in `solution-to-playbooks.json`.

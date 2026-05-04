@@ -5,7 +5,7 @@ Documentation-first Microsoft Purview helper module.
 .DESCRIPTION
 This module provides assessment record helpers for Purview compliance scenarios. No Microsoft
 Purview API calls are made. Customers must configure actual assessment scanning through the
-Purview compliance portal.
+Microsoft Purview portal.
 #>
 Set-StrictMode -Version Latest
 
@@ -14,7 +14,7 @@ function New-PurviewAssessmentRecord {
     .SYNOPSIS
     Creates a Purview assessment record structure (documentation-first). Returns record object
     only. No Microsoft Purview API calls are made. Customer must configure actual assessment
-    scanning through the Purview compliance portal.
+    scanning through the Microsoft Purview portal.
 
     .DESCRIPTION
     Returns a timestamped assessment record object suitable for documentation, offline validation,

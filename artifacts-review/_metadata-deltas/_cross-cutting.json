@@ -1,0 +1,28 @@
+{
+  "slug": "_cross-cutting",
+  "branch": "accuracy-review/2026-05-04-remediation/_cross-cutting",
+  "deltas": [
+    {
+      "issue": 171,
+      "finding_id": "F3",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[id=19-copilot-tuning-governance].summary",
+      "current_value": "Provides a governance framework for Copilot Tuning lifecycle in 5,000+ license organizations — data selection, access controls, output supervision, audit trails, and model risk alignment.",
+      "proposed_value": "Provides a governance framework for Microsoft 365 Copilot Tuning (early access preview) lifecycle in eligible tenants with at least 5,000 Microsoft 365 Copilot licenses — data selection, access controls, output supervision, audit trails, and model risk alignment.",
+      "rationale": "Microsoft Learn identifies Microsoft 365 Copilot Tuning as early access preview and limits public preview eligibility to tenants with at least 5,000 Microsoft 365 Copilot licenses.",
+      "learn_url": "https://learn.microsoft.com/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "learn_last_updated": "2026-04-13"
+    },
+    {
+      "issue": 172,
+      "finding_id": "F4",
+      "target_file": "data/control-coverage.json",
+      "json_path": "controls[control_id=1.16].notes",
+      "current_value": "Copilot Tuning governance assessment and lifecycle management is a native output of solution 19.",
+      "proposed_value": "Copilot Tuning governance assessment and lifecycle management is a native output of solution 19; live Microsoft 365 Copilot Tuning governance requires tenant binding in eligible early access preview tenants with at least 5,000 Microsoft 365 Copilot licenses.",
+      "rationale": "Microsoft Learn identifies Microsoft 365 Copilot Tuning as early access preview and limits public preview eligibility to tenants with at least 5,000 Microsoft 365 Copilot licenses.",
+      "learn_url": "https://learn.microsoft.com/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "learn_last_updated": "2026-04-13"
+    }
+  ]
+}

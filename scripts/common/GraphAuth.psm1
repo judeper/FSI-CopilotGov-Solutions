@@ -49,7 +49,7 @@ function Connect-CopilotGovGraph {
     to authorize requests.
 
     .PARAMETER TenantId
-    Azure AD tenant GUID.
+    Microsoft Entra tenant ID (GUID).
 
     .PARAMETER ClientId
     Application (client) ID for app-only authentication.

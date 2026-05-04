@@ -56,7 +56,7 @@ See [Tier Applicability](./docs/reference/tier-applicability.md) for the per-sol
 | 16 | [Item-Level Oversharing Scanner](./solutions/16-item-level-oversharing-scanner/README.md) | P1 | A | base / **rec** / reg | 1.2, 1.3, 1.4, 1.6, 2.5 |
 | 17 | [SharePoint Permissions Drift Detection](./solutions/17-sharepoint-permissions-drift/README.md) | P1 | A | base / **rec** / reg | 1.2, 1.4, 1.6, 2.5 |
 | 18 | [Entra Access Reviews Automation](./solutions/18-entra-access-reviews/README.md) | P1 | A | base / **rec** / reg | 1.2, 1.6, 2.5, 2.12 |
-| 19 | [Copilot Tuning Governance](./solutions/19-copilot-tuning-governance/README.md) | P1 | A | base / **rec** / reg | 1.16, 3.8 |
+| 19 | [Copilot Tuning Governance (Microsoft 365 Copilot Tuning early access preview; eligible tenants only)](./solutions/19-copilot-tuning-governance/README.md) | P1 | A | base / **rec** / reg | 1.16, 3.8 |
 | 20 | [Generative AI Model Governance Monitor](./solutions/20-generative-ai-model-governance-monitor/README.md) | P1 | D | base / **rec** / reg | 3.8a, 3.8, 3.1, 3.11, 3.12 |
 | 21 | [Cross-Tenant Agent Federation Auditor](./solutions/21-cross-tenant-agent-federation-auditor/README.md) | P1 | B | base / **rec** / reg | 2.17, 2.16, 1.10, 2.13, 2.14, 4.13 |
 | 22 | [Pages and Notebooks Retention Tracker](./solutions/22-pages-notebooks-retention-tracker/README.md) | P1 | D | base / **rec** / reg | 3.14, 3.2, 3.3, 3.11, 2.11 |
@@ -89,7 +89,7 @@ See [Tier Applicability](./docs/reference/tier-applicability.md) for the per-sol
 | 16 | Item-Level Oversharing Scanner | ✅ | ❌ | Representative sample data | PnP PowerShell, SharePoint |
 | 17 | SharePoint Permissions Drift | ✅ | ❌ | Representative sample data | PnP PowerShell, Graph |
 | 18 | Entra Access Reviews Automation | ✅ | ❌ | Representative sample data | Graph, Entra ID |
-| 19 | Copilot Tuning Governance | ✅ | ❌ | Representative sample data | M365 Admin, Graph |
+| 19 | Copilot Tuning Governance (Microsoft 365 Copilot Tuning early access preview; eligible tenants only) | ✅ | ❌ | Representative sample data | Microsoft 365 admin center (eligible tenants with at least 5,000 Microsoft 365 Copilot licenses), Graph |
 | 20 | Generative AI Model Governance Monitor | ✅ | ❌ | Representative sample data | Model Risk Committee, Microsoft attestations |
 | 21 | Cross-Tenant Agent Federation Auditor | ✅ | ❌ | Representative sample data | Entra Agent ID, Copilot Studio, MCP |
 | 22 | Pages and Notebooks Retention Tracker | ✅ | ❌ | Representative sample data | Purview, SharePoint, OneNote, Loop |
@@ -119,7 +119,7 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 | 16 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 17 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 18 | ✅ | — | — | — | — | ✅ | SharePoint |
-| 19 | ✅ | — | — | — | — | — | M365 Admin |
+| 19 | ✅ | — | — | — | — | — | Microsoft 365 admin center (early access preview; eligible tenants with at least 5,000 Microsoft 365 Copilot licenses) |
 | 20 | — | — | — | — | — | — | Model Risk Committee workflow |
 | 21 | ✅ | — | — | — | — | ✅ | Copilot Studio, MCP |
 | 22 | — | — | — | — | ✅ | — | SharePoint, OneNote, Loop |
