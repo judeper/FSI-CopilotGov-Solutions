@@ -5,8 +5,8 @@
 .DESCRIPTION
     Documentation-first deployment script. Loads tier configuration, validates required
     fields, and writes a JSON deployment manifest describing the planned posture for
-    cross-tenant Copilot agent federation, MCP federated trust, and Entra Agent ID
-    governance. No live tenant calls are made.
+    cross-tenant Copilot agent federation, MCP server connection review, and
+    Entra Agent ID identity governance. No live tenant calls are made.
 
 .PARAMETER ConfigurationTier
     Governance tier: baseline, recommended, or regulated.
@@ -22,7 +22,7 @@
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
-    Version:  v0.1.0
+    Version:  v0.1.1
     Status:   Documentation-first scaffold
 #>
 [CmdletBinding(SupportsShouldProcess)]
@@ -91,7 +91,7 @@ else {
 }
 
 Write-Host (
-    "CTAF deployment summary: tier [{0}] | review cadence {1}d | MCP attestation required: {2} | Agent ID signing required: {3}." -f
+    "CTAF deployment summary: tier [{0}] | review cadence {1}d | MCP connection review required: {2} | Agent ID governance review required: {3}." -f
     $ConfigurationTier,
     $configuration.federationReviewCadenceDays,
     [bool]$configuration.mcpTrustAttestationRequired,

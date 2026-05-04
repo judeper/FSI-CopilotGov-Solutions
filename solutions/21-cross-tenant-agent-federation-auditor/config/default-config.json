@@ -2,7 +2,7 @@
   "solution": "21-cross-tenant-agent-federation-auditor",
   "displayName": "Cross-Tenant Agent Federation Auditor",
   "solutionCode": "CTAF",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "track": "B",
   "priority": "P1",
   "primaryControls": [
@@ -37,9 +37,9 @@
     "evidenceOutputPath": ".\\artifacts\\21-cross-tenant-agent-federation-auditor",
     "notificationChannel": "CTAF-governance-alerts",
     "monitoredSurfaces": [
-      "Copilot Studio agents (multi-tenant publishing)",
+      "Copilot Studio agents (channels, authentication, and sharing)",
       "Microsoft Entra Agent ID",
-      "MCP federated servers",
+      "MCP server connections",
       "Entra External Identities cross-tenant access settings"
     ]
   }

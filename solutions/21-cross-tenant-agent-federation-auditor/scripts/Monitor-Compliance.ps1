@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-    Captures a sample federation, trust, MCP attestation, and Entra Agent ID snapshot for CTAF.
+    Captures a sample federation, trust, MCP connection review, and Entra Agent ID governance snapshot for CTAF.
 
 .DESCRIPTION
     Documentation-first monitoring script. Generates representative sample records for
-    cross-tenant Copilot agent federation, cross-tenant trust assessment, MCP federated
-    server attestation, and Entra Agent ID attestation. No live tenant calls are made.
+    cross-tenant Copilot agent federation, cross-tenant trust assessment, MCP server
+    connection review, and Entra Agent ID identity-governance review. No live tenant calls are made.
 
 .PARAMETER ConfigurationTier
     Governance tier: baseline, recommended, or regulated.
@@ -21,7 +21,7 @@
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
-    Version:  v0.1.0
+    Version:  v0.1.1
     Status:   Documentation-first scaffold (sample data only)
 #>
 [CmdletBinding()]
@@ -50,7 +50,11 @@ function Get-SampleFederationInventory {
             agentId = 'agent-fsi-research-copilot'
             displayName = 'FSI Research Copilot'
             sourceTenantId = 'contoso-financial.onmicrosoft.com'
-            publishingMode = 'restricted-multi-tenant'
+            channel = 'Microsoft Teams'
+            authenticationType = 'Microsoft Entra ID'
+            requireUsersToSignIn = $true
+            sharingScope = 'Specific users and groups'
+            allowedUsersOrGroups = @('partner-bank-agent-reviewers')
             approvedAudienceTenants = @('partner-bank.onmicrosoft.com')
             lastReviewedAt = (Get-Date).AddDays(-14).ToString('o')
         },
@@ -58,7 +62,11 @@ function Get-SampleFederationInventory {
             agentId = 'agent-fsi-third-party-pricing'
             displayName = 'Third-Party Pricing Assistant'
             sourceTenantId = 'contoso-financial.onmicrosoft.com'
-            publishingMode = 'multi-tenant'
+            channel = 'Custom channel'
+            authenticationType = 'Microsoft Entra ID'
+            requireUsersToSignIn = $true
+            sharingScope = 'Approved partner tenants'
+            allowedUsersOrGroups = @('vendor-marketdata-agent-reviewers', 'partner-bank-agent-reviewers')
             approvedAudienceTenants = @('vendor-marketdata.onmicrosoft.com', 'partner-bank.onmicrosoft.com')
             lastReviewedAt = (Get-Date).AddDays(-45).ToString('o')
         }
@@ -88,43 +96,59 @@ function Get-SampleCrossTenantTrust {
 }
 
 function Get-SampleMcpAttestations {
-    param([int]$MaxAttestationAgeDays)
+    param([int]$MaxConnectionReviewAgeDays)
     return @(
         [pscustomobject]@{
             serverId = 'mcp-marketdata-prod'
-            transport = 'https'
-            signingKeyThumbprint = '0F1E2D3C4B5A69788796A5B4C3D2E1F0FEDCBA98' # gitleaks:allow -- representative sample SHA-1 thumbprint, not a real credential
-            attestedAt = (Get-Date).AddDays(- [int]($MaxAttestationAgeDays / 2)).ToString('o')
-            attestationStatus = 'current'
+            serverUrl = 'https://mcp.marketdata.example.com/mcp'
+            transportType = 'streamable'
+            authenticationType = 'OAuth 2.0'
+            allowedTools = @('getQuote', 'getReferenceData')
+            approvalRequired = $true
+            lastConnectionReviewAt = (Get-Date).AddDays(- [int]($MaxConnectionReviewAgeDays / 2)).ToString('o')
+            connectionReviewStatus = 'current'
             scopes = @('quotes.read', 'reference-data.read')
         },
         [pscustomobject]@{
             serverId = 'mcp-research-archive'
-            transport = 'https'
-            signingKeyThumbprint = 'A1B2C3D4E5F60718293A4B5C6D7E8F90FEDCBA01' # gitleaks:allow -- representative sample SHA-1 thumbprint, not a real credential
-            attestedAt = (Get-Date).AddDays(- ($MaxAttestationAgeDays + 7)).ToString('o')
-            attestationStatus = 'stale'
+            serverUrl = 'https://mcp.research.example.com/mcp'
+            transportType = 'streamable'
+            authenticationType = 'API key'
+            allowedTools = @('searchArchive')
+            approvalRequired = $true
+            lastConnectionReviewAt = (Get-Date).AddDays(- ($MaxConnectionReviewAgeDays + 7)).ToString('o')
+            connectionReviewStatus = 'stale'
             scopes = @('research.read')
         }
     )
 }
 
 function Get-SampleAgentIdAttestations {
-    param([bool]$SigningRequired, [int]$MaxKeyAgeDays)
+    param([int]$ReviewCadenceDays)
     return @(
         [pscustomobject]@{
-            agentId = 'agent-fsi-research-copilot'
-            signingRequired = $SigningRequired
-            lastKeyRotationAt = (Get-Date).AddDays(-30).ToString('o')
-            nextKeyRotationDueAt = (Get-Date).AddDays($MaxKeyAgeDays - 30).ToString('o')
-            verificationStatus = 'verified'
+            agentIdentityId = 'agent-fsi-research-copilot'
+            displayName = 'FSI Research Copilot Agent ID'
+            blueprintId = 'blueprint-fsi-research'
+            owner = 'fsi-research-platform-owner'
+            sponsor = 'fsi-research-business-sponsor'
+            assignedPermissions = @('Sites.Read.All')
+            conditionalAccessPosture = 'included-in-agent-policy'
+            auditLogReference = 'entra-audit-agent-fsi-research-copilot'
+            lastReviewedAt = (Get-Date).AddDays(- [int]($ReviewCadenceDays / 2)).ToString('o')
+            reviewStatus = 'current'
         },
         [pscustomobject]@{
-            agentId = 'agent-fsi-third-party-pricing'
-            signingRequired = $SigningRequired
-            lastKeyRotationAt = (Get-Date).AddDays(- ($MaxKeyAgeDays + 15)).ToString('o')
-            nextKeyRotationDueAt = (Get-Date).AddDays(-15).ToString('o')
-            verificationStatus = 'pending'
+            agentIdentityId = 'agent-fsi-third-party-pricing'
+            displayName = 'Third-Party Pricing Assistant Agent ID'
+            blueprintId = 'blueprint-third-party-pricing'
+            owner = 'market-data-platform-owner'
+            sponsor = 'third-party-risk-sponsor'
+            assignedPermissions = @('Files.Read.All')
+            conditionalAccessPosture = 'policy-review-due'
+            auditLogReference = 'entra-audit-agent-fsi-third-party-pricing'
+            lastReviewedAt = (Get-Date).AddDays(- ($ReviewCadenceDays + 10)).ToString('o')
+            reviewStatus = 'due'
         }
     )
 }
@@ -133,12 +157,9 @@ Write-Verbose ("Loading CTAF configuration for tier [{0}]." -f $ConfigurationTie
 $configuration = Get-CtafConfiguration -Tier $ConfigurationTier
 Test-CtafConfiguration -Configuration $configuration
 
-$maxAttestationAgeDays = if ($configuration.mcpAttestation.Contains('maxAttestationAgeDays')) {
+$maxConnectionReviewAgeDays = if ($configuration.mcpAttestation.Contains('maxAttestationAgeDays')) {
     [int]$configuration.mcpAttestation.maxAttestationAgeDays
 } else { 60 }
-$maxKeyAgeDays = if ($null -ne $configuration.agentIdRotation -and $configuration.agentIdRotation.Contains('maxKeyAgeDays')) {
-    [int]$configuration.agentIdRotation.maxKeyAgeDays
-} else { 365 }
 
 $snapshot = [pscustomobject]@{
     Solution = $configuration.solution
@@ -148,8 +169,8 @@ $snapshot = [pscustomobject]@{
     Warning = $script:SampleWarning
     FederationInventory = Get-SampleFederationInventory
     CrossTenantTrust = Get-SampleCrossTenantTrust -ReviewCadenceDays $configuration.federationReviewCadenceDays
-    McpAttestations = Get-SampleMcpAttestations -MaxAttestationAgeDays $maxAttestationAgeDays
-    AgentIdAttestations = Get-SampleAgentIdAttestations -SigningRequired ([bool]$configuration.agentIdSigningRequired) -MaxKeyAgeDays $maxKeyAgeDays
+    McpAttestations = Get-SampleMcpAttestations -MaxConnectionReviewAgeDays $maxConnectionReviewAgeDays
+    AgentIdAttestations = Get-SampleAgentIdAttestations -ReviewCadenceDays $configuration.federationReviewCadenceDays
 }
 
 $resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
@@ -158,7 +179,7 @@ $snapshot | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding
 $null = Write-CtafSha256File -Path $snapshotPath
 
 Write-Host (
-    "CTAF monitoring summary: tier [{0}] | agents {1} | trust relationships {2} | MCP attestations {3} | Agent ID attestations {4}." -f
+    "CTAF monitoring summary: tier [{0}] | agents {1} | trust relationships {2} | MCP connection reviews {3} | Agent ID governance reviews {4}." -f
     $ConfigurationTier,
     @($snapshot.FederationInventory).Count,
     @($snapshot.CrossTenantTrust).Count,
