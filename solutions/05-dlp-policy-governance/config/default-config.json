@@ -44,16 +44,39 @@
     "evidenceTable": "fsi_cg_dpg_evidence"
   },
   "defaults": {
-    "copilotWorkloads": [
+    "copilotPolicyLocation": "Microsoft 365 Copilot and Copilot Chat",
+    "copilotPolicyLocationScope": {
+      "locationExclusivity": "Selecting this policy location disables all other locations for that DLP policy.",
+      "adminUnitsSupported": false
+    },
+    "copilotCapabilities": [
+      {
+        "id": "sensitiveInformationTypesInPrompts",
+        "displayName": "Sensitive information types in prompt text",
+        "availability": "preview",
+        "condition": "Content contains > Sensitive information types",
+        "action": "Prevent Copilot from processing content > Processing prompts"
+      },
+      {
+        "id": "externalWebSearchGroundingRestriction",
+        "displayName": "Restrict external web search when prompt text contains sensitive information types",
+        "availability": "preview",
+        "condition": "Content contains > Sensitive information types",
+        "action": "Prevent Copilot from processing content > Performing Web Searches"
+      },
+      {
+        "id": "sensitivityLabelsOnSupportedFilesAndEmails",
+        "displayName": "Sensitivity labels on supported files and emails used in response summarization",
+        "availability": "generallyAvailable",
+        "condition": "Content contains > Sensitivity labels",
+        "action": "Prevent Copilot from processing content"
+      }
+    ],
+    "complementaryWorkloadDlpPolicyLocations": [
       "Teams",
       "SharePoint",
       "OneDrive",
       "Exchange"
-    ],
-    "copilotSignals": [
-      "CopilotPrompt",
-      "CopilotResponse",
-      "GroundedContentAccess"
     ],
     "baselineStoragePath": ".\\artifacts\\dlp-policy-baseline.json",
     "driftThreshold": 10,

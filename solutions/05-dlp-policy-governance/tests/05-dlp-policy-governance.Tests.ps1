@@ -31,8 +31,10 @@ Describe 'DLP Policy Governance for Copilot solution' {
         $config = Get-Content (Join-Path $configRoot 'default-config.json') -Raw | ConvertFrom-Json -Depth 20
         $config.solution | Should -Be '05-dlp-policy-governance'
         @($config.controls) | Should -Contain '2.1'
-        @($config.defaults.copilotWorkloads) | Should -Contain 'Teams'
-        @($config.defaults.copilotWorkloads) | Should -Contain 'Exchange'
+        $config.defaults.copilotPolicyLocation | Should -Be 'Microsoft 365 Copilot and Copilot Chat'
+        @($config.defaults.copilotCapabilities.id) | Should -Contain 'sensitiveInformationTypesInPrompts'
+        @($config.defaults.copilotCapabilities.id) | Should -Contain 'sensitivityLabelsOnSupportedFilesAndEmails'
+        @($config.defaults.complementaryWorkloadDlpPolicyLocations) | Should -Contain 'Exchange'
     }
 
     It 'baseline.json has the correct tier and solution' {

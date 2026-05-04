@@ -3,8 +3,8 @@
 .SYNOPSIS
 Common utility functions shared across DLP Policy Governance scripts.
 .DESCRIPTION
-Provides Read-JsonFile, Read-JsonData, Get-PolicyModeValue, New-DlpPolicyTemplate,
-and ConvertTo-Array. Dot-source this file from Deploy-Solution.ps1,
+Provides Read-JsonFile, Read-JsonData, Get-PolicyModeValue, Get-CopilotCapabilityIds,
+New-DlpPolicyTemplate, and ConvertTo-Array. Dot-source this file from Deploy-Solution.ps1,
 Monitor-Compliance.ps1, and Export-Evidence.ps1.
 #>
 
@@ -66,6 +66,26 @@ function Get-PolicyModeValue {
     return $Fallback
 }
 
+function Get-CopilotCapabilityIds {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$DefaultConfig
+    )
+
+    if ($null -ne $DefaultConfig.defaults -and $DefaultConfig.defaults.PSObject.Properties.Name -contains 'copilotCapabilities') {
+        return @($DefaultConfig.defaults.copilotCapabilities | ForEach-Object {
+            if ($_.PSObject.Properties.Name -contains 'id') {
+                [string]$_.id
+            } else {
+                [string]$_
+            }
+        })
+    }
+
+    return @()
+}
+
 function New-DlpPolicyTemplate {
     [CmdletBinding()]
     param(
@@ -83,7 +103,9 @@ function New-DlpPolicyTemplate {
 
     $templates = foreach ($workload in @($TierConfig.copilotWorkloads)) {
         [ordered]@{
-            policyName = "Copilot DLP - $workload - $($TierConfig.tier)"
+            policyName = "Complementary DLP - $workload - $($TierConfig.tier)"
+            policyLayer = 'complementary-workload-dlp'
+            copilotPolicyLocation = [string]$DefaultConfig.defaults.copilotPolicyLocation
             workload = [string]$workload
             mode = $defaultMode
             highSensitivityMode = $highSensitivityMode
@@ -99,7 +121,7 @@ function New-DlpPolicyTemplate {
                 includedGroups = @($DefaultConfig.defaults.policyScope.includedGroups)
                 excludedGroups = @($DefaultConfig.defaults.policyScope.excludedGroups)
             }
-            monitoredSignals = @($DefaultConfig.defaults.copilotSignals)
+            monitoredCapabilities = Get-CopilotCapabilityIds -DefaultConfig $DefaultConfig
             exceptionHandling = [ordered]@{
                 approvalRequired = [bool]$TierConfig.exceptionApprovalRequired
                 attestationRequired = [bool]$TierConfig.exceptionAttestationRequired

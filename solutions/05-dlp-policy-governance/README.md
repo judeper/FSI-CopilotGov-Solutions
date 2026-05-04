@@ -1,16 +1,16 @@
 # DLP Policy Governance for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.0 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P1 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-DLP Policy Governance for Copilot deploys a read-only governance pattern for Microsoft Purview Data Loss Prevention policy review scoped to Microsoft 365 Copilot. It snapshots Purview DLP policy settings that target Copilot prompts, Copilot responses, and grounded content access patterns, compares those settings to a stored baseline, routes approved exceptions through a Power Automate approval flow, and exports evidence for compliance review.
+DLP Policy Governance for Copilot deploys a read-only governance pattern for Microsoft Purview Data Loss Prevention policy review scoped to the Microsoft 365 Copilot and Copilot Chat policy location. It documents baseline expectations for supported Copilot DLP capabilities, compares those expectations to a stored baseline, routes approved exceptions through a Power Automate approval flow, and exports evidence for compliance review. It also lets teams track separate complementary workload DLP baselines where tenant policy design uses Exchange, SharePoint, OneDrive, Teams, devices, or endpoint locations outside the Copilot policy location.
 
-This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 ICT security expectations, GDPR, FINRA 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
+This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Article 9 ICT security expectations, GDPR, FINRA Rule 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
-> **Microsoft 365 Copilot DLP location:** Microsoft Purview DLP now supports **Microsoft 365 Copilot** as a dedicated policy location. DLP policies can help block Copilot from processing prompts containing sensitive information types, supporting prompt-level data loss prevention for AI-assisted interactions. Tenants receive a default Copilot DLP policy in simulation mode.
+> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location. The location supports sensitive-information-type prompt blocking (preview), external web-search grounding restrictions for sensitive prompts (preview), and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available). Selecting this location disables all other locations for that policy.
 
 ## Related Controls
 
@@ -23,10 +23,10 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 
 ## What the solution does
 
-- Compares a baseline snapshot of Copilot-scoped DLP policy expectations by workload and label condition
-- Validates alignment between the stored baseline and the current governance tier definition
-- Checks policy modes such as Audit and Block for expected sensitivity label handling
-- Validates workload coverage for Teams, SharePoint, OneDrive, and Exchange
+- Compares baseline records for the Microsoft 365 Copilot and Copilot Chat policy location and its supported conditions and actions
+- Tracks separate complementary workload DLP baseline records when tenant policy design requires Exchange, SharePoint, OneDrive, Teams, devices, or endpoint locations
+- Checks policy modes such as Audit and Block for expected sensitivity label handling on supported files and emails
+- Documents prompt-text controls for sensitive information types, including preview status for prompt blocking and external web-search grounding restrictions
 - Documents a Power Automate approval flow for policy exceptions and attestation evidence
 - Exports evidence artifacts that align to `data\evidence-schema.json`
 
@@ -41,6 +41,8 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not configure Adaptive Protection policies (Insider Risk Management integration with DLP is documented as a complementary capability)
+- ❌ Does not evaluate the contents of files uploaded directly into Copilot prompts; Microsoft Purview DLP for Copilot evaluates the prompt text itself for this scenario
+- ❌ Does not combine the Microsoft 365 Copilot and Copilot Chat policy location with Exchange, SharePoint, OneDrive, Teams, or endpoint DLP locations in the same policy
 
 > **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
 
@@ -49,24 +51,24 @@ This solution supports compliance with GLBA 501(b), SEC Reg S-P, DORA Article 9 
 - Dependency `03-sensitivity-label-auditor` is complete and the latest label inventory has been reviewed
 - Microsoft 365 E5 or E5 Compliance licensing is available for Purview DLP and Copilot data protection features
 - Power Automate Premium is available if the exception approval flow is deployed
-- Operators have Compliance Administrator, Security Reader, or DLP Compliance Management permissions
+- Policy editors use one of the current Microsoft Learn roles for Copilot DLP policy create/edit, such as Entra AI Admin, Purview Data Security AI Admin, Purview Compliance Administrator, Purview Compliance Data Administrator, Purview Information Protection Admin, Purview Security Administrator, or Entra Global Admin
+- Security Reader-style access is treated as read-only review only and is not sufficient for Copilot DLP policy create/edit
 - PowerShell 7, `ExchangeOnlineManagement`, and `Microsoft.Graph` are available for read-only data collection
 
 See [docs/prerequisites.md](docs/prerequisites.md) for details.
 
 ## DLP policy scope
 
-This solution focuses on DLP policies that support Copilot governance across the following workloads:
+This solution separates two DLP governance layers:
 
-- Teams chat and channel prompts or responses that may expose sensitive data
-- SharePoint grounded content sources used by Copilot
-- OneDrive grounded content sources used by Copilot
-- Exchange content paths that may surface in Copilot-assisted workflows
+1. **Microsoft 365 Copilot and Copilot Chat policy location** records for supported Copilot conditions and actions. Selecting this policy location disables all other locations for the same DLP policy.
+2. **Complementary workload DLP policy** records for Exchange, SharePoint, OneDrive, Teams, devices, or endpoint locations when tenant policy design uses those controls outside the Copilot policy location.
 
-The baseline and monitoring logic track:
+The Copilot policy-location baseline tracks:
 
-- Sensitivity label conditions, including NPI and PII labels used for GLBA and privacy use cases
-- Policy action modes such as Audit and Block
+- Sensitive information types in prompt text, including preview prompt-blocking behavior
+- Sensitive information types in prompt text that restrict external web search as a grounding source during preview
+- Sensitivity labels on supported files and emails used in Copilot response summarization
 - Scope definitions for included and excluded user groups
 - Exception handling requirements by governance tier
 - Evidence retention and notification settings needed for review
@@ -75,11 +77,11 @@ The baseline and monitoring logic track:
 
 The repository uses a documentation-first pattern for Power Automate assets. The exception approval flow is described in the architecture and deployment guides and is intended to:
 
-1. Receive a request when a policy owner needs a temporary DLP exception for a Copilot workload.
+1. Receive a request when a policy owner needs a temporary DLP exception for a Copilot policy-location or complementary workload DLP baseline record.
 2. Validate the request against the stored baseline and current drift findings.
 3. Route the request to the required approver based on tier:
    - Baseline: service owner review when used
-   - Recommended: Compliance Administrator approval
+   - Recommended: Purview Compliance Administrator or delegated policy-owner approval
    - Regulated: senior compliance sign-off and CCO approval for policy changes
 4. Record the approved exception with attestor, approval date, justification, and expiry date.
 5. Feed approved records into the `exception-attestations` evidence artifact.
@@ -91,7 +93,7 @@ The repository uses a documentation-first pattern for Power Automate assets. The
 | `scripts\Deploy-Solution.ps1` | Creates the DLP baseline template, deployment manifest, and connection stubs |
 | `scripts\Monitor-Compliance.ps1` | Compares baseline content to tier expectations and writes drift findings |
 | `scripts\Export-Evidence.ps1` | Packages evidence artifacts and writes SHA-256 companions |
-| `config\default-config.json` | Shared defaults, workload scope, policy mode defaults, and dataverse names |
+| `config\default-config.json` | Shared defaults for the Copilot policy location, supported capability identifiers, complementary workload locations, policy modes, and dataverse names |
 | `config\baseline.json` | Audit-only baseline tier settings |
 | `config\recommended.json` | Daily monitoring and high-sensitivity block settings |
 | `config\regulated.json` | Regulated tier settings with strict attestation and approval requirements |
@@ -113,8 +115,8 @@ See [docs/deployment-guide.md](docs/deployment-guide.md) for detailed steps.
 
 This solution exports the following evidence outputs:
 
-- `dlp-policy-baseline` - JSON snapshot of Copilot-scoped DLP policy expectations and baseline metadata
-- `policy-drift-findings` - array of detected workload, mode, or exception-handling drift
+- `dlp-policy-baseline` - JSON snapshot of Microsoft 365 Copilot and Copilot Chat policy-location expectations plus separate complementary workload DLP baselines when applicable
+- `policy-drift-findings` - array of detected policy-location, capability, mode, or exception-handling drift
 - `exception-attestations` - array of approved exceptions with attestor, date, and justification
 
 Each exported file receives a `.sha256` companion and is referenced from the solution evidence package.
@@ -125,19 +127,21 @@ See [docs/evidence-export.md](docs/evidence-export.md) for package details.
 
 | Regulation or control driver | How the solution supports compliance with the requirement | Evidence output |
 |------------------------------|-----------------------------------------------------------|-----------------|
-| GLBA 501(b) | Helps teams monitor DLP handling for NPI that may appear in Copilot prompts, responses, or grounded content access. | `dlp-policy-baseline`, `policy-drift-findings` |
-| SEC Reg S-P | Helps document whether privacy-related policy modes and scoping remain aligned to approved standards. | `policy-drift-findings`, `exception-attestations` |
-| DORA Article 9 | Helps operations teams review ICT security governance, policy changes, and exception approvals for Copilot-connected workloads. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
+| GLBA 501(b) | Helps teams monitor DLP handling for NPI that may appear in Copilot prompt text or in supported labeled files and emails used for response summarization. | `dlp-policy-baseline`, `policy-drift-findings` |
+| SEC Regulation S-P | Helps document whether privacy-related policy modes and scoping remain aligned to approved standards. | `policy-drift-findings`, `exception-attestations` |
+| DORA Article 9 | Helps operations teams review ICT security governance, policy changes, and exception approvals for Copilot policy-location and complementary workload DLP baselines. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
 | GDPR | Helps monitor whether personal data handling controls remain in approved DLP modes and scope definitions. | `policy-drift-findings`, `exception-attestations` |
-| FINRA 4511 | Helps preserve records of DLP policy configurations, exceptions, and attestations for Copilot-related communications. | `dlp-policy-baseline`, `exception-attestations` |
-| SOX 302/404 | Helps document internal controls over DLP governance and policy change approvals for Copilot workloads. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
-| Control 2.1 | Validates Copilot DLP coverage across in-scope workloads and sensitivity conditions. | `dlp-policy-baseline`, `policy-drift-findings` |
+| FINRA Rule 4511 | Helps preserve records of DLP policy configurations, exceptions, and attestations for Copilot-related communications. | `dlp-policy-baseline`, `exception-attestations` |
+| SOX 302/404 | Helps document internal controls over DLP governance and policy change approvals for Copilot policy-location and complementary workload DLP baselines. | `dlp-policy-baseline`, `policy-drift-findings`, `exception-attestations` |
+| Control 2.1 | Helps review Copilot DLP coverage across supported policy-location capabilities and separately tracked workload DLP baselines. | `dlp-policy-baseline`, `policy-drift-findings` |
 | Control 3.10 | Tracks drift against an approved baseline and supports scheduled review. | `policy-drift-findings` |
 | Control 3.12 | Records and packages exception approvals and audit evidence. | `exception-attestations` |
 
 ## Known limitations
 
 - Some tenants expose Purview DLP metadata in read-only form only after Exchange Online and Security and Compliance sessions are connected.
-- Copilot-specific workload coverage can depend on Microsoft 365 E5 or E5 Compliance plus the required Copilot licensing.
+- The Microsoft 365 Copilot and Copilot Chat policy location disables other DLP locations for the same policy, so workload DLP policies should be represented separately.
+- DLP for Copilot does not evaluate the contents of files uploaded directly into prompts; it evaluates the typed prompt text for this scenario.
+- Sensitivity-label protection for files and emails is limited to supported files in SharePoint Online or OneDrive for Business and emails sent on or after January 1, 2025; calendar invites are not supported.
 - The Power Automate approval flow is documentation-led in this repository and still requires tenant-specific connection setup.
 - Drift results are only as current as the latest baseline and policy snapshot available to the monitoring process.
