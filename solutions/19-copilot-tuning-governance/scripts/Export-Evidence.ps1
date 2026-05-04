@@ -299,7 +299,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '1.16'
         status = 'partial'
-        notes = 'Tuning governance patterns are documented but tenant-specific API integration requires further implementation.'
+        notes = 'Tuning governance patterns are documented but tenant-specific integration with supported Microsoft 365 admin center or Agent 365 experiences requires further implementation.'
     }
     [pscustomobject]@{
         controlId = '3.8'

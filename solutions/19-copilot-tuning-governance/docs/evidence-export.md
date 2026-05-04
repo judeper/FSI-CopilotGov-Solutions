@@ -65,7 +65,7 @@ For regulated deployments, this artifact helps demonstrate that model risk manag
 
 | Evidence type | Primary controls supported | Typical status interpretation |
 |---------------|----------------------------|-------------------------------|
-| `tuning-requests` | 1.16 | Demonstrates tuning request governance, often `partial` until tenant API integration is fully implemented |
+| `tuning-requests` | 1.16 | Demonstrates tuning request governance, often `partial` until tenant-specific integration with supported Microsoft 365 admin center or Agent 365 experiences is implemented |
 | `model-inventory` | 1.16, 3.8 | Shows active model lifecycle tracking and ownership assignment |
 | `risk-assessments` | 3.8 | Demonstrates model risk assessment practices for tuned models |
 
@@ -73,7 +73,7 @@ For regulated deployments, this artifact helps demonstrate that model risk manag
 
 | Control | Status | Notes |
 |---------|--------|-------|
-| 1.16 | partial | Tuning governance patterns are documented but tenant-specific API integration requires further implementation |
+| 1.16 | partial | Tuning governance patterns are documented but tenant-specific integration with supported Microsoft 365 admin center or Agent 365 experiences requires further implementation |
 | 3.8 | monitor-only | Model risk management is supported through risk assessment patterns but not enforced directly by this script |
 
 ## Retention Note

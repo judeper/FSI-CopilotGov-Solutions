@@ -6,27 +6,27 @@ Follow this sequence to deploy solution 19 in a controlled manner.
 
 ## 1. Confirm Copilot Tuning Eligibility
 
-Before deploying, confirm the organization meets the minimum threshold of 5,000 Microsoft 365 Copilot licenses required for Copilot Tuning eligibility. Document any licensing gaps before proceeding.
+Before deploying, confirm the tenant is included in an eligible early access, Frontier, or public preview rollout, Copilot Tuning settings are visible in the Microsoft 365 admin center, and the organization has at least 5,000 Microsoft 365 Copilot licenses during public preview. Document licensing or preview availability gaps before proceeding.
 
 ## 2. Run the Prerequisites Check
 
 Review [prerequisites.md](prerequisites.md) and confirm:
 
-- Copilot licensing threshold is met or formally documented as a gap
-- Required admin roles are assigned (Global Admin or Copilot Admin)
+- Copilot licensing threshold and preview availability are met or formally documented as gaps
+- Required admin roles are assigned (AI Administrator for Copilot and agent administration; Global Administrator only where broader tenant privileges are required)
 - Model risk management stakeholders are identified
-- Network access to M365 Admin Center is available from the execution environment
+- Network access to the Microsoft 365 admin center is available from the execution environment
 
 ## 3. Review and Adjust Configuration
 
 Inspect the JSON files under `config\`:
 
 - `default-config.json` for common defaults, controls, and evidence output settings
-- `baseline.json` for tuning-disabled posture
+- `baseline.json` for documenting a tuning-disabled or limited tenant posture
 - `recommended.json` for approval-gated tuning with model inventory
 - `regulated.json` for full model risk management controls and extended retention
 
-Align tuning governance settings with institutional model risk management policy before the first execution window.
+Align tuning governance settings with institutional model risk management policy before the first execution window. The JSON tiers document the intended governance posture and do not enable, disable, or limit Copilot Tuning in the tenant.
 
 ## 4. Run Deploy-Solution.ps1
 
@@ -45,23 +45,24 @@ Expected outcomes:
 - Tuning governance prerequisites are checked
 - A deployment manifest is written to the output path
 
-## 5. Establish Baseline Governance (Tuning Disabled)
+## 5. Establish Baseline Governance (Tuning Disabled or Limited)
 
-Start with the baseline tier to establish governance controls before enabling tuning:
+Start with the baseline tier to establish governance controls before expanding Copilot Tuning access. For eligible preview tenants, inspect the Copilot control system in the Microsoft 365 admin center because Copilot Tuning can be enabled by default when the eligibility threshold is met. If the baseline posture requires no new tuning activity, disable tuning or limit it to approved pilot users or groups in the admin center; repository scripts do not change tenant availability settings.
 
 - Confirm model risk management policy is documented
 - Confirm approval workflow stakeholders are identified
 - Confirm evidence storage is available and approved
 - Validate monitoring scripts produce expected output with sample data
 
-## 6. Enable Approval-Gated Tuning (Recommended Tier)
+## 6. Document Approval-Gated Tuning (Recommended Tier)
 
 After validating baseline governance controls:
 
-- Switch to the recommended tier configuration
+- Switch to the recommended tier configuration to document the approved governance posture
+- In the Microsoft 365 admin center, enable tuning only for approved users or groups when the rollout decision is authorized
 - Confirm the approval workflow routes through data owner and model risk officer
 - Monitor the first tuning requests through the full approval lifecycle
-- Validate that model inventory tracking captures all required metadata
+- Validate that model inventory tracking includes all required metadata
 
 ## 7. Monitor Tuning Governance Compliance
 
@@ -112,9 +113,10 @@ For examination-ready posture:
 
 If deployment settings need to be reversed:
 
-1. Revert to the previous tier JSON or disable tuning in configuration
-2. Archive evidence from the rolled-back window for audit traceability
-3. Re-run `Monitor-Compliance.ps1` to confirm the tenant is back to the intended state
-4. Document the rollback decision and rationale for compliance records
+1. Revert to the previous tier JSON to document the approved governance posture.
+2. Disable or limit Copilot Tuning in the Microsoft 365 admin center when the rollback decision requires tenant-level availability changes.
+3. Archive evidence from the rolled-back window for audit traceability.
+4. Re-run `Monitor-Compliance.ps1` to confirm the documented governance posture matches the intended state.
+5. Document the rollback decision and rationale for compliance records.
 
-Rollback decisions should be documented whenever tuning enablement, approval workflow, or model risk management settings change after approval.
+Rollback decisions should be documented whenever tuning availability, approval workflow, or model risk management settings change after approval.

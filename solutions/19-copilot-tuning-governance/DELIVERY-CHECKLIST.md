@@ -47,26 +47,27 @@ Use this checklist to move solution 19 from documentation review into controlled
 ## 1. Scope and Tuning Readiness
 
 - [ ] Confirm the target tenant and business units that will be governed by tuning controls.
-- [ ] Verify the organization has 5,000 or more Copilot licenses, meeting the Copilot Tuning eligibility threshold.
+- [ ] Confirm the tenant is included in an eligible early access, Frontier, or public preview rollout and Copilot Tuning settings are visible in the Microsoft 365 admin center.
+- [ ] Verify the organization has at least 5,000 Microsoft 365 Copilot licenses during public preview, recognizing that Copilot Tuning features and requirements are subject to change.
 - [ ] Confirm model risk management stakeholders are identified and available for tuning approval workflows.
 - [ ] Confirm the selected governance tier (`baseline`, `recommended`, or `regulated`) matches rollout expectations.
 
 ## 2. Licensing and Platform Prerequisites
 
-- [ ] Validate Microsoft 365 Copilot licensing for the tenant (minimum 5,000 seats for Tuning eligibility).
-- [ ] Confirm M365 Admin Center access is available for Copilot Tuning configuration review.
+- [ ] Validate Microsoft 365 Copilot licensing for the tenant (at least 5,000 seats during public preview) and document any preview eligibility constraints.
+- [ ] Confirm Microsoft 365 admin center access is available for Copilot Tuning configuration review.
 - [ ] Confirm the required PowerShell modules are installed and approved for use in the administration workstation or automation host.
 
 ## 3. Administrative Access
 
-- [ ] Confirm the operator has Global Admin or Copilot Admin rights as required for tuning governance management.
+- [ ] Confirm the operator has AI Administrator rights for Copilot and agent administration tasks, with Global Administrator reserved only for tasks that require broader tenant privileges.
 - [ ] Confirm model risk management officer is identified for tuning request approval.
 - [ ] Confirm compliance reviewers are identified for post-tuning risk assessment review.
 
 ## 4. Configuration Review
 
 - [ ] Review `config\default-config.json` for evidence path, controls, and default settings.
-- [ ] Review the selected tier JSON for tuning enablement, approval gates, and evidence requirements.
+- [ ] Review the selected tier JSON for documented tuning availability posture, approval gates, and evidence requirements.
 - [ ] Confirm tuning approval workflow settings match institutional model risk management policy.
 
 ## 5. Tuning Governance Planning

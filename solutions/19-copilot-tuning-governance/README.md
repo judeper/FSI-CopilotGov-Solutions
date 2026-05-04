@@ -1,16 +1,16 @@
 # Copilot Tuning Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.0 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-This solution provides a framework for governing Microsoft 365 Copilot Tuning, a feature available to organizations with 5,000 or more Copilot licenses that allows creation of fine-tuned AI agents from proprietary organizational data. Copilot Tuning introduces model risk management challenges that are especially significant in regulated financial services because custom-tuned models may produce outputs that diverge from baseline Copilot behavior.
+This solution provides a framework for governing Microsoft 365 Copilot Tuning, an early access preview capability currently available to a limited set of customers. During public preview, tenants with at least 5,000 Microsoft 365 Copilot licenses are eligible when Copilot Tuning is available in the Microsoft 365 admin center; access and requirements remain subject to change. Copilot Tuning introduces model risk management challenges that are especially significant in regulated financial services because custom-tuned models may produce outputs that diverge from baseline Copilot behavior.
 
 The solution documents governance patterns for tuning approval workflows, model inventory tracking, risk assessment gates, and evidence export so institutions can demonstrate oversight of tuned model lifecycles. It addresses the operational challenge that tuning requests may originate from multiple business units without centralized visibility into what data is being used, who approved the tuning job, and whether the resulting agent meets regulatory expectations.
 
-Configuration tiers allow institutions to start with tuning disabled (baseline), progress to tuning with approval gates (recommended), and adopt full model risk management controls for examination readiness (regulated).
+Configuration tiers document governance postures for eligible preview tenants: baseline records a disabled or limited tenant-level tuning posture, recommended records approval-gated tuning for approved users or groups, and regulated records full model risk management controls for examination readiness.
 
 ## Features
 
@@ -26,7 +26,7 @@ Configuration tiers allow institutions to start with tuning disabled (baseline),
 > **Important:** This solution provides governance scaffolds, templates, and documentation-first
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
-- ❌ Does not connect to M365 Admin Center or Copilot Tuning APIs (scripts use representative sample data)
+- ❌ Does not connect to the Microsoft 365 admin center Copilot control system, Agent Builder, Agent 365, or undocumented service endpoints (scripts use representative sample data)
 - ❌ Does not perform live tuning, create tuned models, or submit tuning jobs to any tenant
 - ❌ Does not validate tuning outputs, evaluate model accuracy, or measure drift from baseline behavior
 - ❌ Does not deploy Power Automate flows (approval workflow designs are documented, not exported)
@@ -41,7 +41,7 @@ See [docs/architecture.md](docs/architecture.md) for the component diagram, data
 ## Prerequisites
 
 - Review [docs/prerequisites.md](docs/prerequisites.md) and confirm the required admin roles, PowerShell modules, and Copilot licensing are in place.
-- Confirm the organization has 5,000 or more Microsoft 365 Copilot licenses, which is the minimum threshold for Copilot Tuning eligibility.
+- Confirm the tenant is in an eligible early access or Frontier/public preview rollout, Copilot Tuning settings are visible in the Microsoft 365 admin center, and the organization has at least 5,000 Microsoft 365 Copilot licenses during public preview.
 - Confirm model risk management stakeholders have been identified for tuning approval workflows.
 
 ## Quick Start
@@ -54,7 +54,7 @@ See [docs/architecture.md](docs/architecture.md) for the component diagram, data
 
 ## Deployment
 
-Deploy this solution before enabling Copilot Tuning in any tenant. Start with the baseline tier (tuning disabled) to establish governance controls, then progress to the recommended tier after approval workflows and model inventory processes are validated with stakeholders. See [docs/deployment-guide.md](docs/deployment-guide.md) for the full deployment sequence.
+Use this solution before expanding Copilot Tuning beyond approved preview participants. First inspect Copilot Tuning availability in the Microsoft 365 admin center; for a baseline posture, disable tuning or limit it to approved users or groups in the admin center because repository JSON tiers do not change tenant availability settings. Progress to the recommended tier after approval workflows and model inventory processes are validated with stakeholders. See [docs/deployment-guide.md](docs/deployment-guide.md) for the full deployment sequence.
 
 ## Solution Components
 
@@ -64,7 +64,7 @@ Deploy this solution before enabling Copilot Tuning in any tenant. Start with th
 | `scripts\Monitor-Compliance.ps1` | Monitors tuning governance compliance status and reports coverage gaps |
 | `scripts\Export-Evidence.ps1` | Packages tuning requests, model inventory, and risk assessments with checksums |
 | `config\default-config.json` | Shared defaults for controls, tuning governance settings, and evidence output |
-| `config\baseline.json` | Minimum viable rollout with tuning disabled |
+| `config\baseline.json` | Minimum viable rollout with tuning disabled or limited in tenant settings |
 | `config\recommended.json` | Production posture with tuning approval gates and model inventory |
 | `config\regulated.json` | Examination-ready posture with full model risk management controls |
 | `docs\*.md` | Architecture, deployment, prerequisites, evidence, and troubleshooting guidance |
@@ -93,7 +93,7 @@ Each JSON artifact is written with a companion `.sha256` file so control evidenc
 
 ## Known Limitations
 
-- The scripts use implementation stubs and sample data until tenant-specific Copilot Tuning API calls are connected.
-- Copilot Tuning availability depends on organizational license count and Microsoft feature rollout timelines.
+- The scripts use implementation stubs and sample data until tenant-specific integration with supported Microsoft 365 admin center, Agent Builder, or Agent 365 experiences is designed and implemented.
+- Copilot Tuning is an early access preview capability; availability depends on Microsoft rollout, tenant eligibility, admin center visibility, and public-preview requirements that are subject to change.
 - Model risk assessment patterns are documented but do not replace institutional model validation programs required by SR 11-7.
 - Tuning approval workflow patterns are documented but require Power Automate or equivalent implementation for production use.
