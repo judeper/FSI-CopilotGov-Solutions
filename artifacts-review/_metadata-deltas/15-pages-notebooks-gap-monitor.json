@@ -1,0 +1,28 @@
+{
+  "slug": "15-pages-notebooks-gap-monitor",
+  "branch": "accuracy-review/2026-05-04-remediation/15-pages-notebooks-gap-monitor",
+  "deltas": [
+    {
+      "issue": 159,
+      "finding_id": "VERSION-BUMP",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[id=15].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump — solution README and default configuration version updated to v0.1.1 in this PR; shared catalog should mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 159,
+      "finding_id": "VERSION-BUMP",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions[slug=15-pages-notebooks-gap-monitor].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump — solution README and default configuration version updated to v0.1.1 in this PR; shared solution config should mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

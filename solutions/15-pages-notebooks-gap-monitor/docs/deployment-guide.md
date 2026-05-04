@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide walks through the deployment sequence for Copilot Pages and Notebooks Compliance Gap Monitor. The goal is to establish a documented baseline of known platform gaps, assign compensating controls, and export evidence that supports compliance review. The solution is documentation-led and depends on `06-audit-trail-manager` for audit and retention baseline context.
+This guide walks through the deployment sequence for Copilot Pages and Notebooks Compliance Gap Monitor. The goal is to establish a documented baseline of supported-but-validate items and documented limitations, assign compensating controls, and export evidence that supports compliance review. The solution is documentation-led and depends on `06-audit-trail-manager` for audit and retention baseline context.
 
 ## Prerequisites
 
@@ -19,38 +19,39 @@ Run the monitoring script with the baseline tier to create an initial gap snapsh
 pwsh -File .\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath .\artifacts\baseline -PassThru
 ```
 
-Review the output for open gaps related to Pages retention coverage, Loop Microsoft Purview eDiscovery coverage, notebook preservation verification, and sharing controls.
+Review the output for supported-but-validate items and documented limitations related to Pages and Notebooks retention policy scope, Purview eDiscovery review-set search, SharePoint Embedded legal hold, retention labels, Information Barriers, notebook preservation verification, and sharing controls.
 
-## Step 2: Review discovered gaps and classify severity
+## Step 2: Review discovered items and classify severity
 
-Review the generated monitoring output with compliance and legal stakeholders. Confirm that each discovered gap has:
+Review the generated monitoring output with compliance and legal stakeholders. Confirm that each discovered item has:
 
 - the correct affected capability
 - the correct regulation mapping
 - an owner
 - a severity rating of high, medium, or low
-- a clear statement of whether a platform update is required to close the gap
+- a clear statement of whether a Microsoft platform update is required or tenant validation is sufficient
 
-## Step 3: Assign compensating controls to each open gap
+## Step 3: Assign compensating controls to each open item
 
-For every open gap, assign the control that will reduce risk while the gap remains open. Typical controls include:
+For every open limitation or validation item, assign the control that will reduce risk while the item remains open. Typical controls include:
 
-- manual export of Pages content to a governed SharePoint records library
+- retention policy scope validation and manual export when scope cannot be demonstrated
 - restricted sharing and site membership review
 - enhanced audit logging through `06-audit-trail-manager`
-- quarterly notebook storage and retention validation
+- quarterly notebook storage, retention label, and export validation
+- legal-hold container inclusion review for SharePoint Embedded content
 
 Document the owner, approval date, and review due date for each compensating control.
 
 ## Step 4: Get legal and compliance sign-off on preservation exceptions
 
-Where a gap has books-and-records impact, prepare a preservation exception entry for review. Legal and compliance reviewers should confirm:
+Where a documented limitation or validation item has books-and-records impact, prepare a preservation exception entry for review. Legal and compliance reviewers should confirm:
 
 - the exception rationale
 - the regulation affected
 - the interim control in place
 - the expiry date and review cadence
-- the escalation path if the platform gap remains open
+- the escalation path if the documented limitation or validation item remains open
 
 ## Step 5: Run Deploy-Solution.ps1 to initialize the gap register
 
@@ -94,13 +95,13 @@ Validate that the output includes:
 Add the solution to the compliance calendar with a recurring quarterly review. The review should cover:
 
 - new Pages, Loop, or notebook capabilities enabled in the tenant
-- any Microsoft release notes or Message Center posts that may close an open gap
+- any Microsoft release notes or Message Center posts that may change an open limitation or validation requirement
 - the current status of compensating controls
 - the approval state of preservation exceptions
 - any changes required to the evidence narrative for internal audit or examiner discussions
 
 ## Operational Notes
 
-- This solution supports compliance with regulatory review expectations by documenting gaps and manual controls.
+- This solution supports compliance with regulatory review expectations by documenting limitations, validation items, and manual controls.
 - It does not automatically change retention policies, legal holds, or Microsoft Purview eDiscovery scope.
-- Human review remains mandatory before any gap is marked mitigated or closed.
+- Human review remains mandatory before any item is marked mitigated or closed.

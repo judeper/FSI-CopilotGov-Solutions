@@ -3,11 +3,11 @@
     Monitors the Copilot Pages and Notebooks compliance gap register.
 
 .DESCRIPTION
-    Assesses known retention, Microsoft Purview eDiscovery, sharing, and books-and-records gaps for
+    Assesses known retention, Microsoft Purview eDiscovery, sharing, and books-and-records limitations for
     Copilot Pages, Loop workspaces, and notebooks. The script uses documentation-first
-    stub checks to inventory likely coverage gaps, validates whether registered
+    stub checks to inventory documented limitations and validation items, validates whether registered
     compensating controls remain in place, and summarizes any Microsoft platform
-    updates that may close previously documented gaps.
+    updates that may change previously documented limitations.
 
     This script supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by
     producing a monitor-only or partial status view. It does not make tenant changes.
@@ -99,28 +99,28 @@ function Get-CopilotPagesRetentionGaps {
         gaps = @(
             [pscustomobject]@{
                 gapId = 'PNGM-GAP-001'
-                description = 'Retention policy coverage for Loop-backed Copilot Pages remains unverified for this tenant baseline.'
-                affectedCapability = 'Copilot Pages retention coverage'
+                description = 'Purview retention policies configured for All SharePoint Sites are supported for Copilot Pages and Copilot Notebooks; tenant policy scope and evidence should be validated for this baseline.'
+                affectedCapability = 'Copilot Pages and Notebooks retention policy validation'
                 regulations = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
-                severity = 'high'
+                severity = 'medium'
                 discoveredAt = $assessedAt.AddDays(-30).ToString('o')
+                status = 'validation-required'
+                platformUpdateRequired = $false
+            }
+            [pscustomobject]@{
+                gapId = 'PNGM-GAP-004'
+                description = 'Pages security and sharing restrictions require manual review, and Information Barriers are not supported for content stored in SharePoint Embedded containers.'
+                affectedCapability = 'Copilot Pages security, sharing, and Information Barriers'
+                regulations = @('FINRA 4511', 'SOX 404')
+                severity = 'high'
+                discoveredAt = $assessedAt.AddDays(-14).ToString('o')
                 status = 'open'
                 platformUpdateRequired = $true
             }
             [pscustomobject]@{
-                gapId = 'PNGM-GAP-004'
-                description = 'Pages security and sharing restrictions still rely on manual review of workspace permissions and external access settings.'
-                affectedCapability = 'Copilot Pages security and sharing'
-                regulations = @('FINRA 4511', 'SOX 404')
-                severity = 'medium'
-                discoveredAt = $assessedAt.AddDays(-14).ToString('o')
-                status = 'open'
-                platformUpdateRequired = $false
-            }
-            [pscustomobject]@{
                 gapId = 'PNGM-GAP-005'
-                description = 'Copilot Pages and Loop-backed content may not satisfy books-and-records preservation requirements natively, requiring formal exceptions with documented compensating controls.'
-                affectedCapability = 'Books-and-records preservation exceptions'
+                description = 'Legal hold requires manual SharePoint Embedded container addition per user, and retention labels have limited manual support for Pages, Notebooks, and Loop content.'
+                affectedCapability = 'Legal hold and retention label limitations'
                 regulations = @('SEC 17a-4', 'FINRA 4511')
                 severity = 'high'
                 discoveredAt = $assessedAt.AddDays(-28).ToString('o')
@@ -146,8 +146,8 @@ function Get-NotebooksEDiscoveryGaps {
         gaps = @(
             [pscustomobject]@{
                 gapId = 'PNGM-GAP-002'
-                description = 'Loop workspace content referenced by Copilot Pages is not represented consistently in current Microsoft Purview eDiscovery workflows.'
-                affectedCapability = 'Loop workspace Microsoft Purview eDiscovery scope'
+                description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page and .loop files in review sets is not available.'
+                affectedCapability = 'Purview eDiscovery review-set full-text search'
                 regulations = @('SEC 17a-4', 'FINRA 4511')
                 severity = 'high'
                 discoveredAt = $assessedAt.AddDays(-21).ToString('o')
@@ -156,12 +156,12 @@ function Get-NotebooksEDiscoveryGaps {
             }
             [pscustomobject]@{
                 gapId = 'PNGM-GAP-003'
-                description = 'Teams and SharePoint notebooks are generally discoverable, but Copilot-generated notebook context still requires manual verification for formal evidence packages.'
+                description = 'Copilot Notebooks create .pod files in SharePoint Embedded containers; notebook storage, retention policy scope, and export evidence require tenant validation.'
                 affectedCapability = 'Notebooks preservation verification'
                 regulations = @('FINRA 4511', 'SOX 404')
                 severity = 'medium'
                 discoveredAt = $assessedAt.AddDays(-10).ToString('o')
-                status = 'open'
+                status = 'validation-required'
                 platformUpdateRequired = $false
             }
         )
@@ -186,8 +186,8 @@ function Test-CompensatingControlStatus {
         [pscustomobject]@{
             controlId = 'PNGM-CC-001'
             gapId = 'PNGM-GAP-001'
-            controlDescription = 'Monthly export of in-scope Copilot Pages to a governed SharePoint records library.'
-            controlType = 'manual-export'
+            controlDescription = 'Records Management verifies All SharePoint Sites retention policy scope, records SharePoint Embedded container evidence, and uses manual export only when policy scope cannot be demonstrated.'
+            controlType = 'tenant-validation'
             lastValidatedAt = $now.AddDays(-5).ToString('o')
             reviewDueDate = $now.AddDays(25).ToString('o')
             status = $(if ($controlsRequired) { 'in-place' } else { 'planned' })
@@ -195,8 +195,8 @@ function Test-CompensatingControlStatus {
         [pscustomobject]@{
             controlId = 'PNGM-CC-002'
             gapId = 'PNGM-GAP-002'
-            controlDescription = 'Investigation teams capture Loop workspace URLs, custodian names, and exported evidence bundles in the case record.'
-            controlType = 'ediscovery-workaround'
+            controlDescription = 'Investigation teams record SharePoint Embedded container URLs, custodian names, collection/export steps, and the review-set full-text search limitation in the case record.'
+            controlType = 'ediscovery-review-set-limitation'
             lastValidatedAt = $now.AddDays(-4).ToString('o')
             reviewDueDate = $now.AddDays(21).ToString('o')
             status = $(if ($controlsRequired) { 'in-place' } else { 'planned' })
@@ -213,7 +213,7 @@ function Test-CompensatingControlStatus {
         [pscustomobject]@{
             controlId = 'PNGM-CC-004'
             gapId = 'PNGM-GAP-003'
-            controlDescription = 'Compliance operations validates notebook storage location, retention label inheritance, and export steps during quarterly control reviews to confirm Copilot-generated notebook context is preserved.'
+            controlDescription = 'Compliance operations validates notebook storage location, retention policy scope, retention label behavior, and export steps during quarterly control reviews.'
             controlType = 'manual-export'
             lastValidatedAt = $now.AddDays(-7).ToString('o')
             reviewDueDate = $now.AddDays(30).ToString('o')
@@ -222,7 +222,7 @@ function Test-CompensatingControlStatus {
         [pscustomobject]@{
             controlId = 'PNGM-CC-005'
             gapId = 'PNGM-GAP-005'
-            controlDescription = 'Records Management registers a formal preservation exception with legal sign-off and documents the interim manual export procedure for books-and-records compliance until native WORM-compliant preservation is available.'
+            controlDescription = 'Records Management documents legal-hold container inclusion, retention-label limitations, and any preservation exception required for books-and-records review.'
             controlType = 'preservation-exception'
             lastValidatedAt = $now.AddDays(-3).ToString('o')
             reviewDueDate = $now.AddDays(90).ToString('o')
@@ -259,19 +259,19 @@ function Get-PlatformUpdateStatus {
         updates = @(
             [pscustomobject]@{
                 messageId = 'MC-PNGM-2025-001'
-                title = 'Loop workspace retention and Microsoft Purview eDiscovery coverage update remains under evaluation'
+                title = 'Copilot Pages and Notebooks retention and eDiscovery support documented; limitation review continues'
                 publishedAt = $checkedAt.AddDays(-10).ToString('o')
                 status = 'watch'
-                closesGapIds = @()
-                notes = 'Continue monitoring Microsoft 365 release notes and tenant-specific validation results.'
+                closesGapIds = @('PNGM-GAP-001')
+                notes = 'Retention policies via All SharePoint Sites and Purview eDiscovery are supported; continue monitoring review-set full-text search, legal hold, retention label, and Information Barriers limitations.'
             }
             [pscustomobject]@{
                 messageId = 'MC-PNGM-2025-002'
-                title = 'SharePoint-backed notebook guidance updated for compliance review workflows'
+                title = 'SharePoint Embedded notebook guidance updated for compliance review workflows'
                 publishedAt = $checkedAt.AddDays(-4).ToString('o')
                 status = 'available'
                 closesGapIds = @('PNGM-GAP-003')
-                notes = 'Notebook guidance improved, but manual tenant verification is still required before closing the gap.'
+                notes = 'Notebook guidance documents SharePoint Embedded storage and licensing requirements, but tenant verification is still required before closing validation items.'
             }
         )
     }
@@ -298,22 +298,22 @@ $controlStates = @(
     [pscustomobject]@{
         controlId = '2.11'
         status = 'monitor-only'
-        notes = 'Pages sharing controls are documented and reviewed, but platform enforcement coverage still requires manual verification.'
+        notes = 'Pages sharing controls and the SharePoint Embedded Information Barriers limitation are documented for manual governance review.'
     }
     [pscustomobject]@{
         controlId = '3.2'
         status = $(if ($hasCompensatingControls) { 'partial' } else { 'monitor-only' })
-        notes = 'Retention gaps are documented and compensating preservation procedures are tracked.'
+        notes = 'Retention policies are supported via All SharePoint Sites; tenant validation and compensating preservation procedures are tracked.'
     }
     [pscustomobject]@{
         controlId = '3.3'
         status = $(if ($hasCompensatingControls) { 'partial' } else { 'monitor-only' })
-        notes = 'SharePoint-backed notebooks can be reviewed, while Loop and Pages discovery coverage remains under monitoring.'
+        notes = 'Purview eDiscovery is supported for search, collection, review, and export, while review-set full-text search and container-scoping limitations remain monitored.'
     }
     [pscustomobject]@{
         controlId = '3.11'
         status = 'monitor-only'
-        notes = 'Books-and-records coverage remains gap-driven until platform updates close open preservation exceptions.'
+        notes = 'Books-and-records evidence remains monitor-led for legal hold, retention label, and preservation exception reviews.'
     }
 )
 

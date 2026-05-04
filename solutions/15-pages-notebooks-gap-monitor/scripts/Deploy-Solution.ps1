@@ -12,7 +12,7 @@
     This script:
     - Validates prerequisite configuration files
     - Loads the default and tier-specific solution configuration
-    - Initializes the gap register with known platform gaps
+    - Initializes the gap register with supported-but-validate checks and documented platform limitations
     - Creates the deployment manifest
     - Outputs the initial gap baseline for review
 
@@ -39,7 +39,7 @@
     Solution: Copilot Pages and Notebooks Compliance Gap Monitor (PNGM)
     Controls: 2.11, 3.2, 3.3, 3.11
     Regulations: SEC 17a-4, FINRA 4511, SOX 404
-    Version: v0.1.0
+    Version: v0.1.1
 
     NOTE: This solution documents compliance gaps. It does NOT automatically
     remediate retention or Microsoft Purview eDiscovery configurations. All gap remediations
@@ -75,39 +75,39 @@ function Get-KnownGapBaseline {
     return @(
         [pscustomobject]@{
             gapId = 'PNGM-GAP-001'
-            description = 'Copilot Pages stored in Loop-backed workspaces may not consistently inherit tenant retention coverage at the time content is created, so preservation must be verified manually.'
-            affectedCapability = 'Copilot Pages retention coverage'
+            description = 'Purview retention policies configured for All SharePoint Sites are supported for Copilot Pages and Copilot Notebooks; tenant policy scope and evidence should be validated for regulated records.'
+            affectedCapability = 'Copilot Pages and Notebooks retention policy validation'
             regulations = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
-            severity = 'high'
-            status = 'open'
+            severity = 'medium'
+            status = 'validation-required'
             discoveredAt = $generatedAt.AddDays(-30).ToString('o')
-            platformUpdateRequired = $true
-            gapCategory = 'pages-retention-coverage'
+            platformUpdateRequired = $false
+            gapCategory = 'pages-retention-policy-validation'
             owner = 'Records Management'
-            recommendedCompensatingControl = 'Export in-scope Pages content to a governed SharePoint records library and retain reviewer sign-off.'
+            recommendedCompensatingControl = 'Confirm All SharePoint Sites retention policy scope or documented container-specific configuration and record validation evidence.'
             reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
         }
         [pscustomobject]@{
             gapId = 'PNGM-GAP-002'
-            description = 'Loop workspace content referenced by Copilot Pages may not appear consistently in Microsoft Purview eDiscovery workflows across tenant configurations, requiring case-by-case validation.'
-            affectedCapability = 'Loop workspace Microsoft Purview eDiscovery scope'
+            description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page and .loop files in review sets is not available.'
+            affectedCapability = 'Purview eDiscovery review-set full-text search'
             regulations = @('SEC 17a-4', 'FINRA 4511')
             severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-21).ToString('o')
             platformUpdateRequired = $true
-            gapCategory = 'loop-ediscovery-coverage'
+            gapCategory = 'ediscovery-review-set-full-text-limitation'
             owner = 'Microsoft Purview eDiscovery Operations'
-            recommendedCompensatingControl = 'Capture manual exports and related site URLs in the investigation record until native search coverage is confirmed.'
+            recommendedCompensatingControl = 'Record case scope, container URLs, collection/export steps, and review-set full-text limitations in the investigation record.'
             reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
         }
         [pscustomobject]@{
             gapId = 'PNGM-GAP-003'
-            description = 'Notebooks stored in Teams and SharePoint are usually retained, but Copilot-generated notebook context and linked summaries still require manual validation for examiner-ready preservation.'
+            description = 'Copilot Notebooks create .pod files in SharePoint Embedded containers; notebook storage, retention policy scope, and export evidence require tenant validation.'
             affectedCapability = 'Notebooks preservation verification'
             regulations = @('FINRA 4511', 'SOX 404')
             severity = 'medium'
-            status = 'open'
+            status = 'validation-required'
             discoveredAt = $generatedAt.AddDays(-14).ToString('o')
             platformUpdateRequired = $false
             gapCategory = 'notebooks-preservation-verification'
@@ -117,30 +117,30 @@ function Get-KnownGapBaseline {
         }
         [pscustomobject]@{
             gapId = 'PNGM-GAP-004'
-            description = 'Copilot Pages security and sharing settings can depend on the underlying SharePoint or Loop workspace configuration, which requires manual review for restricted and external access scenarios.'
-            affectedCapability = 'Copilot Pages security and sharing'
+            description = 'Copilot Pages security and sharing settings require manual review, and Information Barriers are not supported for SharePoint Embedded content.'
+            affectedCapability = 'Copilot Pages security, sharing, and Information Barriers'
             regulations = @('FINRA 4511', 'SOX 404')
-            severity = 'medium'
+            severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-7).ToString('o')
-            platformUpdateRequired = $false
-            gapCategory = 'pages-sharing-controls'
+            platformUpdateRequired = $true
+            gapCategory = 'sharepoint-embedded-information-barriers-limitation'
             owner = 'Collaboration Governance'
-            recommendedCompensatingControl = 'Restrict site membership, disable external sharing where required, and capture monthly sharing reviews in the control log.'
+            recommendedCompensatingControl = 'Restrict site membership, disable external sharing where required, and record monthly sharing reviews in the control log.'
             reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
         }
         [pscustomobject]@{
             gapId = 'PNGM-GAP-005'
-            description = 'Copilot Pages and Loop-backed content may not satisfy books-and-records preservation requirements natively, requiring formal exceptions with documented compensating controls until platform coverage is confirmed.'
-            affectedCapability = 'Books-and-records preservation exceptions'
+            description = 'Legal hold for Copilot Pages, Copilot Notebooks, and Loop My workspace content requires manual SharePoint Embedded container addition per user, and retention labels have limited manual support.'
+            affectedCapability = 'Legal hold and retention label limitations'
             regulations = @('SEC 17a-4', 'FINRA 4511')
             severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-28).ToString('o')
             platformUpdateRequired = $true
-            gapCategory = 'books-and-records-exceptions'
+            gapCategory = 'legal-hold-container-scope'
             owner = 'Records Management'
-            recommendedCompensatingControl = 'Register a formal preservation exception with legal sign-off, document the interim manual export procedure, and schedule quarterly reviews until native WORM-compliant preservation is available.'
+            recommendedCompensatingControl = 'Register a formal preservation exception when legal hold or retention-label limits affect regulated records, document manual container addition, and schedule quarterly reviews.'
             reviewFrequencyDays = [int]$DefaultConfiguration.gapReviewFrequencyDays
         }
     )

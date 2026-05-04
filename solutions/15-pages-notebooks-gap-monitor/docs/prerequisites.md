@@ -2,7 +2,7 @@
 
 ## Microsoft 365 Requirements
 
-- Microsoft 365 Copilot licenses for users whose Pages or Notebooks content is in scope
+- OneDrive license and an active OneDrive site for Copilot Pages; Microsoft 365 Copilot license for Copilot Notebooks
 - SharePoint Online and Microsoft Teams enabled for the workloads under review
 - Microsoft Purview retention and Microsoft Purview eDiscovery capabilities, typically E5 Compliance or an equivalent licensing bundle
 - Microsoft Loop and Copilot Pages enabled in the tenant if those workloads are being assessed
@@ -18,10 +18,11 @@
 
 ## API Permissions
 
-The monitoring approach assumes access to supporting inventory and policy metadata. Required permissions include:
+The monitoring approach assumes future access to supporting inventory and policy metadata. Required permissions and administrative access include:
 
-- `Sites.Read.All` for SharePoint site and notebook location inventory
-- `InformationProtectionPolicy.Read` for retention and label policy inspection
+- `Sites.Read.All` for SharePoint site, SharePoint Embedded container, and notebook location inventory
+- `InformationProtectionPolicy.Read` for delegated Microsoft Graph beta sensitivity-label lookup, or `InformationProtectionPolicy.Read.All` for application permissions if app-only sensitivity-label lookup is implemented
+- Microsoft Purview portal or supported Purview PowerShell access for retention policy inventory and Microsoft Purview eDiscovery validation
 - Message Center or release-note access for platform update monitoring
 
 > **Note:** The current scripts use stub authentication logic and representative sample data. The permissions listed above are reserved for future authenticated monitoring functionality. Until that functionality is implemented, operators do not need to provision these permissions or configure a client secret. When authenticated monitoring is enabled, store the client secret in an approved secret store and rotate it according to enterprise policy.
@@ -29,8 +30,8 @@ The monitoring approach assumes access to supporting inventory and policy metada
 ## Microsoft Purview eDiscovery Assessment Access
 
 - Microsoft Purview eDiscovery Admin access is required to assess discovery coverage for Pages, Loop, and notebook content.
-- Investigations teams should be able to validate whether Loop-backed Pages content appears in case searches and legal hold workflows.
-- Where discovery coverage is incomplete, the team must document the manual export or collection process used instead.
+- Investigation teams should validate correct SharePoint Embedded container URLs, site scopes, and the documented full-text search limitations for `.page` and `.loop` files in review sets.
+- Where case scope, legal hold, or review-set limitations require manual procedures, the team must document the export or collection process used instead.
 
 ## Dependencies
 

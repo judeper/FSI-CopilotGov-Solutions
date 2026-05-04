@@ -2,7 +2,7 @@
   "solution": "15-pages-notebooks-gap-monitor",
   "displayName": "Copilot Pages and Notebooks Compliance Gap Monitor",
   "solutionCode": "PNGM",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "controls": [
     "2.11",
     "3.2",
@@ -34,9 +34,12 @@
   ],
   "knownGapCategories": [
     "pages-sharing-controls",
-    "pages-retention-coverage",
-    "loop-ediscovery-coverage",
+    "pages-retention-policy-validation",
+    "ediscovery-review-set-full-text-limitation",
     "notebooks-preservation-verification",
+    "legal-hold-container-scope",
+    "retention-label-manual-limitation",
+    "sharepoint-embedded-information-barriers-limitation",
     "books-and-records-exceptions"
   ],
   "gapReviewFrequencyDays": 30,

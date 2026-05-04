@@ -10,8 +10,8 @@
     - preservation-exception-register
 
     The resulting package supports compliance with SEC 17a-4, FINRA 4511, and
-    SOX 404 by documenting current coverage gaps, manual controls, and exception
-    handling. The script does not claim native platform remediation.
+    SOX 404 by documenting current validation items, documented limitations,
+    manual controls, and exception handling. The script does not claim native platform remediation.
 
 .PARAMETER ConfigurationTier
     Governance tier to use when exporting evidence.
@@ -105,18 +105,18 @@ $generatedAt = Get-Date
 $gapFindings = @(
     [pscustomobject]@{
         gapId = 'PNGM-GAP-001'
-        description = 'Copilot Pages content stored in Loop-backed workspaces is not yet validated for consistent tenant retention inheritance.'
-        affectedCapability = 'Copilot Pages retention coverage'
+        description = 'Purview retention policies configured for All SharePoint Sites are supported for Copilot Pages and Copilot Notebooks; tenant policy scope and evidence should be validated for regulated records.'
+        affectedCapability = 'Copilot Pages and Notebooks retention policy validation'
         affectedRegulation = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
-        severity = 'high'
+        severity = 'medium'
         discoveredAt = $PeriodStart.AddDays(2).ToString('o')
-        status = 'open'
-        platformUpdateRequired = $true
+        status = 'validation-required'
+        platformUpdateRequired = $false
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-002'
-        description = 'Loop workspace content referenced by Copilot Pages still requires tenant-specific Microsoft Purview eDiscovery verification.'
-        affectedCapability = 'Loop workspace Microsoft Purview eDiscovery scope'
+        description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page and .loop files in review sets is not available.'
+        affectedCapability = 'Purview eDiscovery review-set full-text search'
         affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
         severity = 'high'
         discoveredAt = $PeriodStart.AddDays(4).ToString('o')
@@ -125,28 +125,28 @@ $gapFindings = @(
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-003'
-        description = 'SharePoint-backed notebooks can usually be preserved, but Copilot-generated notebook context still depends on manual validation for formal evidence use.'
+        description = 'Copilot Notebooks create .pod files in SharePoint Embedded containers; notebook storage, retention policy scope, and export evidence require tenant validation.'
         affectedCapability = 'Notebooks preservation verification'
         affectedRegulation = @('FINRA 4511', 'SOX 404')
         severity = 'medium'
         discoveredAt = $PeriodStart.AddDays(7).ToString('o')
-        status = 'mitigated'
+        status = 'validation-required'
         platformUpdateRequired = $false
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-004'
-        description = 'Copilot Pages sharing restrictions still require manual review of workspace permissions and external access settings.'
-        affectedCapability = 'Copilot Pages security and sharing'
+        description = 'Copilot Pages sharing restrictions require manual review, and Information Barriers are not supported for content stored in SharePoint Embedded containers.'
+        affectedCapability = 'Copilot Pages security, sharing, and Information Barriers'
         affectedRegulation = @('FINRA 4511', 'SOX 404')
-        severity = 'medium'
+        severity = 'high'
         discoveredAt = $PeriodStart.AddDays(9).ToString('o')
         status = 'open'
-        platformUpdateRequired = $false
+        platformUpdateRequired = $true
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-005'
-        description = 'Copilot Pages and Loop-backed content may not satisfy books-and-records preservation requirements natively, requiring formal exceptions with documented compensating controls.'
-        affectedCapability = 'Books-and-records preservation exceptions'
+        description = 'Legal hold requires manual SharePoint Embedded container addition per user, and retention labels have limited manual support for Pages, Notebooks, and Loop content.'
+        affectedCapability = 'Legal hold and retention label limitations'
         affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
         severity = 'high'
         discoveredAt = $PeriodStart.AddDays(3).ToString('o')
@@ -159,8 +159,8 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-001'
         gapId = 'PNGM-GAP-001'
-        controlDescription = 'Operations exports in-scope Copilot Pages to a governed SharePoint records library and records the export job identifier.'
-        controlType = 'manual-export'
+        controlDescription = 'Operations verifies All SharePoint Sites retention policy scope for in-scope Copilot Pages and records SharePoint Embedded container evidence; manual export is used only when policy scope cannot be demonstrated.'
+        controlType = 'tenant-validation'
         implementedAt = $PeriodStart.AddDays(5).ToString('o')
         implementedBy = 'Records Operations'
         approvedBy = 'Compliance Officer'
@@ -170,8 +170,8 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-002'
         gapId = 'PNGM-GAP-002'
-        controlDescription = 'Investigation teams capture Loop workspace URLs, page owners, and exported evidence in the case file while native Microsoft Purview eDiscovery coverage is monitored.'
-        controlType = 'ediscovery-workaround'
+        controlDescription = 'Investigation teams record SharePoint Embedded container URLs, page owners, collection/export steps, and the review-set full-text search limitation in the case file.'
+        controlType = 'ediscovery-review-set-limitation'
         implementedAt = $PeriodStart.AddDays(6).ToString('o')
         implementedBy = 'Microsoft Purview eDiscovery Operations'
         approvedBy = 'Deputy General Counsel'
@@ -192,7 +192,7 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-004'
         gapId = 'PNGM-GAP-003'
-        controlDescription = 'Compliance operations validates notebook storage location, retention label inheritance, and export steps during quarterly control reviews to confirm Copilot-generated notebook context is preserved.'
+        controlDescription = 'Compliance operations validates notebook storage location, retention policy scope, retention label behavior, and export steps during quarterly control reviews.'
         controlType = 'manual-export'
         implementedAt = $PeriodStart.AddDays(10).ToString('o')
         implementedBy = 'Compliance Operations'
@@ -203,7 +203,7 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-005'
         gapId = 'PNGM-GAP-005'
-        controlDescription = 'Records Management registers a formal preservation exception with legal sign-off and documents the interim manual export procedure for books-and-records compliance until native WORM-compliant preservation is available.'
+        controlDescription = 'Records Management documents legal-hold container inclusion, retention-label limitations, and any preservation exception required for books-and-records review.'
         controlType = 'preservation-exception'
         implementedAt = $PeriodStart.AddDays(4).ToString('o')
         implementedBy = 'Records Management'
@@ -218,7 +218,7 @@ $preservationExceptionRegister = @(
         exceptionId = 'PNGM-EX-001'
         gapId = 'PNGM-GAP-001'
         regulation = 'SEC 17a-4'
-        exceptionRationale = 'Native retention coverage for Loop-backed Pages remains under review, so the firm preserves final artifacts through manual export and supervisory approval.'
+        exceptionRationale = 'If All SharePoint Sites retention policy scope or container-specific configuration cannot be evidenced for required Pages or Notebooks records, the firm preserves final artifacts through manual export and supervisory approval.'
         approvedBy = $(if ($tierConfig.preservationExceptionTracking) { 'Chief Compliance Officer' } else { 'Pending legal sign-off' })
         approvalDate = $(if ($tierConfig.preservationExceptionTracking) { $PeriodEnd.AddDays(-3).ToString('o') } else { $null })
         expiryDate = $PeriodEnd.AddDays(90).ToString('o')
@@ -226,7 +226,7 @@ $preservationExceptionRegister = @(
             [pscustomobject]@{
                 reviewedAt = $PeriodEnd.AddDays(-10).ToString('o')
                 reviewer = 'Records Management'
-                notes = 'Gap remains open. Continue manual export and supervisory review.'
+                notes = 'Validation item remains open. Continue policy-scope evidence review and manual export where required.'
             }
         )
     }
@@ -234,7 +234,7 @@ $preservationExceptionRegister = @(
         exceptionId = 'PNGM-EX-002'
         gapId = 'PNGM-GAP-005'
         regulation = 'SEC 17a-4'
-        exceptionRationale = 'Books-and-records preservation for Copilot Pages and Loop-backed content requires formal exception until native WORM-compliant preservation is confirmed by Microsoft.'
+        exceptionRationale = 'Books-and-records preservation for Copilot Pages, Copilot Notebooks, and Loop content requires documented legal-hold container inclusion, retention-label governance, and formal exceptions where manual limits affect regulated records.'
         approvedBy = $(if ($tierConfig.preservationExceptionTracking) { 'Chief Compliance Officer' } else { 'Pending legal sign-off' })
         approvalDate = $(if ($tierConfig.preservationExceptionTracking) { $PeriodEnd.AddDays(-3).ToString('o') } else { $null })
         expiryDate = $PeriodEnd.AddDays(90).ToString('o')
@@ -242,7 +242,7 @@ $preservationExceptionRegister = @(
             [pscustomobject]@{
                 reviewedAt = $PeriodEnd.AddDays(-10).ToString('o')
                 reviewer = 'Records Management'
-                notes = 'Books-and-records preservation exception remains active. Continue interim manual export and quarterly review.'
+                notes = 'Books-and-records preservation exception remains active. Continue legal-hold container review, retention-label governance, and quarterly reassessment.'
             }
         )
     }
@@ -286,22 +286,22 @@ $controls = @(
     [pscustomobject]@{
         controlId = '2.11'
         status = 'monitor-only'
-        notes = 'Pages security controls remain limited; compensating access restrictions and review procedures are registered.'
+        notes = 'Pages security controls and the SharePoint Embedded Information Barriers limitation are registered for manual governance review.'
     }
     [pscustomobject]@{
         controlId = '3.2'
         status = 'monitor-only'
-        notes = 'Retention policy gaps are documented; compensating manual export procedures are registered.'
+        notes = 'Retention policies are supported via All SharePoint Sites; validation evidence and compensating manual procedures are registered.'
     }
     [pscustomobject]@{
         controlId = '3.3'
         status = 'partial'
-        notes = 'Microsoft Purview eDiscovery covers SharePoint-backed notebooks; Loop workspace coverage is still being monitored.'
+        notes = 'Microsoft Purview eDiscovery supports search, collection, review, and export; review-set full-text search and container-scoping limitations are still monitored.'
     }
     [pscustomobject]@{
         controlId = '3.11'
         status = 'monitor-only'
-        notes = 'Books-and-records requirements are documented as gaps until platform updates close the open preservation exceptions.'
+        notes = 'Books-and-records requirements are monitored through legal-hold, retention label, and preservation exception reviews.'
     }
 )
 
