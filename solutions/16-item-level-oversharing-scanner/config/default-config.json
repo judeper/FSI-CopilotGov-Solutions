@@ -1,7 +1,7 @@
 {
   "solution": "16-item-level-oversharing-scanner",
   "displayName": "Item-Level Oversharing Scanner",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "solutionCode": "IOS",
   "track": "A",
   "priority": "P1",

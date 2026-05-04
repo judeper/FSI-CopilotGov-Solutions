@@ -48,14 +48,15 @@ Use this checklist to move solution 16 from documentation review into controlled
 ## 2. Licensing and Platform Prerequisites
 
 - [ ] Validate SharePoint Advanced Management licensing for the tenant or document the approved alternative control path.
-- [ ] Validate Microsoft 365 E5 Compliance or equivalent capability for DSPM for AI review and related investigations.
+- [ ] Validate licensing and permissions for Microsoft Purview Data Security Posture Management (DSPM). If using DSPM for AI, identify it as DSPM for AI (classic).
 - [ ] Confirm PnP PowerShell connectivity from the execution environment to the target SharePoint tenant.
 - [ ] Confirm the required PowerShell modules are installed and approved for use in the administration workstation or automation host.
 
 ## 3. Administrative Access
 
-- [ ] Confirm the operator has SharePoint Admin, Compliance Admin, or Global Admin rights as required for item-level permission enumeration.
-- [ ] Confirm Sites.FullControl.All application permission is available if using app-only authentication.
+- [ ] Confirm target-site site collection administrator access for delegated item-level permission enumeration, or document how a SharePoint Administrator/Global Administrator grants that access.
+- [ ] Confirm Purview or Compliance Administrator roles are used only for DSPM/Purview review tasks, not as substitutes for target-site content access.
+- [ ] For Microsoft Graph read-only permission listing, confirm documented permissions such as `Files.Read.All` or `Sites.Read.All` where applicable; reserve write/full-control permissions for approved remediation and document the specific API surface.
 - [ ] Confirm security operations and compliance reviewers are identified for HIGH-risk findings.
 
 ## 4. Configuration Review

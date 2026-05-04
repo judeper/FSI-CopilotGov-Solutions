@@ -11,10 +11,10 @@
 **Actions**
 
 - Confirm the correct tenant admin URL and authentication method are being used
-- Confirm the operator has SharePoint Admin or site collection administrator rights
+- Confirm the operator is a site collection administrator on each target site, or that a SharePoint Administrator/Global Administrator has granted that access
 - Reinstall or update `PnP.PowerShell` if the module version is outdated
 - Validate that conditional access does not block the execution host
-- For app-only authentication, verify that `Sites.FullControl.All` permission is granted and admin consent is provided
+- For app-only Graph read-only permission listing, validate the documented permissions for the selected endpoint; reserve broader SharePoint/PnP or write permissions for approved remediation scenarios
 
 ## Error: SharePoint throttling during item enumeration
 
@@ -43,8 +43,8 @@
 **Actions**
 
 - Verify the operator has site collection administrator access on target sites
-- For app-only authentication, confirm `Sites.FullControl.All` permission is granted
-- Confirm `User.Read.All` Graph permission is available for user identity resolution
+- For Graph read-only permission listing, validate `Files.Read.All` or the applicable documented higher-privileged permission for the selected endpoint
+- If identity enrichment uses a separate endpoint, document and consent only the least-privileged permission required for that endpoint
 - Review tenant settings that restrict visibility into item-level sharing or sensitivity labels
 
 ## Error: Risk scoring produces unexpected results
