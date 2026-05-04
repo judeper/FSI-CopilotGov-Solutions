@@ -131,7 +131,17 @@ function Merge-Configuration {
         [string]$DefaultConfig.defaults.exceptionRegisterPath
     }
 
-    $namedLocations = if ($TierConfig.ContainsKey('namedLocations')) {
+    $namedLocationIds = if ($TierConfig.ContainsKey('namedLocationIds')) {
+        @($TierConfig.namedLocationIds)
+    }
+    else {
+        @()
+    }
+
+    $namedLocationLabels = if ($TierConfig.ContainsKey('namedLocationLabels')) {
+        @($TierConfig.namedLocationLabels)
+    }
+    elseif ($TierConfig.ContainsKey('namedLocations')) {
         @($TierConfig.namedLocations)
     }
     else {
@@ -149,7 +159,9 @@ function Merge-Configuration {
         baselineStoragePath = $baselineStoragePath
         exceptionRegisterPath = $exceptionRegisterPath
         policyNamingConvention = [string]$DefaultConfig.defaults.policyNamingConvention
-        namedLocations = $namedLocations
+        namedLocations = $namedLocationIds
+        namedLocationIds = $namedLocationIds
+        namedLocationLabels = $namedLocationLabels
         blockLegacyAuth = if ($TierConfig.ContainsKey('blockLegacyAuth')) { [bool]$TierConfig.blockLegacyAuth } else { $false }
         blockUnknownDeviceStates = if ($TierConfig.ContainsKey('blockUnknownDeviceStates')) { [bool]$TierConfig.blockUnknownDeviceStates } else { $false }
     }
@@ -188,14 +200,39 @@ function New-PolicyTemplate {
         $null = $grantControls.Add('compliantDevice')
     }
 
-    $namedLocations = if ($RiskTierSettings.ContainsKey('namedLocations') -and @($RiskTierSettings.namedLocations).Count -gt 0) {
-        @($RiskTierSettings.namedLocations)
+    $namedLocationIds = if ($RiskTierSettings.ContainsKey('namedLocationIds') -and @($RiskTierSettings.namedLocationIds).Count -gt 0) {
+        @($RiskTierSettings.namedLocationIds)
     }
-    elseif (@($Configuration.namedLocations).Count -gt 0) {
-        @($Configuration.namedLocations)
+    elseif ($Configuration.ContainsKey('namedLocationIds') -and @($Configuration.namedLocationIds).Count -gt 0) {
+        @($Configuration.namedLocationIds)
     }
     else {
-        @('NamedLocationReviewRequired')
+        @()
+    }
+
+    $namedLocationLabels = if ($RiskTierSettings.ContainsKey('namedLocationLabels') -and @($RiskTierSettings.namedLocationLabels).Count -gt 0) {
+        @($RiskTierSettings.namedLocationLabels)
+    }
+    elseif ($Configuration.ContainsKey('namedLocationLabels') -and @($Configuration.namedLocationLabels).Count -gt 0) {
+        @($Configuration.namedLocationLabels)
+    }
+    else {
+        @()
+    }
+
+    $requiresTenantNamedLocationIds = [bool]$RiskTierSettings.namedLocationRequired -and @($namedLocationIds).Count -eq 0
+    $includeLocations = if ($RiskTierSettings.namedLocationRequired) {
+        if (@($namedLocationIds).Count -gt 0) { @($namedLocationIds) } else { @() }
+    }
+    else {
+        @('All')
+    }
+
+    $excludeLocations = if ($RiskTierSettings.namedLocationRequired -and @($namedLocationIds).Count -gt 0) {
+        @('AllTrusted')
+    }
+    else {
+        @()
     }
 
     $conditions = [ordered]@{
@@ -207,30 +244,11 @@ function New-PolicyTemplate {
             includeApplications = @($Configuration.copilotAppIds)
             excludeApplications = @()
         }
-        clientAppTypes = if ($Configuration.blockLegacyAuth) {
-            @('browser', 'mobileAppsAndDesktopClients')
-        }
-        else {
-            @('all')
-        }
+        clientAppTypes = @('all')
         signInRiskLevels = @()
         locations = [ordered]@{
-            includeLocations = if ($RiskTierSettings.namedLocationRequired) { $namedLocations } else { @('All') }
-            excludeLocations = if ($RiskTierSettings.namedLocationRequired) { @('AllTrusted') } else { @() }
-        }
-    }
-
-    if ($Configuration.blockUnknownDeviceStates -or $RiskTierSettings.compliantDevice) {
-        $filterRule = if ($Configuration.blockUnknownDeviceStates) {
-            'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
-        } else {
-            'device.isCompliant -eq True'
-        }
-        $conditions.devices = [ordered]@{
-            deviceFilter = [ordered]@{
-                mode = 'include'
-                rule = $filterRule
-            }
+            includeLocations = @($includeLocations)
+            excludeLocations = @($excludeLocations)
         }
     }
 
@@ -255,6 +273,104 @@ function New-PolicyTemplate {
                 isEnabled = $true
             }
         }
+        namedLocationIds = @($namedLocationIds)
+        namedLocationLabels = @($namedLocationLabels)
+        requiresTenantNamedLocationIds = $requiresTenantNamedLocationIds
+        manualReviewRequired = $requiresTenantNamedLocationIds
+        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
+        regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
+    }
+}
+
+function New-LegacyAuthenticationBlockPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Configuration
+    )
+
+    $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'LegacyAuth'
+    $policyName = $policyName -replace '\{Purpose\}', 'Block'
+
+    return [ordered]@{
+        displayName = $policyName
+        tier = $Configuration.tier
+        riskTier = 'legacy-auth'
+        targetedAppIds = @($Configuration.copilotAppIds)
+        grantControls = [ordered]@{
+            operator = 'OR'
+            builtInControls = @('block')
+        }
+        conditions = [ordered]@{
+            users = [ordered]@{
+                includeUsers = @('All')
+                excludeUsers = @()
+            }
+            applications = [ordered]@{
+                includeApplications = @($Configuration.copilotAppIds)
+                excludeApplications = @()
+            }
+            clientAppTypes = @('exchangeActiveSync', 'other')
+            signInRiskLevels = @()
+            locations = [ordered]@{
+                includeLocations = @('All')
+                excludeLocations = @()
+            }
+        }
+        sessionControls = [ordered]@{}
+        requiresTenantNamedLocationIds = $false
+        manualReviewRequired = $false
+        deploymentGuidance = 'Blocks legacy authentication client app types for the selected Copilot target resources.'
+        regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
+    }
+}
+
+function New-UnknownDeviceStateBlockPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Configuration
+    )
+
+    $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'UnknownDeviceState'
+    $policyName = $policyName -replace '\{Purpose\}', 'Block'
+
+    return [ordered]@{
+        displayName = $policyName
+        tier = $Configuration.tier
+        riskTier = 'unknown-device-state'
+        targetedAppIds = @($Configuration.copilotAppIds)
+        grantControls = [ordered]@{
+            operator = 'OR'
+            builtInControls = @('block')
+        }
+        conditions = [ordered]@{
+            users = [ordered]@{
+                includeUsers = @('All')
+                excludeUsers = @()
+            }
+            applications = [ordered]@{
+                includeApplications = @($Configuration.copilotAppIds)
+                excludeApplications = @()
+            }
+            clientAppTypes = @('all')
+            signInRiskLevels = @()
+            locations = [ordered]@{
+                includeLocations = @('All')
+                excludeLocations = @()
+            }
+            devices = [ordered]@{
+                deviceFilter = [ordered]@{
+                    mode = 'exclude'
+                    rule = 'device.isCompliant -eq "True"'
+                }
+            }
+        }
+        sessionControls = [ordered]@{}
+        requiresTenantNamedLocationIds = $false
+        manualReviewRequired = $false
+        deploymentGuidance = 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.'
+        regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
 
@@ -366,9 +482,16 @@ elseif ($baselineDocument -is [hashtable] -and $baselineDocument.ContainsKey('po
     @($baselineDocument.policyTemplates)
 }
 else {
-    foreach ($riskTierName in @('low', 'medium', 'high')) {
+    $templates = @(foreach ($riskTierName in @('low', 'medium', 'high')) {
         New-PolicyTemplate -RiskTierName $riskTierName -RiskTierSettings $config.riskTiers[$riskTierName] -Configuration $config
+    })
+    if ($config.blockLegacyAuth) {
+        $templates += New-LegacyAuthenticationBlockPolicy -Configuration $config
     }
+    if ($config.blockUnknownDeviceStates) {
+        $templates += New-UnknownDeviceStateBlockPolicy -Configuration $config
+    }
+    $templates
 }
 
 $exceptionEntries = Get-ExceptionEntries -Register $exceptionRegisterDocument

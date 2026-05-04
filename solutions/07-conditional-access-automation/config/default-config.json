@@ -2,7 +2,7 @@
   "solution": "07-conditional-access-automation",
   "displayName": "Conditional Access Policy Automation for Copilot",
   "solutionCode": "CAA",
-  "version": "v0.2.0",
+  "version": "v0.2.1",
   "track": "B",
   "priority": "P1",
   "status": "Documentation-first scaffold",
@@ -41,8 +41,7 @@
   ],
   "defaults": {
     "copilotAppIds": [
-      "fb8d773d-7ef8-4ec0-a117-179f88add510",
-      "7df0a125-d3be-4c96-aa54-591f83ff541c"
+      "Office365"
     ],
     "riskTiers": {
       "low": {
@@ -76,6 +75,8 @@
       "exceptionRegisterPath": "fsi_ev_caa_exceptionregisterpath",
       "baselineStoragePath": "fsi_ev_caa_baselinestoragepath",
       "driftSchedule": "fsi_ev_caa_driftschedule"
-    }
+    },
+    "targetResourceMode": "office365-app-suite",
+    "targetResourceGuidance": "Use the Microsoft Graph Office365 Conditional Access app-suite value for Microsoft 365 Copilot coverage; add individual app IDs only after tenant service-principal validation."
   }
 }

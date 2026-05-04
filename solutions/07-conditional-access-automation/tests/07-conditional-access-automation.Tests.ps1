@@ -47,10 +47,11 @@ Describe 'Conditional Access Policy Automation for Copilot' {
         }
     }
 
-    It 'default-config.json contains non-empty Copilot app IDs' {
+    It 'default-config.json contains Graph-supported Conditional Access targets' {
         $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         @($config.defaults.copilotAppIds).Count | Should -BeGreaterThan 0
-        $config.defaults.copilotAppIds | Should -Contain 'fb8d773d-7ef8-4ec0-a117-179f88add510'
+        $config.defaults.copilotAppIds | Should -Contain 'Office365'
+        @($config.defaults.copilotAppIds).Count | Should -Be 1
     }
 
     It 'default-config.json requires MFA for all risk tiers' {
