@@ -151,7 +151,7 @@ else {
                 ItemPath   = 'Trading Records'
                 DriftType  = 'CHANGED'
                 Before     = [pscustomobject]@{ principalName = 'Trading Analysts'; principalType = 'SecurityGroup'; permissionLevel = 'Read' }
-                After      = [pscustomobject]@{ principalName = 'Trading Analysts'; principalType = 'SecurityGroup'; permissionLevel = 'FullControl' }
+                After      = [pscustomobject]@{ principalName = 'Trading Analysts'; principalType = 'SecurityGroup'; permissionLevel = 'Full Control' }
                 RiskScore  = 55
                 RiskTier   = 'MEDIUM'
                 DetectedAt = (Get-Date).ToString('o')
@@ -170,7 +170,7 @@ else {
                 SiteUrl    = 'https://contoso.sharepoint.com/sites/HR-Confidential'
                 ItemPath   = 'Policies/Travel-Policy.docx'
                 DriftType  = 'REMOVED'
-                Before     = [pscustomobject]@{ principalName = 'HR Admins'; principalType = 'SharePointGroup'; permissionLevel = 'FullControl' }
+                Before     = [pscustomobject]@{ principalName = 'HR Admins'; principalType = 'SharePointGroup'; permissionLevel = 'Full Control' }
                 After      = $null
                 RiskScore  = 10
                 RiskTier   = 'LOW'

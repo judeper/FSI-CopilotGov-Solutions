@@ -1,7 +1,7 @@
 {
   "solution": "17-sharepoint-permissions-drift",
   "displayName": "SharePoint Permissions Drift Detection",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "solutionCode": "SPD",
   "track": "A",
   "priority": "P1",

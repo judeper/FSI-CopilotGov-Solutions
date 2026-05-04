@@ -11,7 +11,7 @@
     The configuration tier for evidence retention settings. Valid values: baseline, recommended, regulated.
 
 .PARAMETER TenantId
-    The Azure AD tenant identifier.
+    The Microsoft Entra tenant identifier.
 
 .PARAMETER OutputPath
     Directory for evidence package output. Defaults to .\artifacts\SPD.
