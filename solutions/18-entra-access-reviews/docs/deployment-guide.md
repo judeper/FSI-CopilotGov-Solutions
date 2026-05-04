@@ -6,14 +6,14 @@ Follow this sequence to deploy solution 18 in a controlled manner.
 
 ## 1. Verify Upstream Output
 
-Before deploying, confirm that solution 02-oversharing-risk-assessment has produced risk-scored site output under its artifact path. The deployment script checks for upstream JSON evidence so access review creation can be prioritized against sites with documented oversharing risk.
+Before deploying, confirm that solution 02-oversharing-risk-assessment has produced risk-scored site output under its artifact path. The deployment script checks for upstream JSON evidence so access review creation can be prioritized against groups or access packages mapped to sites with documented oversharing risk.
 
 ## 2. Run the Prerequisites Check
 
 Review [prerequisites.md](prerequisites.md) and confirm:
 
-- Entra ID Governance P2 licensing is available or formally documented as a gap
-- Required admin roles are assigned (Global Admin, Identity Governance Admin, or User Admin)
+- Microsoft Entra ID Governance or Microsoft Entra Suite subscriptions are available or formally documented as a gap; Microsoft Entra ID P2 applies only where Microsoft Learn documents support for the planned access review scenario
+- Required admin roles are assigned (User Administrator or Identity Governance Administrator for group or application reviews; Global Administrator only for break-glass)
 - Microsoft Graph API access with AccessReview.ReadWrite.All permissions is available
 - Network access to Microsoft Graph API endpoints is available
 
@@ -45,10 +45,10 @@ Expected outcomes:
 
 - Selected configuration is merged and validated
 - Upstream dependency status from solution 02 is captured
-- Entra ID Governance licensing check is recorded
+- Microsoft Entra ID Governance or Microsoft Entra Suite licensing check is recorded
 - A deployment manifest is written to the output path
 
-## 5. Create Access Reviews for HIGH-Risk Sites
+## 5. Create Access Reviews for HIGH-Risk Site-Associated Resources
 
 Start with a focused pilot:
 
@@ -62,7 +62,7 @@ Start with a focused pilot:
 
 Why HIGH-risk first:
 
-- Validates review workflow with the most critical sites
+- Validates review workflow with the Microsoft Entra resources mapped to the most critical sites
 - Helps identify reviewer assignment issues before expanding scope
 - Reduces the chance of overwhelming reviewers with bulk review assignments
 
@@ -125,7 +125,7 @@ The export writes:
 
 If deployment settings need to be reversed:
 
-1. Disable or delete access review definitions in Entra ID
+1. Disable or delete access review definitions in Microsoft Entra ID
 2. Revert to the previous tier JSON or disable auto-apply in configuration
 3. Archive the evidence from the rolled-back window for audit traceability
 4. Re-run `Monitor-Compliance.ps1` to confirm the tenant is back to the intended state

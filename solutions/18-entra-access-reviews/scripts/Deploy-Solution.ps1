@@ -5,7 +5,7 @@ Deploys the Entra Access Reviews Automation solution.
 .DESCRIPTION
 Loads the solution default configuration plus the selected governance tier,
 checks for upstream output from solution 02-oversharing-risk-assessment,
-records a placeholder Entra ID Governance licensing validation, and writes a
+records a placeholder Microsoft Entra ID Governance licensing validation, and writes a
 deployment manifest for auditability.
 
 .PARAMETER ConfigurationTier
@@ -146,11 +146,11 @@ function Test-EntraGovernanceLicense {
         'EAR_ASSUME_GOVERNANCE_LICENSE=1 was supplied for stub validation.'
     }
     else {
-        'Validate Entra ID Governance P2 licensing in the tenant before production deployment.'
+        'Validate Microsoft Entra ID Governance or Microsoft Entra Suite licensing in the tenant before production deployment; Microsoft Entra ID P2 applies only where Microsoft Learn documents support for the planned access review scenario.'
     }
 
     return [pscustomobject]@{
-        Requirement = 'Entra ID Governance P2'
+        Requirement = 'Microsoft Entra ID Governance or Microsoft Entra Suite'
         TenantId = $TenantId
         Status = $status
         Notes = $notes

@@ -4,13 +4,13 @@ Applies completed access review decisions and logs all actions to evidence.
 
 .DESCRIPTION
 Applies completed review decisions using
-POST /identityGovernance/accessReviews/definitions/{id}/instances/{id}/decisions/apply.
-For deny decisions, removes user from SharePoint site. Logs all applied decisions to an
+POST /identityGovernance/accessReviews/definitions/{id}/instances/{id}/applyDecisions.
+For deny decisions, applies the decision to the reviewed Microsoft Entra resource, such as group membership or an access package assignment, which may affect SharePoint access when that resource grants site access. Logs all applied decisions to an
 evidence file for audit preparation.
 Scripts use representative sample data and do not connect to live Microsoft 365 services.
 
 .PARAMETER TenantId
-Azure AD tenant GUID.
+Microsoft Entra ID tenant GUID.
 
 .PARAMETER ClientId
 Application (client) ID for app-only authentication.
@@ -84,7 +84,7 @@ function Get-SampleApplyResults {
             appliedAt = $now.ToString('o')
             appliedBy = 'system-automation'
             status = 'sample-data'
-            notes = 'Representative sample: deny decision would remove user from SharePoint site members.'
+            notes = 'Representative sample: deny decision would remove or maintain access on the reviewed group or access package, which may affect SharePoint access when that resource grants site access.'
         }
         [pscustomobject]@{
             reviewDefinitionId = $DefinitionId
@@ -124,7 +124,7 @@ function Invoke-ApplyDecisions {
             foreach ($instance in $instances) {
                 try {
                     Invoke-CopilotGovGraphRequest -Context $GraphContext `
-                        -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances/$($instance.id)/decisions/apply" `
+                        -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances/$($instance.id)/applyDecisions" `
                         -Method 'POST' | Out-Null
 
                     $decisions = Invoke-CopilotGovGraphRequest -Context $GraphContext `

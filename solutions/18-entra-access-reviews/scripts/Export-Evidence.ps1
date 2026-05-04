@@ -191,7 +191,7 @@ $reviewDefinitions = @(
         reviewFrequencyDays = 30
         reviewDurationDays = 7
         reviewer = 'trading-desk-owner@contoso.com'
-        scope = 'site-members-and-guests'
+        scope = 'group-transitive-members'
         createdAt = $now.AddDays(-30).ToString('o')
         reportingPeriodStart = $PeriodStart.ToString('yyyy-MM-dd')
         reportingPeriodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
@@ -203,7 +203,7 @@ $reviewDefinitions = @(
         reviewFrequencyDays = 30
         reviewDurationDays = 7
         reviewer = 'pii-owner@contoso.com'
-        scope = 'site-members-and-guests'
+        scope = 'group-transitive-members'
         createdAt = $now.AddDays(-30).ToString('o')
         reportingPeriodStart = $PeriodStart.ToString('yyyy-MM-dd')
         reportingPeriodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
@@ -215,7 +215,7 @@ $reviewDefinitions = @(
         reviewFrequencyDays = 90
         reviewDurationDays = 14
         reviewer = 'compliance-lead@contoso.com'
-        scope = 'site-members-and-guests'
+        scope = 'group-transitive-members'
         createdAt = $now.AddDays(-60).ToString('o')
         reportingPeriodStart = $PeriodStart.ToString('yyyy-MM-dd')
         reportingPeriodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
@@ -256,7 +256,7 @@ $appliedActions = @(
         appliedAt = $now.AddDays(-3).ToString('o')
         appliedBy = 'system-automation'
         siteUrl = 'https://contoso.sharepoint.com/sites/TradingDesk'
-        notes = 'Deny decision applied. User removed from site members.'
+        notes = 'Deny decision applied to reviewed group membership; SharePoint access may change when that group grants site access.'
     }
 )
 
@@ -279,12 +279,12 @@ $controls = @(
     [pscustomobject]@{
         controlId = '2.5'
         status = 'monitor-only'
-        notes = 'Data minimization is supported by removing unnecessary access through deny decisions.'
+        notes = 'Data minimization is supported by documenting deny decisions and applied membership changes.'
     }
     [pscustomobject]@{
         controlId = '2.12'
         status = 'partial'
-        notes = 'Guest and external user access is included in review scope for periodic recertification.'
+        notes = 'Guest and external user access can be included through Microsoft Graph group-scope filters for periodic recertification.'
     }
 )
 

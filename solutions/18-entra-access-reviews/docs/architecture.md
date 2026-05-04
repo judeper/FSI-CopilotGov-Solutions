@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Solution 18 provides a documentation-first but implementation-ready pattern for automating Entra ID Access Reviews across SharePoint sites that Microsoft 365 Copilot can surface during grounded responses. It uses risk scores from solution 02 to prioritize review creation and set review cadence proportional to each site's oversharing risk tier.
+Solution 18 provides a documentation-first pattern for coordinating Microsoft Entra ID Access Reviews for Microsoft 365 groups, security groups, or access packages associated with SharePoint sites whose content Microsoft 365 Copilot can surface during grounded responses. Direct SharePoint site permissions require a separate inventory and remediation pattern. This solution uses risk scores from solution 02 to prioritize review creation and set review cadence proportional to each site-associated resource's oversharing risk tier.
 
 ## Text-Based Component Diagram
 
@@ -26,7 +26,7 @@ Solution 18 provides a documentation-first but implementation-ready pattern for 
 +---------------------------------------------------------------+
 | New-AccessReview.ps1                                           |
 | - reads risk scores from upstream output                       |
-| - creates review definitions via Graph API patterns            |
+| - prepares review definitions via Microsoft Graph patterns     |
 | - sets cadence per risk tier (30 / 90 / 180 days)              |
 | - assigns site owner as reviewer                               |
 +-----------+----------------------+-----------------------------+
@@ -42,9 +42,9 @@ Solution 18 provides a documentation-first but implementation-ready pattern for 
             v
 +---------------------------------------------------------------+
 | Apply-ReviewDecisions.ps1                                      |
-| - applies deny decisions                                       |
-| - removes access from SharePoint sites                         |
-| - logs all actions to evidence                                 |
+| - applies deny decisions on the reviewed Microsoft Entra resource |
+| - records group or access-package membership outcomes that may affect SharePoint access |
+| - logs applied actions to evidence                             |
 +--------------------------+------------------------------------+
                            |
                            v
@@ -61,23 +61,23 @@ Solution 18 provides a documentation-first but implementation-ready pattern for 
 
 1. `Deploy-Solution.ps1` loads `default-config.json` and the selected governance tier.
 2. The deployment process checks that solution 02-oversharing-risk-assessment has exported risk-scored site output.
-3. `New-AccessReview.ps1` reads risk scores and creates Entra ID Access Review definitions via `POST /identityGovernance/accessReviews/definitions`.
-4. Reviews are created in priority order: HIGH-risk sites first, then MEDIUM, then LOW.
-5. Review scope targets SharePoint site members and guests; reviewer is set to the site owner.
+3. `New-AccessReview.ps1` reads risk scores and creates Microsoft Entra ID Access Review definitions via `POST /identityGovernance/accessReviews/definitions`.
+4. Reviews are created in priority order: resources mapped to HIGH-risk sites first, then MEDIUM, then LOW.
+5. Review scope targets Microsoft Entra group direct or transitive members, or access package assignments, that grant SharePoint access; reviewer is set to the resource owner or documented fallback reviewer.
 6. Review cadence and duration are driven by `config/review-schedule.json` settings per risk tier.
 7. `Get-ReviewResults.ps1` queries `GET /identityGovernance/accessReviews/definitions/{id}/instances/{id}/decisions` for pending and completed decisions.
 8. Reviews approaching expiry (within 48 hours) are flagged for escalation.
-9. `Apply-ReviewDecisions.ps1` applies deny decisions via `POST .../decisions/apply` and logs all actions.
+9. `Apply-ReviewDecisions.ps1` applies deny decisions via `POST /identityGovernance/accessReviews/definitions/{accessReviewScheduleDefinitionId}/instances/{accessReviewInstanceId}/applyDecisions` and logs applied actions.
 10. `Export-Evidence.ps1` packages review definitions, decisions, and applied actions into schema-aligned JSON plus SHA-256 checksum files.
 
 ## Review Lifecycle
 
 ### Creation Phase
 
-Access reviews are created for each SharePoint site based on its risk tier. The review definition includes:
+Access reviews are created for each Microsoft Entra resource mapped to a SharePoint site based on its risk tier. The review definition includes:
 
-- **Scope**: Site members and guest users
-- **Reviewer**: Site owner (resolved from SharePoint site properties), with compliance officer fallback
+- **Scope**: Group direct or transitive members, guest-filtered group members when configured, or access package assignments
+- **Reviewer**: Resource owner or site owner mapping, with compliance officer fallback
 - **Duration**: 7 days for HIGH, 14 days for MEDIUM and LOW
 - **Recurrence**: Every 30, 90, or 180 days depending on risk tier
 
@@ -94,7 +94,7 @@ Active reviews are monitored for:
 Completed review decisions are processed:
 
 - **Approve** decisions maintain current access
-- **Deny** decisions trigger access removal from the SharePoint site
+- **Deny** decisions are applied to the reviewed Microsoft Entra resource, such as group membership or an access package assignment, and may affect SharePoint access when that resource grants site access
 - All decisions are logged to the evidence file with timestamps and reviewer identity
 
 ## Risk Tier Cadence
@@ -120,7 +120,7 @@ The deployment script checks for upstream output before writing the local deploy
 `Invoke-RiskTriagedReviews.ps1` coordinates the full lifecycle:
 
 1. Read risk scores from solution 02 output
-2. Create access reviews for HIGH-risk sites
+2. Create access reviews for HIGH-risk site-associated Microsoft Entra resources
 3. Collect review results
 4. Apply completed decisions
 5. Export evidence package
