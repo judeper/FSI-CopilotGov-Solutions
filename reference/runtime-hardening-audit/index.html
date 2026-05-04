@@ -1,0 +1,2713 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services">
+      
+      
+      
+        <link rel="canonical" href="https://judeper.github.io/FSI-CopilotGov-Solutions/reference/runtime-hardening-audit/">
+      
+      
+        <link rel="prev" href="../shared-modules-contract/">
+      
+      
+        <link rel="next" href="../runtime-hardening-findings/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Runtime Hardening Audit - FSI Copilot Governance Solutions</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#runtime-hardening-audit" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-header__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FSI Copilot Governance Solutions
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Runtime Hardening Audit
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operational-handbook/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../solutions/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Solutions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/managed-identity-standard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Disclaimer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-nav__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    FSI Copilot Governance Solutions
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../getting-started/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operational-handbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../solutions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solutions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/managed-identity-standard/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-classification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Classification Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examination-readiness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examination Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shared-modules-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Modules Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Audit
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#target-solutions-reviewed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Solutions Reviewed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-shared-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Shared Modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-1-graph-scanning-claims-vs-actual-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 1: Graph Scanning Claims vs. Actual Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 1: Graph Scanning Claims vs. Actual Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-01-readme-line-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 01 README Line 11
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-2-purviewcompliance-scanning-claims-vs-actual-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 2: Purview/Compliance Scanning Claims vs. Actual Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 2: Purview/Compliance Scanning Claims vs. Actual Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-01-scanning-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 01 Scanning Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-3-automation-deployment-stubs-mischaracterized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 3: Automation &amp; Deployment Stubs Mischaracterized
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 3: Automation &amp; Deployment Stubs Mischaracterized">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-11-deployment-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 11 Deployment Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-4-dashboard-aggregation-power-bi-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 4: Dashboard Aggregation &amp; Power BI Claims
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 4: Dashboard Aggregation &amp; Power BI Claims">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-12-dashboard-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 12 "Dashboard" Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-5-service-health-polling-dora-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 5: Service Health Polling &amp; DORA Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 5: Service Health Polling &amp; DORA Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#partially-accurate-but-clarification-needed-solution-13-service-health-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partially Accurate but Clarification Needed: Solution 13 Service Health Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-6-shared-module-stub-semantics-not-clarified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 6: Shared Module Stub Semantics Not Clarified
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 6: Shared Module Stub Semantics Not Clarified">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#missing-disclaimer-shared-module-functions-as-stubs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Disclaimer: Shared Module Functions as Stubs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-7-existing-tests-what-they-validate-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 7: Existing Tests — What They Validate &amp; Gaps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 7: Existing Tests — What They Validate &amp; Gaps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tests-do-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests DO Validate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-do-not-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests DO NOT Validate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-8-recommended-validation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 8: Recommended Validation Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 8: Recommended Validation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-semantic-audit-claims-vs-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Semantic Audit — Claims vs. Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-dataverse-write-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Dataverse Write Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-power-automate-deployment-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Power Automate Deployment Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-purviewcompliance-scanning-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Purview/Compliance Scanning Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-license-assignment-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. License Assignment Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-service-health-polling-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Service Health Polling Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-9-smoke-check-runtime-enforcement-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 9: Smoke Check / Runtime Enforcement Gaps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 9: Smoke Check / Runtime Enforcement Gaps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-validation-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Validation Depth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-test-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Test Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-10-implementation-map-action-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 10: Implementation Map &amp; Action Items
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 10: Implementation Map &amp; Action Items">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-1-readme-claim-accuracy-high-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 1: README Claim Accuracy (High Risk)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-2-architecture-documentation-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 2: Architecture Documentation Accuracy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-3-shared-module-help-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 3: Shared Module Help Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-4-test-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 4: Test Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-5-documentation-clarifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 5: Documentation Clarifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-table-overstated-semantics-by-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary Table: Overstated Semantics by Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-commands-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Commands Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-hardening-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Findings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disclaimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#target-solutions-reviewed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Solutions Reviewed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-shared-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Shared Modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-1-graph-scanning-claims-vs-actual-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 1: Graph Scanning Claims vs. Actual Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 1: Graph Scanning Claims vs. Actual Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-01-readme-line-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 01 README Line 11
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-2-purviewcompliance-scanning-claims-vs-actual-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 2: Purview/Compliance Scanning Claims vs. Actual Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 2: Purview/Compliance Scanning Claims vs. Actual Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-01-scanning-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 01 Scanning Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-3-automation-deployment-stubs-mischaracterized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 3: Automation &amp; Deployment Stubs Mischaracterized
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 3: Automation &amp; Deployment Stubs Mischaracterized">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-11-deployment-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 11 Deployment Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-4-dashboard-aggregation-power-bi-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 4: Dashboard Aggregation &amp; Power BI Claims
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 4: Dashboard Aggregation &amp; Power BI Claims">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overstated-solution-12-dashboard-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overstated: Solution 12 "Dashboard" Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-5-service-health-polling-dora-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 5: Service Health Polling &amp; DORA Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 5: Service Health Polling &amp; DORA Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#partially-accurate-but-clarification-needed-solution-13-service-health-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partially Accurate but Clarification Needed: Solution 13 Service Health Claims
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-6-shared-module-stub-semantics-not-clarified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 6: Shared Module Stub Semantics Not Clarified
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 6: Shared Module Stub Semantics Not Clarified">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#missing-disclaimer-shared-module-functions-as-stubs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Disclaimer: Shared Module Functions as Stubs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-7-existing-tests-what-they-validate-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 7: Existing Tests — What They Validate &amp; Gaps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 7: Existing Tests — What They Validate &amp; Gaps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tests-do-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests DO Validate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-do-not-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests DO NOT Validate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-8-recommended-validation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 8: Recommended Validation Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 8: Recommended Validation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-semantic-audit-claims-vs-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Semantic Audit — Claims vs. Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-dataverse-write-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Dataverse Write Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-power-automate-deployment-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Power Automate Deployment Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-purviewcompliance-scanning-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Purview/Compliance Scanning Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-license-assignment-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. License Assignment Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-service-health-polling-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Service Health Polling Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-9-smoke-check-runtime-enforcement-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 9: Smoke Check / Runtime Enforcement Gaps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 9: Smoke Check / Runtime Enforcement Gaps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-validation-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Validation Depth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-test-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Test Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-10-implementation-map-action-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 10: Implementation Map &amp; Action Items
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 10: Implementation Map &amp; Action Items">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-1-readme-claim-accuracy-high-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 1: README Claim Accuracy (High Risk)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-2-architecture-documentation-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 2: Architecture Documentation Accuracy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-3-shared-module-help-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 3: Shared Module Help Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-4-test-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 4: Test Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-5-documentation-clarifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority 5: Documentation Clarifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-table-overstated-semantics-by-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary Table: Overstated Semantics by Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-commands-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Commands Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="runtime-hardening-audit">Runtime Hardening Audit<a class="headerlink" href="#runtime-hardening-audit" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Note:</strong> This document was produced during the v0.2.0–v0.2.1 hardening cycle. The findings listed below informed the semantic corrections applied in v0.2.1. This document is retained for audit trail purposes.</p>
+</blockquote>
+<h2 id="target-solutions-reviewed">Target Solutions Reviewed<a class="headerlink" href="#target-solutions-reviewed" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Solution 01: Copilot Readiness Assessment Scanner</li>
+<li>Solution 04: FINRA Supervision Workflow</li>
+<li>Solution 11: Risk-Tiered Rollout Automation</li>
+<li>Solution 12: Regulatory Compliance Dashboard</li>
+<li>Solution 13: DORA Operational Resilience Monitor</li>
+</ul>
+<h2 id="key-shared-modules">Key Shared Modules<a class="headerlink" href="#key-shared-modules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>scripts/common/GraphAuth.psm1</code></li>
+<li><code>scripts/common/EvidenceExport.psm1</code></li>
+<li><code>scripts/common/DataverseHelpers.psm1</code></li>
+<li><code>scripts/common/IntegrationConfig.psm1</code></li>
+<li><code>scripts/common/PurviewHelpers.psm1</code></li>
+<li><code>scripts/common/EntraHelpers.psm1</code></li>
+<li><code>scripts/common/TeamsNotification.psm1</code></li>
+</ul>
+<hr />
+<h2 id="category-1-graph-scanning-claims-vs-actual-implementation">Category 1: Graph Scanning Claims vs. Actual Implementation<a class="headerlink" href="#category-1-graph-scanning-claims-vs-actual-implementation" title="Permanent link">&para;</a></h2>
+<h3 id="overstated-solution-01-readme-line-11">Overstated: Solution 01 README Line 11<a class="headerlink" href="#overstated-solution-01-readme-line-11" title="Permanent link">&para;</a></h3>
+<!-- fsi-lang:allow="performs graph api scanning" reason="audit document quotes overstated phrasing verbatim to recommend correction" -->
+<p><strong>Claim:</strong> "Performs Graph API-based scanning across licensing, identity, security, compliance, governance, and Copilot configuration domains."</p>
+<p><strong>Reality:</strong></p>
+<ul>
+<li><code>Monitor-Compliance.ps1</code> calls <code>New-CopilotGovGraphContext</code> (lines 335–340) but this is a STUB</li>
+<li><code>GraphAuth.psm1</code> only returns a <code>pscustomobject</code> with <code>TenantId</code> and <code>Scopes</code> — no actual Graph calls</li>
+<li>All domain scans (<code>Invoke-LicensingScan</code>, <code>Invoke-IdentityScan</code>, etc.) return HARDCODED scores: 82, 74, 76, 84, 67, 80</li>
+<li>Lines 221–329: Each domain function returns test data with placeholder issues</li>
+<li>README Line 80: "Live Microsoft 365 and Purview API calls still require tenant-specific authentication wiring"</li>
+</ul>
+<p><strong>Files to inspect/change:</strong></p>
+<ul>
+<li><code>solutions/01-copilot-readiness-scanner/README.md</code> (Line 11)</li>
+<li><code>solutions/01-copilot-readiness-scanner/docs/architecture.md</code> (Lines 68–71)</li>
+<li><code>scripts/common/GraphAuth.psm1</code> (Entire file — add clarifying comment)</li>
+</ul>
+<p><strong>Validation command:</strong></p>
+<p>Grep all <code>Monitor-Compliance.ps1</code> files for live Graph invocations (should find only stub placeholders):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">grep</span> <span class="n">-r</span> <span class="s2">&quot;Invoke-GraphRequest|Get-MgDirectoryObject|Get-MgUser|Get-MgSubscribedSku&quot;</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/</span><span class="n">Monitor-Compliance</span><span class="p">.</span><span class="n">ps1</span>
+</code></pre></div>
+<hr />
+<h2 id="category-2-purviewcompliance-scanning-claims-vs-actual-implementation">Category 2: Purview/Compliance Scanning Claims vs. Actual Implementation<a class="headerlink" href="#category-2-purviewcompliance-scanning-claims-vs-actual-implementation" title="Permanent link">&para;</a></h2>
+<h3 id="overstated-solution-01-scanning-claims">Overstated: Solution 01 Scanning Claims<a class="headerlink" href="#overstated-solution-01-scanning-claims" title="Permanent link">&para;</a></h3>
+<p><strong>Claim:</strong> Domain scan functions perform Purview compliance scan, DLP policy coverage checks, sensitivity label reviews.</p>
+<p><strong>Reality:</strong></p>
+<ul>
+<li><code>Invoke-PurviewScan</code> (lines 274–290) returns hardcoded score of 84</li>
+<li>No actual Purview API calls; placeholder issues only</li>
+<li><code>PurviewHelpers.psm1</code> only contains <code>New-PurviewAssessmentRecord</code> (creates metadata, not actual assessments)</li>
+<li>README Line 81: "Sensitivity label taxonomy quality cannot be fully validated from metadata alone and still requires compliance owner review"</li>
+</ul>
+<p><strong>Files to inspect/change:</strong></p>
+<ul>
+<li><code>solutions/01-copilot-readiness-scanner/scripts/Monitor-Compliance.ps1</code> (Lines 274–290)</li>
+<li><code>scripts/common/PurviewHelpers.psm1</code> (add disclaimer in help)</li>
+</ul>
+<p><strong>Validation command:</strong></p>
+<p>Verify <code>PurviewHelpers</code> only builds records, doesn't scan:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">grep</span> <span class="n">-n</span> <span class="s2">&quot;Purview|Compliance|DLP|Label&quot;</span> <span class="n">scripts</span><span class="p">/</span><span class="n">common</span><span class="p">/</span><span class="n">PurviewHelpers</span><span class="p">.</span><span class="n">psm1</span>
+</code></pre></div>
+<hr />
+<h2 id="category-3-automation-deployment-stubs-mischaracterized">Category 3: Automation &amp; Deployment Stubs Mischaracterized<a class="headerlink" href="#category-3-automation-deployment-stubs-mischaracterized" title="Permanent link">&para;</a></h2>
+<h3 id="overstated-solution-11-deployment-claims">Overstated: Solution 11 Deployment Claims<a class="headerlink" href="#overstated-solution-11-deployment-claims" title="Permanent link">&para;</a></h3>
+<!-- fsi-lang:allow="sequences license assignment" reason="audit document quotes overstated phrasing verbatim to recommend correction" -->
+<p><strong>Claim:</strong> "Risk-tiered Rollout Automation sequences Copilot license assignment" with "License Assigner" and "wave orchestration."</p>
+<p><strong>Status Header:</strong> "Detailed design and deployment stubs"</p>
+<p><strong>Reality:</strong></p>
+<ul>
+<li><code>Deploy-Solution.ps1</code> is a manifest generator, NOT a deployment orchestrator</li>
+<li>Lines 28, 289: Scripts are "documentation-first implementation stub" and "does not call Microsoft Graph directly"</li>
+<li><code>TriggerLicenseAssignment</code> switch stages actions but never executes them</li>
+<li>No actual license assignments occur</li>
+<li>Power Automate flows are "documented as the approval layer" but not deployed</li>
+</ul>
+<p><strong>Files to inspect/change:</strong></p>
+<ul>
+<li><code>solutions/11-risk-tiered-rollout/README.md</code> (Lines 3, 9, 27–28, 123–126)</li>
+<li><code>solutions/11-risk-tiered-rollout/docs/architecture.md</code> (Lines 22–47 — architecture diagram)</li>
+<li><code>solutions/11-risk-tiered-rollout/scripts/Deploy-Solution.ps1</code> (Line 10 — clarify in help)</li>
+</ul>
+<p><strong>Validation command:</strong></p>
+<p>Search for live license assignment code (should find zero):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">grep</span> <span class="n">-r</span> <span class="s2">&quot;Set-MgUserLicense|Update-MgDirectorySettingTemplate&quot;</span> <span class="n">solutions</span><span class="p">/</span><span class="n">11</span><span class="p">*/</span><span class="n">scripts</span><span class="p">/</span>
+</code></pre></div>
+<hr />
+<h2 id="category-4-dashboard-aggregation-power-bi-claims">Category 4: Dashboard Aggregation &amp; Power BI Claims<a class="headerlink" href="#category-4-dashboard-aggregation-power-bi-claims" title="Permanent link">&para;</a></h2>
+<h3 id="overstated-solution-12-dashboard-claims">Overstated: Solution 12 "Dashboard" Claims<a class="headerlink" href="#overstated-solution-12-dashboard-claims" title="Permanent link">&para;</a></h3>
+<p><strong>Claim:</strong> "Regulatory Compliance Dashboard aggregates evidence from upstream solutions into…Power BI."</p>
+<p><strong>Reality:</strong></p>
+<ul>
+<li>README Line 114: "Power BI assets are documentation-led in this repository; the <code>.pbix</code> and <code>.pbit</code> binaries are intentionally not stored here"</li>
+<li><code>Deploy-Solution.ps1</code> generates Dataverse table stubs and seed JSON, not actual connections</li>
+<li><code>RCD-EvidenceAggregator</code> and <code>RCD-FreshnessMonitor</code> flows are documented but not created by scripts</li>
+<li>Dataverse writes are described but not invoked (no Dataverse API calls in scripts)</li>
+</ul>
+<p><strong>Files to inspect/change:</strong></p>
+<ul>
+<li><code>solutions/12-regulatory-compliance-dashboard/README.md</code> (Lines 8, 35–36, 112–116)</li>
+<li><code>solutions/12-regulatory-compliance-dashboard/docs/architecture.md</code> (Lines 5–7, 58–76)</li>
+<li><code>solutions/12-regulatory-compliance-dashboard/scripts/Deploy-Solution.ps1</code> (Lines 8–9 help text)</li>
+</ul>
+<p><strong>Validation command:</strong></p>
+<p>Check for actual Dataverse CRUD operations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">grep</span> <span class="n">-r</span> <span class="s2">&quot;New-DataverseRecord|Update-DataverseTable|Invoke-DataverseAPI&quot;</span> <span class="n">solutions</span><span class="p">/</span><span class="n">12</span><span class="p">*/</span><span class="n">scripts</span><span class="p">/</span>
+</code></pre></div>
+<hr />
+<h2 id="category-5-service-health-polling-dora-monitoring">Category 5: Service Health Polling &amp; DORA Monitoring<a class="headerlink" href="#category-5-service-health-polling-dora-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="partially-accurate-but-clarification-needed-solution-13-service-health-claims">Partially Accurate but Clarification Needed: Solution 13 Service Health Claims<a class="headerlink" href="#partially-accurate-but-clarification-needed-solution-13-service-health-claims" title="Permanent link">&para;</a></h3>
+<p><strong>Claim (Architecture.md Line 54):</strong> "Microsoft Graph service communications…retrieves Microsoft 365 service-health records."</p>
+<p><strong>Reality:</strong></p>
+<ul>
+<li><code>Monitor-Compliance.ps1</code> includes comment: "The repository implementation uses a local stub for the Microsoft Graph call so the script remains testable"</li>
+<li>Line 65: "Service Health Poller" is described as polling but implementation is stub-only</li>
+<li>No actual endpoint call in v0.1.0</li>
+<li>README Line 100: "DRM is primarily a monitoring and evidence solution"</li>
+<li>Limits section (Lines 100–104): "Control 2.7 remains monitor-only until tenant geo settings…are connected"; "Control 4.11 remains monitor-only until a Microsoft Sentinel…is provisioned outside this solution"</li>
+</ul>
+<p><strong>Files to inspect/change:</strong></p>
+<ul>
+<li><code>solutions/13-dora-resilience-monitor/README.md</code> (Lines 100–104)</li>
+<li><code>solutions/13-dora-resilience-monitor/scripts/Monitor-Compliance.ps1</code> (Lines 1–39 help text should clarify stub nature)</li>
+<li><code>solutions/13-dora-resilience-monitor/docs/architecture.md</code> (Lines 54–65 Service Health Poller section)</li>
+</ul>
+<p><strong>Validation command:</strong></p>
+<p>Verify no live Graph health calls:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">grep</span> <span class="n">-r</span> <span class="s2">&quot;ServiceHealth.Read|healthOverviews|Invoke-MgGraphRequest&quot;</span> <span class="n">solutions</span><span class="p">/</span><span class="n">13</span><span class="p">*/</span><span class="n">scripts</span><span class="p">/</span>
+</code></pre></div>
+<hr />
+<h2 id="category-6-shared-module-stub-semantics-not-clarified">Category 6: Shared Module Stub Semantics Not Clarified<a class="headerlink" href="#category-6-shared-module-stub-semantics-not-clarified" title="Permanent link">&para;</a></h2>
+<h3 id="missing-disclaimer-shared-module-functions-as-stubs">Missing Disclaimer: Shared Module Functions as Stubs<a class="headerlink" href="#missing-disclaimer-shared-module-functions-as-stubs" title="Permanent link">&para;</a></h3>
+<p><strong>Files to inspect/change:</strong></p>
+<ol>
+<li><strong><code>GraphAuth.psm1</code></strong></li>
+<li>Function: <code>New-CopilotGovGraphContext</code></li>
+<li>Current: Returns metadata object only</li>
+<li>Issue: Help text absent; implies Graph connection created</li>
+<li>
+<p>Fix: Add help with <code>.DESCRIPTION</code> clarifying this is a context stub</p>
+</li>
+<li>
+<p><strong><code>EvidenceExport.psm1</code></strong></p>
+</li>
+<li>Lines 247–331: <code>Export-SolutionEvidencePackage</code></li>
+<li>Issue: Refers to artifact paths but doesn't validate actual data collection</li>
+<li>
+<p>Validation: <code>Test-CopilotGovEvidencePackage</code> (lines 121–244) only validates schema/hash, not data freshness</p>
+</li>
+<li>
+<p><strong><code>IntegrationConfig.psm1</code></strong></p>
+</li>
+<li>Status scores (lines 9–15) map control status to numbers, but source solutions don't actually execute controls</li>
+<li>
+<p>Issue: Scores imply validated implementation state, but upstream scripts provide no real control evidence</p>
+</li>
+<li>
+<p><strong><code>DataverseHelpers.psm1</code></strong></p>
+</li>
+<li><code>New-DataverseTableContract</code>: Creates contract only, no table creation or API call</li>
+<li>
+<p>Issue: Name implies operational table, but it's metadata only</p>
+</li>
+<li>
+<p><strong><code>PurviewHelpers.psm1</code></strong></p>
+</li>
+<li><code>New-PurviewAssessmentRecord</code>: Creates record structure only</li>
+<li>Issue: Implies assessment occurred; no actual Purview scan</li>
+</ol>
+<hr />
+<h2 id="category-7-existing-tests-what-they-validate-gaps">Category 7: Existing Tests — What They Validate &amp; Gaps<a class="headerlink" href="#category-7-existing-tests-what-they-validate-gaps" title="Permanent link">&para;</a></h2>
+<h3 id="tests-do-validate">Tests DO Validate<a class="headerlink" href="#tests-do-validate" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ File structure and presence (all solutions)</li>
+<li>✓ Configuration JSON valid and contains expected fields</li>
+<li>✓ PowerShell syntax errors</li>
+<li>✓ SHA-256 hashing functions (<code>EvidenceExport.psm1</code>)</li>
+<li>✓ Evidence schema compliance (<code>validate-evidence.ps1</code>)</li>
+</ul>
+<h3 id="tests-do-not-validate">Tests DO NOT Validate<a class="headerlink" href="#tests-do-not-validate" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✗ Live API connectivity or actual data collection</li>
+<li>✗ Graph scanning actually occurs (vs. stub)</li>
+<li>✗ Dataverse operations execute</li>
+<li>✗ Power Automate flows deployment</li>
+<li>✗ Service health polling executes</li>
+<li>✗ Data freshness or quality</li>
+</ul>
+<p><strong>Test files:</strong></p>
+<ul>
+<li><code>solutions/01-copilot-readiness-scanner/tests/01-copilot-readiness-scanner.Tests.ps1</code></li>
+<li><code>solutions/12-regulatory-compliance-dashboard/tests/12-regulatory-compliance-dashboard.Tests.ps1</code></li>
+<li><code>solutions/13-dora-resilience-monitor/tests/13-dora-resilience-monitor.Tests.ps1</code></li>
+<li><code>scripts/validate-evidence.ps1</code> (repository-wide evidence validation)</li>
+</ul>
+<hr />
+<h2 id="category-8-recommended-validation-commands">Category 8: Recommended Validation Commands<a class="headerlink" href="#category-8-recommended-validation-commands" title="Permanent link">&para;</a></h2>
+<h3 id="1-semantic-audit-claims-vs-reality">1. Semantic Audit — Claims vs. Reality<a class="headerlink" href="#1-semantic-audit-claims-vs-reality" title="Permanent link">&para;</a></h3>
+<p>Find all <code>Monitor-Compliance.ps1</code> actual data sources:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/</span><span class="n">Monitor-Compliance</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;=== $_ ===&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$_</span> <span class="n">-Pattern</span> <span class="s1">&#39;Invoke-Graph|Get-Mg|Invoke-RestMethod.*graph&#39;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="p">}</span>
+</code></pre></div>
+<p><strong>Expected:</strong> Only stub/placeholder patterns (<code>New-CopilotGovGraphContext</code>, mock data returns).</p>
+<h3 id="2-dataverse-write-validation">2. Dataverse Write Validation<a class="headerlink" href="#2-dataverse-write-validation" title="Permanent link">&para;</a></h3>
+<p>Search for actual Dataverse operations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;New-CrmRecord|Update-CrmRecord|Set-Dataverse|Invoke-DataverseAPI|DataverseClient&#39;</span>
+</code></pre></div>
+<p><strong>Expected:</strong> Results should reference documentation only, not live operations.</p>
+<h3 id="3-power-automate-deployment-validation">3. Power Automate Deployment Validation<a class="headerlink" href="#3-power-automate-deployment-validation" title="Permanent link">&para;</a></h3>
+<p>Check for flow deployment code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;New-AdminFlow|New-PowerAutomateFlow|Publish-Solution|pac flow create&#39;</span>
+</code></pre></div>
+<p><strong>Expected:</strong> Zero results (all flows are documentation-first).</p>
+<h3 id="4-purviewcompliance-scanning-validation">4. Purview/Compliance Scanning Validation<a class="headerlink" href="#4-purviewcompliance-scanning-validation" title="Permanent link">&para;</a></h3>
+<p>Search for Purview API calls:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;Purview|Compliance|DLP|Get-Label|Invoke-Purview&#39;</span>
+</code></pre></div>
+<p><strong>Expected:</strong> Only <code>PurviewHelpers</code> module references, no actual API calls.</p>
+<h3 id="5-license-assignment-validation">5. License Assignment Validation<a class="headerlink" href="#5-license-assignment-validation" title="Permanent link">&para;</a></h3>
+<p>Search for license assignment code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;Set-MgUserLicense|Assign-License|Update-.*License&#39;</span>
+</code></pre></div>
+<p><strong>Expected:</strong> Zero results for solution 11 (orchestration only, no actual assignment).</p>
+<h3 id="6-service-health-polling-validation">6. Service Health Polling Validation<a class="headerlink" href="#6-service-health-polling-validation" title="Permanent link">&para;</a></h3>
+<p>Search for Graph health endpoint calls:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;healthOverviews|serviceHealth|health.*endpoint&#39;</span>
+</code></pre></div>
+<p><strong>Expected:</strong> Architecture documentation only, no live calls in v0.1.0.</p>
+<hr />
+<h2 id="category-9-smoke-check-runtime-enforcement-gaps">Category 9: Smoke Check / Runtime Enforcement Gaps<a class="headerlink" href="#category-9-smoke-check-runtime-enforcement-gaps" title="Permanent link">&para;</a></h2>
+<h3 id="current-validation-depth">Current Validation Depth<a class="headerlink" href="#current-validation-depth" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✓ Syntax checking</li>
+<li>✓ JSON schema validation</li>
+<li>✓ Hash integrity verification</li>
+<li>✓ File structure</li>
+</ul>
+<h3 id="missing-validation">Missing Validation<a class="headerlink" href="#missing-validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✗ "Freshness check" tests — validates that evidence was actually collected vs. hardcoded/stub</li>
+<li>✗ "Implementation verification" — confirms stub functions aren't called as if they're live</li>
+<li>✗ "Data quality audit" — ensures monitoring output reflects real collection, not test data</li>
+<li>✗ "Dependency binding" — confirms Dataverse, Power Automate, Power BI are actually connected</li>
+</ul>
+<h3 id="recommended-test-extensions">Recommended Test Extensions<a class="headerlink" href="#recommended-test-extensions" title="Permanent link">&para;</a></h3>
+<p><strong>File 1: Create <code>scripts/validate-implementation-depth.ps1</code></strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># New validation to detect oversold features</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c"># Check: All domain scan functions return non-placeholder data</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c"># Check: No hardcoded test scores appear in regulated tier</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Check: Service health polling actually queries Graph</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c"># Check: Dataverse writes are executed, not stubbed</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c"># Check: Evidence artifacts contain real data, not template examples</span>
+</code></pre></div>
+<p><strong>File 2: Extend all solution tests to include "liveness check"</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># In each solution&#39;s .Tests.ps1:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">It</span> <span class="s1">&#39;monitor-compliance provides real data, not stubbed scores&#39;</span> <span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  <span class="c"># Run Monitor-Compliance in test mode</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  <span class="c"># Validate output contains non-test tenant data</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  <span class="c"># For baseline tier, allows mock; regulated tier must validate real collection</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">It</span> <span class="s1">&#39;export-evidence produces real artifact, not template&#39;</span> <span class="p">{</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  <span class="c"># Run Export-Evidence</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  <span class="c"># Parse artifact JSON</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  <span class="c"># Validate metadata.exportedAt is recent</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  <span class="c"># Validate artifacts array is non-empty and references real files</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>File 3: Create smoke check for service dependencies</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Validate Dataverse connectivity when tier=regulated</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># Validate Power BI dataset refresh schedule is configured</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c"># Validate Power Automate flows are published (not just documented)</span>
+</code></pre></div>
+<hr />
+<h2 id="category-10-implementation-map-action-items">Category 10: Implementation Map &amp; Action Items<a class="headerlink" href="#category-10-implementation-map-action-items" title="Permanent link">&para;</a></h2>
+<h3 id="priority-1-readme-claim-accuracy-high-risk">Priority 1: README Claim Accuracy (High Risk)<a class="headerlink" href="#priority-1-readme-claim-accuracy-high-risk" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Issue</th>
+<th>Action</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>solutions/01-copilot-readiness-scanner/README.md</code></td>
+<td>Line 11 overstates "Graph API-based scanning"</td>
+<td>Clarify: "Provides structure for Graph scanning; current version uses test data"</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td><code>solutions/04-finra-supervision-workflow/README.md</code></td>
+<td>Line 7 uses "routing" as if live (but actually docs-first)</td>
+<td>Already accurate (says "documentation-first")</td>
+<td>OK</td>
+</tr>
+<tr>
+<td><code>solutions/11-risk-tiered-rollout/README.md</code></td>
+<td>Line 9 implies license assignment occurs</td>
+<td>Clarify: "Stages manifest for license assignment; requires manual execution"</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td><code>solutions/12-regulatory-compliance-dashboard/README.md</code></td>
+<td>Line 8 implies "aggregates evidence" into Power BI</td>
+<td>Clarify: "Documents aggregation pattern; Power BI assets are documentation-first"</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td><code>solutions/13-dora-resilience-monitor/README.md</code></td>
+<td>Line 20 says "Captures workload health snapshots through Graph"</td>
+<td>Clarify: "Designed for service health polling; v0.1.0 uses stub data"</td>
+<td>MEDIUM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="priority-2-architecture-documentation-accuracy">Priority 2: Architecture Documentation Accuracy<a class="headerlink" href="#priority-2-architecture-documentation-accuracy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Section</th>
+<th>Issue</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>solutions/01-*/docs/architecture.md</code></td>
+<td>Lines 68–71 Data Flow</td>
+<td>Claims "call Microsoft Graph…Purview-aligned services"</td>
+<td>Revise to: "Script structure supports Graph/Purview calls; current version uses sample data"</td>
+</tr>
+<tr>
+<td><code>solutions/12-*/docs/architecture.md</code></td>
+<td>Lines 20–77 Power Automate Flows</td>
+<td>Describes RCD-EvidenceAggregator/Monitor as if deployed</td>
+<td>Confirm already documents as "described here…not deployed automatically"</td>
+</tr>
+<tr>
+<td><code>solutions/13-*/docs/architecture.md</code></td>
+<td>Lines 54–65 Service Health Poller</td>
+<td>Implies polling occurs</td>
+<td>Add: "v0.1.0 includes polling structure; Graph integration not yet wired"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="priority-3-shared-module-help-text">Priority 3: Shared Module Help Text<a class="headerlink" href="#priority-3-shared-module-help-text" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Function</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scripts/common/GraphAuth.psm1</code></td>
+<td><code>New-CopilotGovGraphContext</code></td>
+<td>Add comment: "Returns context structure; actual authentication deferred to caller implementation"</td>
+</tr>
+<tr>
+<td><code>scripts/common/DataverseHelpers.psm1</code></td>
+<td><code>New-DataverseTableContract</code></td>
+<td>Add comment: "Defines table schema; does not create tables or execute Dataverse operations"</td>
+</tr>
+<tr>
+<td><code>scripts/common/PurviewHelpers.psm1</code></td>
+<td><code>New-PurviewAssessmentRecord</code></td>
+<td>Add comment: "Creates record structure for assessment; does not invoke Purview scan"</td>
+</tr>
+<tr>
+<td><code>scripts/common/IntegrationConfig.psm1</code></td>
+<td>All functions</td>
+<td>Add preamble: "Shared configuration for FSI solutions; supports stub implementations in repository state"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="priority-4-test-expansion">Priority 4: Test Expansion<a class="headerlink" href="#priority-4-test-expansion" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>New Test</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>solutions/01-*/tests/*.Tests.ps1</code></td>
+<td>"Monitoring output is non-placeholder"</td>
+<td>Verify domain scan results are not hardcoded test scores in regulated tier</td>
+</tr>
+<tr>
+<td><code>solutions/12-*/tests/*.Tests.ps1</code></td>
+<td>"Dataverse connectivity validated"</td>
+<td>For regulated tier, confirm actual Dataverse operations (not just manifest)</td>
+</tr>
+<tr>
+<td><code>solutions/13-*/tests/*.Tests.ps1</code></td>
+<td>"Service health polling exercises Graph stub"</td>
+<td>Verify polling function is called; results are testable even if Graph not live</td>
+</tr>
+<tr>
+<td><code>scripts/validate-evidence.ps1</code></td>
+<td>"Evidence artifacts are fresh, not template"</td>
+<td>Check <code>metadata.exportedAt</code> is within 24h of current time</td>
+</tr>
+</tbody>
+</table>
+<h3 id="priority-5-documentation-clarifications">Priority 5: Documentation Clarifications<a class="headerlink" href="#priority-5-documentation-clarifications" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Clarification Needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs/README.md</code> (root)</td>
+<td>Add "Implementation Depth" section clarifying which solutions are live vs. stubs</td>
+</tr>
+<tr>
+<td><code>DEPLOYMENT-GUIDE.md</code></td>
+<td>Add "Connectivity Readiness" section listing which solutions require Graph/Dataverse/Power BI binding</td>
+</tr>
+<tr>
+<td><code>docs/architecture.md</code> (root)</td>
+<td>Diagram showing which solutions actually deploy vs. which are documentation-first</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="summary-table-overstated-semantics-by-solution">Summary Table: Overstated Semantics by Solution<a class="headerlink" href="#summary-table-overstated-semantics-by-solution" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>False/Overstated Claim</th>
+<th>Current State</th>
+<th>Recommended Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>"Performs Graph API-based scanning"</td>
+<td>Stub with test data</td>
+<td>"Provides scanning framework; current version uses sample data for testing"</td>
+</tr>
+<tr>
+<td>04</td>
+<td>"Routes flagged communications"</td>
+<td>Documentation-first flows</td>
+<td>ACCURATE (already labeled doc-first)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>"Sequences Copilot license assignment"</td>
+<td>Manifest generator</td>
+<td>"Prepares wave manifests; requires manual license assignment"</td>
+</tr>
+<tr>
+<td>12</td>
+<td>"Aggregates evidence into Power BI"</td>
+<td>Dataverse schema + doc-first flows</td>
+<td>"Documents aggregation pattern; Power BI bindings are customer-deployed"</td>
+</tr>
+<tr>
+<td>13</td>
+<td>"Monitors M365 service health"</td>
+<td>Stub with test data</td>
+<td>"Provides monitoring structure; v0.1.0 includes Graph integration points"</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="validation-commands-summary">Validation Commands Summary<a class="headerlink" href="#validation-commands-summary" title="Permanent link">&para;</a></h2>
+<p>To run all recommended validations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># 1. Syntax check (existing)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Invoke-Pester</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">tests</span> <span class="n">-Show</span> <span class="n">All</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># 2. Evidence validation (existing)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">.\</span><span class="n">scripts</span><span class="p">\</span><span class="n">validate-evidence</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ConfigurationTier</span> <span class="n">regulated</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c"># 3. NEW: Check for live API calls</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-Recurse</span> <span class="p">|</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;Invoke-GraphRequest|Get-Mg\w+|New-AdminFlow|Set-DataverseRecord&#39;</span> <span class="p">|</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;POSSIBLE LIVE CALL: $_&quot;</span> <span class="p">}</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c"># 4. NEW: Verify hardcoded test scores in Monitor output</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="nb">Get-Content</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">scripts</span><span class="p">/</span><span class="n">Monitor-Compliance</span><span class="p">.</span><span class="n">ps1</span> <span class="p">|</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;BaseScore [0-9]{2}|Score = [0-9]{2}&#39;</span> <span class="p">|</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;STUB DATA: $_&quot;</span> <span class="p">}</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c"># 5. NEW: Check evidence package freshness</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">solutions</span><span class="p">/*/</span><span class="n">artifacts</span><span class="p">/*</span><span class="n">-evidence</span><span class="p">.</span><span class="n">json</span> <span class="p">|</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>    <span class="nv">$json</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>    <span class="nv">$age</span> <span class="p">=</span> <span class="nb">New-TimeSpan</span> <span class="n">-Start</span> <span class="nv">$json</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">exportedAt</span> <span class="n">-End</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span> <span class="o">-gt</span> <span class="n">24</span><span class="p">)</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;STALE: $_ (</span><span class="p">$(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span><span class="p">)</span><span class="s2">h old)&quot;</span> <span class="p">}</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>  <span class="p">}</span>
+</code></pre></div>
+<hr />
+<p><em>END OF AUDIT</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../shared-modules-contract/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Shared Modules Contract">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Shared Modules Contract
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../runtime-hardening-findings/" class="md-footer__link md-footer__link--next" aria-label="Next: Runtime Hardening Findings">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Runtime Hardening Findings
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 FSI Copilot Governance Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

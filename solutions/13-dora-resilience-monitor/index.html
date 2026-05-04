@@ -1,0 +1,2299 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services">
+      
+      
+      
+        <link rel="canonical" href="https://judeper.github.io/FSI-CopilotGov-Solutions/solutions/13-dora-resilience-monitor/">
+      
+      
+        <link rel="prev" href="../23-copilot-studio-lifecycle-tracker/troubleshooting/">
+      
+      
+        <link rel="next" href="architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>DORA Operational Resilience Monitor - FSI Copilot Governance Solutions</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dora-operational-resilience-monitor" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-header__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FSI Copilot Governance Solutions
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DORA Operational Resilience Monitor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operational-handbook/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Solutions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/managed-identity-standard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Disclaimer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-nav__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    FSI Copilot Governance Solutions
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../getting-started/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operational-handbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solutions
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Solutions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-copilot-readiness-scanner/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Readiness and Data Governance
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-finra-supervision-workflow/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security and Compliance Enforcement
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../08-license-governance-roi/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations and Analytics
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regulatory Resilience
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Regulatory Resilience
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Operational Resilience Monitor
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_4_5_1" id="__nav_4_5_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    DORA Operational Resilience Monitor
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="deployment-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="evidence-export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evidence Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../14-communication-compliance-config/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Communication Compliance Configurator
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../15-pages-notebooks-gap-monitor/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copilot Pages and Notebooks Compliance Gap Monitor
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../19-copilot-tuning-governance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copilot Tuning Governance
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../20-generative-ai-model-governance-monitor/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generative AI Model Governance Monitor
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../22-pages-notebooks-retention-tracker/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pages and Notebooks Retention Tracker
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/managed-identity-standard/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disclaimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-solution-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Solution Monitors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regulatory-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regulatory Alignment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evidence-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap-awareness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap Awareness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Solutions
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Regulatory Resilience
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    DORA Operational Resilience Monitor
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="dora-operational-resilience-monitor">DORA Operational Resilience Monitor<a class="headerlink" href="#dora-operational-resilience-monitor" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Status:</strong> Documentation-first scaffold | <strong>Version:</strong> v0.1.1 | <strong>Priority:</strong> P1 | <strong>Track:</strong> D</p>
+<p>⚠️ <strong>Documentation-first repository.</strong> Scripts use representative sample data and do not connect to live Microsoft 365 services. See <a href="../../disclaimer/">Disclaimer</a> and <a href="../../documentation-vs-runnable-assets-guide/">Documentation vs Runnable Assets Guide</a>.</p>
+<p>🌍 <strong>Jurisdictional scope.</strong> DORA (Regulation (EU) 2022/2554) is <strong>EU regulation</strong>. The companion FSI-CopilotGov framework is scoped to <strong>US financial services</strong>. This solution is provided for US-headquartered organizations with EU operations or subsidiaries subject to DORA, and for organizations operating directly in the EU. Organizations operating exclusively in the US can disregard this solution. Use of this solution does not on its own satisfy DORA obligations — coordinate with EU legal counsel for jurisdiction-specific requirements.</p>
+</blockquote>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The DORA Operational Resilience Monitor (DRM) provides an operational-resilience monitoring and evidence pattern for Microsoft 365 Copilot in regulated financial-services environments. The repository implementation uses a local stub or operator-supplied sample payload for Copilot-dependent service health, classifies ICT incidents against a DORA-aligned incident taxonomy, records resilience test evidence, and publishes operational-risk dashboard feeds that can be consumed by solution 12-regulatory-compliance-dashboard. DRM supports compliance with DORA, OCC 2011-12, and the FFIEC IT Handbook by improving visibility, escalation readiness, and evidence quality for Copilot dependencies.</p>
+<h2 id="what-this-solution-monitors">What This Solution Monitors<a class="headerlink" href="#what-this-solution-monitors" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Microsoft 365 service health for Exchange Online, SharePoint Online, Microsoft Teams, Microsoft Graph, Microsoft 365 Apps, and Microsoft Copilot</li>
+<li>Incident classification using a DORA ICT incident severity model with major, significant, and minor outcomes</li>
+<li>Resilience test schedules, RTO and RPO targets, and recorded outcomes for annual operational-resilience exercises</li>
+<li>Operational-risk dashboard feeds used by 12-regulatory-compliance-dashboard for control rollup and evidence freshness reporting</li>
+</ul>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service health polling pattern</td>
+<td>Provides a monitoring framework for service health assessment; current version uses representative sample data and requires Microsoft Graph integration for live deployment</td>
+</tr>
+<tr>
+<td>DORA incident classification</td>
+<td>Maps outages and degradations to major, significant, or minor ICT incident outcomes for examiner-ready incident triage</td>
+</tr>
+<tr>
+<td>Resilience test tracking</td>
+<td>Records annual exercise dates, recovery objectives, outcomes, and reminders for Copilot dependency testing</td>
+</tr>
+<tr>
+<td>Evidence packaging</td>
+<td>Exports JSON artifacts with SHA-256 companion files for service-health-log, incident-register, and resilience-test-results</td>
+</tr>
+<tr>
+<td>Tier-aware deployment</td>
+<td>Applies baseline, recommended, or regulated operating settings for polling cadence, evidence retention, and escalation rigor</td>
+</tr>
+<tr>
+<td>Dashboard integration</td>
+<td>Produces structured control-state outputs that can feed 12-regulatory-compliance-dashboard for enterprise reporting</td>
+</tr>
+<tr>
+<td>Documentation-first automation</td>
+<td>Describes a Power Automate flow pattern for notifications and routing without forcing deployment-time workflow changes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scope-boundaries">Scope Boundaries<a class="headerlink" href="#scope-boundaries" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Important:</strong> This solution provides governance scaffolds, templates, and documentation-first
+scripts. It does not modify tenant state or connect to live services in its repository form.</p>
+</blockquote>
+<ul>
+<li>❌ Does not poll Microsoft 365 service health APIs (scripts use a local stub with representative sample data)</li>
+<li>❌ Does not connect to Microsoft Sentinel (incident correlation is documented, not integrated)</li>
+<li>❌ Does not execute DORA Article 17 reporting automatically (reporting templates are provided for manual completion)</li>
+<li>❌ Does not deploy Power Automate flows (resilience alerting workflows are documented, not exported)</li>
+<li>❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)</li>
+<li>❌ Does not produce production evidence (evidence packages contain sample data for format validation)</li>
+<li>❌ Does not cover NYDFS Part 500 cybersecurity incident reporting requirements (framework_ids updated, solution content pending)</li>
+<li>❌ Does not cover FINRA 4370 business continuity plan testing requirements (framework_ids updated, solution content pending)</li>
+</ul>
+<blockquote>
+<p><strong>Data classification:</strong> See <a href="../../reference/data-classification/">Data Classification Matrix</a> for residency, retention, and data-class metadata.</p>
+</blockquote>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p>The solution uses PowerShell scripts for deployment, monitoring, and evidence export; configuration files for tier-specific policy; and documentation-first guidance for optional workflow automation. See <a href="architecture/">docs/architecture.md</a> for the component diagram, data flow, integration points, and security considerations.</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Review <a href="prerequisites/">docs/prerequisites.md</a> and confirm Microsoft 365, Entra ID, PowerShell, and network requirements.</li>
+<li>Select the governance tier that matches the target operating model and review <code>config/&lt;tier-name&gt;.json</code> together with <code>config/default-config.json</code>.</li>
+<li>Run <code>scripts\Deploy-Solution.ps1</code> with <code>-WhatIf</code> first to validate the manifest and tier-specific settings.</li>
+<li>Run <code>scripts\Monitor-Compliance.ps1</code> to capture an initial service-health baseline from the local stub or an operator-supplied sample payload and confirm resilience-test status.</li>
+<li>Run <code>scripts\Export-Evidence.ps1</code> to generate the evidence package and verify that each JSON file has a matching <code>.sha256</code> companion.</li>
+<li>Connect the exported control-state output to solution 12-regulatory-compliance-dashboard if enterprise rollup reporting is required.</li>
+</ol>
+<h2 id="solution-components">Solution Components<a class="headerlink" href="#solution-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>README.md</code></td>
+<td>Solution overview, quick start, controls, and evidence summary</td>
+</tr>
+<tr>
+<td><code>CHANGELOG.md</code></td>
+<td>Version history for the DRM solution package</td>
+</tr>
+<tr>
+<td><code>DELIVERY-CHECKLIST.md</code></td>
+<td>Deployment and handover checklist for customer delivery</td>
+</tr>
+<tr>
+<td><code>docs/architecture.md</code></td>
+<td>Component design, data flow, integrations, and security notes</td>
+</tr>
+<tr>
+<td><code>docs/deployment-guide.md</code></td>
+<td>Step-by-step deployment guidance for tiered rollout</td>
+</tr>
+<tr>
+<td><code>docs/evidence-export.md</code></td>
+<td>Evidence artifact definitions, package contract, and examiner notes</td>
+</tr>
+<tr>
+<td><code>docs/prerequisites.md</code></td>
+<td>Microsoft 365, Entra, PowerShell, and role requirements</td>
+</tr>
+<tr>
+<td><code>docs/troubleshooting.md</code></td>
+<td>Common issues, resolutions, and escalation guidance</td>
+</tr>
+<tr>
+<td><code>scripts/Deploy-Solution.ps1</code></td>
+<td>Tier-aware deployment manifest generation and configuration validation</td>
+</tr>
+<tr>
+<td><code>scripts/Monitor-Compliance.ps1</code></td>
+<td>Service-health monitoring, incident classification, and resilience status collection using a local stub or sample payload until live Graph polling is added</td>
+</tr>
+<tr>
+<td><code>scripts/Export-Evidence.ps1</code></td>
+<td>Evidence artifact creation and package export using shared modules</td>
+</tr>
+<tr>
+<td><code>scripts/DrmConfig.psm1</code></td>
+<td>Shared DRM configuration loading and validation module used by all three scripts</td>
+</tr>
+<tr>
+<td><code>config/default-config.json</code></td>
+<td>Shared DRM defaults including monitored services and dashboard feed settings</td>
+</tr>
+<tr>
+<td><code>config/baseline.json</code></td>
+<td>Baseline tier settings for summary monitoring and alerting</td>
+</tr>
+<tr>
+<td><code>config/recommended.json</code></td>
+<td>Recommended tier settings for incident logging and resilience tracking</td>
+</tr>
+<tr>
+<td><code>config/regulated.json</code></td>
+<td>Regulated tier settings for DORA-oriented reporting, immutability, and Sentinel integration</td>
+</tr>
+<tr>
+<td><code>tests/13-dora-resilience-monitor.Tests.ps1</code></td>
+<td>Pester tests for file presence, config content, script syntax, and documentation references</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
+<p>Deploy DRM by selecting the target governance tier, generating the deployment manifest with <code>Deploy-Solution.ps1</code>, validating the live service-health integration plan, and then scheduling <code>Monitor-Compliance.ps1</code> for the required polling cadence. In the repository state the initial monitoring run uses the local stub or an operator-supplied sample payload; use <code>Export-Evidence.ps1</code> to publish the first evidence package and connect the resulting outputs to solution 12 if centralized reporting is required.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Microsoft 365 E3 or E5 with Copilot-enabled workloads for Exchange Online, SharePoint Online, Teams, Graph-connected services, and Microsoft 365 Apps</li>
+<li>Entra ID application registration with delegated operational ownership and secure secret or certificate storage</li>
+<li>PowerShell 7.2 or later with the modules documented in <a href="prerequisites/">docs/prerequisites.md</a></li>
+<li>Microsoft Graph permissions and tenant roles needed to read service health and preserve evidence records</li>
+<li>Access to shared repository modules in <code>scripts/common/</code> and the shared evidence contract in <code>data/evidence-schema.json</code></li>
+<li>Optional Microsoft Sentinel workspace and dashboard dependency 12-regulatory-compliance-dashboard when centralized risk reporting is required</li>
+</ul>
+<h2 id="related-controls">Related Controls<a class="headerlink" href="#related-controls" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Coverage state</strong> (per <a href="../../reference/control-coverage-honesty/">Control Coverage Honesty</a>):
+4 control(s) are <strong>evidence-export-ready</strong> in scaffold form: 2.7, 4.10, 4.11, 4.9.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.7</td>
+<td>Data Residency and Cross-Border Data Flow Governance</td>
+</tr>
+<tr>
+<td>4.9</td>
+<td>Incident Reporting and Root Cause Analysis</td>
+</tr>
+<tr>
+<td>4.10</td>
+<td>Business Continuity and Disaster Recovery for Copilot Dependency</td>
+</tr>
+<tr>
+<td>4.11</td>
+<td>Microsoft Sentinel Integration for Copilot Events</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Playbooks:</strong> Control implementation playbooks (portal walkthroughs, PowerShell setup, verification and testing, troubleshooting) are maintained in the FSI-CopilotGov framework repository under <code>docs/playbooks/control-implementations/</code>.</p>
+</blockquote>
+<h2 id="regulatory-alignment">Regulatory Alignment<a class="headerlink" href="#regulatory-alignment" title="Permanent link">&para;</a></h2>
+<p>DRM supports compliance with DORA Art. 17 and Art. 18 by organizing ICT incident monitoring, classification, escalation timing, and resilience-test evidence for Copilot-dependent services. It also supports compliance with OCC 2011-12 resilience and governance expectations by preserving documented monitoring, escalation, and challenge records for technology dependencies, and it aligns with the FFIEC IT Handbook focus on operations management, business continuity, incident response, and examiner-ready evidence.</p>
+<h2 id="evidence-export">Evidence Export<a class="headerlink" href="#evidence-export" title="Permanent link">&para;</a></h2>
+<p>The solution exports the following evidence outputs:</p>
+<ul>
+<li><code>service-health-log</code>: service-level health snapshots, polling cadence, timestamps, and workload impact notes</li>
+<li><code>incident-register</code>: DORA-classified incidents with severity, affected service, detection and reporting timestamps, and recovery metrics</li>
+<li><code>resilience-test-results</code>: annual exercise schedule, RTO and RPO targets, outcomes, and documented gaps</li>
+</ul>
+<p>All evidence packages are written as JSON with SHA-256 companion files and are aligned to the shared schema in <code>data/evidence-schema.json</code>.</p>
+<h2 id="roadmap-awareness">Roadmap Awareness<a class="headerlink" href="#roadmap-awareness" title="Permanent link">&para;</a></h2>
+<p>The 2026 Release Wave 1 (April–September 2026) describes several roadmap capabilities relevant to DORA operational resilience monitoring:</p>
+<ul>
+<li>Admin controls for agent security and real-time risk assessment in Copilot Studio</li>
+<li>AI-powered governance agents that automate tenant monitoring and remediation</li>
+<li>Enhanced visibility into usage patterns, Copilot credit consumption, and connector dependencies</li>
+</ul>
+<p>These roadmap capabilities are in preview or rolling out through September 2026. As they reach general availability, this solution's architecture and monitoring patterns may be extended to incorporate them. Customers should evaluate Wave 1 features against their DORA ICT risk management framework requirements as they become available.</p>
+<h2 id="known-limitations">Known Limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>DRM is primarily a monitoring and evidence solution. It does not perform automated service remediation or tenant failover orchestration.</li>
+<li>Default monitoring output is produced from a local stub or <code>DRM_SERVICE_HEALTH_SAMPLE_JSON</code>; live Microsoft Graph polling still requires tenant authentication wiring outside the repository.</li>
+<li>Control 2.7 remains monitor-only until tenant geo settings and approved-region data sources are connected.</li>
+<li>Control 4.11 remains monitor-only until a Microsoft Sentinel workspace, applicable data connector (currently preview per Microsoft Learn), and customer-defined alert rules are provisioned outside this solution.</li>
+<li>Control 4.10 is partial because resilience documentation and test tracking are included, but automated failover validation requires additional tenant-specific engineering.</li>
+<li>The documented Power Automate flow is not deployed by script in this version and must be configured manually from the deployment guide.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../23-copilot-studio-lifecycle-tracker/troubleshooting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Troubleshooting">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Troubleshooting
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Architecture">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Architecture
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 FSI Copilot Governance Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

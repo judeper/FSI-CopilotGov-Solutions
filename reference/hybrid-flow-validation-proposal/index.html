@@ -1,0 +1,1156 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services">
+      
+      
+      
+        <link rel="canonical" href="https://judeper.github.io/FSI-CopilotGov-Solutions/reference/hybrid-flow-validation-proposal/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Hybrid Flow Validation (Proposal) - FSI Copilot Governance Solutions</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hybrid-flow-validation-proposal" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-header__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FSI Copilot Governance Solutions
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hybrid Flow Validation (Proposal)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operational-handbook/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../solutions/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Solutions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/managed-identity-standard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Disclaimer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-nav__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    FSI Copilot Governance Solutions
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../getting-started/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operational-handbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../solutions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solutions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/managed-identity-standard/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disclaimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Approach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-sketch-for-the-flow-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema Sketch for the Flow Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria-for-the-pilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria for the Pilot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="hybrid-flow-validation-proposal">Hybrid Flow Validation (Proposal)<a class="headerlink" href="#hybrid-flow-validation-proposal" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Status:</strong> Proposal v1.0 | <strong>Scope:</strong> Pilot for one solution (Solution 04 — FINRA Supervision Workflow for Copilot) | <strong>Audience:</strong> Repo maintainers, solution authors</p>
+</blockquote>
+<h2 id="problem-statement">Problem Statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h2>
+<p>This repository is documentation-first: Power Automate flows are described in
+markdown narratives under <code>solutions/&lt;id&gt;/docs/flows/</code> and explicitly NOT
+committed as exported runtime artifacts (<code>.zip</code> solution packages or raw
+<code>definition.json</code> files). The policy supports compliance with our framework
+posture by:</p>
+<ul>
+<li>Preventing accidental commit of tenant-specific identifiers, connection
+  references, and secret-bearing fields embedded in Power Platform exports.</li>
+<li>Keeping the repository readable, reviewable, and free of large opaque blobs.</li>
+<li>Forcing authors to express intent in plain language that auditors can read.</li>
+</ul>
+<p>The trade-off is a <strong>golden-artifact gap</strong>: an adopter who builds a flow from
+the markdown has no machine-checkable way to confirm their build matches the
+documented intent. A reviewer cannot diff "what the docs say" against "what
+the live tenant flow actually does". Drift between the two is invisible until
+an examiner asks for evidence.</p>
+<p>This proposal pilots a hybrid approach that preserves the docs-first
+invariant while adding a narrow, machine-validatable contract.</p>
+<h2 id="proposed-approach">Proposed Approach<a class="headerlink" href="#proposed-approach" title="Permanent link">&para;</a></h2>
+<p>The pilot keeps the existing markdown narrative authoritative for human
+review and adds two thin layers around it:</p>
+<ol>
+<li><strong>Authoritative narrative (unchanged).</strong> Flow documentation in
+   <code>solutions/&lt;id&gt;/docs/flows/*.md</code> remains the source of truth for human
+   reviewers. All design rationale, regulatory mapping, and operator
+   instructions stay there.</li>
+<li><strong>Machine-readable flow contract (new, in-repo).</strong> A small JSON file at
+   <code>solutions/&lt;id&gt;/flows/*.flow.json</code> declares the structural expectations
+   for the flow: trigger type, connector references, the ordered set of
+   action names, condition branches, retry policy, naming pattern, and so on.
+   It is intentionally <strong>not</strong> a Power Automate export — it is a hand-written
+   contract that mirrors what the markdown describes. Sample contracts are
+   marked <code>"sample": true</code>.</li>
+<li><strong>Contract validator (new, in-repo).</strong> <code>scripts/validate-flow-contract.py</code>
+   loads each <code>*.flow.json</code>, validates it against an inline schema, and
+   cross-checks that every action name listed in the contract appears at
+   least once in the matching markdown narrative (and vice versa for any
+   action name the markdown declares with a recognisable marker). It
+   produces an OK/error report on stdout.</li>
+<li><strong>Out-of-repo export diff (new, NOT in this PR).</strong> In a controlled
+   tenant, an operator periodically exports the live flow as a <code>*.zip</code> and
+   stores it in a private artifact store (Azure Blob, internal share, or
+   the operator's workstation). A future <code>scripts/diff-flow-export.py</code>
+   would read the export, normalise it (strip tenant-specific GUIDs,
+   connection display names, timestamps), and compare against the in-repo
+   contract, reporting drift such as added/removed actions, changed
+   connector kinds, or altered trigger frequency. The export itself never
+   enters the repository.</li>
+</ol>
+<p>The result: the markdown stays authoritative, the contract is small enough
+to review by eye, and adopters who choose to opt in get a machine-checkable
+golden reference without breaking the no-export rule.</p>
+<h2 id="schema-sketch-for-the-flow-contract">Schema Sketch for the Flow Contract<a class="headerlink" href="#schema-sketch-for-the-flow-contract" title="Permanent link">&para;</a></h2>
+<p>The contract schema is intentionally minimal. Each field below is required
+unless marked optional.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>string</td>
+<td>Contract schema version (e.g., <code>"1.0"</code>). Used to gate validator behaviour as the schema evolves.</td>
+</tr>
+<tr>
+<td><code>solution_id</code></td>
+<td>string</td>
+<td>Solution folder identifier (e.g., <code>04-finra-supervision-workflow</code>). Validator cross-checks the file's location.</td>
+</tr>
+<tr>
+<td><code>flow_name</code></td>
+<td>string</td>
+<td>Human-readable flow name as it would appear in Power Automate.</td>
+</tr>
+<tr>
+<td><code>flow_id</code></td>
+<td>string</td>
+<td>Stable in-repo identifier (kebab-case). Used to correlate with the markdown narrative file name.</td>
+</tr>
+<tr>
+<td><code>sample</code></td>
+<td>boolean</td>
+<td><code>true</code> for representative-only contracts that do not correspond to a tenant-bound flow.</td>
+</tr>
+<tr>
+<td><code>trigger</code></td>
+<td>object</td>
+<td><code>{ "kind": "&lt;recurrence|automated|manual&gt;", "details": "&lt;short description&gt;" }</code>.</td>
+</tr>
+<tr>
+<td><code>connectors</code></td>
+<td>array of objects</td>
+<td>Each item: <code>{ "name": "&lt;display&gt;", "kind": "&lt;sharedoffice365|sharedteams|...&gt;" }</code>. The set of connector references the flow declares.</td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td>array of objects</td>
+<td>Ordered list. Each item: <code>{ "name": "&lt;action display name&gt;", "type": "&lt;compose|http|condition|apply_to_each|...&gt;" }</code>. Names must appear in the markdown narrative.</td>
+</tr>
+<tr>
+<td><code>condition_branches</code></td>
+<td>array of objects</td>
+<td>Each item: <code>{ "name": "&lt;condition action name&gt;", "yes": ["&lt;action name&gt;", ...], "no": ["&lt;action name&gt;", ...] }</code>. Documents the expected control flow.</td>
+</tr>
+<tr>
+<td><code>error_handling</code></td>
+<td>object</td>
+<td><code>{ "configured_run_after": &lt;bool&gt;, "scope_pattern": "&lt;try-catch|none&gt;" }</code>. Describes the exception-handling pattern.</td>
+</tr>
+<tr>
+<td><code>retry_policy</code></td>
+<td>object</td>
+<td><code>{ "type": "&lt;none|fixed|exponential&gt;", "count": &lt;int&gt;, "interval": "&lt;ISO8601 duration&gt;" }</code>. Applied to network-bound actions.</td>
+</tr>
+<tr>
+<td><code>naming_pattern</code></td>
+<td>string</td>
+<td>Regex (anchored) that all action names must match. Helps catch ad-hoc renames.</td>
+</tr>
+<tr>
+<td><code>evidence_outputs</code></td>
+<td>array of strings</td>
+<td>Names of evidence artefacts the flow is expected to write (cross-checked with <code>data/evidence-catalog.json</code> in a future iteration).</td>
+</tr>
+<tr>
+<td><code>notes</code></td>
+<td>string (optional)</td>
+<td>Free-form maintainer notes; not validated.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Schema drift.</strong> The contract schema and the live Power Automate export
+  format may diverge over time. Mitigation: version the schema
+  (<code>schema_version</code>) and keep the contract intentionally narrow.</li>
+<li><strong>False positives on cosmetic export changes.</strong> Power Platform may
+  re-order non-semantic fields, rename internal identifiers, or insert
+  metadata on export. The future export diff must normalise aggressively
+  (sort keys, strip GUIDs, ignore <code>runtimeConfiguration</code>) before comparing.</li>
+<li><strong>Maintenance burden.</strong> The contract is hand-written and can fall out of
+  sync with both the markdown and the live flow. Mitigation: keep the
+  contract small, run the validator in a future CI step (out of scope for
+  this proposal), and treat contract updates as part of any flow change.</li>
+<li><strong>False sense of completeness.</strong> A passing contract validator does not
+  prove the flow is correct, only that its declared structure matches the
+  documented structure. The narrative remains authoritative for intent.</li>
+<li><strong>Scope creep.</strong> Adopters may push for a full flow-as-code surface. The
+  proposal explicitly resists this: the contract is a check, not a build
+  artefact.</li>
+</ul>
+<h2 id="acceptance-criteria-for-the-pilot">Acceptance Criteria for the Pilot<a class="headerlink" href="#acceptance-criteria-for-the-pilot" title="Permanent link">&para;</a></h2>
+<p>The pilot is considered successful when all of the following are true for
+Solution 04 only:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>solutions/04-finra-supervision-workflow/flows/supervision-review.flow.json</code>
+      exists, declares <code>"sample": true</code>, and conforms to the schema sketch above.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>scripts/validate-flow-contract.py</code> runs successfully against the
+      sample contract and exits 0 with an "OK" report.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> The validator produces actionable error output when any required
+      field is removed or when an action name is renamed without updating
+      the markdown narrative (verified manually by maintainers).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> This proposal document is published in the Reference section of the
+      docs site.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No exported Power Automate <code>.zip</code> or <code>definition.json</code> artefact is
+      committed to the repository.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> The validator is <strong>not</strong> wired into CI as part of the pilot. A
+      follow-up decision record will determine whether to promote it.</li>
+</ul>
+<h2 id="out-of-scope">Out of Scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Implementing <code>scripts/diff-flow-export.py</code>.</li>
+<li>Authoring contracts for the other 22 solutions.</li>
+<li>Wiring the validator into <code>.github/workflows/</code>.</li>
+<li>Defining the private artifact store layout for tenant exports.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 FSI Copilot Governance Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
