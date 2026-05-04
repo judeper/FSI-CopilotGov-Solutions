@@ -81,7 +81,7 @@ The Copilot Readiness Assessment Scanner is a PowerShell-first solution that doc
 | Power Platform governance | Environment inventory, connector risk, DLP policy coverage, maker sprawl | Power Platform admin endpoints | 1.1, 1.6 |
 | Copilot configuration | Copilot service enablement, scoped readiness, app configuration drift | Microsoft 365 Copilot admin configuration surfaces | 1.1, 1.9 |
 
-> **Admin Center readiness input:** The redesigned Microsoft 365 Admin Center Copilot overview page (January 2026) provides centralized security configuration, readiness recommendations, and governance settings that complement the scanner's domain-level assessment pattern. Organizations should review these recommendations alongside the scanner's outputs when evaluating overall Copilot readiness posture.
+> **Admin center readiness input:** Microsoft 365 admin center Copilot > Settings scenarios provide selected Copilot management controls and shortcuts to related admin centers that can complement the scanner's domain-level assessment pattern. Organizations should review those scenarios alongside the scanner's outputs when evaluating overall Copilot readiness posture.
 
 ## Scoring Model
 

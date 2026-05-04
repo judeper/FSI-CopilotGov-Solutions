@@ -2,9 +2,12 @@
 
 All notable changes to this solution are documented in this file.
 
-## v0.3.0
+## [v0.2.1] - 2026-05-04
 
-- Added reference to redesigned Microsoft 365 Admin Center Copilot overview page (January 2026) as supplemental readiness input in README and architecture documentation.
+### Changed
+
+- Updated README, architecture, and prerequisites guidance to align with current Microsoft Learn terminology for the Microsoft 365 Copilot Optimization Assessment, Copilot > Settings scenarios, licensing, Copilot Control System management controls, administrator roles, and least-privileged licensing permissions.
+- Added reference to Microsoft 365 admin center Copilot > Settings scenarios as supplemental readiness input in README and architecture documentation.
 
 ## [v0.2.0] - 2026-03-07
 

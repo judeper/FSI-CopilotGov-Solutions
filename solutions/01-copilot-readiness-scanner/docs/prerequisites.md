@@ -20,12 +20,13 @@ Recommended for fuller signal coverage:
 
 ## Required Microsoft Entra ID and Microsoft 365 Roles
 
-The simplest deployment model is to use a Global Administrator account in a controlled non-production or delegated operations process. If the customer prefers least privilege, the following role combination is typically required:
+The preferred deployment model uses least-privilege Microsoft Entra and Microsoft 365 roles for the specific workload being reviewed. Global Administrator should be reserved for break-glass or tightly controlled exception scenarios when a lower-privileged role cannot complete the task. The following role combination is typically required:
 
 | Workload Area | Role Requirement | Purpose |
 |---------------|------------------|---------|
 | Tenant-wide setup | Global Administrator or Privileged Role Administrator plus Global Reader | Initial validation, broad tenant read access, role confirmation |
 | Licensing | License Administrator or Global Reader | Read Copilot and Microsoft 365 SKU assignments |
+| Copilot configuration | AI Administrator for changes; Global Reader for read-only review | Review Microsoft 365 Copilot settings, Copilot Control System scenarios, and agent governance visibility |
 | Entra identity | Security Reader and Directory Reader | Review role assignments, guests, and identity posture |
 | Defender security | Security Reader | Read Defender posture and exposure signals |
 | Purview compliance | Compliance Administrator or Compliance Data Administrator | Review labels, retention, and compliance configuration |
@@ -39,8 +40,8 @@ The exact API permissions depend on the final authentication model, but the scan
 
 | Workload | Example Access Needed | Why It Is Needed |
 |----------|-----------------------|------------------|
-| Microsoft Graph | `Organization.Read.All`, `Directory.Read.All`, `AuditLog.Read.All`, `Reports.Read.All` | Tenant metadata, identity posture, and readiness signals |
-| Licensing | User and SKU read access | Copilot assignment strategy and license drift checks |
+| Microsoft Graph | `LicenseAssignment.Read.All` for licensing reads; `Organization.Read.All`, `Directory.Read.All`, `AuditLog.Read.All`, and `Reports.Read.All` only when the implemented API calls require broader tenant, identity, audit, or report signals | Tenant metadata, identity posture, licensing assignment, and readiness signals |
+| Licensing | `LicenseAssignment.Read.All` or role-equivalent user and SKU read access | Copilot assignment strategy and license drift checks |
 | Purview | Label and retention configuration read access | Sensitivity label and records readiness review |
 | SharePoint Online | Tenant admin read access and PnP connection rights | Site inventory, sharing posture, advanced management readiness |
 | Teams | Teams admin read access | Teams workload dependencies and sharing context |
@@ -52,11 +53,11 @@ The following table documents the Microsoft Graph scopes requested by each scrip
 
 | Script | Scopes Requested | Usage |
 |--------|-----------------|-------|
-| `Deploy-Solution.ps1` | `Organization.Read.All`, `Directory.Read.All`, `AuditLog.Read.All` | Placeholder Graph connectivity validation |
-| `Monitor-Compliance.ps1` | `Organization.Read.All`, `Directory.Read.All`, `Reports.Read.All` | Tenant metadata and readiness signal collection |
+| `Deploy-Solution.ps1` | `LicenseAssignment.Read.All`, `Organization.Read.All`, `Directory.Read.All`, `AuditLog.Read.All` | Placeholder Graph connectivity and licensing-readiness validation |
+| `Monitor-Compliance.ps1` | `LicenseAssignment.Read.All`, `Organization.Read.All`, `Directory.Read.All`, `Reports.Read.All` | Tenant metadata, licensing, and readiness signal collection |
 | `Export-Evidence.ps1` | None directly (delegates to shared modules) | Evidence assembly from local data |
 
-> **Note:** These scopes are currently requested unconditionally. When extending the scanner with live Graph queries, narrow each script's scope to only the permissions required by its specific API calls. For example, `Reports.Read.All` is only needed by `Monitor-Compliance.ps1` for usage reporting, not by `Deploy-Solution.ps1`.
+> **Note:** These placeholder scopes are currently requested unconditionally. When extending the scanner with live Graph queries, narrow each script's scope to only the permissions required by its specific API calls. Use `LicenseAssignment.Read.All` for subscribed SKU and user license detail reads, and keep broader `Directory.Read.All` or `Organization.Read.All` only when a specific API requires a higher-privilege fallback. For example, `Reports.Read.All` is only needed by `Monitor-Compliance.ps1` for usage reporting, not by `Deploy-Solution.ps1`.
 
 ## PowerShell Modules Required
 
