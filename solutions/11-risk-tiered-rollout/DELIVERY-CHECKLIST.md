@@ -4,7 +4,7 @@
 
 - Solution: Risk-Tiered Rollout Automation
 - Solution code: RTR
-- Version: v0.1.0
+- Version: v0.1.1
 - Track: C
 - Priority: P0
 - Dependencies: 01-copilot-readiness-scanner

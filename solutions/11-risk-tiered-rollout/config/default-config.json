@@ -2,7 +2,7 @@
   "solution": "11-risk-tiered-rollout",
   "solutionCode": "RTR",
   "displayName": "Risk-Tiered Rollout Automation",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "track": "C",
   "priority": "P0",
   "controls": [
@@ -170,7 +170,7 @@
     }
   },
   "licenseAssignment": {
-    "skuPartNumber": "MICROSOFT_365_COPILOT",
+    "skuPartNumber": "Microsoft_365_Copilot",
     "groupMode": "wave-based",
     "dryRunByDefault": true
   },

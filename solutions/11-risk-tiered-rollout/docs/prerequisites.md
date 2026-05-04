@@ -10,14 +10,18 @@
 
 - Microsoft 365 E3 or E5 licensing for the targeted users
 - Microsoft 365 Copilot licenses sized for the intended wave plus rollback reserve
+- The Microsoft Entra **Usage location** property is populated for targeted users before they are added to wave-based license-assignment groups
 - Power Automate Premium licenses for approvers or service accounts that run approval workflows
 
 ## Permissions
 
-The rollout automation design assumes the following Graph permissions are approved for the service principal or admin context used during implementation:
+The rollout automation design assumes the following least-privileged Microsoft Graph permissions and role assignments are approved for the service principal or admin context used during implementation:
 
-- `User.ReadWrite.All` (covers license assignment via `POST /users/{id}/assignLicense`)
-- `Directory.Read.All`
+- `LicenseAssignment.ReadWrite.All` for license assignment. Use group-based assignment (`POST /groups/{id}/assignLicense`) for wave groups or direct user assignment (`POST /users/{id | userPrincipalName}/assignLicense`) only when the implementation selects direct assignment.
+- Higher-privileged permissions such as `Directory.ReadWrite.All`, `Group.ReadWrite.All`, or `User.ReadWrite.All` are reserved for implementations that explicitly require them.
+- Delegated group-assignment operators hold Directory Writers, Groups Administrator, License Administrator, User Administrator, or a custom role with `microsoft.directory/groups/assignLicense`.
+- Delegated direct user-assignment operators hold Directory Writers, License Administrator, User Administrator, or a custom role with `microsoft.directory/users/assignLicense`.
+- `Directory.Read.All` for read-only directory lookups when implementation needs inventory or reference data.
 
 ## Platform Requirements
 
