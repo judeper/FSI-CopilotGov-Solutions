@@ -4,6 +4,13 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this solution uses semantic versioning.
 
+## [v0.2.1] - 2026-05-04
+
+### Changed
+
+- Clarified the Microsoft 365 Copilot and Copilot Chat DLP policy location, preview and generally available capability status, prompt-upload limitation, and complementary workload DLP baseline separation.
+- Updated Copilot DLP prerequisite role guidance to distinguish policy create/edit roles from read-only review roles.
+
 ## [v0.2.0]
 
 ### Added

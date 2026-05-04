@@ -8,7 +8,7 @@
 
 | Artifact | File | Description |
 |----------|------|-------------|
-| `dlp-policy-baseline` | `dlp-policy-baseline.json` | JSON snapshot of all Copilot-scoped DLP policies or baseline expectations by workload |
+| `dlp-policy-baseline` | `dlp-policy-baseline.json` | JSON snapshot of Microsoft 365 Copilot and Copilot Chat policy-location settings plus separate complementary workload DLP baseline records when applicable |
 | `policy-drift-findings` | `policy-drift-findings.json` | Array of policy changes detected since the baseline, including added, removed, or modified settings |
 | `exception-attestations` | `exception-attestations.json` | Array of approved exceptions with attestor, approval date, justification, and expiry metadata |
 
@@ -17,7 +17,8 @@
 The baseline snapshot should document:
 
 - Selected governance tier
-- In-scope Copilot workloads
+- Microsoft 365 Copilot and Copilot Chat policy-location capabilities and availability status
+- Separate complementary workload DLP locations when tenant policy design tracks them
 - Policy mode expectations for standard and high-sensitivity content
 - Label-specific handling for NPI and PII when required
 - Included and excluded user groups
@@ -39,7 +40,7 @@ Each drift finding should include enough detail for review and escalation:
 Each approved exception record should capture:
 
 - Exception identifier
-- Policy or workload reference
+- Policy-location or complementary workload reference
 - Attestor name or role
 - Approval date
 - Justification

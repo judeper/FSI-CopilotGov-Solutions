@@ -72,8 +72,10 @@ function New-BaselineSnapshot {
         baselineSource = 'evidence-export'
         controls = @('2.1', '3.10', '3.12')
         regulations = @('GLBA 501(b)', 'SEC Reg S-P', 'DORA Article 9', 'GDPR', 'FINRA 4511', 'SOX 302/404')
-        copilotWorkloads = @($TierConfig.copilotWorkloads)
-        monitoredSignals = @($DefaultConfig.defaults.copilotSignals)
+        copilotPolicyLocation = [string]$DefaultConfig.defaults.copilotPolicyLocation
+        copilotCapabilities = @($DefaultConfig.defaults.copilotCapabilities)
+        complementaryWorkloadDlpPolicyLocations = @($TierConfig.copilotWorkloads)
+        monitoredCapabilities = Get-CopilotCapabilityIds -DefaultConfig $DefaultConfig
         policyModes = [ordered]@{
             default = $defaultMode
             highSensitivity = $highSensitivityMode
@@ -158,7 +160,8 @@ $exceptionData = @($allExceptionData | Where-Object {
     }
 })
 $baselinePolicyCount = @($baselineData.policies).Count
-$workloadCount = @($baselineData.copilotWorkloads).Count
+$workloadLocations = if ($baselineData.PSObject.Properties.Name -contains 'complementaryWorkloadDlpPolicyLocations') { @($baselineData.complementaryWorkloadDlpPolicyLocations) } else { @($baselineData.copilotWorkloads) }
+$workloadCount = $workloadLocations.Count
 
 $baselineHash = Write-HashCompanion -Path $baselineArtifactPath
 $driftHash = Write-HashCompanion -Path $driftArtifactPath
@@ -171,7 +174,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '2.1'
         status = 'monitor-only'
-        notes = ('Captured {0} Copilot-scoped DLP policy record(s) across {1} workload(s).' -f $baselinePolicyCount, $workloadCount)
+        notes = ('Documented {0} DLP policy baseline record(s) and {1} complementary workload DLP location(s).' -f $baselinePolicyCount, $workloadCount)
     },
     [pscustomobject]@{
         controlId = '3.10'

@@ -3,7 +3,7 @@
 .SYNOPSIS
 Deploys DLP Policy Governance configuration for Microsoft 365 Copilot.
 .DESCRIPTION
-Takes a baseline snapshot of current DLP policies scoped to Copilot workloads, writes the baseline JSON file, generates a deployment manifest, and creates connection stubs for Graph API and Exchange Online. The script does not modify DLP policies and is limited to read-only deployment artifacts that support later tenant data collection.
+Creates a baseline template for the Microsoft 365 Copilot and Copilot Chat policy location plus separate complementary workload DLP policy records, writes the baseline JSON file, generates a deployment manifest, and creates connection stubs for Graph API and Exchange Online. The script does not modify DLP policies and is limited to read-only deployment artifacts that support later tenant data collection.
 .PARAMETER ConfigurationTier
 Governance tier to apply. Valid values are baseline, recommended, and regulated.
 .PARAMETER OutputPath
@@ -59,8 +59,10 @@ $baselineSnapshot = [ordered]@{
     baselineSource = 'tier-configuration'
     controls = @('2.1', '3.10', '3.12')
     regulations = @('GLBA 501(b)', 'SEC Reg S-P', 'DORA Article 9', 'GDPR', 'FINRA 4511', 'SOX 302/404')
-    copilotWorkloads = @($tierConfig.copilotWorkloads)
-    monitoredSignals = @($defaultConfig.defaults.copilotSignals)
+    copilotPolicyLocation = [string]$defaultConfig.defaults.copilotPolicyLocation
+    copilotCapabilities = @($defaultConfig.defaults.copilotCapabilities)
+    complementaryWorkloadDlpPolicyLocations = @($tierConfig.copilotWorkloads)
+    monitoredCapabilities = Get-CopilotCapabilityIds -DefaultConfig $defaultConfig
     policyModes = [ordered]@{
         default = $defaultMode
         highSensitivity = $highSensitivityMode
@@ -103,7 +105,9 @@ $manifest = [ordered]@{
     baselinePath = $BaselinePath
     dependencies = @('03-sensitivity-label-auditor')
     tierSettings = [ordered]@{
-        workloads = @($tierConfig.copilotWorkloads)
+        copilotPolicyLocation = [string]$defaultConfig.defaults.copilotPolicyLocation
+        complementaryWorkloadDlpPolicyLocations = @($tierConfig.copilotWorkloads)
+        monitoredCapabilities = Get-CopilotCapabilityIds -DefaultConfig $defaultConfig
         driftThreshold = [int]$tierConfig.driftThreshold
         exceptionApprovalRequired = [bool]$tierConfig.exceptionApprovalRequired
         policyModes = $tierConfig.policyModes
