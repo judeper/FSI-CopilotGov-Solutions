@@ -7,7 +7,7 @@ This deployment guide follows a documentation-first pattern for Power Automate a
 1. Verify that solution `09-feature-management-controller` is already deployed.
 2. Confirm that the deployment team has:
    - Power Platform Administrator access
-   - Microsoft 365 Global Admin access for Teams app policy review
+   - AI Administrator role for Microsoft 365 admin center agent and plugin governance; Global Administrator only for tasks that explicitly require it
    - Dataverse System Administrator access
    - Power Automate Premium licensing
    - A reviewer mailbox or distribution group for approval tasks

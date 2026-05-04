@@ -4,7 +4,7 @@
 
 - Solution: Copilot Connector and Plugin Governance
 - Solution Code: CPG
-- Version: v0.1.0
+- Version: v0.1.1
 - Track: C
 - Domain: operations-analytics
 - Priority: P1
@@ -41,7 +41,8 @@
 
 - [ ] Confirm solution `09-feature-management-controller` is deployed and available for rollout gating.
 - [ ] Validate Power Platform Admin API access to enumerate connectors in the target environment.
-- [ ] Validate Microsoft Graph inventory access for app registrations tied to Graph connectors or plugins.
+- [ ] Validate Entra app registration and admin-consent records for custom connector or API authentication dependencies.
+- [ ] Validate Microsoft 365 admin center Agent Registry and agent details metadata; if programmatic access is approved, document that Microsoft Graph Agent Registry APIs are preview and work with the AI Admin role.
 - [ ] Review `config\default-config.json` blocked connector IDs against current DLP and AppSource policy decisions.
 - [ ] Review risk classification outcomes for Microsoft-built, certified third-party, custom, and blocked connector categories.
 - [ ] Confirm the approval workflow path includes security review, CISO or DLP review, and approval or denial outcomes.

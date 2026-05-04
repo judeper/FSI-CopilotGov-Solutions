@@ -2,7 +2,7 @@
   "solution": "10-connector-plugin-governance",
   "solutionCode": "CPG",
   "displayName": "Copilot Connector and Plugin Governance",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P1",
@@ -56,8 +56,7 @@
       "description": "Connectors prohibited in regulated Copilot contexts.",
       "examples": [
         "shared_dropbox",
-        "shared_twitter",
-        "shared_facebook"
+        "shared_twitter"
       ]
     }
   },
@@ -92,8 +91,15 @@
   "blockedConnectorIds": [
     "shared_dropbox",
     "shared_twitter",
-    "shared_facebook",
     "shared_boxpersonal"
+  ],
+  "legacyDeprecatedConnectorIds": [
+    {
+      "connectorId": "shared_facebook",
+      "reason": "Deprecated connector retained only for legacy DLP reference checks.",
+      "learnUrl": "https://learn.microsoft.com/connectors/facebook/",
+      "learnLastUpdated": "2024-03-01"
+    }
   ],
   "powerAutomateFlows": [
     "CPG-ConnectorInventory",
