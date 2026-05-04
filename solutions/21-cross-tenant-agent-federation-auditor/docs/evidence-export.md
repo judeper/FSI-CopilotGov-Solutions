@@ -13,7 +13,11 @@ Inventory of Copilot Studio agents and Entra Agent IDs exposed across tenant bou
 | agentId | Stable identifier for the agent. |
 | displayName | Human-readable name. |
 | sourceTenantId | Tenant that publishes the agent. |
-| publishingMode | `single-tenant`, `multi-tenant`, or `restricted-multi-tenant`. |
+| channel | Copilot Studio channel used to make the agent available. |
+| authenticationType | Authentication option selected for users who chat with the agent. |
+| requireUsersToSignIn | Whether sign-in is required for the sample governance classification. |
+| sharingScope | Organization sharing scope or approved audience classification. |
+| allowedUsersOrGroups | Users, groups, or partner tenant review groups approved for access in the sample record. |
 | approvedAudienceTenants | Tenant IDs explicitly approved for invocation. |
 | lastReviewedAt | Timestamp of the most recent governance review. |
 
@@ -30,28 +34,38 @@ Review status of cross-tenant access settings and external collaboration scopes 
 
 ### `mcp-trust-relationship-log`
 
-MCP federated server trust records.
+MCP server connection review records.
 
 | Field | Description |
 |-------|-------------|
 | serverId | MCP server identifier. |
-| transport | Transport (e.g., `https`). |
-| signingKeyThumbprint | Sha-256 thumbprint of the attested signing key. |
-| attestedAt | Timestamp of the most recent attestation. |
-| attestationStatus | `current`, `stale`, or `missing`. |
+| serverUrl | HTTPS URL configured for the MCP server connection. |
+| transportType | MCP transport type; Copilot Studio currently supports Streamable transport. |
+| authenticationType | Configured authentication method, such as API key or OAuth 2.0. |
+| allowedTools | Tool names approved for the connection review. |
+| approvalRequired | Whether tool-call approval is required by the sample governance classification. |
+| lastConnectionReviewAt | Timestamp of the most recent connection/authentication review. |
+| connectionReviewStatus | `current`, `stale`, or `missing` based on the tier cadence. |
 | scopes | Scopes granted to the MCP server. |
 
 ### `agent-id-attestation-evidence`
 
-Entra Agent ID signing, key rotation, and verification metadata.
+Microsoft Entra Agent ID identity-governance review metadata.
 
 | Field | Description |
 |-------|-------------|
-| agentId | Entra Agent ID. |
-| signingRequired | Whether signing is required by the active tier. |
-| lastKeyRotationAt | Timestamp of the most recent key rotation. |
-| nextKeyRotationDueAt | Next required rotation timestamp. |
-| verificationStatus | `verified`, `pending`, or `failed`. |
+| agentIdentityId | Microsoft Entra Agent ID identity account for the agent. |
+| displayName | Human-readable Agent ID name. |
+| blueprintId | Agent identity blueprint reference, when used. |
+| owner | Accountable owner recorded for the agent identity. |
+| sponsor | Sponsor recorded for the agent identity, where applicable. |
+| assignedPermissions | Permissions assigned to the agent identity for review. |
+| conditionalAccessPosture | Sample review status for Conditional Access coverage. |
+| auditLogReference | Reference to sign-in or audit log evidence used in the review. |
+| lastReviewedAt | Timestamp of the most recent identity-governance review. |
+| reviewStatus | `current`, `due`, or `overdue` based on the tier cadence. |
+
+If an organization tracks signing or key-rotation controls for its own agent implementation, treat those as customer-defined evidence fields outside the documented Microsoft Entra Agent ID schema.
 
 ## Integrity
 

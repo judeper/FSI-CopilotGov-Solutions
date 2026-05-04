@@ -28,7 +28,7 @@
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
-    Version:  v0.1.0
+    Version:  v0.1.1
     Status:   Documentation-first scaffold (sample data only)
 #>
 [CmdletBinding()]
@@ -117,7 +117,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '2.17'
         status = 'partial'
-        notes = 'Entra Agent ID attestation evidence is exported using sample records; live Graph integration is required for production evidence.'
+        notes = 'Entra Agent ID identity-governance review evidence is exported using sample records; live Microsoft Graph integration is required for production evidence.'
     },
     [pscustomobject]@{
         controlId = '2.16'
@@ -127,7 +127,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '1.10'
         status = 'monitor-only'
-        notes = 'Third-party connector inventory is referenced via MCP attestation log; full third-party register lives outside this solution.'
+        notes = 'Third-party connector inventory is referenced via the MCP connection review log; full third-party register lives outside this solution.'
     },
     [pscustomobject]@{
         controlId = '2.13'
@@ -137,7 +137,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '2.14'
         status = 'partial'
-        notes = 'MCP federated server trust is recorded in mcp-trust-relationship-log; signing-key verification is roadmapped.'
+        notes = 'MCP server connection/authentication posture is recorded in mcp-trust-relationship-log; live tool approval and allow-list integration is roadmapped.'
     },
     [pscustomobject]@{
         controlId = '4.13'
@@ -155,8 +155,8 @@ $artifacts = @(
 
 $recordCount = @($snapshot.FederationInventory).Count + @($snapshot.CrossTenantTrust).Count + @($snapshot.McpAttestations).Count + @($snapshot.AgentIdAttestations).Count
 $findingCount = (@($snapshot.CrossTenantTrust) | Where-Object { $_.reviewStatus -ne 'current' }).Count +
-                (@($snapshot.McpAttestations) | Where-Object { $_.attestationStatus -ne 'current' }).Count +
-                (@($snapshot.AgentIdAttestations) | Where-Object { $_.verificationStatus -ne 'verified' }).Count
+                (@($snapshot.McpAttestations) | Where-Object { $_.connectionReviewStatus -ne 'current' }).Count +
+                (@($snapshot.AgentIdAttestations) | Where-Object { $_.reviewStatus -ne 'current' }).Count
 $exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
 
 $packageManifest = [ordered]@{

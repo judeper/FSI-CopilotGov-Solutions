@@ -26,4 +26,4 @@
 
 ## Sample data appears in evidence
 
-**Expected behavior:** v0.1.0 is documentation-first. All evidence records are representative sample data, clearly labeled with `runtimeMode = "sample"` in the JSON output. This is not a defect; live integration is roadmapped for later versions.
+**Expected behavior:** v0.1.1 is documentation-first. All evidence records are representative sample data, clearly labeled with `runtimeMode = "sample"` in the JSON output. This is not a defect; live integration is roadmapped for later versions.

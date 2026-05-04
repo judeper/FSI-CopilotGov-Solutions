@@ -10,9 +10,9 @@ Confirm the items in [prerequisites.md](prerequisites.md) before deploying.
 
 1. Open PowerShell 7.2 or later in `solutions/21-cross-tenant-agent-federation-auditor`.
 2. Choose a governance tier:
-   - `baseline` — 90-day federation review cadence, optional MCP attestation.
-   - `recommended` — 30-day cadence, required MCP attestation and Entra Agent ID signing.
-   - `regulated` — 7-day cadence, MCP attestation revalidation, Agent ID key rotation tracking, 1825-day retention.
+   - `baseline` — 90-day federation review cadence, optional MCP connection/authentication review.
+   - `recommended` — 30-day cadence, required MCP connection/authentication review and Agent ID identity-governance review.
+   - `regulated` — 7-day cadence, MCP connection revalidation, customer-defined Agent ID credential review, 1825-day retention.
 3. Run a deployment preview:
 
    ```powershell
@@ -44,8 +44,8 @@ Confirm the items in [prerequisites.md](prerequisites.md) before deploying.
 
 ## Live Integration (Future)
 
-Live tenant integration is intentionally out of scope for v0.1.0. Future versions will add:
+Live tenant integration is intentionally out of scope for v0.1.1. Future versions will add:
 
-- Microsoft Graph integration for cross-tenant access policy enumeration.
-- Copilot Studio publishing telemetry hooks.
-- MCP signing-key verification.
+- Microsoft Graph v1.0 integration for cross-tenant access policy partner enumeration.
+- Copilot Studio channel, authentication, and organization sharing telemetry hooks.
+- MCP connection/authentication review patterns using approved server URLs and tool approvals.

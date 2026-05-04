@@ -1,0 +1,28 @@
+{
+  "slug": "21-cross-tenant-agent-federation-auditor",
+  "branch": "accuracy-review/2026-05-04-remediation/21-cross-tenant-agent-federation-auditor",
+  "deltas": [
+    {
+      "issue": 52,
+      "finding_id": "version-bump",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[slug=21-cross-tenant-agent-federation-auditor].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump: solution README and scoped default configuration were updated to v0.1.1 for Phase 2 accuracy remediations.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 52,
+      "finding_id": "version-bump",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions[21-cross-tenant-agent-federation-auditor].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump: solution README and scoped default configuration were updated to v0.1.1 for Phase 2 accuracy remediations.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}
