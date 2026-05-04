@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.1.1] - 2026-05-04
+
+- Updated Power BI documentation terminology from dataset to semantic model across dashboard guidance.
+- Refreshed administrator and Microsoft Purview licensing prerequisites to align with current Microsoft Learn guidance.
+
 ## v0.1.0
 
 - Replaced scaffold content with solution-specific documentation for Dataverse, Power Automate, Power BI, evidence exports, deployment, prerequisites, and troubleshooting.

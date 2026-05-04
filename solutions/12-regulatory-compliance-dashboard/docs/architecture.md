@@ -31,7 +31,7 @@ The design goal is to support compliance with supervisory and records-retention 
                 \                     |                     /
                  v                    v                    v
                   +--------------------------------------+
-                  | Power BI dataset and report layer    |
+                  | Power BI semantic model and report layer    |
                   | Control Master, Implementation       |
                   | Status, Evidence Log, Regulatory Map |
                   +--------------------------------------+
@@ -53,7 +53,7 @@ The dashboard normalizes source evidence into three Dataverse tables named with 
 | `fsi_cg_rcd_finding` | Coverage gaps, stale evidence observations, and framework-specific reporting gaps. | `findingId`, `frameworkId`, `controlId`, `severity`, `gapDescription`, `ownerSolution`, `targetDate` |
 | `fsi_cg_rcd_evidence` | Dashboard snapshots and evidence package metadata. | `evidenceId`, `solutionSlug`, `evidenceType`, `exportedAt`, `hash`, `storagePath`, `isFresh`, `frameworkList` |
 
-The deployment script documents these tables as Dataverse contracts and creates seed JSON artifacts that can be used during implementation. In a customer-implemented environment Dataverse becomes the authoritative aggregation store for the Power BI dataset.
+The deployment script documents these tables as Dataverse contracts and creates seed JSON artifacts that can be used during implementation. In a customer-implemented environment Dataverse becomes the authoritative aggregation store for the Power BI semantic model.
 
 ## Documented Power Automate Flows
 
@@ -79,12 +79,12 @@ The following flows are documented as implementation specifications only. No flo
 
 > **Note:** The Power Automate flows described in this section are documented designs. They are not deployed or exported by repository scripts. Customer must create these flows in their tenant using the specifications provided.
 
-## Power BI Dataset Structure
+## Power BI Semantic Model Structure
 
-The report layer is documentation-led and no binary `.pbix` or `.pbit` files are included in this repository. Instead of storing a binary report file, this solution documents the expected dataset tables, relationships, pages, and measures that customers should implement in their Power BI workspace.
+The report layer is documentation-led and no binary `.pbix` or `.pbit` files are included in this repository. Instead of storing a binary report file, this solution documents the expected semantic model tables, relationships, pages, and measures that customers should implement in their Power BI workspace.
 
-| Dataset table | Grain | Source |
-|---------------|-------|--------|
+| Semantic model table | Grain | Source |
+|----------------------|-------|--------|
 | `ControlMaster` | One row per control | Solution metadata, control mappings, and weights from configuration |
 | `ImplementationStatus` | One row per control per snapshot date | `fsi_cg_rcd_baseline` |
 | `EvidenceLog` | One row per evidence export | `fsi_cg_rcd_evidence` |
@@ -170,7 +170,7 @@ Suggested dashboard thresholds:
 Because Power BI assets are documentation-led in this repository, the template should be implemented with these elements:
 
 - Report name: `RCD-GovernanceDashboard`
-- Dataset tables: `ControlMaster`, `ImplementationStatus`, `EvidenceLog`, `RegulatoryMapping`
+- Semantic model tables: `ControlMaster`, `ImplementationStatus`, `EvidenceLog`, `RegulatoryMapping`
 - Default filters: `Tier`, `Framework`, `Evidence freshness state`, `Business unit`
 - Security model: row-level security by business unit, legal entity, or operating segment
 - Export modes: Power BI service export to PDF for executive review and JSON metadata export for audit packaging
