@@ -1,0 +1,57 @@
+[
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/README.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/README.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__README.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/CHANGELOG.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/CHANGELOG.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__CHANGELOG.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/DELIVERY-CHECKLIST.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/DELIVERY-CHECKLIST.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__DELIVERY-CHECKLIST.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/docs/architecture.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/docs/architecture.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__docs__architecture.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/docs/deployment-guide.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/docs/deployment-guide.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__docs__deployment-guide.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__docs__evidence-export.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/docs/prerequisites.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/docs/prerequisites.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__docs__prerequisites.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/docs/troubleshooting.md",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/docs/troubleshooting.md \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__docs__troubleshooting.md.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/scripts/Deploy-Solution.ps1",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/scripts/Deploy-Solution.ps1 \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__scripts__Deploy-Solution.ps1.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/scripts/Export-Evidence.ps1",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/scripts/Export-Evidence.ps1 \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__scripts__Export-Evidence.ps1.issue.md"
+  },
+  {
+    "path": "solutions/22-pages-notebooks-retention-tracker/scripts/Monitor-Compliance.ps1",
+    "title": "[22] solutions/22-pages-notebooks-retention-tracker/scripts/Monitor-Compliance.ps1 \u2014 accuracy review (2026-05-04)",
+    "body": "c:\\dev\\FSI-CopilotGov-Solutions\\artifacts-review\\22-pages-notebooks-retention-tracker\\issues\\solutions__22-pages-notebooks-retention-tracker__scripts__Monitor-Compliance.ps1.issue.md"
+  }
+]

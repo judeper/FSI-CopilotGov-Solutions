@@ -1,0 +1,38 @@
+[
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\README.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/145"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\DELIVERY-CHECKLIST.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/148"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\docs\\architecture.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/151"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\docs\\deployment-guide.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/152"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\docs\\prerequisites.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/153"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\docs\\troubleshooting.md",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/154"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\config\\default-config.json",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/155"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\scripts\\Deploy-Solution.ps1",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/156"
+  },
+  {
+    "file": "solutions\\04-finra-supervision-workflow\\scripts\\Export-Evidence.ps1",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/157"
+  }
+]

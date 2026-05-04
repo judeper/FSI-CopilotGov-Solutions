@@ -1,0 +1,72 @@
+[
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\DELIVERY-CHECKLIST.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\DELIVERY-CHECKLIST.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/91",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\README.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\README.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/93",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\architecture.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\architecture.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/95",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\deployment-guide.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\deployment-guide.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/97",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\evidence-export.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\evidence-export.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/99",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\prerequisites.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\prerequisites.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/101",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\docs\\troubleshooting.md",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\docs\\troubleshooting.md — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/103",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\scripts\\Deploy-Solution.ps1",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\scripts\\Deploy-Solution.ps1 — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/105",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\scripts\\Export-Evidence.ps1",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\scripts\\Export-Evidence.ps1 — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/107",
+    "number": null
+  },
+  {
+    "path": "solutions\\02-oversharing-risk-assessment\\scripts\\Monitor-Compliance.ps1",
+    "title": "[02] solutions\\02-oversharing-risk-assessment\\scripts\\Monitor-Compliance.ps1 — accuracy review (2026-05-04)",
+    "status": "created",
+    "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/issues/109",
+    "number": null
+  }
+]

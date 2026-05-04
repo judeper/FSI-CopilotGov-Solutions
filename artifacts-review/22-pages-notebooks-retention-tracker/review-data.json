@@ -1,0 +1,333 @@
+{
+  "files_reviewed": [
+    "solutions/22-pages-notebooks-retention-tracker/README.md",
+    "solutions/22-pages-notebooks-retention-tracker/CHANGELOG.md",
+    "solutions/22-pages-notebooks-retention-tracker/DELIVERY-CHECKLIST.md",
+    "solutions/22-pages-notebooks-retention-tracker/config/default-config.json",
+    "solutions/22-pages-notebooks-retention-tracker/config/baseline.json",
+    "solutions/22-pages-notebooks-retention-tracker/config/recommended.json",
+    "solutions/22-pages-notebooks-retention-tracker/config/regulated.json",
+    "solutions/22-pages-notebooks-retention-tracker/docs/architecture.md",
+    "solutions/22-pages-notebooks-retention-tracker/docs/deployment-guide.md",
+    "solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md",
+    "solutions/22-pages-notebooks-retention-tracker/docs/prerequisites.md",
+    "solutions/22-pages-notebooks-retention-tracker/docs/troubleshooting.md",
+    "solutions/22-pages-notebooks-retention-tracker/scripts/Deploy-Solution.ps1",
+    "solutions/22-pages-notebooks-retention-tracker/scripts/Export-Evidence.ps1",
+    "solutions/22-pages-notebooks-retention-tracker/scripts/Monitor-Compliance.ps1",
+    "solutions/22-pages-notebooks-retention-tracker/scripts/PnrtConfig.psm1",
+    "solutions/22-pages-notebooks-retention-tracker/tests/22-pages-notebooks-retention-tracker.Tests.ps1"
+  ],
+  "findings": {
+    "solutions/22-pages-notebooks-retention-tracker/README.md": [
+      {
+        "id": "F1",
+        "title": "Copilot Pages branching and mutability states are not documented lifecycle events",
+        "severity": "Major",
+        "location": "lines 9, 13, 22, 25, 61-65, 73, 76, 94",
+        "current": "\"record branching and mutability lineage events\"; \"Branching event log\"; \"Page branching, fork, and mutability transition events\"",
+        "issue": "Microsoft Learn documents Copilot Pages/Notebooks governance around SharePoint Embedded storage, audit logs, retention, and version history. It does not document branch/fork/merge or mutable/locked/preserved Page states as Microsoft product lifecycle events, so the current wording can lead implementers to build evidence around unsupported signals.",
+        "suggestion": "Replace branch/fork/merge/mutability wording with documented signals such as SharePoint Embedded .page files, Purview audit events, retention labels/policies, and version history. If branch-like lineage remains, label it as an internal sample taxonomy rather than a Microsoft Pages state.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Version History: Export in Purview or via Graph API... 50 versions per file (not configurable)."
+      },
+      {
+        "id": "F2",
+        "title": "OneNote retention is section-based, not notebook-level label assignment",
+        "severity": "Major",
+        "location": "lines 14, 23, 74, 94",
+        "current": "\"OneNote Notebook retention-policy coverage and inheritance\"; \"OneNote Notebook retention-label assignment\"",
+        "issue": "The README implies that a OneNote notebook itself receives a retention label or policy assignment. Microsoft Learn says retention settings apply to OneNote sections as files; pages inherit from their parent section, and the notebook modified date is not used by Microsoft 365 retention.",
+        "suggestion": "Describe OneNote evidence as section/folder-level retention coverage within the parent SharePoint or OneDrive location, with notebook identity used only as grouping metadata.",
+        "source": "https://learn.microsoft.com/en-us/purview/retention-policies-sharepoint",
+        "updated": "2026-04-30",
+        "quote": "Only sections are impacted by the retention settings that you specify."
+      },
+      {
+        "id": "F3",
+        "title": "Loop API wording does not match current Microsoft Learn surfaces",
+        "severity": "Major",
+        "location": "lines 9, 35, 98",
+        "current": "\"wiring live Microsoft Graph, Loop, and Purview data sources\"; \"Microsoft Graph and Loop API insertion points\"",
+        "issue": "Current Microsoft Learn pages describe Loop and Copilot Pages/Notebooks content through SharePoint Embedded, SharePoint/OneDrive, Purview, and Graph export/drive surfaces. They do not document a standalone Microsoft Loop API for this inventory pattern.",
+        "suggestion": "Replace \"Loop API\" with \"SharePoint Embedded containers, Microsoft Graph DriveItem/export where documented, Purview audit/retention, and Loop/Cloud Policy admin surfaces.\"",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/loop-storage?view=o365-worldwide",
+        "updated": "2026-03-16",
+        "quote": "Loop content is stored in SharePoint, OneDrive, and SharePoint Embedded."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/CHANGELOG.md": [
+      {
+        "id": "F1",
+        "title": "Branching audit terminology should be qualified as internal sample taxonomy",
+        "severity": "Major",
+        "location": "lines 9, 11-12",
+        "current": "\"branching audit\"; \"sample-data inventory of Pages, Notebooks, Loop components, and branching events\"",
+        "issue": "The changelog presents branching audit as part of the Microsoft technical scaffold, but Microsoft Learn documents version history and audit logs for Copilot Pages/Notebooks rather than Page branch/fork/merge lifecycle events.",
+        "suggestion": "Clarify that branching events are representative internal sample lineage, or rename the capability to documented version-history/audit-log evidence.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Version History: Export in Purview or via Graph API... 50 versions per file (not configurable)."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/DELIVERY-CHECKLIST.md": [
+      {
+        "id": "F1",
+        "title": "Checklist uses unsupported branching and vague Loop integration surfaces",
+        "severity": "Major",
+        "location": "lines 29-31, 48, 55",
+        "current": "\"summary branching audit\"; \"full branching audit\"; \"Live Microsoft Graph, Loop, and Purview integration insertion points\"",
+        "issue": "Microsoft Learn documents Purview audit logs, version history, SharePoint Embedded containers, and Graph export surfaces for Copilot Pages/Notebooks. It does not document Page branching audit events or a standalone Loop API integration surface.",
+        "suggestion": "Update the checklist to validate documented version-history/audit-log evidence and name current integration surfaces: SharePoint Embedded, Microsoft Graph DriveItem/export where documented, Purview audit/retention, and Cloud Policy/SharePoint admin controls.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Audit logs: Available for all events. Retained, exportable, and streamable to third-party tools."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/docs/architecture.md": [
+      {
+        "id": "F1",
+        "title": "Graph beta Pages enumeration and Microsoft Loop API claims are unsupported",
+        "severity": "Critical",
+        "location": "lines 11, 37, 49, 69-77",
+        "current": "\"Microsoft Graph (Copilot Pages, OneNote, Loop) - live target\"; \"Microsoft Loop APIs can expose Pages...\"; \"Microsoft Graph beta endpoints for Copilot Pages enumeration\"",
+        "issue": "The architecture identifies non-documented integration surfaces. Current Microsoft Learn content describes Copilot Pages/Notebooks storage in SharePoint Embedded and supports Graph API export for third-party tools; it does not document a Microsoft Graph beta enumeration endpoint for Copilot Pages or a standalone Microsoft Loop API for this purpose.",
+        "suggestion": "Rewrite the integration model around documented surfaces: SharePoint Embedded containers and container URLs, Microsoft Graph DriveItem/export capabilities where documented, Purview audit/retention, and Cloud Policy/SharePoint admin controls. Do not reference Graph beta Pages enumeration unless Microsoft publishes a specific endpoint.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Graph API export: Supported for third-party tools."
+      },
+      {
+        "id": "F2",
+        "title": "Branch/fork/mutability lifecycle is not documented for Copilot Pages",
+        "severity": "Major",
+        "location": "lines 5, 39, 42, 49, 59-61, 87",
+        "current": "\"mutability and branching lineage\"; \"Page branching, fork, and mutability transitions\"",
+        "issue": "Microsoft Learn documents Copilot Pages/Notebooks audit logs and version history, but not branch, fork, merge, or mutability-state events as product lifecycle signals.",
+        "suggestion": "Replace the Branching Event Recorder with a version-history/audit-log evidence component, or explicitly mark branch/fork/mutability as repository sample taxonomy not backed by Microsoft product events.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Version History: Export in Purview or via Graph API... 50 versions per file (not configurable)."
+      },
+      {
+        "id": "F3",
+        "title": "OneNote retention resolver is modeled at the wrong granularity",
+        "severity": "Major",
+        "location": "lines 40, 51-53, 71-72, 81",
+        "current": "\"retention label assigned to each Notebook\"; \"OneNote Notebook retention-label assignment\"",
+        "issue": "Microsoft 365 retention for OneNote content applies to sections as files, with pages inheriting from their parent section. Modeling direct notebook-level retention labels or notebook policy inheritance is inaccurate.",
+        "suggestion": "Model OneNote sections/folders and parent SharePoint/OneDrive retention coverage; keep notebook metadata only for grouping and reporting.",
+        "source": "https://learn.microsoft.com/en-us/purview/retention-policies-sharepoint",
+        "updated": "2026-04-30",
+        "quote": "Pages from each section are contained within the file and inherit the retention settings from their parent section."
+      },
+      {
+        "id": "F4",
+        "title": "Copilot Pages retention labels need limited-application caveats",
+        "severity": "Major",
+        "location": "lines 39, 49, 81",
+        "current": "\"records the retention-label assignment... for each Page\"; \"Resolve retention labels and policies that apply to Copilot Pages\"",
+        "issue": "The architecture omits important Microsoft Learn caveats: retention labels for Copilot Pages have limited manual application; they cannot be viewed or applied directly in Copilot Pages, and record/regulatory record labels cannot be manually applied in Copilot Pages or Loop.",
+        "suggestion": "Add a caveat that Copilot Pages label evidence should be resolved via OneDrive/SharePoint/Loop/Purview-supported paths and distinguish retention policies from limited retention-label support.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Retention labels cannot be viewed or applied directly from a Copilot Page."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/docs/deployment-guide.md": [
+      {
+        "id": "F1",
+        "title": "Deployment guide treats branching audit as a Microsoft Pages signal",
+        "severity": "Major",
+        "location": "lines 24-26, 48-53",
+        "current": "\"summary branching audit\"; \"full branching audit\"; \"Pages inventory with retention labels and mutability state\"; \"Branching event records\"",
+        "issue": "Microsoft Learn documents Copilot Pages/Notebooks audit logs and version history, not branch/fork/merge audit modes or mutability states.",
+        "suggestion": "Replace branching audit validation with documented Purview audit-log, version-history, retention-policy, and retention-label checks. If branch events remain, mark them as sample-only internal lineage.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Audit logs: Available for all events. Retained, exportable, and streamable to third-party tools."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md": [
+      {
+        "id": "F1",
+        "title": "Notebook-retention-log schema should track OneNote sections/folders",
+        "severity": "Major",
+        "location": "lines 20-32, 77, 79",
+        "current": "\"OneNote Notebook retention-policy assignment and inheritance lineage\" with `notebookId`, `retentionLabel`, and `retentionPolicySource`",
+        "issue": "Microsoft Learn states OneNote retention impacts sections as files and pages inherit from sections. The current schema implies direct notebook-level assignment and inheritance.",
+        "suggestion": "Revise the schema to include section-level identifiers and parent notebook/container metadata, or explicitly state that notebook-level rows summarize section/folder retention coverage.",
+        "source": "https://learn.microsoft.com/en-us/purview/retention-policies-sharepoint",
+        "updated": "2026-04-30",
+        "quote": "Only sections are impacted by the retention settings that you specify."
+      },
+      {
+        "id": "F2",
+        "title": "Branching-event-log schema uses undocumented Page lifecycle events",
+        "severity": "Major",
+        "location": "lines 7, 17-18, 48-60, 80-81",
+        "current": "`mutabilityState`; `branchingParentPageId`; `eventType`: `branch`, `fork`, `merge`, `lock`, or `preserve`",
+        "issue": "Microsoft Learn documents Copilot Pages/Notebooks version history and audit logs, not branch/fork/merge event types or mutable/locked/preserved Page states.",
+        "suggestion": "Replace these fields with documented version-history and Purview audit fields, or label them as sample-only internal lineage states that are not emitted by Microsoft 365.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Version History: Export in Purview or via Graph API... 50 versions per file (not configurable)."
+      },
+      {
+        "id": "F3",
+        "title": "Copilot Pages retention-label evidence needs limited-support caveat",
+        "severity": "Major",
+        "location": "lines 15, 73, 77",
+        "current": "\"retentionLabel: Microsoft Purview retention label assigned to the Page\"; \"Records retention-label coverage... for Copilot Pages\"",
+        "issue": "Microsoft Learn says retention labels are supported for Copilot Pages with limited manual application and cannot be viewed or applied directly from a Copilot Page. Record/regulatory record labels also cannot be manually applied from Copilot Pages or Loop.",
+        "suggestion": "Add these caveats and distinguish policy coverage from label assignment evidence.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Retention labels cannot be viewed or applied directly from a Copilot Page."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/docs/prerequisites.md": [
+      {
+        "id": "F1",
+        "title": "Microsoft Copilot prerequisite should use Microsoft 365 Copilot licensing",
+        "severity": "Major",
+        "location": "lines 5-6",
+        "current": "\"Microsoft 365 E3 or E5 tenant with Microsoft Copilot...\"",
+        "issue": "Microsoft Learn names the product/license as Microsoft 365 Copilot and describes it as an add-on plan with prerequisites. The current \"Microsoft Copilot\" wording is ambiguous and can be confused with consumer Copilot.",
+        "suggestion": "State that in-scope users need Microsoft 365 Copilot licensing with a qualifying Microsoft 365 E3/E5 (or equivalent) subscription, plus enabled OneNote, Loop, SharePoint Online, and Copilot Pages/Notebooks where applicable.",
+        "source": "https://learn.microsoft.com/en-us/office365/servicedescriptions/office-365-platform-service-description/microsoft-365-copilot",
+        "updated": "2026-04-30",
+        "quote": "Microsoft 365 Copilot is an add-on plan with specific licensing prerequisites."
+      },
+      {
+        "id": "F2",
+        "title": "Loop and Copilot Pages read scopes are not documented prerequisites",
+        "severity": "Critical",
+        "location": "lines 13-16",
+        "current": "`Notes.Read.All`; `Sites.Read.All`; \"Loop and Copilot Pages read scopes as released by Microsoft for the tenant\"",
+        "issue": "The OneNote `Notes.Read.All` permission is documented for notebook listing, but Microsoft Learn does not document generic Loop or Copilot Pages read scopes for this inventory. Current Copilot Pages/Notebooks management guidance uses SharePoint Embedded containers, Purview, and Graph export/DriveItem capabilities where documented.",
+        "suggestion": "Keep `Notes.Read.All` for OneNote. Replace the Loop/Copilot Pages read-scope bullet with documented prerequisites such as SharePoint Embedded administrator access for container discovery, SharePoint/Graph file permissions where applicable, and Purview permissions for audit/retention lookup.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-loop-purview-management?view=o365-worldwide",
+        "updated": "2026-03-16",
+        "quote": "Sign in to the SharePoint admin center with the SharePoint Embedded administrator role."
+      },
+      {
+        "id": "F3",
+        "title": "Purview Compliance Admin is not the documented role name",
+        "severity": "Major",
+        "location": "lines 41-46",
+        "current": "\"Purview Compliance Admin for retention-policy lookup\"",
+        "issue": "Microsoft Learn recommends the Compliance Administrator admin role group for retention policies/labels, or a custom role group with Retention Management/View-Only Retention Management. It also uses Records Management for records-management tasks. \"Purview Compliance Admin\" is not the documented role name.",
+        "suggestion": "Use \"Compliance Administrator\" or a custom role group with \"Retention Management\"/\"View-Only Retention Management\" for retention-policy lookup; use \"Records Management\" for records/disposition tasks.",
+        "source": "https://learn.microsoft.com/en-us/purview/get-started-with-data-lifecycle-management",
+        "updated": "2026-04-30",
+        "quote": "we recommend that you add users to the Compliance Administrator admin role group."
+      },
+      {
+        "id": "F4",
+        "title": "Copilot Pages storage location is SharePoint Embedded, not SharePoint or OneDrive containers",
+        "severity": "Major",
+        "location": "line 58",
+        "current": "\"retention policies pre-published for the SharePoint and OneDrive containers that host Copilot Pages and OneNote Notebooks\"",
+        "issue": "Microsoft Learn states Copilot Pages and Copilot Notebooks are stored in a user-owned SharePoint Embedded container. OneNote content can be in SharePoint/OneDrive, but Copilot Pages should be documented separately from OneNote locations.",
+        "suggestion": "Reference SharePoint Embedded containers for Copilot Pages, and SharePoint/OneDrive folders or sections for OneNote content. For Purview retention, mention All SharePoint Sites or specific SharePoint Embedded container URLs where applicable.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-storage?view=o365-worldwide",
+        "updated": "2026-04-23",
+        "quote": "Copilot Pages and Copilot Notebooks are stored within your organization in SharePoint Embedded."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/docs/troubleshooting.md": [
+      {
+        "id": "F1",
+        "title": "Copilot Pages enumeration troubleshooting assumes an undocumented Graph surface",
+        "severity": "Critical",
+        "location": "lines 16-22",
+        "current": "\"Confirm Copilot Pages enumeration is enabled in the tenant...\"; \"until live Graph access is wired\"",
+        "issue": "Microsoft Learn does not document a Microsoft Graph Copilot Pages enumeration endpoint. Current guidance for Copilot Pages/Notebooks centers on SharePoint Embedded containers, Purview audit/export, and Graph export/DriveItem capabilities where documented.",
+        "suggestion": "Replace this with checks for SharePoint Embedded container discovery, Purview audit/export visibility, and documented Graph DriveItem/export access. Avoid instructing users to enable a non-documented Pages enumeration feature.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Graph API export: Supported for third-party tools."
+      },
+      {
+        "id": "F2",
+        "title": "OneNote retention troubleshooting should focus on sections and folders",
+        "severity": "Major",
+        "location": "lines 31-40",
+        "current": "\"Notebook shows `none` for retention-policy source\"; \"parent SharePoint site or OneDrive library for an applied retention label\"",
+        "issue": "Microsoft Learn says retention settings impact OneNote sections as files and pages inherit from those sections. The troubleshooting guidance should not imply direct notebook-level retention assignment.",
+        "suggestion": "Troubleshoot OneNote section/folder retention, parent SharePoint/OneDrive policy scope, and retention labels applied to OneNote folders or sections.",
+        "source": "https://learn.microsoft.com/en-us/purview/retention-policies-sharepoint",
+        "updated": "2026-04-30",
+        "quote": "Pages from each section are contained within the file and inherit the retention settings from their parent section."
+      },
+      {
+        "id": "F3",
+        "title": "Loop API reachability guidance references a non-documented API",
+        "severity": "Critical",
+        "location": "lines 44-47, 77",
+        "current": "\"Verify the Loop API is reachable from the deployment host\"; \"Microsoft Graph, Loop, or Purview endpoints\"",
+        "issue": "Microsoft Learn describes Loop content storage and administration through SharePoint Embedded, SharePoint/OneDrive, Cloud Policy, SharePoint PowerShell, Purview, and documented Graph export/file surfaces. A standalone Loop API is not documented for this scenario.",
+        "suggestion": "Replace Loop API reachability checks with checks for SharePoint Embedded container access, Graph DriveItem/export access where used, Purview audit/retention access, and Loop/Cloud Policy configuration.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/loop-storage?view=o365-worldwide",
+        "updated": "2026-03-16",
+        "quote": "Loop content is stored in SharePoint, OneDrive, and SharePoint Embedded."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/scripts/Deploy-Solution.ps1": [
+      {
+        "id": "F1",
+        "title": "Deployment manifest exposes unsupported branching audit as product evidence",
+        "severity": "Major",
+        "location": "lines 6-8, 95, 107, 126-131",
+        "current": "\"branching audit mode\"; `branchingEvent`; \"branching audit [{3}]\"",
+        "issue": "The script output presents branching audit as a Copilot Pages governance signal. Microsoft Learn documents audit logs and version history for Copilot Pages/Notebooks rather than Page branch/fork/merge lifecycle events.",
+        "suggestion": "Rename these manifest fields to documented audit/version-history evidence or label them as internal sample lineage not emitted by Microsoft 365.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Audit logs: Available for all events. Retained, exportable, and streamable to third-party tools."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/scripts/Export-Evidence.ps1": [
+      {
+        "id": "F1",
+        "title": "Branching event export and Graph activity API note do not match documented Pages evidence",
+        "severity": "Major",
+        "location": "lines 6-8, 124-128, 149, 154, 158-162",
+        "current": "\"branching-event-log\"; \"live audit ingestion requires Microsoft Graph activity APIs\"",
+        "issue": "Microsoft Learn documents Purview audit-log search/export and version history for Copilot Pages/Notebooks; it does not document branch/fork/merge event exports or a generic Microsoft Graph activity API for Pages lifecycle events.",
+        "suggestion": "Use Purview audit-log evidence fields and documented SharePoint Embedded/Graph file export/version-history signals; avoid implying a Graph activity API for unsupported branching events.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-loop-purview-management?view=o365-worldwide",
+        "updated": "2026-03-16",
+        "quote": "Search audit logs for \"page\" or \"loop\" or the Loop Application IDs."
+      }
+    ],
+    "solutions/22-pages-notebooks-retention-tracker/scripts/Monitor-Compliance.ps1": [
+      {
+        "id": "F1",
+        "title": "Live source comments reference non-documented Loop and Pages APIs",
+        "severity": "Major",
+        "location": "lines 7-9, 27, 66, 187-188",
+        "current": "\"from Microsoft Graph, Microsoft Loop, and Microsoft Purview\"; \"live Graph or Loop implementation\"",
+        "issue": "Current Microsoft Learn documentation does not describe a standalone Microsoft Loop API or a Graph Copilot Pages enumeration API for this inventory. The documented surfaces are SharePoint Embedded, Purview, Cloud Policy/SharePoint admin controls, and Graph export/file capabilities where applicable.",
+        "suggestion": "Revise comments and warning text to mention SharePoint Embedded/Purview/Graph DriveItem or export surfaces instead of \"Microsoft Loop\" reads or generic Graph/Loop implementation.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-storage?view=o365-worldwide",
+        "updated": "2026-04-23",
+        "quote": "Copilot Pages and Copilot Notebooks are stored within your organization in SharePoint Embedded."
+      },
+      {
+        "id": "F2",
+        "title": "Sample Page states and branching events are not Microsoft lifecycle states",
+        "severity": "Major",
+        "location": "lines 77, 83, 93-94, 158-178, 227-233",
+        "current": "`editable`, `branched`, `locked`, `preserved`; event types `branch`, `fork`, `merge`, `lock`, `preserve`",
+        "issue": "The sample data uses Page states and branching event types that Microsoft Learn does not document for Copilot Pages/Notebooks. This can make sample evidence look like it came from real Microsoft product event names.",
+        "suggestion": "Rename the sample values to clearly internal taxonomy or replace them with documented Purview audit/version-history events.",
+        "source": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+        "updated": "2026-04-28",
+        "quote": "Version History: Export in Purview or via Graph API... 50 versions per file (not configurable)."
+      }
+    ]
+  }
+}

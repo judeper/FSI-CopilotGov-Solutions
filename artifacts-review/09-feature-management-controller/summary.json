@@ -1,0 +1,14 @@
+{
+  "files_reviewed": 16,
+  "counts": {
+    "Critical": 7,
+    "Major": 18
+  },
+  "files_no_findings": [
+    "solutions/09-feature-management-controller/scripts/Deploy-Solution.ps1",
+    "solutions/09-feature-management-controller/scripts/Monitor-Compliance.ps1",
+    "solutions/09-feature-management-controller/scripts/Export-Evidence.ps1",
+    "solutions/09-feature-management-controller/tests/09-feature-management-controller.Tests.ps1"
+  ],
+  "unverified": 0
+}
