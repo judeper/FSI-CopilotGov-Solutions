@@ -40,6 +40,8 @@ The Copilot Studio Agent Lifecycle Tracker (CSLT) provides a documentation-first
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not cover Copilot Studio model fine-tuning lifecycle — see Solution 19 (Copilot Tuning) for that scope
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Prerequisites
 
 Review [docs/prerequisites.md](docs/prerequisites.md) for the required admin roles, PowerShell modules, and Microsoft 365 prerequisites before deploying this solution.

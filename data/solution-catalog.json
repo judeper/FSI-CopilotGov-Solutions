@@ -60,7 +60,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "regulated",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "02",
@@ -125,7 +133,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "regulated",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "03",
@@ -187,7 +203,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "04",
@@ -238,7 +262,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "regulated",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "05",
@@ -297,7 +329,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "06",
@@ -357,7 +397,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "regulated",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "07",
@@ -414,7 +462,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "08",
@@ -471,7 +527,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "09",
@@ -536,7 +600,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "10",
@@ -596,7 +668,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "11",
@@ -656,7 +736,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "regulated",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "12",
@@ -730,7 +818,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "regulated",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "13",
@@ -791,7 +887,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "14",
@@ -856,7 +960,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "15",
@@ -913,7 +1025,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "16",
@@ -975,7 +1095,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "17",
@@ -1035,7 +1163,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "18",
@@ -1094,7 +1230,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "19",
@@ -1148,7 +1292,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "20",
@@ -1204,7 +1356,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "21",
@@ -1264,7 +1424,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "22",
@@ -1320,7 +1488,15 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   },
   {
     "id": "23",
@@ -1378,6 +1554,14 @@
       "evidence-export.md",
       "prerequisites.md",
       "troubleshooting.md"
-    ]
+    ],
+    "tiers_supported": [
+      "baseline",
+      "recommended",
+      "regulated"
+    ],
+    "tier_recommended": "recommended",
+    "tier_maturity": "active",
+    "maturity": "documentation-first-scaffold"
   }
 ]

@@ -15,7 +15,7 @@
 
 | Aspect | Detail |
 |--------|--------|
-| **Claim** | "Performs Graph API-based scanning across 6 domains" |
+| **Claim** | "Performs Graph API-based scanning across 6 domains" | <!-- fsi-lang:allow="performs graph api scanning" reason="findings table quotes overstated phrasing for recommended correction" -->
 | **Reality** | Returns hardcoded test scores (82, 74, 76, 84, 67, 80) |
 | **Test data** | `Monitor-Compliance.ps1` lines 221–329 |
 
@@ -34,7 +34,7 @@
 
 | Aspect | Detail |
 |--------|--------|
-| **Claim** | "Sequences Copilot license assignment" |
+| **Claim** | "Sequences Copilot license assignment" | <!-- fsi-lang:allow="sequences license assignment" reason="findings table quotes overstated phrasing for recommended correction" -->
 | **Reality** | Generates wave manifests only; no actual license assignment |
 | **Test data** | `Deploy-Solution.ps1` returns manifest JSON, no Graph calls |
 
@@ -47,7 +47,7 @@
 
 | Aspect | Detail |
 |--------|--------|
-| **Claim** | "Aggregates evidence into Dataverse and Power BI" |
+| **Claim** | "Aggregates evidence into Dataverse and Power BI" | <!-- fsi-lang:allow="aggregates evidence into power bi" reason="findings table quotes overstated phrasing for recommended correction" -->
 | **Reality** | Power BI is documentation-first; Dataverse connections manual |
 | **Test data** | Flows documented but not deployed by scripts |
 
@@ -60,7 +60,7 @@
 
 | Aspect | Detail |
 |--------|--------|
-| **Claim** | "Captures service health snapshots through Graph" |
+| **Claim** | "Captures service health snapshots through Graph" | <!-- fsi-lang:allow="captures snapshots through graph" reason="findings table quotes overstated phrasing for recommended correction" -->
 | **Reality** | v0.1.0 uses test data; Graph integration pending |
 | **Test data** | No actual Graph API calls in current version |
 
@@ -180,11 +180,11 @@ Invoke-Pester solutions/*/tests/*.Tests.ps1
 
 | Location | Before | After |
 |----------|--------|-------|
-| `01-copilot-readiness-scanner/README.md:11` | "Performs Graph API-based scanning across licensing…" | "Provides scanning framework with test data; ready for Graph API integration" |
+| `01-copilot-readiness-scanner/README.md:11` | "Performs Graph API-based scanning across licensing…" | "Provides scanning framework with test data; ready for Graph API integration" | <!-- fsi-lang:allow="performs graph api scanning" reason="findings table quotes overstated phrasing for recommended correction" -->
 | `01-copilot-readiness-scanner/docs/architecture.md:68-71` | *(no disclaimer)* | Add: "Note: Repository version uses sample data. For live implementation, customer must bind Graph, Purview, and SharePoint endpoints." |
-| `11-risk-tiered-rollout/README.md:9` | "sequences Copilot license assignment" | "prepares license assignment wave manifests for manual execution" |
+| `11-risk-tiered-rollout/README.md:9` | "sequences Copilot license assignment" | "prepares license assignment wave manifests for manual execution" | <!-- fsi-lang:allow="sequences license assignment" reason="findings table quotes overstated phrasing for recommended correction" -->
 | `11-risk-tiered-rollout/README.md:27-28` | "stages license-assignment actions" | "generates license assignment manifests (requires manual approval and execution)" |
-| `12-regulatory-compliance-dashboard/README.md:8` | "aggregates evidence exports…into Dataverse and Power BI" | "documents aggregation pattern; customer must deploy Dataverse connections and Power BI bindings" |
+| `12-regulatory-compliance-dashboard/README.md:8` | "aggregates evidence exports…into Dataverse and Power BI" | "documents aggregation pattern; customer must deploy Dataverse connections and Power BI bindings" | <!-- fsi-lang:allow="aggregates evidence into power bi" reason="findings table quotes overstated phrasing for recommended correction" -->
 | `13-dora-resilience-monitor/README.md:20` | *(no disclaimer)* | Add: "(v0.1.0: includes polling framework; Graph integration required for live deployment)" |
 
 ---

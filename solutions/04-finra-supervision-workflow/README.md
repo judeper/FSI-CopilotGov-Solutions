@@ -37,6 +37,8 @@ By default, repository evidence exports remain configuration-driven sample data 
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Regulatory context
 
 - FINRA 3110: supports supervisory review, escalation, and evidence retention for sampled and mandatory communications review.
@@ -124,6 +126,9 @@ Evidence artifacts follow `config\evidence-schema.json` and include:
 Each export writes a `.sha256` companion file so reviewers can verify package integrity before filing evidence in the firm's records repository.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 3 control(s) are **evidence-export-ready** in scaffold form: 3.4, 3.5, 3.6.
 
 | Control | Supervisory objective | Solution capability | Evidence output |
 | --- | --- | --- | --- |

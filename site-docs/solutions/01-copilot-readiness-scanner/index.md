@@ -29,6 +29,8 @@ The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 re
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 The solution uses tiered configuration, PowerShell collection scripts, shared helper modules, and JSON evidence outputs that support a Power BI reporting layer. See [docs/architecture.md](architecture.md) for the detailed component model, data flow, scoring logic, and shared module integration points.
@@ -73,6 +75,9 @@ Deploy the solution from this folder after confirming the correct governance tie
 - Access to shared repository modules under `..\..\scripts\common\` and the shared evidence schema under `..\..\data\`.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 5 control(s) are **evidence-export-ready** in scaffold form: 1.1, 1.5, 1.6, 1.7, 1.9.
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|

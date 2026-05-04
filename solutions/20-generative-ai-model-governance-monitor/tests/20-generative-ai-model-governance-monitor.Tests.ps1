@@ -62,8 +62,9 @@ Describe 'GMG - Configuration Validation' {
             @($defaultConfig.primaryControls) | Should -Contain '3.8a'
             @($defaultConfig.primaryControls) | Should -Contain '3.8'
         }
-        It 'cites SR 11-7 / OCC Bulletin 2011-12 (interim genAI principles)' {
-            @($defaultConfig.regulations) | Should -Contain 'SR 11-7 / OCC Bulletin 2011-12 (interim genAI principles)'
+        It 'cites Federal Reserve SR 11-7 and OCC Bulletin 2011-12' {
+            @($defaultConfig.regulations) | Should -Contain 'Federal Reserve SR 11-7'
+            @($defaultConfig.regulations) | Should -Contain 'OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)'
         }
         It 'lists all four evidence outputs' {
             foreach ($e in @('copilot-model-inventory', 'validation-summary', 'ongoing-monitoring-log', 'third-party-due-diligence')) {

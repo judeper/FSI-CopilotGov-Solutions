@@ -46,7 +46,7 @@ SOLUTIONS_JSON = REPO / "solutions.json"
 CATALOG = REPO / "data" / "solution-catalog.json"
 OUTPUT = REPO / "solutions-graph.json"
 
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 
 
 def _rel(path: Path) -> str:
@@ -118,6 +118,10 @@ def build_graph() -> dict:
                 "domain": sol.get("domain", ""),
                 "controlCoverage": sorted(coverage),
                 "docFileCount": doc_count,
+                "tiersSupported": sol.get("tiersSupported", []),
+                "tierRecommended": sol.get("tierRecommended"),
+                "tierMaturity": sol.get("tierMaturity"),
+                "maturity": sol.get("maturity"),
             }
         )
 

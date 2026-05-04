@@ -5,6 +5,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- **Tier metadata** across the catalog: `tiers_supported`, `tier_recommended`, `tier_maturity`, `maturity` per solution in `data/solution-catalog.json`; surfaced through `solutions.json` (schema 0.2.0) and `solutions-graph.json` (schema 1.1.0).
+- **Coverage-state envelope** in `data/control-coverage.json` (schemaVersion 1.1.0): each control gains `solution_coverage[]` with `coverageState` ∈ {`documentation-only`, `scripted-sample`, `evidence-export-ready`}. `evidence-export-ready` requires `Export-Evidence.ps1` to exist for the solution.
+- **Coverage-honesty annotations** on all 23 solution `## Related Controls` sections, linking to `docs/reference/control-coverage-honesty.md`.
+- **README Quickstart + Pick-a-tier** sections and a `Tiers` column (`base / rec / reg`, recommended in **bold**) on the solution catalog table.
+- **`DEPLOYMENT-GUIDE.md` v1.0** promotion: status banner pinned to `FRAMEWORK-VERSION`, what-is/is-not preamble, populated tier-applicability matrix for all 23 solutions, 5-step pilot path, licensing footprint, threat-model + data-classification cross-refs, revision history.
+- **Hardening artifacts** (P2): `SECURITY.md`, `pyproject.toml`, `PSScriptAnalyzerSettings.psd1`, `.gitleaks.toml`, `FRAMEWORK-VERSION`, `data/data-classification.{json,schema.json}`, `docs/security/` and reference pages (`control-coverage-honesty`, `data-classification`, `framework-compatibility`, `tier-applicability`, `hybrid-flow-validation-proposal`).
+- **CI workflows**: `codeql.yml`, `dependency-review.yml`, `lint-powershell.yml`, `lint-python.yml`, `release.yml`, `sbom-pr.yml`, `secret-scan.yml`, `test-pester.yml`, `validate-evidence.yml`.
+- **Validators**: `scripts/validate_data_classification.py`, `scripts/validate-flow-contract.py`, `scripts/gen-release-manifest.py`. `scripts/validate-contracts.py` now enforces the coverage envelope and `Export-Evidence.ps1` existence for `evidence-export-ready` claims.
+- Solution 04 flow contract scaffold under `solutions/04-finra-supervision-workflow/flows/`.
+
+### Changed
+- `scripts/build_solutions_json.py` and `scripts/build_solutions_graph.py` emit the new tier and maturity fields; schemas bumped (`solutions.json` → 0.2.0, `solutions-graph.json` → 1.1.0).
+- `scripts/validate_solutions_json.py` enforces `ALLOWED_TIERS`, `ALLOWED_TIER_MATURITY`, `ALLOWED_MATURITY` enums.
+- `scripts/validate-documentation.py` adds `check_framework_version_file()` and `check_deployment_guide_matrix()` (drift gates) and a configurable language-gate suppression mechanism.
+- `AGENTS.md` validation-commands block updated to list all 8 validators.
+- `.gitignore` adds `.gitleaks-report.json` and `.tools/`.
+
+### Notes
+- All changes are documentation-first — scripts continue to use representative sample data; no runtime tenant binding.
+- Working tree is staged for operator review; release tagging is deferred.
+
 ## [0.7.0] - 2026-04-22
 
 ### Added

@@ -43,6 +43,8 @@ This solution **does not**:
 - ❌ Guarantee compliance with any regulation — it supports compliance efforts
 - ❌ Replace legal or compliance counsel review of permission policies
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md) for the component diagram and data flow.
@@ -85,6 +87,10 @@ See [docs/prerequisites.md](docs/prerequisites.md) for platform, licensing, role
 This solution builds on the site inventory and oversharing risk classification from [Solution 02 — Oversharing Risk Assessment](../02-oversharing-risk-assessment/). Solution 02 identifies sites with oversharing risk at a point in time; Solution 17 adds continuous monitoring to detect when permissions drift from an approved state.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 1.2, 1.4, 1.6, 2.5.
+> 1 control(s) are **documentation-only** (listed in metadata but not yet exercised by scripts/tests in this scaffold): 1.15.
 
 | Control ID | Focus Area | How This Solution Supports |
 |------------|-----------|---------------------------|

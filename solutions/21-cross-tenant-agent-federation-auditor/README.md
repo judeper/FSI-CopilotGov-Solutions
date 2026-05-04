@@ -40,6 +40,8 @@ CTAF helps meet third-party and information-security governance expectations und
 - ❌ Does not block agent invocation; CTAF is detective and evidentiary, not preventive.
 - ❌ Does not cover internal-only (single-tenant) agents — see solution 20 for in-tenant agent inventory.
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Prerequisites
 
 Review [docs/prerequisites.md](docs/prerequisites.md) for the required admin roles, PowerShell modules, and Microsoft 365 prerequisites before deploying this solution.

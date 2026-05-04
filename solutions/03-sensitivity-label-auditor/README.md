@@ -28,6 +28,8 @@ Sensitivity Label Coverage Auditor measures how much in-scope content is actuall
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture Reference
 
 See `docs\architecture.md` for the component diagram, Graph data flow, workload coverage model, gap prioritization formula, and Power Automate flow design.
@@ -101,6 +103,9 @@ This solution depends on upstream data from the following solutions and they mus
 2. `02-oversharing-risk-assessment` to identify high-risk containers that should be prioritized when unlabeled content is found.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 1.5, 2.2, 3.11, 3.12.
 
 | Control | Status | How this solution supports the control |
 |---------|--------|----------------------------------------|

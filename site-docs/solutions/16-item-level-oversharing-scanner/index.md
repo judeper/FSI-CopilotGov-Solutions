@@ -35,6 +35,8 @@ By default, all remediation tiers use approval-gate mode. Auto-remediation is in
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not modify sensitivity labels (label information is read-only for risk scoring)
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 See [docs/architecture.md](architecture.md) for the 3-script pipeline diagram, data flow, and remediation policy design.
@@ -86,6 +88,10 @@ After the deployment manifest is created with `Deploy-Solution.ps1`, run the 3-s
 Solution 16 depends on the site-level oversharing assessment from solution 02 to identify which sites warrant item-level investigation. The deployment workflow checks for upstream evidence so item-level scans can be targeted at sites already flagged for broad sharing, guest access, or regulated content exposure.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 5 control(s) are **evidence-export-ready** in scaffold form: 1.2, 1.3, 1.4, 1.6, 2.5.
+> 1 control(s) is/are **documentation-only** (listed in metadata but not yet exercised by scripts/tests in this scaffold): 1.14.
 
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|

@@ -93,7 +93,7 @@ function Get-SampleMcpAttestations {
         [pscustomobject]@{
             serverId = 'mcp-marketdata-prod'
             transport = 'https'
-            signingKeyThumbprint = '0F1E2D3C4B5A69788796A5B4C3D2E1F0FEDCBA98'
+            signingKeyThumbprint = '0F1E2D3C4B5A69788796A5B4C3D2E1F0FEDCBA98' # gitleaks:allow -- representative sample SHA-1 thumbprint, not a real credential
             attestedAt = (Get-Date).AddDays(- [int]($MaxAttestationAgeDays / 2)).ToString('o')
             attestationStatus = 'current'
             scopes = @('quotes.read', 'reference-data.read')
@@ -101,7 +101,7 @@ function Get-SampleMcpAttestations {
         [pscustomobject]@{
             serverId = 'mcp-research-archive'
             transport = 'https'
-            signingKeyThumbprint = 'A1B2C3D4E5F60718293A4B5C6D7E8F90FEDCBA01'
+            signingKeyThumbprint = 'A1B2C3D4E5F60718293A4B5C6D7E8F90FEDCBA01' # gitleaks:allow -- representative sample SHA-1 thumbprint, not a real credential
             attestedAt = (Get-Date).AddDays(- ($MaxAttestationAgeDays + 7)).ToString('o')
             attestationStatus = 'stale'
             scopes = @('research.read')

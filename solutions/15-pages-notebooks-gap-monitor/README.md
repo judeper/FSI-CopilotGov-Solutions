@@ -45,6 +45,8 @@ This solution gives compliance, legal, and operations teams a repeatable way to 
 - ❌ Does not cover departed-user / leaver workflow for Copilot Pages and Notebooks
 - ❌ Does not capture notebook sensitivity labeling limitations as a distinct gap category
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 The solution uses a documentation-first monitoring pattern:
@@ -98,6 +100,9 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 Deploy the solution by initializing the selected tier with `Deploy-Solution.ps1`, running `Monitor-Compliance.ps1` to populate the initial gap register, reviewing the documented gaps with compliance and legal stakeholders, and then exporting the approved state with `Export-Evidence.ps1`. Because this solution is monitor-only, deployment focuses on documentation, review cadence, and preservation exception governance rather than tenant-side enforcement.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 2.11, 3.11, 3.2, 3.3.
 
 | Control | Title | How this solution addresses it |
 |---------|-------|--------------------------------|
