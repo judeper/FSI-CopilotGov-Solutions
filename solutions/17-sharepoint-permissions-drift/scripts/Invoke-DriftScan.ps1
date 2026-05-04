@@ -62,13 +62,22 @@ Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
 #region Helper Functions
 
+function Test-FullControlPermissionLevel {
+    param([AllowNull()][string]$PermissionLevel)
+
+    if ([string]::IsNullOrWhiteSpace($PermissionLevel)) { return $false }
+
+    $normalized = ($PermissionLevel -replace '\s', '').ToLowerInvariant()
+    return $normalized -eq 'fullcontrol'
+}
+
 function Get-DriftTypeWeight {
     param([string]$DriftType, [pscustomobject]$DriftItem)
 
     $weight = 0
     switch ($DriftType) {
         'ADDED' {
-            if ($DriftItem.After.permissionLevel -eq 'FullControl') { $weight += 25 }
+            if (Test-FullControlPermissionLevel -PermissionLevel $DriftItem.After.permissionLevel) { $weight += 25 }
             elseif ($DriftItem.After.permissionLevel -eq 'Contribute') { $weight += 15 }
             else { $weight += 10 }
 
@@ -80,8 +89,8 @@ function Get-DriftTypeWeight {
         }
         'CHANGED' {
             $weight += 15
-            if ($DriftItem.After.permissionLevel -eq 'FullControl' -and
-                $DriftItem.Before.permissionLevel -ne 'FullControl') {
+            if ((Test-FullControlPermissionLevel -PermissionLevel $DriftItem.After.permissionLevel) -and
+                -not (Test-FullControlPermissionLevel -PermissionLevel $DriftItem.Before.permissionLevel)) {
                 $weight += 20
             }
         }
@@ -221,7 +230,7 @@ function Get-SampleDriftData {
             After      = [pscustomobject]@{
                 principalName   = 'Trading Analysts'
                 principalType   = 'SecurityGroup'
-                permissionLevel = 'FullControl'
+                permissionLevel = 'Full Control'
             }
             RiskScore  = 55
             RiskTier   = 'MEDIUM'
@@ -248,7 +257,7 @@ function Get-SampleDriftData {
             Before     = [pscustomobject]@{
                 principalName   = 'HR Admins'
                 principalType   = 'SharePointGroup'
-                permissionLevel = 'FullControl'
+                permissionLevel = 'Full Control'
             }
             After      = $null
             RiskScore  = 10

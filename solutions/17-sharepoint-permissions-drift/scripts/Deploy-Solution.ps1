@@ -12,7 +12,7 @@
     The configuration tier to deploy. Valid values: baseline, recommended, regulated.
 
 .PARAMETER TenantId
-    The Azure AD tenant identifier.
+    The Microsoft Entra tenant identifier.
 
 .PARAMETER OutputPath
     Directory for deployment artifacts. Defaults to .\artifacts\SPD.
@@ -149,7 +149,7 @@ if ($PSCmdlet.ShouldProcess("$OutputPath", "Generate deployment manifest")) {
         solution          = '17-sharepoint-permissions-drift'
         solutionCode      = 'SPD'
         displayName       = 'SharePoint Permissions Drift Detection'
-        version           = 'v0.1.0'
+        version           = 'v0.1.1'
         deployedAt        = (Get-Date).ToString('o')
         configurationTier = $ConfigurationTier
         tenantId          = $TenantId

@@ -11,11 +11,11 @@
 
 ## Required Administrative Roles
 
-| Role | Purpose |
-|------|---------|
-| SharePoint Administrator | Required for baseline capture and drift scan across all sites |
-| Global Reader or Security Reader | Sufficient for read-only drift detection (no reversion) |
-| Exchange Online Administrator | Required if using Graph API mail notifications |
+| Role / Access | Purpose |
+|---------------|---------|
+| SharePoint Administrator or site owner | Required for baseline capture and drift scan across in-scope sites |
+| Microsoft Graph application permissions | Required for complete read-only permission inventory; use `Files.Read.All` for drive item permissions and `Sites.Read.All` where site-wide inventory requires it |
+| Mail sender mailbox and `Mail.Send` consent | Required if using Microsoft Graph mail notifications; scope the sender mailbox per institutional policy |
 | Compliance Administrator | Recommended for evidence export review and approval-gate oversight |
 
 ## Required PowerShell Modules
@@ -34,20 +34,22 @@ Install-Module -Name Microsoft.Graph -MinimumVersion 2.0.0 -Scope CurrentUser
 Install-Module -Name Pester -MinimumVersion 5.0.0 -Scope CurrentUser
 ```
 
-> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
+> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation supports PowerShell 7.4 and Windows PowerShell 5.1; validate region, cloud, and selected `PnP.PowerShell` module compatibility before scheduling runbooks.
 
 ## Application Registration
 
-For unattended (service account) operation, register an Azure AD application with:
+For unattended (service account) operation, register a Microsoft Entra ID application with:
 
 | Permission | Type | Purpose |
 |------------|------|---------|
-| `Sites.Read.All` | Application | Read site permissions for baseline and drift scan |
+| `Files.Read.All` | Application | Read drive item permissions for detect-only inventory |
+| `Sites.Read.All` | Application | Read site permissions where site-wide inventory requires it |
 | `Sites.FullControl.All` | Application | Required only if auto-reversion is enabled |
 | `Mail.Send` | Application | Send drift alert and approval request emails |
-| `User.Read.All` | Application | Resolve user and group identities |
+| `User.Read.All` | Application | Resolve user identities |
+| `GroupMember.Read.All` / `Group.Read.All` or `Directory.Read.All` | Application | Resolve group identities and membership, depending on the queries used |
 
-> **Note:** Use `Sites.Read.All` for detect-only mode. Elevate to `Sites.FullControl.All` only when auto-reversion is explicitly enabled and approved by your security team.
+> **Note:** Use `Files.Read.All` and, where site-wide inventory requires it, `Sites.Read.All` for detect-only mode. Elevate to `Sites.FullControl.All` only when auto-reversion is explicitly enabled and approved by your security team.
 
 ## Upstream Dependency
 
@@ -61,7 +63,7 @@ The Solution 02 site inventory output provides context for risk scoring. If Solu
 |----------|----------|---------|
 | `*.sharepoint.com` | HTTPS 443 | SharePoint Online API access |
 | `graph.microsoft.com` | HTTPS 443 | Microsoft Graph API for notifications |
-| `login.microsoftonline.com` | HTTPS 443 | Azure AD authentication |
+| `login.microsoftonline.com` | HTTPS 443 | Microsoft Entra ID authentication |
 
 ## Operational Readiness
 

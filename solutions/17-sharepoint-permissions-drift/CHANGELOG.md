@@ -2,6 +2,14 @@
 
 All notable changes to this solution are documented in this file.
 
+## [v0.1.1] — 2026-05-04
+
+### Fixed
+
+- Corrected read-only SharePoint permission inventory prerequisites to avoid relying on directory reader roles alone.
+- Updated Microsoft Entra ID terminology and Azure Automation runtime guidance.
+- Normalized sample SharePoint permission-level values to the canonical `Full Control` display name.
+
 ## [v0.1.0] — 2025-07-01
 
 ### Added

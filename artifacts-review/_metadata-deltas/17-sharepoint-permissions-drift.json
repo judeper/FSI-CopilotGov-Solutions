@@ -1,0 +1,28 @@
+{
+  "slug": "17-sharepoint-permissions-drift",
+  "branch": "accuracy-review/2026-05-04-remediation/17-sharepoint-permissions-drift",
+  "deltas": [
+    {
+      "issue": 51,
+      "finding_id": "version-sync",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[slug=17-sharepoint-permissions-drift].version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump — README and solution default configuration version updated to v0.1.1 in this PR; shared catalog metadata should mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 51,
+      "finding_id": "version-sync",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions.17-sharepoint-permissions-drift.version",
+      "current_value": "v0.1.0",
+      "proposed_value": "v0.1.1",
+      "rationale": "Patch bump — README and solution default configuration version updated to v0.1.1 in this PR; shared solution configuration metadata should mirror.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}

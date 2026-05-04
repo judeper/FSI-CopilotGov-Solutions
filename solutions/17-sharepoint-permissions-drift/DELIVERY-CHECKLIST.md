@@ -22,10 +22,10 @@
 
 ## 3. Administrative Access
 
-- [ ] SharePoint Administrator role is assigned for baseline capture and drift scan
-- [ ] Global Reader or Security Reader role is confirmed for read-only operations
-- [ ] Application registration is created with Sites.FullControl.All (or Sites.Read.All for read-only mode)
-- [ ] Mail.Send permission is granted for drift alert notifications
+- [ ] SharePoint Administrator role or site owner access is assigned for baseline capture and drift scan
+- [ ] Read-only drift detection uses SharePoint access or admin-consented Microsoft Graph `Files.Read.All`/`Sites.Read.All`; Global Reader or Security Reader alone is not treated as sufficient
+- [ ] Application registration is created with `Files.Read.All`/`Sites.Read.All` for detect-only mode and `Sites.FullControl.All` only if auto-reversion is approved
+- [ ] `Mail.Send` permission is granted for drift alert notifications
 - [ ] Conditional Access policies allow the service account to authenticate
 
 ## 4. Configuration Review

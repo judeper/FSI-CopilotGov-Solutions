@@ -14,7 +14,7 @@
     The configuration tier to use. Valid values: baseline, recommended, regulated.
 
 .PARAMETER TenantId
-    The Azure AD tenant identifier.
+    The Microsoft Entra tenant identifier.
 
 .PARAMETER TenantUrl
     The SharePoint Online tenant URL (e.g., https://contoso.sharepoint.com).
