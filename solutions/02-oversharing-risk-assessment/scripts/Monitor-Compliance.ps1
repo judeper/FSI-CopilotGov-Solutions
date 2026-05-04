@@ -105,6 +105,9 @@ function Invoke-GraphWithRetry {
     param(
         [Parameter(Mandatory)][psobject]$Context,
         [Parameter(Mandatory)][string]$Uri,
+        [ValidateSet('GET', 'POST', 'PATCH', 'PUT', 'DELETE')]
+        [string]$Method = 'GET',
+        [object]$Body,
         [switch]$AllPages,
         [int]$MaxRetries = 3,
         [int[]]$BackoffSeconds = @(60, 120, 240)
@@ -112,7 +115,8 @@ function Invoke-GraphWithRetry {
     $attempt = 0
     while ($true) {
         try {
-            $params = @{ Context = $Context; Uri = $Uri }
+            $params = @{ Context = $Context; Uri = $Uri; Method = $Method }
+            if ($null -ne $Body) { $params['Body'] = $Body }
             if ($AllPages) { $params['AllPages'] = $true }
             return Invoke-CopilotGovGraphRequest @params
         }
@@ -661,7 +665,7 @@ function Get-SensitivityLabelCoverage {
                 [pscustomobject]@{ Label = 'Confidential'; Count = [Math]::Floor($labeledCount * 0.50) }
                 [pscustomobject]@{ Label = 'General'; Count = ($labeledCount - [Math]::Floor($labeledCount * 0.33) - [Math]::Floor($labeledCount * 0.50)) }
             )
-            Recommendation = 'Apply Microsoft Purview Information Protection sensitivity labels to all sites containing regulated data to restrict Microsoft 365 Copilot content surfacing.'
+            Recommendation = 'Configure Microsoft Purview Information Protection sensitivity labels and protection settings for regulated data; treat label coverage as a governance signal because Copilot honors permissions and label-based protections such as encryption, where users need VIEW and EXTRACT rights.'
         }
     }
 
@@ -687,22 +691,58 @@ function Get-SensitivityLabelCoverage {
 
         try {
             $driveItems = @(Invoke-GraphWithRetry -Context $GraphContext `
-                -Uri "/sites/$siteId/drive/root/children?`$select=id,sensitivityLabel&`$top=50")
-            $labeledItems = @($driveItems | Where-Object {
-                $label = if ($_ -is [hashtable]) { $_['sensitivityLabel'] } else { $_.sensitivityLabel }
-                $null -ne $label
-            })
+                -Uri "/sites/$siteId/drive/root/children?`$select=id,name,file&`$top=50")
+            $siteLabelCount = 0
 
-            if ($labeledItems.Count -gt 0) {
-                $labeledSiteCount++
-                foreach ($item in $labeledItems) {
-                    $label = if ($item -is [hashtable]) { $item['sensitivityLabel'] } else { $item.sensitivityLabel }
-                    $labelName = if ($label -is [hashtable]) { $label['displayName'] } else { $label.displayName }
-                    if (-not [string]::IsNullOrWhiteSpace($labelName)) {
-                        if (-not $labelCounts.ContainsKey($labelName)) { $labelCounts[$labelName] = 0 }
-                        $labelCounts[$labelName]++
+            foreach ($item in $driveItems) {
+                $itemId = if ($item -is [hashtable]) { $item['id'] } else { $item.id }
+                $fileFacet = if ($item -is [hashtable]) { $item['file'] } else { $item.file }
+                if ([string]::IsNullOrWhiteSpace($itemId) -or $null -eq $fileFacet) { continue }
+
+                try {
+                    $labelResults = @(Invoke-GraphWithRetry -Context $GraphContext `
+                        -Method POST `
+                        -Uri "/sites/$siteId/drive/items/$itemId/extractSensitivityLabels")
+
+                    foreach ($labelResult in $labelResults) {
+                        $labels = if ($labelResult -is [hashtable]) {
+                            $labelResult['labels']
+                        }
+                        elseif ($labelResult.PSObject.Properties.Name -contains 'labels') {
+                            $labelResult.labels
+                        }
+                        else {
+                            @()
+                        }
+
+                        foreach ($label in @($labels)) {
+                            if ($null -eq $label) { continue }
+
+                            $labelName = if ($label -is [hashtable]) {
+                                if ($label.ContainsKey('displayName')) { $label['displayName'] } else { $label['sensitivityLabelId'] }
+                            }
+                            else {
+                                $labelProperties = @($label.PSObject.Properties.Name)
+                                if ($labelProperties -contains 'displayName') { $label.displayName }
+                                elseif ($labelProperties -contains 'sensitivityLabelId') { $label.sensitivityLabelId }
+                                else { $null }
+                            }
+
+                            if (-not [string]::IsNullOrWhiteSpace($labelName)) {
+                                if (-not $labelCounts.ContainsKey($labelName)) { $labelCounts[$labelName] = 0 }
+                                $labelCounts[$labelName]++
+                                $siteLabelCount++
+                            }
+                        }
                     }
                 }
+                catch {
+                    Write-Verbose "Could not extract sensitivity labels for item $itemId on site $siteUrl : $($_.Exception.Message)"
+                }
+            }
+
+            if ($siteLabelCount -gt 0) {
+                $labeledSiteCount++
             }
             else {
                 $unlabeledSiteCount++
@@ -728,7 +768,7 @@ function Get-SensitivityLabelCoverage {
         SitesWithoutLabels = $unlabeledSiteCount
         LabelCoveragePercent = $coveragePercent
         LabelBreakdown = @($breakdown)
-        Recommendation = 'Apply Microsoft Purview Information Protection sensitivity labels to all sites containing regulated data to restrict Microsoft 365 Copilot content surfacing.'
+        Recommendation = 'Configure Microsoft Purview Information Protection sensitivity labels and protection settings for regulated data; treat label coverage as a governance signal because Copilot honors permissions and label-based protections such as encryption, where users need VIEW and EXTRACT rights.'
     }
 }
 

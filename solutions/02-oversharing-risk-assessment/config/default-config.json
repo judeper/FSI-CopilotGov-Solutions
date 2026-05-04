@@ -1,7 +1,7 @@
 {
   "solution": "02-oversharing-risk-assessment",
   "displayName": "Oversharing Risk Assessment and Remediation",
-  "version": "v0.2.0",
+  "version": "v0.2.1",
   "solutionCode": "ORA",
   "track": "A",
   "priority": "P0",

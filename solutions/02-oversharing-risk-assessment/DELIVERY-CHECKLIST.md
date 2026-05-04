@@ -11,8 +11,8 @@ Use this checklist to move solution 02 from documentation review into controlled
 
 ## 2. Licensing and Platform Prerequisites
 
-- [ ] Validate SharePoint Advanced Management licensing for the tenant or document the approved alternative control path.
-- [ ] Validate Microsoft 365 E5 Compliance or equivalent capability for DSPM for AI review and related investigations.
+- [ ] Validate SharePoint Advanced Management feature entitlement by confirming the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license, or document the approved alternative control path.
+- [ ] Validate Microsoft Purview Data Security Posture Management (DSPM) prerequisites for the target scenarios, including permissions, audit, Microsoft 365 Copilot user licensing, and any Edge, device, browser extension, or pay-as-you-go billing requirements that apply.
 - [ ] Confirm SharePoint REST API and Microsoft Graph access from the execution environment.
 - [ ] Confirm the required PowerShell modules are installed and approved for use in the administration workstation or automation host.
 
@@ -27,7 +27,7 @@ Use this checklist to move solution 02 from documentation review into controlled
 - [ ] Review `config\default-config.json` for evidence path, classifier weights, and default notification settings.
 - [ ] Review the selected tier JSON for workload coverage, remediation mode, and evidence retention.
 - [ ] Set an initial `maxSitesPerRun` value appropriate for pilot execution.
-- [ ] Confirm Restricted SharePoint Search settings align with the intended Copilot rollout boundary.
+- [ ] Confirm Restricted SharePoint Search planning is temporary, limited to the supported allowed-list scope, and not treated as a SharePoint permissions change or security boundary.
 
 ## 5. Site Owner Communication Planning
 

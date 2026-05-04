@@ -70,7 +70,7 @@ Expected fields include:
 - `reportingPeriodEnd`
 - `recommendation`
 
-This artifact supports data governance by reporting which sites have sensitivity labels applied. Sites without labels may expose regulated content via Microsoft 365 Copilot.
+This artifact supports data governance by reporting which sites have sensitivity labels applied. Label coverage is a governance signal rather than an automatic Copilot restriction: Copilot respects existing permissions and label-based protections such as encryption, where users need VIEW and EXTRACT rights for AI apps to return the data.
 
 ## Control Status Mapping by Evidence Type
 
@@ -85,8 +85,8 @@ This artifact supports data governance by reporting which sites have sensitivity
 
 | Control | Status | Notes |
 |---------|--------|-------|
-| 1.2 | partial | DSPM for AI provides partial native coverage, but full-tenant oversharing detection still requires local workflow tuning |
-| 1.3 | monitor-only | The solution records readiness and planned enablement for Restricted SharePoint Search but does not enforce tenant state on its own |
+| 1.2 | partial | Microsoft Purview Data Security Posture Management (DSPM) can provide native signals; the classic DSPM for AI default weekly data risk assessment is scoped to the top 100 SharePoint sites by usage, so tenant-specific workflow tuning may still be required |
+| 1.3 | monitor-only | The solution records temporary Restricted SharePoint Search planning and does not modify tenant state on its own |
 | 1.4 | partial | Semantic index governance is supported through scoped findings and remediation planning |
 | 2.5 | monitor-only | Data minimization is monitored through broad-access findings and recommended actions |
 | 2.12 | partial | External sharing and guest access governance is captured in findings and remediation workflow stubs |

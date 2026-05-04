@@ -1,0 +1,28 @@
+{
+  "slug": "02-oversharing-risk-assessment",
+  "branch": "accuracy-review/2026-05-04-remediation/02-oversharing-risk-assessment",
+  "deltas": [
+    {
+      "issue": 93,
+      "finding_id": "VERSION-BUMP",
+      "target_file": "data/solution-catalog.json",
+      "json_path": "solutions[id=02].version",
+      "current_value": "v0.2.0",
+      "proposed_value": "v0.2.1",
+      "rationale": "Patch bump after solution 02 accuracy-review fixes; shared catalog metadata must mirror the README and config/default-config.json version updated in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    },
+    {
+      "issue": 93,
+      "finding_id": "VERSION-BUMP",
+      "target_file": "scripts/solution-config.yml",
+      "json_path": "solutions[slug=02-oversharing-risk-assessment].version",
+      "current_value": "v0.2.0",
+      "proposed_value": "v0.2.1",
+      "rationale": "Patch bump after solution 02 accuracy-review fixes; shared solution configuration must mirror the README and config/default-config.json version updated in this PR.",
+      "learn_url": null,
+      "learn_last_updated": null
+    }
+  ]
+}
