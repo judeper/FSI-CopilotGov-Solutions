@@ -241,6 +241,33 @@ function Get-DocumentationEvidenceData {
     }
 }
 
+function Get-DataverseEntitySetName {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [System.Collections.IDictionary]$Configuration,
+
+        [Parameter(Mandatory)]
+        [string]$LogicalName
+    )
+
+    $table = @($Configuration['dataverseTables'] | Where-Object { [string]($_['logicalName']) -eq $LogicalName } | Select-Object -First 1)
+    if ($table.Count -eq 0) {
+        throw "Dataverse table logical name '$LogicalName' is not configured."
+    }
+
+    $entitySetName = if ($table[0].Contains('entitySetName')) { [string]$table[0]['entitySetName'] } else { $null }
+    if ([string]::IsNullOrWhiteSpace($entitySetName)) {
+        throw "Dataverse EntitySet name is required for table '$LogicalName'. Add entitySetName to config/default-config.json after validating the Web API service document."
+    }
+
+    if ($entitySetName -match '[/?#]') {
+        throw "Dataverse EntitySet name '$entitySetName' must be a collection resource name, not a URL."
+    }
+
+    return $entitySetName
+}
+
 function Invoke-DataverseTableQuery {
     [CmdletBinding()]
     param(
@@ -248,7 +275,7 @@ function Invoke-DataverseTableQuery {
         [string]$EnvironmentUrl,
 
         [Parameter(Mandatory)]
-        [string]$TableName,
+        [string]$EntitySetName,
 
         [Parameter(Mandatory)]
         [string[]]$Select,
@@ -276,7 +303,7 @@ function Invoke-DataverseTableQuery {
         throw "Dataverse environment URL host must match *.crm.dynamics.com or *.crm[N].dynamics.com. Got: $($parsedUri.Host)"
     }
 
-    $uri = '{0}/api/data/v9.2/{1}?$select={2}' -f $EnvironmentUrl.TrimEnd('/'), $TableName, ($Select -join ',')
+    $uri = '{0}/api/data/v9.2/{1}?$select={2}' -f $EnvironmentUrl.TrimEnd('/'), $EntitySetName, ($Select -join ',')
     if (-not [string]::IsNullOrWhiteSpace($Filter)) {
         $uri = '{0}&$filter={1}' -f $uri, [System.Uri]::EscapeDataString($Filter)
     }
@@ -352,10 +379,13 @@ function Get-LiveEvidenceData {
     $environmentUrl = [string]$Configuration['dataverseEnvironmentUrl']
     $queueFilter = "createdon ge $($StartDate.ToString('yyyy-MM-ddTHH:mm:ssZ')) and createdon lt $($EndDate.AddDays(1).ToString('yyyy-MM-ddTHH:mm:ssZ'))"
     $logFilter = "fsi_timestamp ge $($StartDate.ToString('yyyy-MM-ddTHH:mm:ssZ')) and fsi_timestamp lt $($EndDate.AddDays(1).ToString('yyyy-MM-ddTHH:mm:ssZ'))"
+    $queueEntitySet = Get-DataverseEntitySetName -Configuration $Configuration -LogicalName 'fsi_cg_fsw_queue'
+    $logEntitySet = Get-DataverseEntitySetName -Configuration $Configuration -LogicalName 'fsi_cg_fsw_log'
+    $configEntitySet = Get-DataverseEntitySetName -Configuration $Configuration -LogicalName 'fsi_cg_fsw_config'
 
-    $queueRecords = Invoke-DataverseTableQuery -EnvironmentUrl $environmentUrl -TableName 'fsi_cg_fsw_queue' -Select @('fsi_queuenumber', 'fsi_sourcetype', 'fsi_sourceid', 'fsi_agentid', 'fsi_zone', 'fsi_tier', 'fsi_state', 'fsi_assignedprincipal', 'fsi_sladue', 'fsi_reviewoutcome', 'fsi_reviewnotes') -Filter $queueFilter
-    $logRecords = Invoke-DataverseTableQuery -EnvironmentUrl $environmentUrl -TableName 'fsi_cg_fsw_log' -Select @('fsi_lognumber', 'fsi_queueitem', 'fsi_action', 'fsi_actor', 'fsi_timestamp') -Filter $logFilter
-    $configRows = Invoke-DataverseTableQuery -EnvironmentUrl $environmentUrl -TableName 'fsi_cg_fsw_config' -Select @('fsi_zone', 'fsi_tier', 'fsi_slahours', 'fsi_reviewpercent')
+    $queueRecords = Invoke-DataverseTableQuery -EnvironmentUrl $environmentUrl -EntitySetName $queueEntitySet -Select @('fsi_queuenumber', 'fsi_sourcetype', 'fsi_sourceid', 'fsi_agentid', 'fsi_zone', 'fsi_tier', 'fsi_state', 'fsi_assignedprincipal', 'fsi_sladue', 'fsi_reviewoutcome', 'fsi_reviewnotes') -Filter $queueFilter
+    $logRecords = Invoke-DataverseTableQuery -EnvironmentUrl $environmentUrl -EntitySetName $logEntitySet -Select @('fsi_lognumber', 'fsi_queueitem', 'fsi_action', 'fsi_actor', 'fsi_timestamp') -Filter $logFilter
+    $configRows = Invoke-DataverseTableQuery -EnvironmentUrl $environmentUrl -EntitySetName $configEntitySet -Select @('fsi_zone', 'fsi_tier', 'fsi_slahours', 'fsi_reviewpercent')
 
     $stateSummary = @($queueRecords | Group-Object -Property fsi_state | ForEach-Object {
         [ordered]@{

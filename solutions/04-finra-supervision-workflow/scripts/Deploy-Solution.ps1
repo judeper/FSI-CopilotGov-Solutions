@@ -4,8 +4,8 @@
     Deploys the FINRA Supervision Workflow configuration for Microsoft 365 Copilot.
 .DESCRIPTION
     Validates prerequisites, applies tier-specific configuration, generates a deployment
-    manifest, and prepares Dataverse connection reference stubs. Power Automate flows
-    and Dataverse tables must be created manually per docs\deployment-guide.md because
+    manifest, and prepares connection reference stubs for the customer-validated handoff
+    and Dataverse. Power Automate flows and Dataverse tables must be created manually per docs\deployment-guide.md because
     the Power Platform CLI is not required as a dependency for this solution.
 .PARAMETER ConfigurationTier
     Governance tier: baseline, recommended, or regulated.
@@ -131,11 +131,11 @@ $connectionReferenceStubs = [ordered]@{
     tier = $ConfigurationTier
     connectionReferences = @(
         [ordered]@{
-            name = 'fsi_cr_fsw_purview'
-            service = 'purview-communication-compliance'
+            name = 'fsi_cr_fsw_handoff'
+            service = 'customer-validated-communication-compliance-handoff'
             required = $true
             status = 'manual-create'
-            purpose = 'Used by the Ingest Flagged Items flow to retrieve flagged Copilot communications.'
+            purpose = 'Used by the Ingest Flagged Items flow only after the firm validates a Communication Compliance report export, audit-log review, or alert-context Power Automate handoff.'
         },
         [ordered]@{
             name = 'fsi_cr_fsw_dataverse'
