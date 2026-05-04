@@ -73,9 +73,9 @@ The solution writes the package and SHA-256 hash file into the selected output f
 | 3.6 | `partial` | Reviewer queue metrics and supervision workflow evidence require manual reviewer actions |
 | 3.9 | `partial` | AI disclosure policy templates are exported, but monitoring remains partly manual |
 
-## Insider Risk and Video Recap Evidence Fields
+## Insider Risk and Teams Intelligent Recap Evidence Fields
 
-Evidence packages should document the following additional compliance artifact categories to support insider risk management and video recap governance:
+Evidence packages should document the following additional compliance artifact categories to support insider risk management, Teams Intelligent recap, and audio recap governance:
 
 ### Insider Risk AI Usage Policy State
 
@@ -83,21 +83,23 @@ Evidence packages should document the following additional compliance artifact c
 |-------|------|-------------|
 | `irmPolicyName` | string | Name of the insider risk management policy targeting AI usage indicators |
 | `irmPolicyStatus` | string | Configuration state such as `documented`, `configured`, or `active` |
-| `riskIndicators[]` | array | List of enabled IRM indicators for Copilot interactions (e.g., sensitive prompt, unusual volume) |
+| `riskIndicators[]` | array | List of enabled IRM indicators for AI usage such as generative AI website browsing, sensitive prompt or response content, and risky intent |
 | `adaptiveProtectionEnabled` | boolean | Whether Adaptive Protection risk scoring is configured for the policy |
 | `lastReviewedAt` | string | ISO 8601 timestamp of the most recent policy review |
 
-### Video Recap Retention Policy Coverage
+### Intelligent Recap and Audio Recap Retention Policy Coverage
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `videoRecapRetentionPolicy` | string | Name of the retention policy governing video recap source artifacts |
-| `retentionPeriodDays` | number | Configured retention period in days for meeting recordings and transcripts |
-| `videoRecapInScope` | boolean | Whether video recap artifacts are included in communication compliance supervision scope |
-| `sourceArtifactTypes[]` | array | Source artifact types covered (e.g., `meeting-recording`, `meeting-transcript`, `video-recap`) |
+| `intelligentRecapPolicyCoverage` | string | Name of the policy or operating procedure covering Intelligent recap outputs such as AI meeting notes, recommended tasks, chapters, and topics |
+| `audioRecapRetentionPolicyCoverage` | string | Name of the retention policy or validation record for audio recap files stored in OneDrive |
+| `retentionPeriodDays` | number | Configured retention period in days for meeting recordings, transcripts, and any validated recap artifacts |
+| `recapArtifactsInScope` | boolean | Whether Intelligent recap or audio recap artifacts are included in supervisory review planning |
+| `sourceArtifactTypes[]` | array | Source artifact types covered (e.g., `meeting-recording`, `meeting-transcript`, `intelligent-recap-notes`, `audio-recap`) |
+| `audioRecapStorageLocation` | string | Documented OneDrive location for audio recap files, when applicable |
 | `regulatoryBasis` | string | Regulatory requirement driving retention (e.g., `SEC Rule 17a-4`, `FINRA Rule 4511`) |
 
-These fields are recommended additions to the evidence package. They document the configuration posture for insider risk AI usage detection and video recap retention rather than attesting to live policy enforcement.
+These fields are recommended additions to the evidence package. They document the configuration posture for insider risk AI usage detection, Teams meeting recordings and transcripts, Intelligent recap outputs, and audio recap storage rather than attesting to live policy enforcement.
 
 ## Operational Notes
 

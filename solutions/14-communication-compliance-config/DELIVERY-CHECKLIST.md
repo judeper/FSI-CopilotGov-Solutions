@@ -4,7 +4,7 @@
 
 - Solution: Microsoft Purview Communication Compliance Configurator (`14-communication-compliance-config`)
 - Code: `CCC`
-- Version: `v0.1.0`
+- Version: `v0.2.1`
 - Track / Priority / Phase: `D / P1 / 3`
 - Dependency: `04-finra-supervision-workflow`
 - Evidence outputs: `policy-template-export`, `reviewer-queue-metrics`, `lexicon-update-log`
@@ -12,7 +12,7 @@
 ## Pre-Deployment
 
 - [ ] Confirm Microsoft Purview Communication Compliance licensing is available for the target tenant.
-- [ ] Confirm Microsoft 365 E5 Compliance or equivalent add-on requirements are met.
+- [ ] Confirm Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 E5, or Office 365 E3 with the Advanced Compliance add-on requirements are met for covered users.
 - [ ] Confirm reviewer assignments for Compliance, Supervision, and Legal are approved.
 - [ ] Confirm supervised lexicon words were reviewed by Legal and Compliance.
 - [ ] Confirm escalation mailbox or queue owner is documented.

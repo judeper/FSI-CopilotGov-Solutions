@@ -2,11 +2,17 @@
 
 ## [Unreleased]
 
+## v0.2.1 - 2026-05-04
+
+- Corrected Communication Compliance licensing and role-group terminology to align with current Microsoft Learn guidance.
+- Reframed Teams recap references around Intelligent recap and audio recap instead of non-current video-highlight terminology.
+- Narrowed risky AI usage and retention statements to documented Microsoft Purview and Teams capabilities.
+
 ## v0.2.0
 
 - Added insider risk management integration for risky AI usage detection: IRM prompt/response monitoring, Adaptive Protection correlation, and control 2.10 coverage.
-- Added Copilot video recap compliance artifact documentation: governance patterns for FINRA 3110 supervision and SEC 17a-4 retention of AI-generated meeting highlights.
-- Updated scope boundaries to clarify IRM and video recap governance posture.
+- Added Teams Intelligent recap and audio recap compliance artifact documentation: governance patterns for FINRA 3110 supervision and SEC 17a-4 retention of AI-generated meeting notes, tasks, chapters, and audio summaries.
+- Updated scope boundaries to clarify IRM and Teams recap governance posture.
 - Updated architecture and evidence export documentation with new compliance artifact categories.
 
 ## v0.1.0 - 2025-01-15

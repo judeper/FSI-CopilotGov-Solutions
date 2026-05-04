@@ -38,7 +38,7 @@
     Solution: Microsoft Purview Communication Compliance Configurator (CCC)
     Controls:  2.10, 3.4, 3.5, 3.6, 3.9
     Regulations: FINRA 2210, FINRA 3110, SEC Reg BI, FCA SYSC 10
-    Version: v0.1.0
+    Version: v0.2.1
 
     IMPORTANT: Microsoft Purview Communication Compliance policy deployment requires manual steps
     in the Microsoft Purview compliance portal. This script generates the policy
