@@ -5,9 +5,9 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 ## Audit readiness
 
 - [ ] Unified Audit Log is enabled in the Microsoft 365 tenant.
-- [ ] `CopilotInteraction` and `AIInteraction` events are confirmed in the validation window.
-- [ ] Required supporting events such as `SharePointFileAccess` are included in the monitoring scope.
-- [ ] Audit level for the selected tier is documented as Standard or Advanced as required.
+- [ ] `CopilotInteraction` events are confirmed in the validation window; `ConnectedAIAppInteraction` or `AIAppInteraction` are included only when custom or third-party AI apps are in scope.
+- [ ] Required supporting events such as `FileAccessed` are included in the monitoring scope.
+- [ ] Audit tier for the selected tier is documented as Audit (Standard) or Audit (Premium) as required.
 
 ## Retention readiness
 

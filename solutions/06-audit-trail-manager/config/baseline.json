@@ -10,11 +10,10 @@
     "3.11",
     "3.12"
   ],
-  "auditLevel": "Standard",
+  "auditLevel": "Audit (Standard)",
   "auditEventTypes": [
     "CopilotInteraction",
-    "AIInteraction",
-    "SharePointFileAccess"
+    "FileAccessed"
   ],
   "retentionPeriods": {
     "unit": "days",

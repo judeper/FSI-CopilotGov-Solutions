@@ -10,8 +10,8 @@ This artifact records:
 
 - UAL enabled check status.
 - Required audit level and selected tier.
-- Copilot event types captured: `CopilotInteraction` and `AIInteraction`.
-- Supporting event types captured for operational context, such as `SharePointFileAccess`.
+- Copilot event types documented for validation: `CopilotInteraction`.
+- Supporting event types documented for operational context, such as `FileAccessed`.
 - Sample counts by event type.
 - Validation window and notes on possible UAL latency.
 

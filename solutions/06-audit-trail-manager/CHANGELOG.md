@@ -4,6 +4,12 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog, and this project follows semantic versioning.
 
+## [v0.2.1] - 2026-05-04
+
+### Changed
+- Updated audit event naming to use `CopilotInteraction` and `FileAccessed`, with `ConnectedAIAppInteraction` or `AIAppInteraction` noted only for custom or third-party AI app scopes.
+- Updated Microsoft Purview Audit tier, licensing, audit role, Graph Audit Search permission, retention policy cmdlet, Copilot retention location, and audit latency terminology based on Microsoft Learn references.
+
 ## [0.2.0] - 2026-03-07
 
 ### Added

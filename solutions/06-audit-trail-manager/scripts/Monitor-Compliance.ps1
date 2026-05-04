@@ -128,7 +128,7 @@ if ($missingEventTypes.Count -gt 0) {
         severity = 'high'
         category = 'audit'
         description = 'Required Copilot audit event types are missing from the configured monitoring scope.'
-        recommendation = 'Update the audit validation scope to include CopilotInteraction, AIInteraction, and supporting workload events.'
+        recommendation = 'Update the audit validation scope to include CopilotInteraction and supporting workload events such as FileAccessed; include ConnectedAIAppInteraction or AIAppInteraction only when custom or third-party AI apps are in scope.'
     })
 }
 
@@ -138,7 +138,7 @@ if ($CheckAuditLevel -and -not $auditLevelValid) {
         severity = 'medium'
         category = 'audit'
         description = 'The configured audit level does not match the allowed values in default-config.json.'
-        recommendation = 'Update the tier configuration to Standard or Advanced as documented.'
+        recommendation = 'Update the tier configuration to Audit (Standard) or Audit (Premium) as documented.'
     })
 }
 

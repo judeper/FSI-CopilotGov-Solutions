@@ -8,8 +8,8 @@ Confirm licensing, roles, PowerShell modules, and Graph permissions described in
 
 - Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
 - Run the operational validation workflow aligned to `Check-AuditLogCompleteness`.
-- Confirm that `CopilotInteraction`, `AIInteraction`, and supporting workload events such as `SharePointFileAccess` appear in scope.
-- Allow up to 24 hours for newly enabled audit events to appear in UAL.
+- Confirm that `CopilotInteraction` and supporting workload events such as `FileAccessed` appear in scope; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
+- Allow for audit record availability to vary; Microsoft doesn't guarantee a specific return time, core services typically appear within 60-90 minutes, and other services can take longer.
 
 ## 3. Generate solution manifests
 
@@ -25,7 +25,7 @@ The deployment script creates the following files:
 
 ## 4. Apply retention policies
 
-- Use `Set-RetentionPolicy` or the Microsoft Purview portal to create or update the retention policies defined in `retention-policy-manifest.json`.
+- Use the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as `New-RetentionCompliancePolicy`, `Set-RetentionCompliancePolicy`, and `New-RetentionComplianceRule`/`Set-RetentionComplianceRule` to create or update the retention policies defined in `retention-policy-manifest.json`.
 - Validate that the selected tier aligns to the target preservation objective:
   - baseline: 1095 days
   - recommended: 1825 days
