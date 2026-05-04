@@ -4,6 +4,15 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog, and this repository uses semantic versioning for solution content.
 
+## [v0.2.1] - 2026-05-04
+
+### Fixed
+
+- Replaced unverifiable individual Copilot app IDs and the Microsoft Flow Service app ID with the Microsoft Graph `Office365` Conditional Access app-suite target plus tenant-verified app-ID guidance.
+- Separated named-location display labels from Graph `namedLocationIds` so generated commands do not emit display-name placeholders.
+- Modeled legacy-authentication and unknown-device-state safeguards as separate block-policy templates.
+- Updated Copilot licensing and Conditional Access portal guidance to align with current Microsoft Learn references.
+
 ## [0.2.0] - 2026-03-07
 
 ### Added

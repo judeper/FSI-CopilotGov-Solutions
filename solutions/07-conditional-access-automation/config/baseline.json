@@ -8,27 +8,32 @@
     "2.9"
   ],
   "copilotAppIds": [
-    "fb8d773d-7ef8-4ec0-a117-179f88add510",
-    "7df0a125-d3be-4c96-aa54-591f83ff541c"
+    "Office365"
   ],
   "riskTiers": {
     "low": {
       "mfaRequired": true,
       "compliantDevice": false,
       "namedLocationRequired": false,
-      "namedLocations": []
+      "namedLocations": [],
+      "namedLocationIds": [],
+      "namedLocationLabels": []
     },
     "medium": {
       "mfaRequired": true,
       "compliantDevice": false,
       "namedLocationRequired": false,
-      "namedLocations": []
+      "namedLocations": [],
+      "namedLocationIds": [],
+      "namedLocationLabels": []
     },
     "high": {
       "mfaRequired": true,
       "compliantDevice": false,
       "namedLocationRequired": false,
-      "namedLocations": []
+      "namedLocations": [],
+      "namedLocationIds": [],
+      "namedLocationLabels": []
     }
   },
   "driftDetectionEnabled": true,
@@ -48,5 +53,7 @@
     "Supports compliance with OCC 2011-12 access control expectations.",
     "Supports compliance with FINRA 3110 supervisory review of Copilot access changes.",
     "Supports compliance with DORA Article 9 ICT security access-control planning."
-  ]
+  ],
+  "namedLocationIds": [],
+  "namedLocationLabels": []
 }

@@ -8,7 +8,7 @@ Complete `05-dlp-policy-governance` before deploying this solution. Conditional 
 
 - Microsoft Entra ID P1 minimum for Conditional Access creation and enforcement.
 - Microsoft Entra ID P2 for risk-based policies and Microsoft Entra ID Protection signals.
-- Microsoft 365 E3 or E5 with the required Copilot entitlement for app targeting and user assignment.
+- An eligible Microsoft 365, Office 365, or other qualifying prerequisite plan plus the Microsoft 365 Copilot add-on or entitlement for app targeting and user assignment; Microsoft 365 E3 and E5 are examples, not the complete prerequisite list.
 
 ## Required roles
 
@@ -46,7 +46,7 @@ Grant admin consent where required before automation runs in production.
 
 ## Environment preparation
 
-- Verify the Copilot app IDs in `config\default-config.json`.
-- Define tenant-specific named locations before enabling recommended or regulated policies.
+- Verify the `Office365` Conditional Access target or any tenant-validated app IDs in `config\default-config.json`.
+- Define tenant-specific named locations and record their Microsoft Graph object IDs in `namedLocationIds` before enabling recommended or regulated policies.
 - Confirm a protected output path for the baseline and exception register.
 - Align environment variables to the `fsi_ev_caa_{setting}` naming convention if deployment automation uses centralized configuration.

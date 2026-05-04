@@ -8,21 +8,22 @@
     "2.9"
   ],
   "copilotAppIds": [
-    "fb8d773d-7ef8-4ec0-a117-179f88add510",
-    "7df0a125-d3be-4c96-aa54-591f83ff541c"
+    "Office365"
   ],
   "riskTiers": {
     "low": {
       "mfaRequired": true,
       "compliantDevice": false,
       "namedLocationRequired": false,
-      "namedLocations": []
+      "namedLocationIds": [],
+      "namedLocationLabels": []
     },
     "medium": {
       "mfaRequired": true,
       "compliantDevice": true,
       "namedLocationRequired": true,
-      "namedLocations": [
+      "namedLocationIds": [],
+      "namedLocationLabels": [
         "Copilot-Zone-2"
       ]
     },
@@ -30,7 +31,8 @@
       "mfaRequired": true,
       "compliantDevice": true,
       "namedLocationRequired": true,
-      "namedLocations": [
+      "namedLocationIds": [],
+      "namedLocationLabels": [
         "Copilot-Zone-2",
         "Copilot-Zone-3"
       ]
@@ -48,14 +50,15 @@
   },
   "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
   "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
-  "namedLocations": [
-    "Copilot-Zone-2",
-    "Copilot-Zone-3"
-  ],
-  "locationRestrictionMode": "named-location",
+  "locationRestrictionMode": "tenant-named-location-ids-required",
   "regulatoryNotes": [
     "Supports compliance with OCC 2011-12 by pairing MFA with device-based access assurance for elevated Copilot use.",
     "Supports compliance with FINRA 3110 through stronger supervisory control over medium and high risk access.",
     "Supports compliance with DORA Article 9 by documenting named-location restrictions for higher-risk populations."
+  ],
+  "namedLocationIds": [],
+  "namedLocationLabels": [
+    "Copilot-Zone-2",
+    "Copilot-Zone-3"
   ]
 }

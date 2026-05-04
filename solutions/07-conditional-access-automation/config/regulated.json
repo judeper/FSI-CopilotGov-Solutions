@@ -8,15 +8,15 @@
     "2.9"
   ],
   "copilotAppIds": [
-    "fb8d773d-7ef8-4ec0-a117-179f88add510",
-    "7df0a125-d3be-4c96-aa54-591f83ff541c"
+    "Office365"
   ],
   "riskTiers": {
     "low": {
       "mfaRequired": true,
       "compliantDevice": true,
       "namedLocationRequired": true,
-      "namedLocations": [
+      "namedLocationIds": [],
+      "namedLocationLabels": [
         "Copilot-Regulated-Zone"
       ]
     },
@@ -24,7 +24,8 @@
       "mfaRequired": true,
       "compliantDevice": true,
       "namedLocationRequired": true,
-      "namedLocations": [
+      "namedLocationIds": [],
+      "namedLocationLabels": [
         "Copilot-Regulated-Zone"
       ]
     },
@@ -32,7 +33,8 @@
       "mfaRequired": true,
       "compliantDevice": true,
       "namedLocationRequired": true,
-      "namedLocations": [
+      "namedLocationIds": [],
+      "namedLocationLabels": [
         "Copilot-Regulated-Zone"
       ]
     }
@@ -50,9 +52,6 @@
   },
   "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
   "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
-  "namedLocations": [
-    "Copilot-Regulated-Zone"
-  ],
   "blockLegacyAuth": true,
   "blockUnknownDeviceStates": true,
   "realTimeDriftAlerts": true,
@@ -61,5 +60,9 @@
     "Supports compliance with OCC 2011-12 access control and change management expectations for regulated Copilot access.",
     "Supports compliance with FINRA 3110 by requiring strict supervisory approval for access exceptions.",
     "Supports compliance with DORA Article 9 ICT security and access-control requirements with named-location and device-state enforcement."
+  ],
+  "namedLocationIds": [],
+  "namedLocationLabels": [
+    "Copilot-Regulated-Zone"
   ]
 }
