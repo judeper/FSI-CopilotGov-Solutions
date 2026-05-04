@@ -36,7 +36,7 @@ Records publishing events and the supervisory approval evidence for each event.
 
 ### version-history
 
-Per-agent version records covering publishing and rollback events.
+Per-agent version/change records covering published updates and operator-supplied change notes. Microsoft Learn's [Copilot Studio publishing guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-fundamentals-publish-channels) documents that each update can be published again and updates connected channels; it does not provide a canonical rollback event API, so rollback references in this scaffold are customer-supplied evidence fields.
 
 **Schema fields**
 
@@ -45,7 +45,7 @@ Per-agent version records covering publishing and rollback events.
 - `publishedAt`
 - `publishedBy`
 - `changeNotes`
-- `rollbackOf` (optional)
+- `rollbackOf` (optional customer-supplied reference; not populated from a validated Microsoft rollback API in this scaffold)
 - `previousVersion` (optional)
 
 ### deprecation-evidence

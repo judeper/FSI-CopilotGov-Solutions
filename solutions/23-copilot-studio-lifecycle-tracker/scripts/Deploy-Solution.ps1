@@ -34,7 +34,7 @@
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
     Primary Controls: 4.14, 4.13
     Supporting Controls: 1.10, 1.16, 4.5, 4.12
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(

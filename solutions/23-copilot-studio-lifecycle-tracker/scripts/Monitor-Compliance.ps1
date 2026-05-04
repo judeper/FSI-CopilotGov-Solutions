@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Loads CSLT configuration for the selected tier and produces a lifecycle compliance
-    snapshot covering agent inventory, publishing approval evidence, version history,
+    snapshot covering agent inventory, publishing approval evidence, version/change records,
     and deprecation records. The repository implementation uses a local stub data source;
     Power Platform admin API integration is required for live tenant collection. The
     script remains testable without external connectivity.
@@ -23,7 +23,7 @@
 
 .NOTES
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
-    Version: v0.1.0
+    Version: v0.1.1
 #>
 [CmdletBinding()]
 param(
