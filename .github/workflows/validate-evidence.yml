@@ -1,0 +1,37 @@
+name: Validate Evidence Schema
+
+on:
+  pull_request:
+    paths:
+      - 'data/evidence-schema.json'
+      - 'scripts/validate-evidence.ps1'
+      - 'scripts/common/EvidenceExport.psm1'
+      - 'solutions/**/docs/evidence-export.md'
+      - 'solutions/**/scripts/Export-Evidence.ps1'
+      - 'solutions/**/config/default-config.json'
+      - '.github/workflows/validate-evidence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/evidence-schema.json'
+      - 'scripts/validate-evidence.ps1'
+      - 'scripts/common/EvidenceExport.psm1'
+      - 'solutions/**/docs/evidence-export.md'
+      - 'solutions/**/scripts/Export-Evidence.ps1'
+      - 'solutions/**/config/default-config.json'
+      - '.github/workflows/validate-evidence.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-evidence:
+    name: Validate evidence package schema
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run evidence schema validation
+        run: pwsh -File scripts/validate-evidence.ps1 -ConfigurationTier baseline

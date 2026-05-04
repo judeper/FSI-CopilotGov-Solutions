@@ -33,6 +33,8 @@ This solution depends on `04-finra-supervision-workflow` for downstream review r
 - ❌ Does not cover v1.3+ content preview in IRM alerts or risky AI usage indicators for control 2.10
 - ❌ Does not cover EU AI Act or Colorado AI Act compliance tracking (framework_ids updated, solution content pending)
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 The solution combines JSON configuration, PowerShell deployment and monitoring scripts, and documentation-first operating procedures:
@@ -89,6 +91,9 @@ Deploy this solution by generating the tier-aware policy templates with `Deploy-
 - Access to repository shared modules under `scripts\common\`.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../docs/reference/control-coverage-honesty.md)):
+> 5 control(s) are **evidence-export-ready** in scaffold form: 2.10, 3.4, 3.5, 3.6, 3.9.
 
 | Control | Title | Solution Contribution |
 |---------|-------|-----------------------|

@@ -4,6 +4,27 @@ Governance solution scaffolds and documentation patterns for the [FSI-CopilotGov
 
 This repository translates the framework's 58 controls and 243 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
 
+## Quickstart
+
+Want to deploy one solution against a non-production tenant? Follow this minimum path:
+
+1. **Pick a tier.** Choose `baseline`, `recommended`, or `regulated` based on your obligations (see [Pick a tier](#pick-a-tier) below and [Tier Applicability](./docs/reference/tier-applicability.md)).
+2. **Pick a solution.** Use the [Solution Catalog](#solution-catalog) below; the *Tiers* column shows the recommended tier for each solution.
+3. **Read the disclaimer.** This is a documentation-first repository; scripts use representative sample data. See [Disclaimer](./docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](./docs/documentation-vs-runnable-assets-guide.md).
+4. **Run preflight.** `pwsh -File scripts\deployment\Validate-Prerequisites.ps1` and resolve any gaps.
+5. **Follow the deployment guide.** [DEPLOYMENT-GUIDE.md](./DEPLOYMENT-GUIDE.md) for the wave plan and tier matrix; the chosen solution's `docs/deployment-guide.md` for solution-specific steps.
+6. **Export evidence.** Each solution's `scripts/Export-Evidence.ps1` produces sample JSON for evidence-export-ready controls.
+
+## Pick a tier
+
+| Tier | Use when | Defaults |
+|------|----------|----------|
+| `baseline` | Pilot, sandbox, or non-regulated department | Minimum controls; no audit-trail dependency |
+| `recommended` | Standard production rollout for regulated FSI tenants | Default for P1/P2 solutions |
+| `regulated` | Highest assurance — supervised business units, FINRA/SEC/DORA scope | Default for P0 solutions; full audit-trail + retention |
+
+See [Tier Applicability](./docs/reference/tier-applicability.md) for the per-solution matrix and [Control Coverage Honesty](./docs/reference/control-coverage-honesty.md) for what each control mapping actually demonstrates today.
+
 ## What This Repository Contains
 
 - A shared contract layer for governance tiers, solution naming, evidence export, and dashboard integration
@@ -13,31 +34,33 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 
 ## Solution Catalog
 
-| ID | Solution | Priority | Track | Controls |
-|----|----------|----------|-------|----------|
-| 01 | [Copilot Readiness Assessment Scanner](./solutions/01-copilot-readiness-scanner/README.md) | P0 | A | 1.1, 1.5, 1.6, 1.7, 1.9 |
-| 02 | [Oversharing Risk Assessment and Remediation](./solutions/02-oversharing-risk-assessment/README.md) | P0 | A | 1.2, 1.3, 1.4, 1.6, 2.5, 2.12 |
-| 03 | [Sensitivity Label Coverage Auditor](./solutions/03-sensitivity-label-auditor/README.md) | P1 | A | 1.5, 2.2, 3.11, 3.12 |
-| 04 | [FINRA Supervision Workflow for Copilot](./solutions/04-finra-supervision-workflow/README.md) | P0 | B | 3.4, 3.5, 3.6 |
-| 05 | [DLP Policy Governance for Copilot](./solutions/05-dlp-policy-governance/README.md) | P1 | B | 2.1, 3.10, 3.12 |
-| 06 | [Copilot Interaction Audit Trail Manager](./solutions/06-audit-trail-manager/README.md) | P0 | B | 3.1, 3.2, 3.3, 3.11, 3.12 |
-| 07 | [Conditional Access Policy Automation for Copilot](./solutions/07-conditional-access-automation/README.md) | P1 | B | 2.3, 2.6, 2.9 |
-| 08 | [License Governance and ROI Tracker](./solutions/08-license-governance-roi/README.md) | P1 | C | 1.9, 4.5, 4.6, 4.8 |
-| 09 | [Copilot Feature Management Controller](./solutions/09-feature-management-controller/README.md) | P1 | C | 2.6, 4.1, 4.2, 4.3, 4.4, 4.12, 4.13 |
-| 10 | [Copilot Connector and Plugin Governance](./solutions/10-connector-plugin-governance/README.md) | P1 | C | 1.13, 2.13, 2.14, 4.13 |
-| 11 | [Risk-Tiered Rollout Automation](./solutions/11-risk-tiered-rollout/README.md) | P0 | C | 1.9, 1.11, 1.12, 4.12 |
-| 12 | [Regulatory Compliance Dashboard](./solutions/12-regulatory-compliance-dashboard/README.md) | P0 | C | 3.7, 3.8, 3.12, 3.13, 4.5, 4.7 |
-| 13 | [DORA Operational Resilience Monitor](./solutions/13-dora-resilience-monitor/README.md) | P1 | D | 2.7, 4.9, 4.10, 4.11 |
-| 14 | [Communication Compliance Configurator](./solutions/14-communication-compliance-config/README.md) | P1 | D | 2.10, 3.4, 3.5, 3.6, 3.9 |
-| 15 | [Copilot Pages and Notebooks Compliance Gap Monitor](./solutions/15-pages-notebooks-gap-monitor/README.md) | P2 | D | 2.11, 3.2, 3.3, 3.11 |
-| 16 | [Item-Level Oversharing Scanner](./solutions/16-item-level-oversharing-scanner/README.md) | P1 | A | 1.2, 1.3, 1.4, 1.6, 2.5 |
-| 17 | [SharePoint Permissions Drift Detection](./solutions/17-sharepoint-permissions-drift/README.md) | P1 | A | 1.2, 1.4, 1.6, 2.5 |
-| 18 | [Entra Access Reviews Automation](./solutions/18-entra-access-reviews/README.md) | P1 | A | 1.2, 1.6, 2.5, 2.12 |
-| 19 | [Copilot Tuning Governance](./solutions/19-copilot-tuning-governance/README.md) | P1 | A | 1.16, 3.8 |
-| 20 | [Generative AI Model Governance Monitor](./solutions/20-generative-ai-model-governance-monitor/README.md) | P1 | D | 3.8a, 3.8, 3.1, 3.11, 3.12 |
-| 21 | [Cross-Tenant Agent Federation Auditor](./solutions/21-cross-tenant-agent-federation-auditor/README.md) | P1 | B | 2.17, 2.16, 1.10, 2.13, 2.14, 4.13 |
-| 22 | [Pages and Notebooks Retention Tracker](./solutions/22-pages-notebooks-retention-tracker/README.md) | P1 | D | 3.14, 3.2, 3.3, 3.11, 2.11 |
-| 23 | [Copilot Studio Agent Lifecycle Tracker](./solutions/23-copilot-studio-lifecycle-tracker/README.md) | P1 | C | 4.14, 4.13, 1.10, 1.16, 4.5, 4.12 |
+> **Tiers column:** `base` / `rec` / `reg` show which tiers each solution supports. **Bold** marks the recommended default tier. See [Tier Applicability](./docs/reference/tier-applicability.md).
+
+| ID | Solution | Priority | Track | Tiers | Controls |
+|----|----------|----------|-------|-------|----------|
+| 01 | [Copilot Readiness Assessment Scanner](./solutions/01-copilot-readiness-scanner/README.md) | P0 | A | base / rec / **reg** | 1.1, 1.5, 1.6, 1.7, 1.9 |
+| 02 | [Oversharing Risk Assessment and Remediation](./solutions/02-oversharing-risk-assessment/README.md) | P0 | A | base / rec / **reg** | 1.2, 1.3, 1.4, 1.6, 2.5, 2.12 |
+| 03 | [Sensitivity Label Coverage Auditor](./solutions/03-sensitivity-label-auditor/README.md) | P1 | A | base / **rec** / reg | 1.5, 2.2, 3.11, 3.12 |
+| 04 | [FINRA Supervision Workflow for Copilot](./solutions/04-finra-supervision-workflow/README.md) | P0 | B | base / rec / **reg** | 3.4, 3.5, 3.6 |
+| 05 | [DLP Policy Governance for Copilot](./solutions/05-dlp-policy-governance/README.md) | P1 | B | base / **rec** / reg | 2.1, 3.10, 3.12 |
+| 06 | [Copilot Interaction Audit Trail Manager](./solutions/06-audit-trail-manager/README.md) | P0 | B | base / rec / **reg** | 3.1, 3.2, 3.3, 3.11, 3.12 |
+| 07 | [Conditional Access Policy Automation for Copilot](./solutions/07-conditional-access-automation/README.md) | P1 | B | base / **rec** / reg | 2.3, 2.6, 2.9 |
+| 08 | [License Governance and ROI Tracker](./solutions/08-license-governance-roi/README.md) | P1 | C | base / **rec** / reg | 1.9, 4.5, 4.6, 4.8 |
+| 09 | [Copilot Feature Management Controller](./solutions/09-feature-management-controller/README.md) | P1 | C | base / **rec** / reg | 2.6, 4.1, 4.2, 4.3, 4.4, 4.12, 4.13 |
+| 10 | [Copilot Connector and Plugin Governance](./solutions/10-connector-plugin-governance/README.md) | P1 | C | base / **rec** / reg | 1.13, 2.13, 2.14, 4.13 |
+| 11 | [Risk-Tiered Rollout Automation](./solutions/11-risk-tiered-rollout/README.md) | P0 | C | base / rec / **reg** | 1.9, 1.11, 1.12, 4.12 |
+| 12 | [Regulatory Compliance Dashboard](./solutions/12-regulatory-compliance-dashboard/README.md) | P0 | C | base / rec / **reg** | 3.7, 3.8, 3.12, 3.13, 4.5, 4.7 |
+| 13 | [DORA Operational Resilience Monitor](./solutions/13-dora-resilience-monitor/README.md) | P1 | D | base / **rec** / reg | 2.7, 4.9, 4.10, 4.11 |
+| 14 | [Communication Compliance Configurator](./solutions/14-communication-compliance-config/README.md) | P1 | D | base / **rec** / reg | 2.10, 3.4, 3.5, 3.6, 3.9 |
+| 15 | [Copilot Pages and Notebooks Compliance Gap Monitor](./solutions/15-pages-notebooks-gap-monitor/README.md) | P2 | D | base / **rec** / reg | 2.11, 3.2, 3.3, 3.11 |
+| 16 | [Item-Level Oversharing Scanner](./solutions/16-item-level-oversharing-scanner/README.md) | P1 | A | base / **rec** / reg | 1.2, 1.3, 1.4, 1.6, 2.5 |
+| 17 | [SharePoint Permissions Drift Detection](./solutions/17-sharepoint-permissions-drift/README.md) | P1 | A | base / **rec** / reg | 1.2, 1.4, 1.6, 2.5 |
+| 18 | [Entra Access Reviews Automation](./solutions/18-entra-access-reviews/README.md) | P1 | A | base / **rec** / reg | 1.2, 1.6, 2.5, 2.12 |
+| 19 | [Copilot Tuning Governance](./solutions/19-copilot-tuning-governance/README.md) | P1 | A | base / **rec** / reg | 1.16, 3.8 |
+| 20 | [Generative AI Model Governance Monitor](./solutions/20-generative-ai-model-governance-monitor/README.md) | P1 | D | base / **rec** / reg | 3.8a, 3.8, 3.1, 3.11, 3.12 |
+| 21 | [Cross-Tenant Agent Federation Auditor](./solutions/21-cross-tenant-agent-federation-auditor/README.md) | P1 | B | base / **rec** / reg | 2.17, 2.16, 1.10, 2.13, 2.14, 4.13 |
+| 22 | [Pages and Notebooks Retention Tracker](./solutions/22-pages-notebooks-retention-tracker/README.md) | P1 | D | base / **rec** / reg | 3.14, 3.2, 3.3, 3.11, 2.11 |
+| 23 | [Copilot Studio Agent Lifecycle Tracker](./solutions/23-copilot-studio-lifecycle-tracker/README.md) | P1 | C | base / **rec** / reg | 4.14, 4.13, 1.10, 1.16, 4.5, 4.12 |
 
 ## Implementation Depth
 

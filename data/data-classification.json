@@ -1,0 +1,186 @@
+[
+  {
+    "slug": "01-copilot-readiness-scanner",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Sample readiness scores only; production deployments must classify findings per the firm's data taxonomy."
+  },
+  {
+    "slug": "02-oversharing-risk-assessment",
+    "data_classes_processed": ["internal", "confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Permission and oversharing findings reference SharePoint and OneDrive scope; reclassify item-level evidence per firm policy."
+  },
+  {
+    "slug": "03-sensitivity-label-auditor",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Operates on label taxonomy metadata; sample data only and not a substitute for live Purview review."
+  },
+  {
+    "slug": "04-finra-supervision-workflow",
+    "data_classes_processed": ["confidential", "restricted", "regulated-financial", "regulated-pii"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Supervision evidence supports compliance with FINRA Rule 4511 and SEC Rule 17a-4 records retention; sample data only."
+  },
+  {
+    "slug": "05-dlp-policy-governance",
+    "data_classes_processed": ["confidential", "restricted", "regulated-pii"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Documents DLP policy posture using sample match data; production exports may include sensitive identifiers and require firm-defined classification."
+  },
+  {
+    "slug": "06-audit-trail-manager",
+    "data_classes_processed": ["confidential", "restricted", "regulated-financial"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 2555,
+    "notes": "Default tier retains audit summaries for one year; regulated tier extends retention to align with FINRA Rule 4511 and SEC Rule 17a-4 expectations."
+  },
+  {
+    "slug": "07-conditional-access-automation",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Captures Conditional Access policy posture metadata only; sign-in user data is not exported by the scaffold."
+  },
+  {
+    "slug": "08-license-governance-roi",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Sample license assignment and usage indicators only; production deployments may include user identifiers requiring reclassification."
+  },
+  {
+    "slug": "09-feature-management-controller",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Feature toggle inventory and tier mappings only; no end-user content is processed by the scaffold."
+  },
+  {
+    "slug": "10-connector-plugin-governance",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Connector and plugin inventory metadata only; live connector telemetry is not collected by the scaffold."
+  },
+  {
+    "slug": "11-risk-tiered-rollout",
+    "data_classes_processed": ["internal", "confidential"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Wave cohort and approval evidence only; sample data and not a substitute for production change-management records."
+  },
+  {
+    "slug": "12-regulatory-compliance-dashboard",
+    "data_classes_processed": ["internal", "confidential", "regulated-financial"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 365,
+    "retention_max_days": 365,
+    "notes": "Aggregates representative control evidence into dashboard feeds; production aggregation must apply the firm's data taxonomy."
+  },
+  {
+    "slug": "13-dora-resilience-monitor",
+    "data_classes_processed": ["internal", "confidential", "regulated-financial"],
+    "residency_options": ["commercial", "eu-data-boundary"],
+    "retention_default_days": 1825,
+    "retention_max_days": 1825,
+    "notes": "Supports compliance with DORA operational resilience evidence retention; EU Data Boundary residency is recommended where the firm operates in the EU."
+  },
+  {
+    "slug": "14-communication-compliance-config",
+    "data_classes_processed": ["confidential", "restricted", "regulated-financial", "regulated-pii"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Communication review configuration only; the regulated tier does not pin evidenceRetentionDays, so the default reflects FINRA Rule 4511 and SEC Rule 17a-4 records guidance."
+  },
+  {
+    "slug": "15-pages-notebooks-gap-monitor",
+    "data_classes_processed": ["confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Operates on Pages and Notebooks metadata; production deployments may surface end-user content snippets that require reclassification."
+  },
+  {
+    "slug": "16-item-level-oversharing-scanner",
+    "data_classes_processed": ["confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Item-level permission findings only; production scans may reference filenames or paths and must be reclassified per firm policy."
+  },
+  {
+    "slug": "17-sharepoint-permissions-drift",
+    "data_classes_processed": ["internal", "confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Permission baseline and drift indicators only; sample data and not a substitute for live SharePoint Advanced Management reviews."
+  },
+  {
+    "slug": "18-entra-access-reviews",
+    "data_classes_processed": ["internal", "confidential", "regulated-pii"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Sample access review attestations may reference user identifiers; production deployments must classify reviewer evidence per firm policy."
+  },
+  {
+    "slug": "19-copilot-tuning-governance",
+    "data_classes_processed": ["confidential", "restricted", "regulated-financial"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Tuning configuration and approval evidence only; production tuning datasets may include sensitive content requiring reclassification."
+  },
+  {
+    "slug": "20-generative-ai-model-governance-monitor",
+    "data_classes_processed": ["internal", "confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Model inventory and monitoring telemetry only; sample data helps meet OCC 2011-12 and Interagency AI Guidance evidence patterns."
+  },
+  {
+    "slug": "21-cross-tenant-agent-federation-auditor",
+    "data_classes_processed": ["internal", "confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 1825,
+    "retention_max_days": 1825,
+    "notes": "Cross-tenant federation audit metadata only; production exports may reference partner tenant identifiers and require reclassification."
+  },
+  {
+    "slug": "22-pages-notebooks-retention-tracker",
+    "data_classes_processed": ["confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Retention coverage indicators for Pages and Notebooks; supports compliance with SEC Rule 17a-4 records retention expectations."
+  },
+  {
+    "slug": "23-copilot-studio-lifecycle-tracker",
+    "data_classes_processed": ["internal", "confidential", "restricted"],
+    "residency_options": ["commercial"],
+    "retention_default_days": 2555,
+    "retention_max_days": 2555,
+    "notes": "Agent lifecycle and version metadata only; production deployments may include agent training data that requires reclassification."
+  }
+]

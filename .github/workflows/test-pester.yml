@@ -1,0 +1,63 @@
+name: Pester Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'solutions/**/scripts/**'
+      - 'solutions/**/tests/**'
+      - 'scripts/common/**'
+      - '.github/workflows/test-pester.yml'
+  pull_request:
+    paths:
+      - 'solutions/**/scripts/**'
+      - 'solutions/**/tests/**'
+      - 'scripts/common/**'
+      - '.github/workflows/test-pester.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pester:
+    name: Run Pester tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Pester 5.x
+        shell: pwsh
+        run: |
+          Install-Module -Name Pester -MinimumVersion 5.5.0 -Force -Scope CurrentUser -SkipPublisherCheck
+          Import-Module Pester
+          (Get-Module Pester).Version | Write-Host
+
+      - name: Discover and run Pester tests
+        shell: pwsh
+        run: |
+          $testFiles = Get-ChildItem -Recurse -Path solutions -Filter '*.Tests.ps1' -File -ErrorAction SilentlyContinue
+          if (-not $testFiles -or $testFiles.Count -eq 0) {
+            Write-Host "No Pester test files (*.Tests.ps1) found under solutions/. Skipping."
+            exit 0
+          }
+          Write-Host "Discovered $($testFiles.Count) test file(s)."
+          Import-Module Pester
+          $config = New-PesterConfiguration
+          $config.Run.Path = $testFiles.FullName
+          $config.Run.Exit = $true
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = 'testResults.xml'
+          $config.TestResult.OutputFormat = 'NUnitXml'
+          $config.Output.Verbosity = 'Detailed'
+          $config.Output.CIFormat = 'GithubActions'
+          Invoke-Pester -Configuration $config
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pester-test-results
+          path: testResults.xml
+          if-no-files-found: ignore

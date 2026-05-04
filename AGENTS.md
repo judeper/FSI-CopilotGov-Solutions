@@ -61,5 +61,9 @@ python scripts/build-docs.py
 python scripts/validate-contracts.py
 python scripts/validate-solutions.py
 python scripts/validate-documentation.py
+python scripts/validate_solutions_json.py
+python scripts/validate_solutions_graph.py
+python scripts/validate_data_classification.py
+python scripts/verify_readme_counts.py
 pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null) | Out-Null }"
 ```

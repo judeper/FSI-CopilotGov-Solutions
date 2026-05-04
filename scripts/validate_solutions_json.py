@@ -30,7 +30,15 @@ REQUIRED_FIELDS = (
     "url",
     "prerequisites",
     "verification",
+    "tiersSupported",
+    "tierRecommended",
+    "tierMaturity",
+    "maturity",
 )
+
+ALLOWED_TIERS = ("baseline", "recommended", "regulated")
+ALLOWED_TIER_MATURITY = ("active", "preview", "deprecated")
+ALLOWED_MATURITY = ("documentation-first-scaffold", "preview", "live")
 
 
 def main() -> int:
@@ -46,8 +54,8 @@ def main() -> int:
 
     errors: list[str] = []
 
-    if doc.get("schemaVersion") != "0.1.0":
-        errors.append(f"schemaVersion must be '0.1.0', got {doc.get('schemaVersion')!r}")
+    if doc.get("schemaVersion") != "0.2.0":
+        errors.append(f"schemaVersion must be '0.2.0', got {doc.get('schemaVersion')!r}")
     if not doc.get("generatedAt"):
         errors.append("generatedAt missing")
 
@@ -85,6 +93,23 @@ def main() -> int:
             v = s.get(list_field)
             if not isinstance(v, list):
                 errors.append(f"{prefix} ({sid}): {list_field} must be an array")
+
+        ts = s.get("tiersSupported")
+        if not isinstance(ts, list) or not ts:
+            errors.append(f"{prefix} ({sid}): tiersSupported must be a non-empty array")
+        else:
+            for t in ts:
+                if t not in ALLOWED_TIERS:
+                    errors.append(f"{prefix} ({sid}): tiersSupported contains invalid value {t!r}")
+        tr = s.get("tierRecommended")
+        if tr not in ALLOWED_TIERS:
+            errors.append(f"{prefix} ({sid}): tierRecommended must be one of {ALLOWED_TIERS}, got {tr!r}")
+        tm = s.get("tierMaturity")
+        if tm not in ALLOWED_TIER_MATURITY:
+            errors.append(f"{prefix} ({sid}): tierMaturity must be one of {ALLOWED_TIER_MATURITY}, got {tm!r}")
+        mat = s.get("maturity")
+        if mat not in ALLOWED_MATURITY:
+            errors.append(f"{prefix} ({sid}): maturity must be one of {ALLOWED_MATURITY}, got {mat!r}")
 
     if errors:
         print(f"FAIL: {len(errors)} validation error(s):", file=sys.stderr)

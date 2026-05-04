@@ -40,6 +40,8 @@ The Generative AI Model Governance Monitor (GMG) provides a documentation-first 
 - ❌ Does not retrieve Microsoft or partner attestations, SOC reports, Responsible AI documentation, transparency notes, or content safety configuration directly
 - ❌ Does not constitute an independent model validation by itself; firms must perform their own validation work
 
+> **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Prerequisites
 
 Review [docs/prerequisites.md](docs/prerequisites.md) for the required admin roles, Azure and Microsoft 365 prerequisites, model inventory sources, PowerShell modules, and content safety prerequisites before deploying this solution.

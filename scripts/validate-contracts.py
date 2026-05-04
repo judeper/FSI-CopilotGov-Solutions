@@ -89,7 +89,14 @@ def main() -> None:
         raise SystemExit("Missing contract files:\n" + "\n".join(missing))
 
     controls = load_json(ROOT / "data" / "controls-master.json")
-    coverage = load_json(ROOT / "data" / "control-coverage.json")
+    coverage_doc = load_json(ROOT / "data" / "control-coverage.json")
+    if not isinstance(coverage_doc, dict) or "controls" not in coverage_doc:
+        raise SystemExit("control-coverage.json must be an envelope object with 'schemaVersion' and 'controls'")
+    if coverage_doc.get("schemaVersion") != "1.1.0":
+        raise SystemExit(
+            f"control-coverage.json schemaVersion must be '1.1.0', got {coverage_doc.get('schemaVersion')!r}"
+        )
+    coverage = coverage_doc["controls"]
     catalog = load_json(ROOT / "data" / "solution-catalog.json")
     playbooks = load_json(ROOT / "data" / "solution-to-playbooks.json")
     frameworks = load_json(ROOT / "data" / "frameworks-master.json")
@@ -132,6 +139,7 @@ def main() -> None:
             f"  Playbooks only: {sorted(playbook_slugs - solution_slugs)}"
         )
 
+    ALLOWED_COVERAGE_STATES = ("documentation-only", "scripted-sample", "evidence-export-ready")
     for item in coverage:
         for slug in item.get("solutions", []):
             if slug not in solution_slugs:
@@ -141,6 +149,33 @@ def main() -> None:
                 raise SystemExit(
                     f"Unknown framework id in control coverage for {item['control_id']}: {framework_id}"
                 )
+        sc = item.get("solution_coverage")
+        if not isinstance(sc, list):
+            raise SystemExit(
+                f"control-coverage.json {item['control_id']}: 'solution_coverage' must be an array"
+            )
+        sc_slugs = {entry.get("slug") for entry in sc if isinstance(entry, dict)}
+        expected_slugs = set(item.get("solutions", []))
+        if sc_slugs != expected_slugs:
+            raise SystemExit(
+                f"control-coverage.json {item['control_id']}: solution_coverage slugs "
+                f"{sorted(sc_slugs)} do not match solutions {sorted(expected_slugs)}"
+            )
+        for entry in sc:
+            slug = entry.get("slug")
+            state = entry.get("coverageState")
+            if state not in ALLOWED_COVERAGE_STATES:
+                raise SystemExit(
+                    f"control-coverage.json {item['control_id']}: invalid coverageState "
+                    f"{state!r} for {slug}; must be one of {ALLOWED_COVERAGE_STATES}"
+                )
+            if state == "evidence-export-ready":
+                export_path = ROOT / "solutions" / slug / "scripts" / "Export-Evidence.ps1"
+                if not export_path.is_file():
+                    raise SystemExit(
+                        f"control-coverage.json {item['control_id']}: '{slug}' marked "
+                        f"evidence-export-ready but scripts/Export-Evidence.ps1 is missing"
+                    )
 
     if not frameworks:
         raise SystemExit("Framework registry is empty")

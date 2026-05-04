@@ -15,3 +15,7 @@ site/
 coverage.xml
 allTestResults.xml
 testResults.xml
+
+# Local tooling output
+.gitleaks-report.json
+.tools/

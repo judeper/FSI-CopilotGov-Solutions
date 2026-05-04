@@ -34,6 +34,8 @@ The solution depends on `01-copilot-readiness-scanner` to provide current readin
 - ❌ Does not distinguish Copilot Chat Basic vs Premium tiers in wave planning (v1.3+ framework feature pending solution update)
 - ❌ Does not include organizational branded footer configuration as a trust mechanism
 
+> **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
+
 ## Architecture
 
 ```text
@@ -108,6 +110,9 @@ Detailed deployment steps, sample commands, and rollback actions are documented 
 See [docs/prerequisites.md](prerequisites.md) for full prerequisites and operational dependencies.
 
 ## Related Controls
+
+> **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
+> 4 control(s) are **evidence-export-ready** in scaffold form: 1.11, 1.12, 1.9, 4.12.
 
 | Control | Title | Playbooks |
 |---------|-------|-----------|

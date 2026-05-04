@@ -1,0 +1,67 @@
+name: Lint PowerShell
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**/*.ps1'
+      - 'scripts/**/*.psm1'
+      - 'solutions/**/*.ps1'
+      - 'solutions/**/*.psm1'
+      - 'PSScriptAnalyzerSettings.psd1'
+      - '.github/workflows/lint-powershell.yml'
+  pull_request:
+    paths:
+      - 'scripts/**/*.ps1'
+      - 'scripts/**/*.psm1'
+      - 'solutions/**/*.ps1'
+      - 'solutions/**/*.psm1'
+      - 'PSScriptAnalyzerSettings.psd1'
+      - '.github/workflows/lint-powershell.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  psscriptanalyzer:
+    name: PSScriptAnalyzer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          Import-Module PSScriptAnalyzer
+          (Get-Module PSScriptAnalyzer).Version
+
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $results = Invoke-ScriptAnalyzer `
+            -Path scripts,solutions `
+            -Recurse `
+            -Severity @('Error','Warning') `
+            -Settings ./PSScriptAnalyzerSettings.psd1 `
+            -ReportSummary
+
+          if ($null -ne $results) {
+            $results | Format-Table -AutoSize | Out-String | Write-Host
+          }
+
+          $errors   = @($results | Where-Object Severity -eq 'Error')
+          $warnings = @($results | Where-Object Severity -eq 'Warning')
+
+          Write-Host ""
+          Write-Host "PSScriptAnalyzer summary:"
+          Write-Host "  Errors:   $($errors.Count)"
+          Write-Host "  Warnings: $($warnings.Count) (non-blocking)"
+
+          if ($errors.Count -gt 0) {
+            Write-Host "::error::PSScriptAnalyzer reported $($errors.Count) Error-severity finding(s)."
+            exit 1
+          }
