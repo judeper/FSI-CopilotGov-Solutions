@@ -115,6 +115,7 @@ function Get-ResolvedConfiguration {
         evidenceOutputs = @($defaultConfig.evidenceOutputs)
         defaults = $defaultConfig.defaults
         graphApiVersion = $defaultConfig.graphApiVersion
+        sensitivityLabelDefinitionsApiVersion = $defaultConfig.sensitivityLabelDefinitionsApiVersion
         labelTaxonomy = @($defaultConfig.labelTaxonomy)
         coverageThreshold = $defaultConfig.coverageThreshold
         workloadsToAudit = $resolvedWorkloads
@@ -131,10 +132,10 @@ function Test-PurviewLicensing {
     )
 
     $requiredSku = if ($Configuration.tier -eq 'baseline') {
-        'Microsoft 365 E5 Compliance or equivalent'
+        'Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance for sensitivity labeling'
     }
     else {
-        'Microsoft 365 E5 Compliance or equivalent plus Purview Information Protection P2 for auto-labeling'
+        'Microsoft 365 E5/A5/G5, Microsoft Purview Suite, Microsoft Defender + Purview Suite, or Microsoft 365 Information Protection and Governance for service-side automatic sensitivity labeling'
     }
 
     return [pscustomobject]@{
@@ -239,6 +240,7 @@ function New-DeploymentManifest {
         tier = $Configuration.tier
         workloadsToAudit = @($Configuration.workloadsToAudit)
         graphApiVersion = $Configuration.graphApiVersion
+        sensitivityLabelDefinitionsApiVersion = $Configuration.sensitivityLabelDefinitionsApiVersion
         licensingCheck = $LicensingCheck
         taxonomyCheck = $TaxonomyCheck
         labelTaxonomySnapshot = $TaxonomySnapshot

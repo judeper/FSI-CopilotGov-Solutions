@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.1] - 2026-05-04
+
+- Corrected Microsoft Graph sensitivity label API versioning, protected API prerequisites, current licensing and role terminology, and Exchange collection caveats for accuracy-review findings.
+- Updated deployment and monitoring stubs to distinguish v1.0 drive item actions from beta label definition enumeration and document supported SharePoint and OneDrive extraction patterns.
+
 ## v0.2.0
 
 - Replaced scaffold documentation with solution-specific guidance for sensitivity label coverage monitoring in SharePoint, OneDrive, and Exchange.
