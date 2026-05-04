@@ -3,7 +3,7 @@
 ## Platform and Licensing
 
 - SharePoint Advanced Management licensing is recommended for the intended production posture. If licensing is not available, document the limitation before enabling this solution.
-- Microsoft 365 E5 Compliance, or an equivalent licensing combination that enables DSPM for AI investigations, should be available for the tenant.
+- Microsoft Purview Data Security Posture Management (DSPM) licensing and permissions should be available for the tenant; if using DSPM for AI, document it as DSPM for AI (classic).
 - The target tenant should already have a defined Copilot pilot or rollout scope so item-level findings can be prioritized against real exposure risk.
 
 ## Upstream Dependency
@@ -12,13 +12,11 @@ Solution 02-oversharing-risk-assessment must complete a site-level assessment be
 
 ## Required Administrative Roles
 
-At least one of the following roles should be assigned to the operator, depending on the task being performed:
+Use task-specific access rather than treating Microsoft 365 admin roles as interchangeable for SharePoint content access:
 
-- SharePoint Admin
-- Compliance Admin
-- Global Admin
-
-For app-only authentication, the application registration requires `Sites.FullControl.All` permission in Microsoft Graph.
+- For delegated item-level permission enumeration, the operator should be a site collection administrator on each target site.
+- A SharePoint Administrator or Global Administrator may grant or manage site access, but those roles do not automatically provide content access to every site or OneDrive.
+- Use Compliance Administrator, Microsoft Purview Compliance Administrator, or DSPM roles for Purview/DSPM review and investigation tasks, not as substitutes for target-site content access.
 
 ## Required PowerShell Modules
 
@@ -37,10 +35,9 @@ Install-Module PnP.PowerShell, Microsoft.Graph -Scope CurrentUser
 
 ## API Permissions
 
-When using app-only authentication with PnP PowerShell, the following Microsoft Graph API permissions are required:
+When using Microsoft Graph to list `driveItem` permissions, select permissions documented for that endpoint. For read-only application enumeration, `Files.Read.All` is the least-privileged application permission; `Files.ReadWrite.All`, `Sites.Read.All`, and `Sites.ReadWrite.All` are higher-privileged options.
 
-- `Sites.FullControl.All` — Read and enumerate permissions on all site content
-- `User.Read.All` — Resolve user identities in permission entries
+Use broader SharePoint/PnP or write permissions only when the approved implementation requires remediation or site administration, and document that API surface separately. If identity enrichment uses a separate endpoint, document and consent only the least-privileged permission required for that endpoint.
 
 When using delegated authentication, the operator must have site collection administrator access on target sites.
 

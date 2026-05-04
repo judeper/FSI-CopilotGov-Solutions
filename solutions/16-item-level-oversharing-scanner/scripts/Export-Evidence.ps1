@@ -264,7 +264,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '1.3'
         status = 'monitor-only'
-        notes = 'Supports Restricted SharePoint Search planning by identifying overshared items that should be limited.'
+        notes = 'Supports temporary Restricted SharePoint Search or Restricted Content Discovery planning by identifying overshared sites/items for permission cleanup; RSS is not a security boundary and does not change permissions.'
     }
     [pscustomobject]@{
         controlId = '1.4'
