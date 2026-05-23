@@ -290,7 +290,8 @@ $package = Export-SolutionEvidencePackage `
         exceptionCount = $partialControls
     } `
     -Controls $controls `
-    -Artifacts $artifacts
+    -Artifacts $artifacts `
+    -ExpectedArtifacts ([string[]]$config.evidenceOutputs)
 
 [pscustomobject]@{
     Package = $package

@@ -1,6 +1,6 @@
 # Copilot Feature Management Controller
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -152,8 +152,8 @@ Detailed requirements are listed in [docs/prerequisites.md](prerequisites.md).
 | 2.6 | Copilot Web Search and Web Grounding Controls | Uses approved feature scope, app coverage lists, and Restricted ring definitions to keep unapproved Copilot experiences — including web search and grounding — blocked or isolated. |
 | 4.1 | Copilot Admin Settings and Feature Management | Maintains an inventory of Copilot features, source systems, and expected state across supported admin surfaces. |
 | 4.2 | Copilot in Teams Meetings Governance | Documents expected enablement by tier and highlights policy exceptions that require formal approval for Teams Meetings Copilot features. |
-| 4.3 | Copilot in Teams Phone and Queues Governance | Defines four rollout rings with target population percentages and approval expectations for Teams Phone and Queues Copilot features. |
-| 4.4 | Copilot in Viva Suite Governance | Compares observed feature state to approved baseline and records drift findings for follow-up across Viva Suite Copilot capabilities. |
+| 4.3 | Copilot in Teams Phone and Queues Governance | Documents the rollout-ring pattern that can be extended to Teams Phone and Queues; the current scaffold tracks Teams chat and meetings feature records until tenant-specific Phone and Queues metadata is added. |
+| 4.4 | Copilot in Viva Suite Governance | Documents the baseline comparison and drift-finding pattern that can be extended to Viva Suite; the current tier configs do not include Viva-specific feature records until tenant binding is added. |
 | 4.12 | Change Management and Rollout Risk Tracking | Preserves rollout promotion history, change references, and notification events for supervisory review. |
 | 4.13 | Third-Party Connector and Plugin Risk Assessment | Flags connector and plugin exposure in the feature registry so separate risk review can be triggered before enablement. |
 

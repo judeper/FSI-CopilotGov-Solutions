@@ -62,10 +62,45 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
-Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\DataverseHelpers.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
+
+function Merge-RolloutRingDefinitions {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [System.Collections.IDictionary]$DefaultRings,
+
+        [Parameter(Mandatory)]
+        [System.Collections.IDictionary]$TierRings
+    )
+
+    $mergedRings = @{}
+    foreach ($ringName in $DefaultRings.Keys) {
+        $ringDefinition = @{}
+        foreach ($key in $DefaultRings[$ringName].Keys) {
+            $ringDefinition[$key] = $DefaultRings[$ringName][$key]
+        }
+
+        if ($TierRings.Contains($ringName)) {
+            foreach ($key in $TierRings[$ringName].Keys) {
+                $ringDefinition[$key] = $TierRings[$ringName][$key]
+            }
+        }
+
+        $mergedRings[$ringName] = $ringDefinition
+    }
+
+    foreach ($ringName in $TierRings.Keys) {
+        if (-not $mergedRings.Contains($ringName)) {
+            $mergedRings[$ringName] = $TierRings[$ringName]
+        }
+    }
+
+    return $mergedRings
+}
 
 function Get-FmcConfiguration {
     [CmdletBinding()]
@@ -99,7 +134,7 @@ function Get-FmcConfiguration {
         graph                        = $defaultConfig.graph
         dataverse                    = $defaultConfig.dataverse
         featureCategories            = $defaultConfig.featureCategories
-        rolloutRings                 = if ($tierConfig.ContainsKey('rolloutRings')) { $tierConfig.rolloutRings } else { $defaultConfig.rolloutRings }
+        rolloutRings                 = if ($tierConfig.ContainsKey('rolloutRings')) { Merge-RolloutRingDefinitions -DefaultRings $defaultConfig.rolloutRings -TierRings $tierConfig.rolloutRings } else { $defaultConfig.rolloutRings }
         powerAutomate                = $defaultConfig.powerAutomate
         driftAlertThreshold          = if ($tierConfig.ContainsKey('driftAlertThreshold')) { [int]$tierConfig.driftAlertThreshold } else { [int]$defaultConfig.driftAlertThreshold }
         driftMonitoring              = $tierConfig.driftMonitoring
@@ -198,6 +233,8 @@ function Set-FeatureRolloutRing {
     )
 
     $enabled = if ($RingDefinition.ContainsKey('enabled')) { [bool]$RingDefinition.enabled } else { $true }
+    $defaultState = if ($RingDefinition.ContainsKey('defaultState')) { [string]$RingDefinition.defaultState } else { 'tier-defined' }
+    $maxAudience = if ($RingDefinition.ContainsKey('maxAudience')) { [string]$RingDefinition.maxAudience } else { 'tier-defined cohort' }
     $action = if ($PSCmdlet.ShouldProcess($Feature.displayName, "Assign feature to $TargetRing in $Environment")) { 'planned' } else { 'whatif' }
 
     return [pscustomobject]@{
@@ -207,6 +244,8 @@ function Set-FeatureRolloutRing {
         targetPercentage = [int]$RingDefinition.targetPercentage
         approvalRequired = [bool]$RingDefinition.approvalRequired
         enabled          = $enabled
+        defaultState     = $defaultState
+        maxAudience      = $maxAudience
         environment      = $Environment
         action           = $action
         notes            = 'Stub rollout assignment recorded for later admin center or Graph execution.'
