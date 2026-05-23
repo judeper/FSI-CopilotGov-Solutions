@@ -1,6 +1,6 @@
 # Copilot Interaction Audit Trail Manager
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P0 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -54,7 +54,7 @@ This solution supports compliance with those obligations by organizing audit val
 - Microsoft 365 E5, Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), or Microsoft 365 E5 eDiscovery and Audit add-on licensing for Purview features used by audit, retention, and Microsoft Purview eDiscovery operations.
 - Power BI Pro for dashboard publication and refresh management.
 - Roles: Compliance Administrator, eDiscovery Manager, Audit Reader for audit search/export access, Audit Manager for audit administration as required, and Global Reader.
-- PowerShell modules: ExchangeOnlineManagement and Microsoft.Graph.
+- PowerShell 7.0 or later with modules: ExchangeOnlineManagement and Microsoft.Graph.
 - Graph permissions for Microsoft Purview Audit Search API workflows: `AuditLogsQuery.Read.All` or the least-privileged service-specific `AuditLogsQuery-*` scope required for the selected workload.
 - Unified Audit Log enabled in the tenant.
 

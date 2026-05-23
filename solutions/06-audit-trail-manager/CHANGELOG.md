@@ -4,6 +4,12 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog, and this project follows semantic versioning.
 
+## [v0.2.2] — 2026-05-23 — Council review remediation
+
+### Fixed
+- F-05: Derived the evidence package overall status from all ATM control statuses instead of only retention gap count.
+- F-11: Documented the PowerShell 7.0+ runtime prerequisite to match script `#Requires -Version 7.0` declarations.
+
 ## [v0.2.1] - 2026-05-04
 
 ### Changed

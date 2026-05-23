@@ -14,6 +14,10 @@ The deployment team should have the following roles assigned as appropriate:
 - Audit Reader
 - Global Reader
 
+## PowerShell runtime
+
+Use PowerShell 7.0 or later before running solution scripts.
+
 ## PowerShell modules
 
 Install or update these modules before running the scripts:
