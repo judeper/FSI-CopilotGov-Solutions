@@ -49,7 +49,7 @@
       ],
       "approvalMode": "rollout-board",
       "gateCriteria": [
-        "trainingCompletion",
+        "analyticsFeedConfigured",
         "backlogWithinThreshold",
         "dashboardHealthy"
       ]

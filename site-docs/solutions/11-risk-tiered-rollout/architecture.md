@@ -49,7 +49,7 @@ Risk-Tiered Rollout Automation documents Copilot rollout coordination by risk ti
 +----------------------------------------------+
 ```
 
-> Note: The License Assigner component generates wave manifests and gate-criteria evaluations.
+> Note: The Assignment Staging component generates wave manifests and gate-criteria evaluations.
 > It does not execute license assignments or modify tenant state. Manual approval and execution
 > by the platform operator is required for each wave.
 
@@ -57,7 +57,7 @@ Risk-Tiered Rollout Automation documents Copilot rollout coordination by risk ti
 
 | Risk Tier | Description | Required Controls Before Rollout |
 |-----------|-------------|----------------------------------|
-| Tier 1 - Standard Users | General knowledge workers with the lowest operational risk. Eligible for Wave 0 and Wave 1 after basic readiness checks. | Current readiness scan, seat availability, service-desk coverage |
+| Tier 1 - Standard Users | General knowledge workers with the lowest operational risk. Eligible for Wave 0 and Wave 1 after basic readiness checks. | Current readiness scan, manual seat availability confirmation, service-desk coverage |
 | Tier 2 - Regulated Role Users | Compliance officers, legal, and HR users who require stronger data-handling and supervision safeguards. Eligible after Tier 1 waves show stability. | Tier 1 controls plus DLP validation, supervision evidence, approval workflow completion |
 | Tier 3 - Privileged or Executive Users | C-suite leaders, IT administrators, and traders where privilege, market sensitivity, or concentration risk is highest. Enter only after earlier waves are stable. | Tier 2 controls plus CA policy validation, DLP enforcement, audit trail verification, CAB approval |
 
@@ -69,21 +69,23 @@ The canonical design contains four waves. Lower governance tiers intentionally s
 - Recommended uses Wave 0 through Wave 2.
 - Regulated uses Wave 0 through Wave 3.
 
-| Wave | Target Cohort | Rollout Intent |
-|------|---------------|----------------|
-| Wave 0 | Pilot 50 users, Tier 1 | Validate prerequisite checks, help-desk readiness, and initial assignment workflow on a low-risk pilot |
-| Wave 1 | 500 users, Tier 1 and Tier 2 | Expand after Wave 0 success and introduce regulated-role users with added DLP and supervision checks |
-| Wave 2 | Full Tier 1 and Tier 2 population | Move to scaled deployment after sustained operational stability and acceptable issue volume |
-| Wave 3 | Tier 3 population | Release to privileged and executive users only after all prior waves pass and CAB approval is documented |
+Tier-specific configuration files are the source of truth for wave sizes. The canonical Wave 0 pilot is 50 users, while `config\baseline.json` intentionally limits Wave 0 to 25 users and Wave 1 to 250 users.
+
+| Wave | Canonical Target Cohort | Tier-Specific Sizing Notes | Rollout Intent |
+|------|-------------------------|----------------------------|----------------|
+| Wave 0 | Pilot 50 users, Tier 1 | Baseline override: 25 users | Validate prerequisite checks, help-desk readiness, and initial assignment workflow on a low-risk pilot |
+| Wave 1 | 500 users, Tier 1 and Tier 2 | Baseline override: 250 Tier 1 users | Expand after Wave 0 success and introduce regulated-role users with added DLP and supervision checks |
+| Wave 2 | Full Tier 1 and Tier 2 population | Available in recommended and regulated tiers | Move to scaled deployment after sustained operational stability and acceptable issue volume |
+| Wave 3 | Tier 3 population | Available in regulated tier only | Release to privileged and executive users only after all prior waves pass and CAB approval is documented |
 
 ## Gate Criteria by Wave
 
 | Wave | Gate Criteria |
 |------|---------------|
-| Wave 0 | Readiness scanner completed successfully, readiness data is current, minimum readiness threshold met, service desk and support roster confirmed, reserved Copilot seats available |
-| Wave 1 | Wave 0 health score meets threshold, Tier 2 DLP rules verified, supervision coverage confirmed, approval flow completed, open incident count below configured limit |
-| Wave 2 | Wave 1 stable for the configured observation period, training or communications completion recorded, backlog within threshold, rollout dashboard healthy, approval history complete |
-| Wave 3 | Wave 2 stable, Tier 3 CA policy validated, DLP coverage confirmed, audit trail enabled, CAB approval captured, DORA resilience review completed |
+| Wave 0 | Readiness scanner completed successfully, readiness data is current, minimum readiness threshold met, service desk and support roster confirmed, seat availability checked manually outside `Monitor-Compliance.ps1` |
+| Wave 1 | Wave 0 health score meets threshold, Tier 2 DLP rules verified, supervision coverage confirmed, approval flow completed, configured open incident count below limit |
+| Wave 2 | Wave 1 stable for the configured observation period, analytics feed configured for training and communications trend review, remediation backlog within threshold, rollout dashboard healthy, approval history complete |
+| Wave 3 | Wave 2 stable, Tier 3 CA policy validated, DLP coverage confirmed, audit trail evidence marker configured, CAB approval captured, DORA resilience review completion marker set |
 
 ## Power Automate Flow Design
 
