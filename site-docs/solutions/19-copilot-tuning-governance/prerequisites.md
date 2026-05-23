@@ -27,11 +27,9 @@ The following stakeholders should be identified before deploying tuning governan
 
 ## Required PowerShell Modules
 
-Install and approve the following modules on the execution host:
+The documentation-first scripts in this solution do not require additional PowerShell modules beyond built-in PowerShell capabilities. `Microsoft.Graph` is optional and forward-looking for future tenant-bound integrations that introduce supported Graph cmdlet usage.
 
-- `Microsoft.Graph`
-
-Example installation command:
+Optional installation command for future live integrations:
 
 ```powershell
 Install-Module Microsoft.Graph -Scope CurrentUser
@@ -39,7 +37,7 @@ Install-Module Microsoft.Graph -Scope CurrentUser
 
 ## Network and Service Access
 
-The execution environment must be able to reach:
+For production tenant-bound integrations, the execution environment should be able to reach:
 
 - Microsoft 365 Admin Center (`https://admin.microsoft.com`)
 - Microsoft Graph API endpoints (`https://graph.microsoft.com`)

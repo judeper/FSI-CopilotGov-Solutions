@@ -38,6 +38,7 @@ param(
 
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
+    [ValidatePattern('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')]
     [string]$TenantId
 )
 
@@ -141,17 +142,19 @@ function Test-CopilotLicenseThreshold {
         [string]$TenantId
     )
 
+    $minimumLicenseThreshold = [int]$Configuration.minimumLicenseThreshold
     $status = if ($env:CTG_ASSUME_LICENSE_THRESHOLD -eq '1') { 'verified' } else { 'manual-check-required' }
     $notes = if ($status -eq 'verified') {
-        'CTG_ASSUME_LICENSE_THRESHOLD=1 was supplied for stub validation.'
+        "CTG_ASSUME_LICENSE_THRESHOLD=1 was supplied for stub validation against the configured $minimumLicenseThreshold-license threshold."
     }
     else {
-        'Validate early access preview availability, Microsoft 365 admin center visibility, and at least 5,000 Microsoft 365 Copilot licenses during public preview before expanding Copilot Tuning access.'
+        "Validate early access preview availability, Microsoft 365 admin center visibility, and at least $minimumLicenseThreshold Microsoft 365 Copilot licenses during public preview before expanding Copilot Tuning access."
     }
 
     return [pscustomobject]@{
         Requirement = 'Copilot Tuning Preview Eligibility'
         TenantId = $TenantId
+        MinimumLicenseThreshold = $minimumLicenseThreshold
         Status = $status
         Notes = $notes
     }
@@ -180,6 +183,7 @@ $manifest = [ordered]@{
         requireOwnerAttestation = $configuration.requireOwnerAttestation
         riskReassessmentDays = $configuration.riskReassessmentDays
         evidenceRetentionDays = $configuration.evidenceRetentionDays
+        minimumLicenseThreshold = $configuration.minimumLicenseThreshold
         maxTuningRequestsPerCycle = $configuration.maxTuningRequestsPerCycle
     }
 }

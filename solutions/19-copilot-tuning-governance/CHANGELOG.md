@@ -4,6 +4,21 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [v0.1.2] — 2026-05-23 — Council review remediation
+
+### Fixed
+
+- F04: Corrected delivery-checklist customer validation references to existing solution docs or repository-root relative docs.
+- F12: Added GUID-format validation for the `TenantId` deployment parameter before deployment artifacts are written.
+
+### Documentation tightened
+
+- F13: Labeled `Microsoft.Graph` as optional and forward-looking because the documentation-first scripts do not use Graph cmdlets.
+
+### Dead config
+
+- F05: Wired `minimumLicenseThreshold` into license-check notes and the deployment manifest configuration snapshot.
+
 ## [v0.1.1] - 2026-05-04
 
 ### Changed
