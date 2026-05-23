@@ -98,4 +98,4 @@ The package contract contains:
 
 ## Examiner Notes for DORA Art. 19 Reporting Package
 
-DRM packages the technical evidence needed to prepare a DORA Art. 19 reporting package, including incident chronology, affected services, severity assessment, and recovery metrics. The export does not submit notices to regulators automatically and does not replace jurisdiction-specific reporting templates. Operations and compliance teams should add narrative impact assessments, customer communications, root-cause analysis, and legal review before external submission.
+DRM packages the technical evidence needed to prepare a DORA Art. 19 reporting package, including incident chronology, affected services, selected DORA Art. 18 severity-assessment fields, and recovery metrics. The export keeps DORA Art. 17 incident-management chronology separate from Art. 19 reporting-package preparation, does not submit notices to regulators automatically, and does not replace jurisdiction-specific reporting templates. Operations and compliance teams should add narrative impact assessments, customer communications, root-cause analysis, and legal review before external submission.

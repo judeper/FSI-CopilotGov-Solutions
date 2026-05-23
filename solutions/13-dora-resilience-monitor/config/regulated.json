@@ -11,6 +11,8 @@
     "doraArticle17Reporting": true,
     "regulatoryNotificationThreshold": "major",
     "notificationWindowHours": 4,
+    "intermediateReportWindowHours": 72,
+    "finalReportWindowDays": 30,
     "severityThresholds": {
       "major": { "downtimeMinutes": 60, "affectedUserPct": 10 },
       "significant": { "downtimeMinutes": 10, "affectedUserPct": 5 },
@@ -41,7 +43,7 @@
     "alertOnViolation": true
   },
   "powerAutomateFlow": {
-    "description": "Full DORA incident reporting and resilience test tracking flow - documentation-first",
+    "description": "DORA incident reporting timeline reference and resilience test tracking flow - documentation-first",
     "triggerType": "scheduled",
     "scheduleIntervalMinutes": 5,
     "includesIncidentRegister": true,

@@ -1,6 +1,6 @@
 # DORA Operational Resilience Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -36,7 +36,7 @@ The DORA Operational Resilience Monitor (DRM) provides an operational-resilience
 
 - ❌ Does not poll Microsoft 365 service health APIs (scripts use a local stub with representative sample data)
 - ❌ Does not connect to Microsoft Sentinel (incident correlation is documented, not integrated)
-- ❌ Does not execute DORA Article 17 reporting automatically (reporting templates are provided for manual completion)
+- ❌ Does not submit DORA Art. 19 regulatory reports automatically (reporting templates are provided for manual completion)
 - ❌ Does not deploy Power Automate flows (resilience alerting workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
@@ -109,7 +109,7 @@ Deploy DRM by selecting the target governance tier, generating the deployment ma
 
 ## Regulatory Alignment
 
-DRM supports compliance with DORA Art. 17 and Art. 18 by organizing ICT incident monitoring, classification, escalation timing, and resilience-test evidence for Copilot-dependent services. It also supports compliance with OCC 2011-12 resilience and governance expectations by preserving documented monitoring, escalation, and challenge records for technology dependencies, and it aligns with the FFIEC IT Handbook focus on operations management, business continuity, incident response, and examiner-ready evidence.
+DRM supports compliance with DORA Art. 17 by organizing ICT incident-management monitoring and escalation records, DORA Art. 18 by documenting selected severity-classification criteria, and DORA Art. 19 by preparing reporting-package evidence for regulated-tier review. Resilience-test evidence maps to DORA Art. 24-26 and control 4.10 rather than Art. 17. DRM also supports compliance with OCC 2011-12 resilience and governance expectations by preserving documented monitoring, escalation, and challenge records for technology dependencies, and it aligns with the FFIEC IT Handbook focus on operations management, business continuity, incident response, and examiner-ready evidence.
 
 ## Evidence Export
 

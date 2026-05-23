@@ -74,7 +74,9 @@ The Incident Classifier maps health events to DORA ICT incident severity bands:
 - Significant: meaningful degradation, partial unavailability, or sustained customer impact below the major threshold
 - Minor: short-lived or low-impact service issues that still warrant local operational logging
 
-Classification output is intended to support compliance with DORA Art. 17 incident-management expectations and downstream root-cause analysis under control 4.9.
+Coverage note: the scaffolded classifier models selected DORA Art. 18 criteria only: clients or users affected (criterion a), duration and service downtime (criterion c), and criticality of services affected (criterion f). Reputational impact, geographical spread, data losses, and economic impact require manual or customer-specific assessment before the classification is treated as complete.
+
+Classification output is intended to support compliance with DORA Art. 17 incident-management expectations, selected DORA Art. 18 classification criteria, and downstream root-cause analysis under control 4.9.
 
 ### Resilience Test Tracker
 
@@ -86,7 +88,7 @@ The Evidence Packager creates `service-health-log`, `incident-register`, and `re
 
 ### Power Automate Flow
 
-The Power Automate Flow is documentation-first in v0.1.1. The solution describes a scheduled flow that can read monitoring output, route service alerts, create follow-up tasks, and notify resilience stakeholders, but the flow is not deployed automatically by the scripts in this repository.
+The Power Automate Flow is documentation-first in v0.1.2. The solution describes a scheduled flow that can read monitoring output, route service alerts, create follow-up tasks, and notify resilience stakeholders, but the flow is not deployed automatically by the scripts in this repository.
 
 ## Integration Points
 
@@ -136,6 +138,6 @@ Related connection references and environment variables follow the shared contra
 - Restrict access to incident-register and resilience-test evidence because outage narratives may contain sensitive operational details.
 - Review cross-region monitoring outputs with data-residency governance teams before treating them as complete control 2.7 evidence.
 
-## DORA Art. 17 Alignment Notes
+## DORA Incident and Resilience-Testing Alignment Notes
 
-DRM is designed to support compliance with DORA Art. 17 by documenting ICT incident detection, severity classification, reporting timestamps, and resilience-test readiness for Copilot-dependent services. The solution does not submit regulatory notices automatically; instead, it organizes the technical evidence needed for internal review, escalation, and external reporting workflows. Regulated-tier settings increase polling cadence, require richer incident metadata, and highlight missing resilience-test evidence so operations teams can close reporting gaps before an examination or supervisory review.
+DRM is designed to support compliance with DORA Art. 17 by documenting ICT incident detection and incident-management escalation records for Copilot-dependent services. It supports selected DORA Art. 18 classification criteria through scaffolded severity fields, and it prepares technical evidence for DORA Art. 19 reporting-package review without submitting regulatory notices automatically. Resilience-test readiness maps to DORA ICT resilience-testing expectations in Art. 24-26 and control 4.10 rather than Art. 17. Regulated-tier settings increase polling cadence, require richer incident metadata, and highlight missing resilience-test evidence so operations teams can close reporting gaps before an examination or supervisory review.

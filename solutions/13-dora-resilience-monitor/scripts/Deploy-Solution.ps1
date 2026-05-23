@@ -12,7 +12,7 @@
     This script:
     - Validates prerequisites and configuration
     - Creates the deployment manifest
-    - Registers service health monitoring endpoints
+    - Documents service health monitoring endpoints in the deployment manifest
     - Configures incident severity thresholds per the selected tier
     - Outputs a deployment summary for evidence purposes
 
@@ -20,7 +20,7 @@
     Governance tier: baseline, recommended, or regulated.
     - baseline: Service health polling + summary alerting
     - recommended: + Incident register + DORA classification
-    - regulated: + Full DORA Art. 17-19 reporting package + Sentinel integration
+    - regulated: + DORA Art. 17-19 reporting-package references + Sentinel integration settings
 
 .PARAMETER OutputPath
     Path for deployment artifacts and evidence output.
@@ -41,7 +41,7 @@
     Solution: DORA Operational Resilience Monitor (DRM)
     Controls:  2.7, 4.9, 4.10, 4.11
     Regulations: DORA, OCC 2011-12, FFIEC IT Handbook
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(

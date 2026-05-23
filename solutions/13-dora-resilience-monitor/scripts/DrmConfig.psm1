@@ -40,7 +40,7 @@ function Get-DrmConfiguration {
         controls                             = $tierConfig.controls
         evidenceRetentionDays                = $tierConfig.evidenceRetentionDays
         notificationMode                     = $tierConfig.notificationMode
-        serviceHealthPollingIntervalMinutes  = $tierConfig.serviceHealthPollingIntervalMinutes
+        serviceHealthPollingIntervalMinutes  = if ($tierConfig.Contains('serviceHealthPollingIntervalMinutes')) { $tierConfig.serviceHealthPollingIntervalMinutes } else { $defaultConfig.defaults.serviceHealthPollingIntervalMinutes }
         incidentClassification               = $tierConfig.incidentClassification
         resilienceTestTracking               = $tierConfig.resilienceTestTracking
         sentinelIntegration                  = $tierConfig.sentinelIntegration
