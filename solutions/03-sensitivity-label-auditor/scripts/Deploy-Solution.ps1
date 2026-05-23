@@ -65,7 +65,7 @@ function Resolve-OptionalPath {
         return (Resolve-Path -Path $Path).Path
     }
 
-    return $Path
+    return [System.IO.Path]::GetFullPath($Path)
 }
 
 function Read-JsonFile {

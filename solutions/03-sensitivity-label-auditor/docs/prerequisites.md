@@ -40,7 +40,6 @@ Additional permissions may be needed if the organization extends the solution to
 - PowerShell 7.x
 - `Microsoft.Graph`
 - `ExchangeOnlineManagement`
-- `PnP.PowerShell`
 
 The scripts are written as implementation-ready stubs and can be extended with tenant-approved authentication and Graph request logic.
 

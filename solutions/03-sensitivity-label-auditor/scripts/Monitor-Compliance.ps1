@@ -19,7 +19,7 @@ The Microsoft Entra tenant ID or primary tenant domain for the scan target.
 Optional workload override. When omitted, the selected tier defines the workload scope.
 
 .PARAMETER MaxItemsPerWorkload
-Optional maximum item count to evaluate per workload. When omitted, the tier configuration value is used.
+Optional maximum item count to evaluate per workload. When omitted, the tier configuration value is used. Negative values, including the regulated tier `maxItemsPerScan` value of -1, mean no configured per-workload cap in this scaffold.
 
 .PARAMETER OutputPath
 Directory where monitoring artifacts are written.

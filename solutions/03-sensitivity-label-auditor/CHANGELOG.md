@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.2.2] — 2026-05-23 — Council review remediation
+
+### VERIFIED-BUG
+
+- Normalized missing upstream dependency paths in deployment output to absolute paths.
+- Removed unused `PnP.PowerShell` from the required prerequisites list.
+- Documented the regulated tier `maxItemsPerScan: -1` convention as no configured per-workload cap.
+
+### VERIFIED-VERSION-DRIFT
+
+- Documented configured regulatory mappings for SEC 17a-3, SEC Reg S-P, SOX 302/404, and FFIEC IT Handbook.
+- Aligned README, delivery checklist, and default configuration version metadata to v0.2.2.
+
 ## [v0.2.1] - 2026-05-04
 
 - Corrected Microsoft Graph sensitivity label API versioning, protected API prerequisites, current licensing and role terminology, and Exchange collection caveats for accuracy-review findings.
