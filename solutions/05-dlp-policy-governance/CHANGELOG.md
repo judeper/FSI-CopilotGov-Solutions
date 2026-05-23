@@ -4,6 +4,12 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this solution uses semantic versioning.
 
+## [v0.2.2] — 2026-05-23 — Council review remediation
+
+### Dead config
+
+- Finding 7: Marked `defaults.baselineStoragePath` as illustrative metadata, changed the sample path to a platform-neutral relative path, and clarified that scripts compute artifact paths from runtime output parameters.
+
 ## [v0.2.1] - 2026-05-04
 
 ### Changed
