@@ -31,7 +31,7 @@ jobs:
         shell: pwsh
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run evidence schema validation
         run: pwsh -File scripts/validate-evidence.ps1 -ConfigurationTier baseline
