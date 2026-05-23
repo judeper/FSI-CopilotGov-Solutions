@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -78,7 +78,7 @@ def main() -> None:
 
     doc = {
         "schemaVersion": "0.2.0",
-        "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generatedAt": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "solutions": solutions,
     }
     OUT.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")

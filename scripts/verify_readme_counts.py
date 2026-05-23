@@ -1,9 +1,9 @@
-"""Verify hand-typed counts in sister README/AGENTS against solutions-graph.json.
+"""Verify hand-typed counts in sister README against solutions-graph.json.
 
-GitHub renders README.md and AGENTS.md directly; they cannot use mkdocs
-macros. This script anchors hand-typed integers ("19 solutions", "58
-controls", "243 playbooks") to the canonical solutions-graph.json so
-CI fails when prose drifts from data.
+GitHub renders README.md directly; it cannot use mkdocs macros. This script
+anchors hand-typed integers ("19 solutions", "58 controls", "243 playbooks")
+to the canonical solutions-graph.json so CI fails when prose drifts from
+data.
 
 The CG framework counts (controls, playbooks) live in the FSI-CopilotGov
 repository's content-graph.json. They are mirrored here as a hand-
@@ -22,7 +22,6 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 GRAPH = REPO / "solutions-graph.json"
 README = REPO / "README.md"
-AGENTS = REPO / "AGENTS.md"
 
 # CG framework counts (mirrored from FSI-CopilotGov content-graph.json).
 # Update in lockstep with CG ships that change these counts.
@@ -66,7 +65,6 @@ def main() -> int:
     expected_sols = counts.get("solutions", -1)
 
     readme = _file_text(README)
-    agents = _file_text(AGENTS)
 
     errors: list[str] = []
 
@@ -87,7 +85,7 @@ def main() -> int:
     )
 
     if errors:
-        print("FAILED: sister README/AGENTS counts verification found errors:", file=sys.stderr)
+        print("FAILED: sister README counts verification found errors:", file=sys.stderr)
         for e in errors:
             print(f"  - {e}", file=sys.stderr)
         print(
@@ -98,7 +96,7 @@ def main() -> int:
         return 1
 
     print(
-        f"--- Sister README/AGENTS Counts Verification: PASSED ---\n"
+        f"--- Sister README Counts Verification: PASSED ---\n"
         f"  solutions (canonical) = {expected_sols}\n"
         f"  CG framework controls (mirrored constant) = {CG_FRAMEWORK_COUNTS['controls']}\n"
         f"  CG framework playbooks (mirrored constant) = {CG_FRAMEWORK_COUNTS['playbooks_total']}"
