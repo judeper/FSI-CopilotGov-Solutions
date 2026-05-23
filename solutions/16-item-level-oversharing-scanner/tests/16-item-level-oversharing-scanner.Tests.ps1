@@ -34,36 +34,36 @@ Describe 'Solution structure' {
 Describe 'Configuration content' {
     BeforeAll {
         $solutionRoot = Join-Path $PSScriptRoot '..'
-        $expectedControls = @('1.2', '1.3', '1.4', '1.6', '2.5')
-        $defaultConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\default-config.json') -Raw) | ConvertFrom-Json
-        $baselineConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\baseline.json') -Raw) | ConvertFrom-Json
-        $recommendedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\recommended.json') -Raw) | ConvertFrom-Json
-        $regulatedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\regulated.json') -Raw) | ConvertFrom-Json
+        $script:expectedControls = @('1.2', '1.3', '1.4', '1.6', '2.5')
+        $script:defaultConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\default-config.json') -Raw) | ConvertFrom-Json
+        $script:baselineConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\baseline.json') -Raw) | ConvertFrom-Json
+        $script:recommendedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\recommended.json') -Raw) | ConvertFrom-Json
+        $script:regulatedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\regulated.json') -Raw) | ConvertFrom-Json
     }
 
     It 'includes riskThresholds in default config' {
-        $defaultConfig.riskThresholds.high | Should -BeGreaterThan 0
-        $defaultConfig.riskThresholds.medium | Should -BeGreaterThan 0
-        $defaultConfig.riskThresholds.low | Should -Be 0
+        $script:defaultConfig.riskThresholds.high | Should -BeGreaterThan 0
+        $script:defaultConfig.riskThresholds.medium | Should -BeGreaterThan 0
+        $script:defaultConfig.riskThresholds.low | Should -Be 0
     }
 
     It 'uses longer retention in the regulated tier' {
-        [int]$regulatedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$recommendedConfig.evidenceRetentionDays)
-        [int]$recommendedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$baselineConfig.evidenceRetentionDays)
+        [int]$script:regulatedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$script:recommendedConfig.evidenceRetentionDays)
+        [int]$script:recommendedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$script:baselineConfig.evidenceRetentionDays)
     }
 
     It 'keeps the control mapping consistent across configs' {
-        (@($defaultConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
-        (@($baselineConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
-        (@($recommendedConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
-        (@($regulatedConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
+        (@($script:defaultConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
+        (@($script:baselineConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
+        (@($script:recommendedConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
+        (@($script:regulatedConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
     }
 
     It 'includes evidenceOutputs in all tier configs' {
         $expectedOutputs = @('item-oversharing-findings', 'risk-scored-report', 'remediation-actions')
-        (@($baselineConfig.evidenceOutputs) -join ',') | Should -Be ($expectedOutputs -join ',')
-        (@($recommendedConfig.evidenceOutputs) -join ',') | Should -Be ($expectedOutputs -join ',')
-        (@($regulatedConfig.evidenceOutputs) -join ',') | Should -Be ($expectedOutputs -join ',')
+        (@($script:baselineConfig.evidenceOutputs) -join ',') | Should -Be ($expectedOutputs -join ',')
+        (@($script:recommendedConfig.evidenceOutputs) -join ',') | Should -Be ($expectedOutputs -join ',')
+        (@($script:regulatedConfig.evidenceOutputs) -join ',') | Should -Be ($expectedOutputs -join ',')
     }
 
     It 'validates risk-thresholds.json is valid JSON' {
@@ -122,7 +122,7 @@ Describe 'Evidence types' {
 
 Describe 'README content' {
     BeforeAll {
-        $readmeContent = Get-Content -Path (Join-Path (Join-Path $PSScriptRoot '..') 'README.md') -Raw
+        $script:readmeContent = Get-Content -Path (Join-Path (Join-Path $PSScriptRoot '..') 'README.md') -Raw
     }
 
     It 'includes required sections' {
@@ -138,15 +138,15 @@ Describe 'README content' {
 
         foreach ($section in $requiredSections) {
             $escaped = [regex]::Escape($section)
-            $readmeContent | Should -Match $escaped
+            $script:readmeContent | Should -Match $escaped
         }
     }
 
     It 'includes the standardized status line' {
-        $readmeContent | Should -Match 'Status:.*Documentation-first scaffold'
+        $script:readmeContent | Should -Match 'Status:.*Documentation-first scaffold'
     }
 
     It 'includes the disclaimer banner' {
-        $readmeContent | Should -Match 'Documentation-first repository'
+        $script:readmeContent | Should -Match 'Documentation-first repository'
     }
 }

@@ -35,46 +35,46 @@ Describe 'Solution structure' {
 Describe 'Configuration content' {
     BeforeAll {
         $solutionRoot = Join-Path $PSScriptRoot '..'
-        $expectedControls = @('1.2', '1.6', '2.5', '2.12')
-        $defaultConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\default-config.json') -Raw) | ConvertFrom-Json
-        $baselineConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\baseline.json') -Raw) | ConvertFrom-Json
-        $recommendedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\recommended.json') -Raw) | ConvertFrom-Json
-        $regulatedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\regulated.json') -Raw) | ConvertFrom-Json
-        $reviewSchedule = (Get-Content -Path (Join-Path $solutionRoot 'config\review-schedule.json') -Raw) | ConvertFrom-Json
-        $reviewerMapping = (Get-Content -Path (Join-Path $solutionRoot 'config\reviewer-mapping.json') -Raw) | ConvertFrom-Json
+        $script:expectedControls = @('1.2', '1.6', '2.5', '2.12')
+        $script:defaultConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\default-config.json') -Raw) | ConvertFrom-Json
+        $script:baselineConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\baseline.json') -Raw) | ConvertFrom-Json
+        $script:recommendedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\recommended.json') -Raw) | ConvertFrom-Json
+        $script:regulatedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\regulated.json') -Raw) | ConvertFrom-Json
+        $script:reviewSchedule = (Get-Content -Path (Join-Path $solutionRoot 'config\review-schedule.json') -Raw) | ConvertFrom-Json
+        $script:reviewerMapping = (Get-Content -Path (Join-Path $solutionRoot 'config\reviewer-mapping.json') -Raw) | ConvertFrom-Json
     }
 
     It 'includes evidenceOutputs and upstreamDependency in default config' {
-        @($defaultConfig.evidenceOutputs).Count | Should -BeGreaterThan 0
-        $defaultConfig.upstreamDependency | Should -Be '02-oversharing-risk-assessment'
+        @($script:defaultConfig.evidenceOutputs).Count | Should -BeGreaterThan 0
+        $script:defaultConfig.upstreamDependency | Should -Be '02-oversharing-risk-assessment'
     }
 
     It 'uses longer retention in the regulated tier' {
-        [int]$regulatedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$recommendedConfig.evidenceRetentionDays)
-        [int]$recommendedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$baselineConfig.evidenceRetentionDays)
+        [int]$script:regulatedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$script:recommendedConfig.evidenceRetentionDays)
+        [int]$script:recommendedConfig.evidenceRetentionDays | Should -BeGreaterThan ([int]$script:baselineConfig.evidenceRetentionDays)
     }
 
     It 'keeps the control mapping consistent across configs' {
-        (@($defaultConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
-        (@($baselineConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
-        (@($recommendedConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
-        (@($regulatedConfig.controls) -join ',') | Should -Be ($expectedControls -join ',')
+        (@($script:defaultConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
+        (@($script:baselineConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
+        (@($script:recommendedConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
+        (@($script:regulatedConfig.controls) -join ',') | Should -Be ($script:expectedControls -join ',')
     }
 
     It 'defines review cadence for all risk tiers' {
-        $reviewSchedule.reviewCadence.HIGH.frequencyDays | Should -BeGreaterThan 0
-        $reviewSchedule.reviewCadence.MEDIUM.frequencyDays | Should -BeGreaterThan 0
-        $reviewSchedule.reviewCadence.LOW.frequencyDays | Should -BeGreaterThan 0
+        $script:reviewSchedule.reviewCadence.HIGH.frequencyDays | Should -BeGreaterThan 0
+        $script:reviewSchedule.reviewCadence.MEDIUM.frequencyDays | Should -BeGreaterThan 0
+        $script:reviewSchedule.reviewCadence.LOW.frequencyDays | Should -BeGreaterThan 0
     }
 
     It 'defines escalation chain in reviewer mapping' {
-        @($reviewerMapping.escalationChain).Count | Should -BeGreaterThan 0
+        @($script:reviewerMapping.escalationChain).Count | Should -BeGreaterThan 0
     }
 
     It 'includes all evidence outputs in tier configs' {
-        @($baselineConfig.evidenceOutputs) | Should -Contain 'access-review-definitions'
-        @($baselineConfig.evidenceOutputs) | Should -Contain 'review-decisions'
-        @($baselineConfig.evidenceOutputs) | Should -Contain 'applied-actions'
+        @($script:baselineConfig.evidenceOutputs) | Should -Contain 'access-review-definitions'
+        @($script:baselineConfig.evidenceOutputs) | Should -Contain 'review-decisions'
+        @($script:baselineConfig.evidenceOutputs) | Should -Contain 'applied-actions'
     }
 }
 

@@ -4,7 +4,7 @@ BeforeAll {
     $configPath = Join-Path $solutionRoot 'config'
     $scriptsPath = Join-Path $solutionRoot 'scripts'
 
-    $requiredDocs = @(
+    $script:requiredDocs = @(
         (Join-Path $docsPath 'architecture.md'),
         (Join-Path $docsPath 'deployment-guide.md'),
         (Join-Path $docsPath 'evidence-export.md'),
@@ -12,42 +12,42 @@ BeforeAll {
         (Join-Path $docsPath 'troubleshooting.md')
     )
 
-    $requiredScripts = @(
+    $script:requiredScripts = @(
         (Join-Path $scriptsPath 'Deploy-Solution.ps1'),
         (Join-Path $scriptsPath 'Monitor-Compliance.ps1'),
         (Join-Path $scriptsPath 'Export-Evidence.ps1'),
         (Join-Path $scriptsPath 'CRS-Common.psm1')
     )
 
-    $requiredConfigs = @(
+    $script:requiredConfigs = @(
         (Join-Path $configPath 'default-config.json'),
         (Join-Path $configPath 'baseline.json'),
         (Join-Path $configPath 'recommended.json'),
         (Join-Path $configPath 'regulated.json')
     )
 
-    $defaultConfigPath = Join-Path $configPath 'default-config.json'
-    $baselineConfigPath = Join-Path $configPath 'baseline.json'
-    $regulatedConfigPath = Join-Path $configPath 'regulated.json'
-    $changelogPath = Join-Path $solutionRoot 'CHANGELOG.md'
-    $evidenceDocPath = Join-Path $docsPath 'evidence-export.md'
+    $script:defaultConfigPath = Join-Path $configPath 'default-config.json'
+    $script:baselineConfigPath = Join-Path $configPath 'baseline.json'
+    $script:regulatedConfigPath = Join-Path $configPath 'regulated.json'
+    $script:changelogPath = Join-Path $solutionRoot 'CHANGELOG.md'
+    $script:evidenceDocPath = Join-Path $docsPath 'evidence-export.md'
 }
 
 Describe 'Solution structure' {
     It 'has all required documentation files' {
-        foreach ($path in $requiredDocs) {
+        foreach ($path in $script:requiredDocs) {
             Test-Path $path | Should -BeTrue
         }
     }
 
     It 'has all required script files' {
-        foreach ($path in $requiredScripts) {
+        foreach ($path in $script:requiredScripts) {
             Test-Path $path | Should -BeTrue
         }
     }
 
     It 'has all required configuration files' {
-        foreach ($path in $requiredConfigs) {
+        foreach ($path in $script:requiredConfigs) {
             Test-Path $path | Should -BeTrue
         }
     }
@@ -55,7 +55,7 @@ Describe 'Solution structure' {
 
 Describe 'Configuration file content' {
     It 'default-config.json has required fields' {
-        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         $config['solution'] | Should -Be '01-copilot-readiness-scanner'
         $config['displayName'] | Should -Be 'Copilot Readiness Assessment Scanner'
         $config['controls'] | Should -Contain '1.1'
@@ -63,18 +63,18 @@ Describe 'Configuration file content' {
     }
 
     It 'baseline tier has evidenceRetentionDays' {
-        $config = Get-Content -Path $baselineConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $config = Get-Content -Path $script:baselineConfigPath -Raw | ConvertFrom-Json -AsHashtable
         $config['evidenceRetentionDays'] | Should -Be 90
     }
 
     It 'regulated tier has longer retention than baseline' {
-        $baselineConfig = Get-Content -Path $baselineConfigPath -Raw | ConvertFrom-Json -AsHashtable
-        $regulatedConfig = Get-Content -Path $regulatedConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $baselineConfig = Get-Content -Path $script:baselineConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $regulatedConfig = Get-Content -Path $script:regulatedConfigPath -Raw | ConvertFrom-Json -AsHashtable
         [int]$regulatedConfig['evidenceRetentionDays'] | Should -BeGreaterThan ([int]$baselineConfig['evidenceRetentionDays'])
     }
 
     It 'config controls match catalog' {
-        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         $config['controls'] | Should -Contain '1.1'
         $config['controls'] | Should -Contain '1.5'
         $config['controls'] | Should -Contain '1.6'
@@ -111,17 +111,17 @@ Describe 'Script syntax validation' {
 
 Describe 'CHANGELOG format' {
     It 'CHANGELOG has v0.2.2 entry' {
-        (Get-Content -Path $changelogPath -Raw) | Should -Match '## \[v0\.2\.2\]'
+        (Get-Content -Path $script:changelogPath -Raw) | Should -Match '## \[v0\.2\.2\]'
     }
 }
 
 Describe 'Evidence export doc' {
     It 'evidence-export.md documents readiness-scorecard' {
-        (Get-Content -Path $evidenceDocPath -Raw) | Should -Match 'readiness-scorecard'
+        (Get-Content -Path $script:evidenceDocPath -Raw) | Should -Match 'readiness-scorecard'
     }
 
     It 'evidence-export.md documents data-hygiene-findings' {
-        (Get-Content -Path $evidenceDocPath -Raw) | Should -Match 'data-hygiene-findings'
+        (Get-Content -Path $script:evidenceDocPath -Raw) | Should -Match 'data-hygiene-findings'
     }
 }
 

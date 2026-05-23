@@ -10,9 +10,9 @@
 
 BeforeAll {
     $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-    $scriptsPath = Join-Path $solutionRoot 'scripts'
-    $configPath = Join-Path $solutionRoot 'config'
-    $docsPath = Join-Path $solutionRoot 'docs'
+    $script:scriptsPath = Join-Path $solutionRoot 'scripts'
+    $script:configPath = Join-Path $solutionRoot 'config'
+    $script:docsPath = Join-Path $solutionRoot 'docs'
 
     function Get-JsonContent {
         param([string]$Path)
@@ -34,48 +34,48 @@ Describe 'GMG - File Presence' {
 
     It 'has all required config files' {
         foreach ($p in @('default-config.json', 'baseline.json', 'recommended.json', 'regulated.json')) {
-            Test-Path (Join-Path $configPath $p) | Should -BeTrue
+            Test-Path (Join-Path $script:configPath $p) | Should -BeTrue
         }
     }
 
     It 'has all required doc files' {
         foreach ($p in @('architecture.md', 'deployment-guide.md', 'evidence-export.md', 'prerequisites.md', 'troubleshooting.md')) {
-            Test-Path (Join-Path $docsPath $p) | Should -BeTrue
+            Test-Path (Join-Path $script:docsPath $p) | Should -BeTrue
         }
     }
 
     It 'has all required scripts' {
         foreach ($p in @('Deploy-Solution.ps1', 'Monitor-Compliance.ps1', 'Export-Evidence.ps1', 'GmgConfig.psm1')) {
-            Test-Path (Join-Path $scriptsPath $p) | Should -BeTrue
+            Test-Path (Join-Path $script:scriptsPath $p) | Should -BeTrue
         }
     }
 }
 
 Describe 'GMG - Configuration Validation' {
     Context 'default-config.json' {
-        BeforeAll { $defaultConfig = Get-JsonContent -Path (Join-Path $configPath 'default-config.json') }
+        BeforeAll { $script:defaultConfig = Get-JsonContent -Path (Join-Path $script:configPath 'default-config.json') }
 
-        It 'has correct solution slug' { $defaultConfig.solution     | Should -Be '20-generative-ai-model-governance-monitor' }
-        It 'has solutionCode GMG'      { $defaultConfig.solutionCode | Should -Be 'GMG' }
-        It 'has track D'               { $defaultConfig.track        | Should -Be 'D' }
+        It 'has correct solution slug' { $script:defaultConfig.solution     | Should -Be '20-generative-ai-model-governance-monitor' }
+        It 'has solutionCode GMG'      { $script:defaultConfig.solutionCode | Should -Be 'GMG' }
+        It 'has track D'               { $script:defaultConfig.track        | Should -Be 'D' }
         It 'has primary controls 3.8a and 3.8' {
-            @($defaultConfig.primaryControls) | Should -Contain '3.8a'
-            @($defaultConfig.primaryControls) | Should -Contain '3.8'
+            @($script:defaultConfig.primaryControls) | Should -Contain '3.8a'
+            @($script:defaultConfig.primaryControls) | Should -Contain '3.8'
         }
         It 'cites Federal Reserve SR 11-7 and OCC Bulletin 2011-12 model risk guidance' {
-            @($defaultConfig.regulations) | Should -Contain 'Federal Reserve SR 11-7'
-            @($defaultConfig.regulations) | Should -Contain 'OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)'
+            @($script:defaultConfig.regulations) | Should -Contain 'Federal Reserve SR 11-7'
+            @($script:defaultConfig.regulations) | Should -Contain 'OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)'
         }
         It 'lists all five evidence outputs' {
             foreach ($e in @('copilot-model-inventory', 'validation-summary', 'ongoing-monitoring-log', 'content-safety-and-guardrails', 'third-party-due-diligence')) {
-                @($defaultConfig.evidenceOutputs) | Should -Contain $e
+                @($script:defaultConfig.evidenceOutputs) | Should -Contain $e
             }
         }
         It 'lists structured model sources and content safety defaults' {
-            @($defaultConfig.defaults.trackedModelSources).Count | Should -BeGreaterOrEqual 4
-            @($defaultConfig.defaults.trackedModelSources.modelSource) | Should -Contain 'azureopenai'
-            @($defaultConfig.defaults.trackedModelSources.modelSource) | Should -Contain 'partner'
-            $defaultConfig.defaults.contentSafetyDefaults.promptShields | Should -Not -BeNullOrEmpty
+            @($script:defaultConfig.defaults.trackedModelSources).Count | Should -BeGreaterOrEqual 4
+            @($script:defaultConfig.defaults.trackedModelSources.modelSource) | Should -Contain 'azureopenai'
+            @($script:defaultConfig.defaults.trackedModelSources.modelSource) | Should -Contain 'partner'
+            $script:defaultConfig.defaults.contentSafetyDefaults.promptShields | Should -Not -BeNullOrEmpty
         }
     }
 
@@ -83,7 +83,7 @@ Describe 'GMG - Configuration Validation' {
         It '<tier> has required fields' -ForEach @(
             @{ tier = 'baseline' }, @{ tier = 'recommended' }, @{ tier = 'regulated' }
         ) {
-            $config = Get-JsonContent -Path (Join-Path $configPath ("{0}.json" -f $tier))
+            $config = Get-JsonContent -Path (Join-Path $script:configPath ("{0}.json" -f $tier))
             $propertyNames = $config.PSObject.Properties.Name
             foreach ($f in @('solution', 'tier', 'controls', 'model_inventory_review_cadence_days', 'monitoring_log_retention_days', 'validation_assessment_required', 'third_party_review_cadence_days', 'ongoingMonitoring', 'evidenceRetentionDays', 'notificationMode')) {
                 $propertyNames | Should -Contain $f
@@ -91,7 +91,7 @@ Describe 'GMG - Configuration Validation' {
         }
 
         It 'regulated tier requires independent challenge' {
-            $regulated = Get-JsonContent -Path (Join-Path $configPath 'regulated.json')
+            $regulated = Get-JsonContent -Path (Join-Path $script:configPath 'regulated.json')
             $regulated.independentChallenge.enabled | Should -BeTrue
             $regulated.validation_assessment_required | Should -Match 'independent-challenge'
         }
@@ -105,13 +105,13 @@ Describe 'GMG - Script Parse Validation' {
         @{ script = 'Export-Evidence.ps1' },
         @{ script = 'GmgConfig.psm1' }
     ) {
-        Test-PowerShellParse -Path (Join-Path $scriptsPath $script) | Should -BeTrue
+        Test-PowerShellParse -Path (Join-Path $script:scriptsPath $script) | Should -BeTrue
     }
 }
 
 Describe 'GMG - Config Loader Smoke Test' {
     BeforeAll {
-        Import-Module (Join-Path $scriptsPath 'GmgConfig.psm1') -Force
+        Import-Module (Join-Path $script:scriptsPath 'GmgConfig.psm1') -Force
     }
 
     It 'Get-GmgConfiguration loads <tier> tier' -ForEach @(
@@ -125,23 +125,23 @@ Describe 'GMG - Config Loader Smoke Test' {
 
 Describe 'GMG - Documentation Validation' {
     BeforeAll {
-        $readme        = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
-        $architecture  = Get-Content -Path (Join-Path $docsPath 'architecture.md') -Raw
-        $evidenceExport = Get-Content -Path (Join-Path $docsPath 'evidence-export.md') -Raw
+        $script:readme        = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
+        $script:architecture  = Get-Content -Path (Join-Path $script:docsPath 'architecture.md') -Raw
+        $script:evidenceExport = Get-Content -Path (Join-Path $script:docsPath 'evidence-export.md') -Raw
     }
 
-    It 'README references SR 26-2 / OCC Bulletin 2026-13' { $readme | Should -Match 'SR 26-2 / OCC Bulletin 2026-13' }
-    It 'README references SR 11-7' { $readme | Should -Match 'SR 11-7' }
+    It 'README references SR 26-2 / OCC Bulletin 2026-13' { $script:readme | Should -Match 'SR 26-2 / OCC Bulletin 2026-13' }
+    It 'README references SR 11-7' { $script:readme | Should -Match 'SR 11-7' }
     It 'README references all primary controls' {
-        $readme | Should -Match '3\.8a'
-        $readme | Should -Match '3\.8'
+        $script:readme | Should -Match '3\.8a'
+        $script:readme | Should -Match '3\.8'
     }
-    It 'architecture.md references SR 11-7' { $architecture | Should -Match 'SR 11-7' }
+    It 'architecture.md references SR 11-7' { $script:architecture | Should -Match 'SR 11-7' }
     It 'evidence-export.md references all five outputs' {
-        $evidenceExport | Should -Match 'copilot-model-inventory'
-        $evidenceExport | Should -Match 'validation-summary'
-        $evidenceExport | Should -Match 'ongoing-monitoring-log'
-        $evidenceExport | Should -Match 'content-safety-and-guardrails'
-        $evidenceExport | Should -Match 'third-party-due-diligence'
+        $script:evidenceExport | Should -Match 'copilot-model-inventory'
+        $script:evidenceExport | Should -Match 'validation-summary'
+        $script:evidenceExport | Should -Match 'ongoing-monitoring-log'
+        $script:evidenceExport | Should -Match 'content-safety-and-guardrails'
+        $script:evidenceExport | Should -Match 'third-party-due-diligence'
     }
 }
