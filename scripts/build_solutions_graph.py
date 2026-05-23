@@ -37,7 +37,7 @@ Output schema (version 1.0.0):
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -130,7 +130,7 @@ def build_graph() -> dict:
 
     return {
         "schemaVersion": SCHEMA_VERSION,
-        "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generatedAt": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "counts": {
             "solutions": len(enriched),
             "tier1": tier_counts[1],

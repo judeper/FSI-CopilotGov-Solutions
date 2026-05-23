@@ -11,6 +11,7 @@ on:
       - 'README.md'
       - 'AGENTS.md'
       - 'scripts/validate_solutions_json.py'
+      - 'scripts/build_solutions_json.py'
       - 'scripts/build_solutions_graph.py'
       - 'scripts/validate_solutions_graph.py'
       - 'scripts/verify_readme_counts.py'
@@ -27,6 +28,7 @@ on:
       - 'README.md'
       - 'AGENTS.md'
       - 'scripts/validate_solutions_json.py'
+      - 'scripts/build_solutions_json.py'
       - 'scripts/build_solutions_graph.py'
       - 'scripts/validate_solutions_graph.py'
       - 'scripts/verify_readme_counts.py'
@@ -50,6 +52,14 @@ jobs:
           if ! git diff --quiet -I '"generatedAt"' -- solutions-graph.json; then
             echo "::error::solutions-graph.json is stale. Run 'python scripts/build_solutions_graph.py' and commit."
             git --no-pager diff -I '"generatedAt"' -- solutions-graph.json | head -100
+            exit 1
+          fi
+      - name: Build solutions.json (drift check)
+        run: |
+          python scripts/build_solutions_json.py
+          if ! git diff --quiet -I '"generatedAt"' -- solutions.json; then
+            echo "::error::solutions.json is stale. Run 'python scripts/build_solutions_json.py' and commit."
+            git --no-pager diff -I '"generatedAt"' -- solutions.json | head -100
             exit 1
           fi
       - name: Validate solutions-graph.json

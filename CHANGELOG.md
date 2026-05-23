@@ -40,6 +40,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - **GitHub Actions bumps** (PRs #247, #248, #249, #251, #253): `actions/upload-artifact` 4→7, `actions/attest-build-provenance` 2→4, `github/codeql-action` 3→4, `actions/setup-python` 5→6, `actions/checkout` 4→6. Compatibility verified: workflows use single-name uploads (safe with `upload-artifact@v5+` immutability), all use Python 3.11+ (safe with `setup-python@v6` removal of 3.7), and runner git versions exceed `checkout@v6` minimums.
 - **Python dependency bumps** (PRs #250, #252): `mkdocs-material >=9.5` → `>=9.7.6`, `pyyaml >=6.0` → `>=6.0.3`. Patch-range tightening only; no API changes.
 
+### Fixed — Tech-debt sweep
+- **Python lint cleanup**: cleared 4 ruff violations across `scripts/`:
+  - `UP017` (×2): `scripts/build_solutions_graph.py` and `scripts/build_solutions_json.py` migrated from deprecated `timezone.utc` to `datetime.UTC` alias.
+  - `I001` (×1): `scripts/hooks/boundary-check.py` import order normalised (stdlib `import` before `from … import`).
+  - `F841` (×1): removed dead `AGENTS = REPO / "AGENTS.md"` load from `scripts/verify_readme_counts.py` (the script only verifies sister-README counts; AGENTS verification was never implemented). Docstring and output strings tightened accordingly.
+- **`solutions.json` and `solutions-graph.json` version drift repaired**: rebuilt both catalogs against current README/CHANGELOG truth — picks up version bumps from PRs that did not regenerate the artifacts (#228, #229, #241, council-review series). Thirteen solutions advanced their cached `version` field (e.g. `01-copilot-readiness-scanner` `0.2.1`→`0.2.2`). The `solutions-graph.json` drift was caught by the existing CI drift-check during this PR's CI run.
+- **`validate-solutions-json.yml` drift-check coverage**: workflow now drift-checks `solutions.json` in addition to `solutions-graph.json`, and triggers on edits to `scripts/build_solutions_json.py`. Prevents future drift between README/CHANGELOG version bumps and the cached JSON catalog.
+- **`sbom-pr.yml` long-standing flag bug repaired**: the workflow invoked `cyclonedx-py requirements -i requirements-docs.txt ...`, but `-i` is `--index-url` (the Pip index URL), not the requirements-file flag — the requirements file is a positional argument in every release ≥4.0. The misuse silently fell back to the non-existent default `requirements.txt` and broke the workflow on every push. Replaced with positional invocation (`cyclonedx-py requirements requirements-docs.txt ...`) and renamed `--output-format JSON` to the v6+ short flag `--of JSON`. Also bumped pin from `>=4,<6` to `>=6,<8` for security and validator-format updates.
+
+### Notes — Tech-debt sweep
+- Final state on this branch: `ruff check scripts/` → 0 errors; `Invoke-ScriptAnalyzer` (per prior PR #254) → 0 Errors, 0 Warnings; all `validate_*` scripts pass; SBOM generation verified locally (4.6 KB CycloneDX 1.6 JSON produced); no stale branches, worktrees, stashes, or untracked files outside `.gitignore`.
+
 ### Notes
 - All changes are documentation-first — scripts continue to use representative sample data; no runtime tenant binding.
 - Working tree is staged for operator review; release tagging is deferred.
