@@ -207,6 +207,18 @@ $manifest = [ordered]@{
         enableEscalation = $configuration.enableEscalation
         maxSitesPerRun = $configuration.maxSitesPerRun
         evidenceRetentionDays = $configuration.evidenceRetentionDays
+        requireOwnerAttestation = $configuration.requireOwnerAttestation
+        requireExaminerReadyEvidence = $configuration.requireExaminerReadyEvidence
+    }
+    governanceRequirements = [ordered]@{
+        ownerAttestation = [ordered]@{
+            required = [bool]$configuration.requireOwnerAttestation
+            status = if ([bool]$configuration.requireOwnerAttestation) { 'manual-check-required' } else { 'not-required-by-tier' }
+        }
+        examinerReadyEvidence = [ordered]@{
+            required = [bool]$configuration.requireExaminerReadyEvidence
+            status = if ([bool]$configuration.requireExaminerReadyEvidence) { 'manual-check-required' } else { 'not-required-by-tier' }
+        }
     }
 }
 

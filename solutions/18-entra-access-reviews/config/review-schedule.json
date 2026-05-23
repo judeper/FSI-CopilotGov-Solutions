@@ -5,7 +5,7 @@
     "LOW": { "frequencyDays": 180, "durationDays": 14 }
   },
   "defaultReviewer": "site-owner",
-  "fallbackReviewer": "compliance-officer",
+  "fallbackReviewer": "compliance-officer@contoso.com",
   "autoApplyDecisions": false,
   "reminderDays": 2
 }

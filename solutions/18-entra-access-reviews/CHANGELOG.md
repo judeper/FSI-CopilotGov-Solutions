@@ -4,6 +4,32 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## v0.1.2 — 2026-05-23 — Council review remediation
+
+### Fixed
+
+- Finding 1: Added `ConfigurationTier` passthrough in the orchestrator so evidence export uses the selected tier instead of hardcoded baseline.
+- Finding 4: Added `ShouldProcess` confirmation support before posting live `applyDecisions` requests.
+- Finding 5: Replaced the fallback reviewer role label with a sample resolvable UPN in `review-schedule.json`.
+- Finding 12: Mapped non-deny and unknown review decisions to `no-action` or `unsupported-decision` instead of `maintain-access`.
+- Finding 13: Carried `siteUrl` into applied-action evidence from review definition mappings or live definition metadata.
+
+### Documentation tightened
+
+- Finding 10: Clarified that `reminderDays` is reference metadata until scheduling is wired to tenant automation.
+- Finding 11: Removed `PnP.PowerShell` from required modules and marked it optional for future SharePoint owner-resolution work.
+- Finding 16: Updated the orchestrator description to state that review creation follows HIGH, MEDIUM, then LOW risk order.
+
+### Dead config
+
+- Finding 2: Marked `reviewer-mapping.json` as a non-runtime reference template until tenant role-to-user resolution is added.
+- Finding 8: Wired selected tier `maxSitesPerRun` into review creation and added an override parameter.
+- Finding 14: Reported regulated-tier attestation and examiner-ready evidence flags in the deployment manifest as manual checks.
+
+### Version drift
+
+- None; no verified version-drift finding was included in the remediation brief.
+
 ## [v0.1.1] - 2026-05-04
 
 ### Fixed

@@ -26,7 +26,7 @@ Use this checklist to move solution 18 from documentation review into controlled
 
 - [ ] Review `config\default-config.json` for evidence path, controls, and default settings.
 - [ ] Review `config\review-schedule.json` for review cadence and duration by risk tier.
-- [ ] Review `config\reviewer-mapping.json` for reviewer assignment and escalation chain.
+- [ ] Review `config\reviewer-mapping.json` as a reference reviewer and escalation template; confirm tenant-specific reviewer identities separately.
 - [ ] Review the selected tier JSON for retention, auto-apply settings, and evidence requirements.
 
 ## 5. Access Review Planning

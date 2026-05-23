@@ -120,7 +120,7 @@ The deployment script checks for upstream output before writing the local deploy
 `Invoke-RiskTriagedReviews.ps1` coordinates the full lifecycle:
 
 1. Read risk scores from solution 02 output
-2. Create access reviews for HIGH-risk site-associated Microsoft Entra resources
+2. Create access reviews for site-associated Microsoft Entra resources in risk order (HIGH, then MEDIUM, then LOW)
 3. Collect review results
 4. Apply completed decisions
 5. Export evidence package
