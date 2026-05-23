@@ -11,7 +11,7 @@
   "connectors": [
     {"name": "Office 365 Outlook", "kind": "sharedoffice365"},
     {"name": "Microsoft Teams", "kind": "sharedteams"},
-    {"name": "SharePoint", "kind": "sharedsharepointonline"},
+    {"name": "Microsoft Dataverse", "kind": "sharedcommondataserviceforapps"},
     {"name": "HTTP with Microsoft Entra ID", "kind": "sharedhttpwithentra"}
   ],
   "actions": [
@@ -20,13 +20,13 @@
     {"name": "Evaluate Risk Tier", "type": "condition"},
     {"name": "Notify Principal Reviewer", "type": "office365_send_email"},
     {"name": "Post Teams Adaptive Card", "type": "teams_post_card"},
-    {"name": "Append Supervision Evidence Row", "type": "sharepoint_create_item"},
+    {"name": "Add Supervision Log Row", "type": "dataverse_add_row", "target_table": "fsi_cg_fsw_log"},
     {"name": "Mark Item As Routed", "type": "http"}
   ],
   "condition_branches": [
     {
       "name": "Evaluate Risk Tier",
-      "yes": ["Notify Principal Reviewer", "Post Teams Adaptive Card", "Append Supervision Evidence Row", "Mark Item As Routed"],
+      "yes": ["Notify Principal Reviewer", "Post Teams Adaptive Card", "Add Supervision Log Row", "Mark Item As Routed"],
       "no": ["Mark Item As Routed"]
     }
   ],
@@ -41,8 +41,9 @@
   },
   "naming_pattern": "^[A-Z][A-Za-z0-9 ]+$",
   "evidence_outputs": [
-    "supervision-review-log.csv",
-    "principal-attestation-summary.json"
+    "supervision-queue-snapshot",
+    "review-disposition-log",
+    "sampling-summary"
   ],
   "notes": "Representative sample contract for Solution 04. Values are illustrative; no live Power Automate flow is bound to this contract."
 }

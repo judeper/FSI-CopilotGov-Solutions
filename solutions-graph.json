@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-04-29T23:34:51Z",
+  "generatedAt": "2026-05-23T04:12:40Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -14,7 +14,7 @@
       "id": "01-copilot-readiness-scanner",
       "name": "Copilot Readiness Assessment Scanner",
       "tier": 1,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.1",
@@ -37,7 +37,7 @@
       "id": "02-oversharing-risk-assessment",
       "name": "Oversharing Risk Assessment and Remediation",
       "tier": 1,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
@@ -61,7 +61,7 @@
       "id": "03-sensitivity-label-auditor",
       "name": "Sensitivity Label Coverage Auditor",
       "tier": 2,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.5",
@@ -83,7 +83,7 @@
       "id": "04-finra-supervision-workflow",
       "name": "FINRA Supervision Workflow for Copilot",
       "tier": 1,
-      "version": "0.2.0",
+      "version": "0.2.2",
       "domain": "security-compliance",
       "controlCoverage": [
         "3.4",
@@ -104,7 +104,7 @@
       "id": "05-dlp-policy-governance",
       "name": "DLP Policy Governance for Copilot",
       "tier": 2,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "domain": "security-compliance",
       "controlCoverage": [
         "2.1",
@@ -125,7 +125,7 @@
       "id": "06-audit-trail-manager",
       "name": "Copilot Interaction Audit Trail Manager",
       "tier": 1,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "domain": "security-compliance",
       "controlCoverage": [
         "3.1",
@@ -148,7 +148,7 @@
       "id": "07-conditional-access-automation",
       "name": "Conditional Access Policy Automation for Copilot",
       "tier": 2,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "domain": "security-compliance",
       "controlCoverage": [
         "2.3",
@@ -169,7 +169,7 @@
       "id": "08-license-governance-roi",
       "name": "License Governance and ROI Tracker",
       "tier": 2,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.9",
@@ -191,7 +191,7 @@
       "id": "09-feature-management-controller",
       "name": "Copilot Feature Management Controller",
       "tier": 2,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "2.6",
@@ -216,7 +216,7 @@
       "id": "10-connector-plugin-governance",
       "name": "Copilot Connector and Plugin Governance",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.13",
@@ -238,7 +238,7 @@
       "id": "11-risk-tiered-rollout",
       "name": "Risk-Tiered Rollout Automation",
       "tier": 1,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.11",
@@ -260,7 +260,7 @@
       "id": "12-regulatory-compliance-dashboard",
       "name": "Regulatory Compliance Dashboard",
       "tier": 1,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "3.12",
@@ -284,7 +284,7 @@
       "id": "13-dora-resilience-monitor",
       "name": "DORA Operational Resilience Monitor",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "regulatory-resilience",
       "controlCoverage": [
         "2.7",
@@ -306,7 +306,7 @@
       "id": "14-communication-compliance-config",
       "name": "Communication Compliance Configurator",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.2.1",
       "domain": "regulatory-resilience",
       "controlCoverage": [
         "2.10",
@@ -329,7 +329,7 @@
       "id": "15-pages-notebooks-gap-monitor",
       "name": "Copilot Pages and Notebooks Compliance Gap Monitor",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "regulatory-resilience",
       "controlCoverage": [
         "2.11",
@@ -351,7 +351,7 @@
       "id": "16-item-level-oversharing-scanner",
       "name": "Item-Level Oversharing Scanner",
       "tier": 2,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
@@ -374,7 +374,7 @@
       "id": "17-sharepoint-permissions-drift",
       "name": "SharePoint Permissions Drift Detection",
       "tier": 2,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
@@ -396,7 +396,7 @@
       "id": "18-entra-access-reviews",
       "name": "Entra Access Reviews Automation",
       "tier": 2,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
@@ -418,7 +418,7 @@
       "id": "19-copilot-tuning-governance",
       "name": "Copilot Tuning Governance",
       "tier": 2,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.16",
@@ -438,7 +438,7 @@
       "id": "20-generative-ai-model-governance-monitor",
       "name": "Generative AI Model Governance Monitor",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "regulatory-resilience",
       "controlCoverage": [
         "3.1",
@@ -461,7 +461,7 @@
       "id": "21-cross-tenant-agent-federation-auditor",
       "name": "Cross-Tenant Agent Federation Auditor",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "security-compliance",
       "controlCoverage": [
         "1.10",
@@ -485,7 +485,7 @@
       "id": "22-pages-notebooks-retention-tracker",
       "name": "Pages and Notebooks Retention Tracker",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "regulatory-resilience",
       "controlCoverage": [
         "2.11",
@@ -508,7 +508,7 @@
       "id": "23-copilot-studio-lifecycle-tracker",
       "name": "Copilot Studio Agent Lifecycle Tracker",
       "tier": 3,
-      "version": "0.1.0",
+      "version": "0.1.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.10",

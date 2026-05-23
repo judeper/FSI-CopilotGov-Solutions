@@ -1,5 +1,14 @@
 # Delivery Checklist
 
+## Delivery Summary
+
+- Solution: FINRA Supervision Workflow for Copilot
+- Solution Code: FSW
+- Version: v0.2.2
+- Track: B
+- Priority: P0
+- Evidence Outputs: supervision-queue-snapshot, review-disposition-log, sampling-summary
+
 Use this checklist before promoting the FINRA Supervision Workflow for Copilot solution into a managed Power Platform environment.
 
 ## 1. Prerequisites and access

@@ -65,11 +65,13 @@ artifacts\evidence\
 
 ## Retention schedule
 
-| Tier | Suggested evidence retention |
-| --- | --- |
-| baseline | 365 days |
-| recommended | 1095 days |
-| regulated | 2555 days (7 years) |
+| Tier | Suggested evidence retention | Rationale to confirm with records management |
+| --- | --- | --- |
+| baseline | 365 days | Design-review and dry-run evidence retention for non-production validation; not a substitute for regulated books-and-records retention. |
+| recommended | 1095 days | Three-year operating evidence window aligned to the SEC Rule 17a-4(b)(4) broker-dealer communications retention floor where applicable. |
+| regulated | 2555 days (7 years) | Conservative repository default for supervisory evidence that exceeds the six-year FINRA Rule 4511(c) default for records without another specified period and the SEC Rule 17a-4(b)(4) three-year communications minimum. |
+
+These defaults support FINRA Rule 3110 supervisory review evidence and FINRA Rule 4511(a) books-and-records obligations, but they do not replace a firm's approved retention schedule. Records management, legal, and supervisory principals must confirm the final retention period for production evidence before deployment.
 
 ## Notes
 
