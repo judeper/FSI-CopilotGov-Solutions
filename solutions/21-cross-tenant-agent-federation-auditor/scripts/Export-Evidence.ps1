@@ -28,7 +28,7 @@
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
-    Version:  v0.1.1
+    Version:  v0.1.2
     Status:   Documentation-first scaffold (sample data only)
 #>
 [CmdletBinding()]
@@ -54,7 +54,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 Import-Module (Join-Path $PSScriptRoot 'CtafConfig.psm1') -Force
-Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\IntegrationConfig.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\EvidenceExport.psm1') -Force
 
 if ($PeriodEnd -lt $PeriodStart) {
     throw 'PeriodEnd must be greater than or equal to PeriodStart.'
@@ -159,36 +159,45 @@ $findingCount = (@($snapshot.CrossTenantTrust) | Where-Object { $_.reviewStatus 
                 (@($snapshot.AgentIdAttestations) | Where-Object { $_.reviewStatus -ne 'current' }).Count
 $exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
 
-$packageManifest = [ordered]@{
-    metadata = [ordered]@{
-        solution = $configuration.solution
-        solutionCode = $configuration.solutionCode
-        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
-        exportedAt = (Get-Date).ToString('o')
-        tier = $ConfigurationTier
-        generatedAt = (Get-Date).ToString('o')
-        runtimeMode = 'sample'
-        documentationFirstNotice = 'Evidence package generated from documentation-first sample data; not suitable for examiner submission.'
-    }
-    summary = [ordered]@{
-        overallStatus = 'partial'
-        recordCount = $recordCount
-        findingCount = $findingCount
-        exceptionCount = $exceptionCount
-    }
-    controls = $controls
-    artifacts = $artifacts
+$packageSummary = @{
+    overallStatus = 'partial'
+    recordCount = $recordCount
+    findingCount = $findingCount
+    exceptionCount = $exceptionCount
 }
 
-$packagePath = Join-Path $resolvedOutputPath ("ctaf-evidence-package-{0}.json" -f $ConfigurationTier)
-$packageManifest | ConvertTo-Json -Depth 10 | Set-Content -Path $packagePath -Encoding utf8
-$null = Write-CtafSha256File -Path $packagePath
+$packageMetadata = [ordered]@{
+    generatedAt = (Get-Date).ToString('o')
+    runtimeMode = 'sample'
+    documentationFirstNotice = 'Evidence package generated from documentation-first sample data; not suitable for examiner submission.'
+}
+
+$expectedArtifacts = @(
+    'agent-federation-inventory',
+    'cross-tenant-trust-assessment',
+    'mcp-trust-relationship-log',
+    'agent-id-attestation-evidence'
+)
+
+$package = Export-SolutionEvidencePackage `
+    -Solution $configuration.solution `
+    -SolutionCode $configuration.solutionCode `
+    -Tier $ConfigurationTier `
+    -OutputPath $resolvedOutputPath `
+    -PackageFileName ("ctaf-evidence-package-{0}.json" -f $ConfigurationTier) `
+    -Summary $packageSummary `
+    -Controls $controls `
+    -Artifacts $artifacts `
+    -ExpectedArtifacts $expectedArtifacts `
+    -AdditionalMetadata $packageMetadata
 
 $result = [pscustomobject]@{
-    Summary = $packageManifest
+    Summary = $packageSummary
     Controls = $controls
     Artifacts = $artifacts
-    PackagePath = $packagePath
+    Package = $package
+    PackagePath = $package.Path
+    PackageHash = $package.Hash
     RuntimeMode = 'sample'
 }
 

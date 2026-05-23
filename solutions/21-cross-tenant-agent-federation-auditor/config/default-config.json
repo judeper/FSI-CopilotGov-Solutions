@@ -2,7 +2,7 @@
   "solution": "21-cross-tenant-agent-federation-auditor",
   "displayName": "Cross-Tenant Agent Federation Auditor",
   "solutionCode": "CTAF",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "track": "B",
   "priority": "P1",
   "primaryControls": [

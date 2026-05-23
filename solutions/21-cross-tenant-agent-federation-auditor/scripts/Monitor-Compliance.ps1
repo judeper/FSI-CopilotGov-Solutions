@@ -21,7 +21,7 @@
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
-    Version:  v0.1.1
+    Version:  v0.1.2
     Status:   Documentation-first scaffold (sample data only)
 #>
 [CmdletBinding()]

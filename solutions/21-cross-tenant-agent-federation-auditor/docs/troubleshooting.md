@@ -10,7 +10,7 @@
 
 **Symptom:** `CTAF configuration is missing required fields: ...`.
 
-**Resolution:** Compare your tier file against the shipped template. Required fields include `tier`, `primaryControls`, `federationReviewCadenceDays`, `mcpTrustAttestationRequired`, `agentIdSigningRequired`, `crossTenantAuditLogRetentionDays`, `evidenceRetentionDays`, `notificationMode`, `copilotStudioPublishing`, and `mcpAttestation`.
+**Resolution:** Compare `config/default-config.json` and the selected tier file against the shipped templates. The validator requires solution metadata (`solution`, `displayName`, `solutionCode`, `version`), tier metadata (`tier`, `primaryControls`), tier review settings (`federationReviewCadenceDays`, `mcpTrustAttestationRequired`, `agentIdSigningRequired`, `agentIdKeyRotationTrackingEnabled`, `crossTenantAuditLogRetentionDays`, `evidenceRetentionDays`, `notificationMode`), and nested review blocks (`copilotStudioPublishing`, `mcpAttestation`). `mcpAttestationRevalidationRequired` is optional and defaults to `false` unless present in a tier file.
 
 ## SHA-256 companion file missing
 
@@ -26,4 +26,4 @@
 
 ## Sample data appears in evidence
 
-**Expected behavior:** v0.1.1 is documentation-first. All evidence records are representative sample data, clearly labeled with `runtimeMode = "sample"` in the JSON output. This is not a defect; live integration is roadmapped for later versions.
+**Expected behavior:** v0.1.2 is documentation-first. All evidence records are representative sample data, clearly labeled with `runtimeMode = "sample"` in the JSON output. This is not a defect; live integration is roadmapped for later versions.

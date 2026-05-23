@@ -1,6 +1,6 @@
 # Cross-Tenant Agent Federation Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365, Entra, or Copilot Studio services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -64,7 +64,7 @@ CTAF uses PowerShell stub scripts for deployment, monitoring, and evidence expor
 |------|---------------------------|-----------------------|----------------------------|------------------------------|
 | baseline | 90 days | Optional | Recommended | 90 days |
 | recommended | 30 days | Required | Required | 365 days |
-| regulated | 7 days | Required + revalidation | Required + customer-defined credential review | 1825 days (7 years aligned to broker-dealer record-keeping practice) |
+| regulated | 7 days | Required + revalidation | Required + customer-defined credential review | 1825 days (5 years; verify applicable record-retention obligations) |
 
 ## Evidence Export
 
