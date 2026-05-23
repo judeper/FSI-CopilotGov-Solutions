@@ -96,6 +96,9 @@ function Invoke-PermissionRevert {
         [pscustomobject]$Policy
     )
 
+    # Policy accepted for future policy-aware reversion choices; not yet referenced in scaffold path.
+    $null = $Policy
+
     # In documentation-first mode, log the reversion intent without executing
     $revertRecord = [pscustomobject]@{
         siteUrl         = $DriftItem.SiteUrl

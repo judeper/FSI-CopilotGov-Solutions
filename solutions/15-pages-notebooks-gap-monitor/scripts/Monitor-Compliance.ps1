@@ -90,6 +90,9 @@ function Get-CopilotPagesRetentionGap {
         [SecureString]$ClientSecret
     )
 
+    # TierConfiguration accepted for future tier-specific gap weighting; not yet referenced.
+    $null = $TierConfiguration
+
     $authenticated = ($TenantId -and $ClientId -and $null -ne $ClientSecret)
     $assessedAt = Get-Date
 
@@ -137,6 +140,9 @@ function Get-NotebooksEDiscoveryGap {
         [Parameter(Mandatory)]
         [pscustomobject]$TierConfiguration
     )
+
+    # TierConfiguration accepted for future tier-specific eDiscovery scoping; not yet referenced.
+    $null = $TierConfiguration
 
     $assessedAt = Get-Date
 

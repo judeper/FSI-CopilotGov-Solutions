@@ -144,6 +144,9 @@ function Get-SitePermissionAnalysis {
         [string]$SiteName = ''
     )
 
+    # SiteName accepted for future per-site diagnostic logging; not yet referenced in computation.
+    $null = $SiteName
+
     $sharingScope = 'Targeted'
     $anomalyCount = 0
     $exposureReasons = @()

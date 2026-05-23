@@ -54,6 +54,9 @@ function Get-CopilotUsageReport {
         [hashtable]$Configuration
     )
 
+    # Configuration accepted for future tier-aware filtering; not yet referenced in sample data.
+    $null = $Configuration
+
     return @(
         [pscustomobject]@{ userPrincipalName = 'alex.morgan@contoso.com'; department = 'Treasury'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-3).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.82; riskTier = 'medium' }
         [pscustomobject]@{ userPrincipalName = 'jamie.lee@contoso.com'; department = 'Retail Banking'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-9).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.67; riskTier = 'low' }

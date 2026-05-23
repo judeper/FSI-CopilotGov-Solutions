@@ -63,6 +63,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# ConfigPath accepted for future per-tenant config overlay; not yet referenced in scaffold path.
+$null = $ConfigPath
+
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
