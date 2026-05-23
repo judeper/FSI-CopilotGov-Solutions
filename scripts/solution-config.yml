@@ -424,7 +424,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P1",
-      "version": "v0.1.1",
+      "version": "v0.1.2",
       "controls": [
         "2.17",
         "2.16",
