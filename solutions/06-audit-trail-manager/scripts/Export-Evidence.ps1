@@ -234,7 +234,6 @@ if ($PSCmdlet.ShouldProcess($outputFolder, 'Write ATM evidence artifacts')) {
 
 $retentionGapCount = @($retentionValidation | Where-Object { -not $_.meetsMinimum }).Count
 $control32Status = if ($retentionGapCount -eq 0) { 'implemented' } else { 'partial' }
-$summaryStatus = if ($retentionGapCount -eq 0) { 'implemented' } else { 'partial' }
 
 $requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
 $configuredEventTypes = @($tierConfig.auditEventTypes)
@@ -293,6 +292,17 @@ $controls = @(
         notes = 'Evidence collection attestation readiness is assessed based on evidence output configuration and exception alert coverage.'
     }
 )
+
+$controlStatuses = @($controls.status)
+$summaryStatus = if ($controlStatuses -contains 'partial') {
+    'partial'
+} elseif ($controlStatuses -contains 'monitor-only') {
+    'monitor-only'
+} elseif ($controlStatuses -contains 'playbook-only') {
+    'playbook-only'
+} else {
+    'implemented'
+}
 
 $artifacts = @(
     [pscustomobject]@{
