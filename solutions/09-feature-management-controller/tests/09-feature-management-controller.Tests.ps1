@@ -225,6 +225,35 @@ Describe 'FMC functional tests' {
         }
     }
 
+    Context 'Get-PowerAutomateFlowPlan' {
+        It 'defers ring promotion when BaselineOnly is specified' {
+            $configuration = @{
+                powerAutomate = @{
+                    documentationFirst = $true
+                    flows = @(
+                        @{
+                            name = 'FMC-DriftMonitor'
+                            trigger = 'Hourly recurrence'
+                            purpose = 'Collect current feature state.'
+                        },
+                        @{
+                            name = 'FMC-RingPromotion'
+                            trigger = 'On-demand'
+                            purpose = 'Document ring promotions.'
+                        }
+                    )
+                }
+            }
+
+            $result = Get-PowerAutomateFlowPlan -Configuration $configuration -Environment 'Test' -BaselineOnly
+            $ringPromotion = $result | Where-Object { $_.name -eq 'FMC-RingPromotion' } | Select-Object -First 1
+            $driftMonitor = $result | Where-Object { $_.name -eq 'FMC-DriftMonitor' } | Select-Object -First 1
+
+            $ringPromotion.deploymentState | Should -Be 'deferred'
+            $driftMonitor.deploymentState | Should -Be 'documented'
+        }
+    }
+
     Context 'Get-StableFeatureHash' {
         It 'produces deterministic output across calls' {
             $hash1 = Get-StableFeatureHash -FeatureId 'test-feature'
@@ -236,6 +265,39 @@ Describe 'FMC functional tests' {
             $hash1 = Get-StableFeatureHash -FeatureId 'feature-a'
             $hash2 = Get-StableFeatureHash -FeatureId 'feature-b'
             $hash1 | Should -Not -Be $hash2
+        }
+    }
+
+    Context 'Test-BaselineIntegrity' {
+        BeforeEach {
+            $integrityTestRoot = Join-Path $solutionRoot ('artifacts\test-integrity\{0}' -f [guid]::NewGuid().Guid)
+            $null = New-Item -ItemType Directory -Path $integrityTestRoot -Force
+            $baselineUnderTest = Join-Path $integrityTestRoot 'feature-state-baseline.json'
+            '{"features":[{"featureId":"test-feature","displayName":"Test Feature","expectedEnabled":true,"expectedRing":"General Availability"}]}' | Set-Content -Path $baselineUnderTest -Encoding utf8
+        }
+
+        AfterEach {
+            if (Test-Path -Path $integrityTestRoot) {
+                Remove-Item -Path $integrityTestRoot -Recurse -Force
+            }
+        }
+
+        It 'accepts a matching SHA-256 companion file' {
+            $hash = (Get-FileHash -Path $baselineUnderTest -Algorithm SHA256).Hash
+            "$hash  $baselineUnderTest" | Set-Content -Path "${baselineUnderTest}.sha256" -Encoding utf8
+
+            { Test-BaselineIntegrity -BaselinePath $baselineUnderTest } | Should -Not -Throw
+        }
+
+        It 'throws on a mismatched SHA-256 companion file' {
+            $mismatchedHash = '0' * 64
+            "$mismatchedHash  $baselineUnderTest" | Set-Content -Path "${baselineUnderTest}.sha256" -Encoding utf8
+
+            { Test-BaselineIntegrity -BaselinePath $baselineUnderTest } | Should -Throw '*SHA-256 hash mismatch*'
+        }
+
+        It 'allows monitoring to continue when the SHA-256 companion file is missing' {
+            { Test-BaselineIntegrity -BaselinePath $baselineUnderTest -WarningAction SilentlyContinue } | Should -Not -Throw
         }
     }
 

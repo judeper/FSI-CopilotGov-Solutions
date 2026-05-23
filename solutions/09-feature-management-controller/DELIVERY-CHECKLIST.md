@@ -4,7 +4,7 @@
 
 - Solution: Copilot Feature Management Controller
 - Solution Code: FMC
-- Version: v0.1.1
+- Version: v0.1.2
 - Track: C
 - Domain: operations-analytics
 - Priority: P1
@@ -32,8 +32,8 @@
 
 - [ ] Confirm `config\default-config.json` and the tier file align on rollout rings, feature categories, and drift thresholds.
 - [ ] Validate that Dataverse table names follow the `fsi_cg_{solution}_{purpose}` contract and resolve to `fsi_cg_fmc_baseline`, `fsi_cg_fmc_finding`, and `fsi_cg_fmc_evidence`.
-- [ ] Run `powershell -NoProfile -File .\solutions\09-feature-management-controller\scripts\Deploy-Solution.ps1 -ConfigurationTier baseline -TenantId <tenant> -Environment Sandbox -BaselineOnly -WhatIf`.
-- [ ] Run `powershell -NoProfile -File .\solutions\09-feature-management-controller\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -BaselinePath .\solutions\09-feature-management-controller\config\baseline.json`.
+- [ ] Run `powershell -NoProfile -File .\solutions\09-feature-management-controller\scripts\Deploy-Solution.ps1 -ConfigurationTier baseline -TenantId <tenant> -Environment Sandbox -BaselineOnly -OutputPath .\artifacts\FMC` to generate `feature-state-baseline.json` and its `.sha256` companion.
+- [ ] Run `powershell -NoProfile -File .\solutions\09-feature-management-controller\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -BaselinePath .\artifacts\FMC\feature-state-baseline.json`.
 - [ ] Run `powershell -NoProfile -File .\solutions\09-feature-management-controller\scripts\Export-Evidence.ps1 -ConfigurationTier baseline -OutputPath .\solutions\09-feature-management-controller\artifacts\validation`.
 - [ ] PowerShell syntax validation completed for all updated scripts.
 - [ ] Evidence export verified with a companion `.sha256` file.

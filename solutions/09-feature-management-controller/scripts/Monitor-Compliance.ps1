@@ -20,7 +20,7 @@ Number of drift findings that triggers an alert payload. Default is 3.
 .\Monitor-Compliance.ps1 -ConfigurationTier recommended -BaselinePath .\artifacts\FMC\feature-state-baseline.json
 
 .EXAMPLE
-.\Monitor-Compliance.ps1 -ConfigurationTier regulated -BaselinePath .\config\regulated.json -AlertThreshold 3
+.\Monitor-Compliance.ps1 -ConfigurationTier regulated -BaselinePath .\artifacts\FMC\feature-state-baseline.json -AlertThreshold 3
 
 .NOTES
 Supports compliance with SEC Reg FD and FINRA 3110 by preserving repeatable drift
@@ -282,12 +282,13 @@ function Measure-FeatureDrift {
     }
 }
 
-try {
-    if (-not (Test-Path -Path $BaselinePath)) {
-        throw "Baseline file not found: $BaselinePath"
-    }
+function Test-BaselineIntegrity {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$BaselinePath
+    )
 
-    # Verify baseline integrity if companion SHA-256 hash file exists
     $hashPath = "${BaselinePath}.sha256"
     if (Test-Path -Path $hashPath) {
         $hashContent = (Get-Content -Path $hashPath -Raw).Trim()
@@ -296,11 +297,20 @@ try {
         if ($expectedHash -ne $actualHash) {
             throw "Baseline integrity check failed: SHA-256 hash mismatch for '$BaselinePath'. Expected '$expectedHash', got '$actualHash'. The baseline may have been tampered with."
         }
+
         Write-Verbose "Baseline integrity verified: SHA-256 hash matches."
+        return
     }
-    else {
-        Write-Warning "No companion .sha256 file found for baseline '$BaselinePath'. Baseline integrity cannot be verified. For tamper-evident storage, generate a hash file during baseline capture."
+
+    Write-Warning "No companion .sha256 file found for baseline '$BaselinePath'. Baseline integrity cannot be verified. For tamper-evident storage, generate a hash file during baseline capture."
+}
+
+try {
+    if (-not (Test-Path -Path $BaselinePath)) {
+        throw "Baseline file not found: $BaselinePath"
     }
+
+    Test-BaselineIntegrity -BaselinePath $BaselinePath
 
     $baselineDocument = Get-Content -Path $BaselinePath -Raw | ConvertFrom-Json
     if (-not $baselineDocument.features) {
