@@ -67,7 +67,7 @@ Example:
 
 ## Evidence Package Contract
 
-The package file aligns to `../../data/evidence-schema.json` and includes:
+The package file aligns to `../../../data/evidence-schema.json` from this `docs/` folder and includes:
 
 - `metadata`
   - `solution`
