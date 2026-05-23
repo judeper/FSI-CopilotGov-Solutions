@@ -4,6 +4,17 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this project follows Semantic Versioning.
 
+## [v0.2.2] — 2026-05-23 — Council review remediation
+
+### VERIFIED-BUG
+- Aligned the supervision review flow sample with the Dataverse `fsi_cg_fsw_log` action pattern and contracted evidence artifact names.
+- Regenerated committed sample evidence artifacts and SHA-256 companion files using the shared evidence exporter.
+- Documented retention rationale for baseline, recommended, and regulated evidence defaults with FINRA Rule 4511 and SEC Rule 17a-4 references.
+- Normalized the architecture diagram box widths.
+
+### VERIFIED-VERSION-DRIFT
+- Updated solution version metadata from v0.2.1 to v0.2.2 and regenerated the sample evidence package with exportVersion 1.1.0.
+
 ## [v0.2.1] - 2026-05-04
 
 ### Fixed

@@ -2,57 +2,57 @@
   "metadata": {
     "solution": "04-finra-supervision-workflow",
     "solutionCode": "FSW",
-    "exportVersion": "1.0.0",
-    "exportedAt": "2026-03-06T20:50:56.332026-05:00",
+    "exportVersion": "1.1.0",
+    "exportedAt": "2026-05-23T00:12:07.4413334-04:00",
     "tier": "regulated",
-    "periodStart": "2026-01-01",
-    "periodEnd": "2026-01-31",
-    "evidenceMode": "documentation-first",
+    "environmentUrl": "https://REPLACE-ME.crm.dynamics.com",
     "warning": "Documentation-first export emits configuration-based sample evidence. Use -LiveExport with Dataverse connectivity before treating supervisory controls as implemented.",
+    "evidenceMode": "documentation-first",
     "policyId": "00000000-0000-0000-0000-000000000000",
-    "environmentUrl": "https://REPLACE-ME.crm.dynamics.com"
+    "periodStart": "2026-01-01",
+    "periodEnd": "2026-01-31"
   },
   "summary": {
-    "recordCount": 13,
-    "overallStatus": "partial",
     "exceptionCount": 1,
+    "overallStatus": "partial",
+    "recordCount": 13,
     "findingCount": 3
   },
   "controls": [
     {
       "controlId": "3.4",
       "status": "partial",
-      "notes": "Supports compliance with supervisory coverage by capturing queue intake, zone assignment, sampling configuration, and SLA targets."
+      "notes": "Documentation-first sample evidence captures the intended queue, sampling, and SLA pattern; live Dataverse rows are required before treating supervisory coverage as implemented."
     },
     {
       "controlId": "3.5",
       "status": "partial",
-      "notes": "Supports compliance with review disposition accountability through reviewer actions, timestamps, and recorded outcomes."
+      "notes": "Documentation-first sample evidence preserves the intended review-disposition contract, but live reviewer actions are not exported by default."
     },
     {
       "controlId": "3.6",
       "status": "partial",
-      "notes": "Supports compliance with exception tracking through escalation settings, breach logging, and review notes retained for audit."
+      "notes": "Exception tracking configuration is documented and exportable, but default repository output remains documentation-first until live Dataverse evidence is supplied."
     }
   ],
   "artifacts": [
     {
       "name": "supervision-queue-snapshot",
       "type": "supervision-queue-snapshot",
-      "path": "artifacts/evidence/supervision-queue-snapshot.json",
-      "hash": "c0c9234e289984d335f326db7e1f6cff44bd1e805124ac7ebd52ebf7927e0dc2"
+      "path": "artifacts\\evidence\\supervision-queue-snapshot.json",
+      "hash": "019a8f20058fbdc333bf52c5fdfa71075a0648e3372e7e7a8389204fa9e18b19"
     },
     {
       "name": "review-disposition-log",
       "type": "review-disposition-log",
-      "path": "artifacts/evidence/review-disposition-log.json",
-      "hash": "4de413b0632505e8d7e17fe30c810ff953645f21f34cbfc122b997d9479b9934"
+      "path": "artifacts\\evidence\\review-disposition-log.json",
+      "hash": "d4eebabf05e126e6fd6ae79bcad24c6d078c558f55fbfacaa67261acc6511967"
     },
     {
       "name": "sampling-summary",
       "type": "sampling-summary",
-      "path": "artifacts/evidence/sampling-summary.json",
-      "hash": "a08c12ea9c9ce7161f229fcdefd62042c70c878804e27335920965308feb5209"
+      "path": "artifacts\\evidence\\sampling-summary.json",
+      "hash": "3f6a491595a05344b9f3f4d357e7d795fcf0dd68bfc8b6cf4e705011a8416c13"
     }
   ]
 }

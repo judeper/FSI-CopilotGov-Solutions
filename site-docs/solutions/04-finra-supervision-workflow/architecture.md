@@ -82,37 +82,37 @@ This architecture supports compliance with supervisory review requirements by se
 +---------------------------------------------------------------+
 | Microsoft Purview Communication Compliance                    |
 | Flagged Copilot prompts and responses                         |
-+------------------------------+--------------------------------+
++---------------------------------------------------------------+
                                |
                                v
 +---------------------------------------------------------------+
-| Customer-validated handoff                                     |
-| Alert Power Automate flow, report export, or audit-log review  |
-+------------------------------+--------------------------------+
+| Customer-validated handoff                                    |
+| Alert Power Automate flow, report export, or audit-log review |
++---------------------------------------------------------------+
                                |
                                v
 +---------------------------------------------------------------+
-| Power Automate layer                                            |
-| 1. Ingest Flagged Items                                         |
-| 2. Assignment Flow                                              |
-| 3. Escalation Flow                                              |
-| 4. Review Complete Flow                                         |
-+------------------------------+--------------------------------+
-                               |
-                               v
-+------------------------------+--------------------------------+
-| Dataverse layer                                                 |
-| fsi_cg_fsw_queue   fsi_cg_fsw_log   fsi_cg_fsw_config          |
-+------------------------------+--------------------------------+
+| Power Automate layer                                          |
+| 1. Ingest Flagged Items                                       |
+| 2. Assignment Flow                                            |
+| 3. Escalation Flow                                            |
+| 4. Review Complete Flow                                       |
++---------------------------------------------------------------+
                                |
                                v
 +---------------------------------------------------------------+
-| Evidence export layer                                           |
-| Export-Evidence.ps1                                             |
-| - supervision-queue-snapshot                                   |
-| - review-disposition-log                                        |
-| - sampling-summary                                              |
-| - package hash files                                            |
+| Dataverse layer                                               |
+| fsi_cg_fsw_queue   fsi_cg_fsw_log   fsi_cg_fsw_config         |
++---------------------------------------------------------------+
+                               |
+                               v
++---------------------------------------------------------------+
+| Evidence export layer                                         |
+| Export-Evidence.ps1                                           |
+| - supervision-queue-snapshot                                  |
+| - review-disposition-log                                      |
+| - sampling-summary                                            |
+| - package hash files                                          |
 +---------------------------------------------------------------+
 ```
 
@@ -134,4 +134,3 @@ This architecture supports compliance with supervisory review requirements by se
 - Log rows should be append-only to preserve reviewer accountability.
 - Configuration changes should be tightly controlled because they change supervisory coverage.
 - Evidence packaging is separate from workflow execution so firms can export evidence on demand for audits and exams.
-

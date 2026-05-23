@@ -8,6 +8,7 @@
     "priority": "P0",
     "type": "Power Automate, Dataverse"
   },
+  "version": "v0.2.2",
   "controls": [
     "3.4",
     "3.5",
