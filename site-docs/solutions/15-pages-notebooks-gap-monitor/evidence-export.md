@@ -59,6 +59,7 @@ The combined evidence package uses the shared repository contract:
 - `metadata.exportVersion`
 - `metadata.exportedAt`
 - `metadata.tier`
+- `metadata.frameworkIds` for configured regulatory framework identifiers
 - `summary.overallStatus`
 - `summary.recordCount`
 - `summary.findingCount`

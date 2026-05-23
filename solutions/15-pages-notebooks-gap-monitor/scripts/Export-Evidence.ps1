@@ -255,6 +255,7 @@ $exceptionRegisterPath = Join-Path $OutputPath '15-pages-notebooks-gap-monitor-p
 $gapFindingsArtifact = [ordered]@{
     solution = $defaultConfig.solution
     artifact = 'gap-findings'
+    frameworkIds = @($defaultConfig.framework_ids)
     periodStart = $PeriodStart.ToString('o')
     periodEnd = $PeriodEnd.ToString('o')
     generatedAt = $generatedAt.ToString('o')
@@ -370,12 +371,16 @@ if ($PSCmdlet.ShouldProcess($defaultConfig.displayName, "Export evidence package
         -OutputPath $OutputPath `
         -Summary $summary `
         -Controls $controls `
-        -Artifacts $artifacts
+        -Artifacts $artifacts `
+        -AdditionalMetadata ([ordered]@{
+            frameworkIds = @($defaultConfig.framework_ids)
+        })
 }
 
 $exportResult = [ordered]@{
     solution = $defaultConfig.solution
     solutionCode = $defaultConfig.solutionCode
+    frameworkIds = @($defaultConfig.framework_ids)
     tier = $ConfigurationTier
     tierDefinition = $tierDefinition
     overallStatus = $summary.overallStatus
