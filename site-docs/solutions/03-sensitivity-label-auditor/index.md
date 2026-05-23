@@ -1,6 +1,6 @@
 # Sensitivity Label Coverage Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -118,9 +118,13 @@ This solution depends on upstream data from the following solutions and they mus
 ## Regulatory Alignment
 
 - **FINRA 4511:** supports compliance with records supervision by showing whether regulated repositories are classified and by preserving evidence of label coverage review.
+- **SEC 17a-3:** helps meet books-and-records inventory expectations by documenting classification coverage for supervised repositories and mailboxes.
 - **SEC 17a-4:** supports compliance with retention and audit preparation by producing exportable coverage reports and remediation manifests for supervised repositories.
+- **SEC Reg S-P:** supports privacy safeguard review by highlighting customer-information stores that remain unlabeled or insufficiently classified.
 - **GDPR:** supports data protection by identifying personal data stores that remain unlabeled or insufficiently classified.
 - **GLBA 501(b):** supports safeguarding obligations by tracking whether customer financial information is placed under the correct sensitivity controls.
+- **SOX 302/404:** helps meet management attestation and internal-control evidence needs by preserving repeatable classification coverage outputs for financial reporting repositories.
+- **FFIEC IT Handbook:** supports information security governance review by mapping label coverage evidence to data classification and access control expectations.
 
 ## Evidence Export
 

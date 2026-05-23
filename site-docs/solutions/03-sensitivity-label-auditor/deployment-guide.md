@@ -36,6 +36,7 @@ Update configuration values before the first scan:
 - Set `workloadsToAudit` in the selected tier file.
 - Populate `prioritySites` with regulated SharePoint or OneDrive locations that require elevated scanning attention.
 - Confirm `remediationManifestMaxItems` aligns to available operations capacity.
+- Treat `maxItemsPerScan: -1` in the regulated tier as no configured per-workload cap; tenant-specific implementations should still set operational guardrails before live scans.
 - Set notification and evidence retention settings for the chosen governance tier.
 
 ## Step 3: Run `Deploy-Solution.ps1`
