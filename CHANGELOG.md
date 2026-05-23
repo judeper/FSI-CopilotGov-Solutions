@@ -23,6 +23,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `AGENTS.md` validation-commands block updated to list all 8 validators.
 - `.gitignore` adds `.gitleaks-report.json` and `.tools/`.
 
+### Fixed — CI workflow stability (PRs #244, #245)
+- **`lint-powershell.yml`** (PR #244): replaced `Invoke-ScriptAnalyzer -Path scripts,solutions` (which failed with `Cannot convert 'System.Object[]' to 'System.String'` under PSScriptAnalyzer 1.24+) with a per-path `foreach` loop that concatenates results. Lint PowerShell now runs green on `main`.
+- **`dependency-review.yml`** (PR #245): removed the `actions/checkout@v4` step (the action uses the Dependency Graph compare API and does not need a working tree for the default/inline configuration; checkout was failing deterministically with `fatal: could not read Username for 'https://github.com'` when fetching `refs/pull/N/merge`). Also enabled repository vulnerability alerts so the Dependency Graph API responds for this repo. A YAML comment in the workflow documents the rationale to prevent regression.
+
 ### Notes
 - All changes are documentation-first — scripts continue to use representative sample data; no runtime tenant binding.
 - Working tree is staged for operator review; release tagging is deferred.
