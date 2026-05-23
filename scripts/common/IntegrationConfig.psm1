@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Shared configuration contract module.
 

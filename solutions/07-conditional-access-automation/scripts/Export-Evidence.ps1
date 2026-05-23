@@ -374,7 +374,7 @@ function New-UnknownDeviceStateBlockPolicy {
     }
 }
 
-function Get-ExceptionEntries {
+function Get-ExceptionEntry {
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -494,7 +494,7 @@ else {
     $templates
 }
 
-$exceptionEntries = Get-ExceptionEntries -Register $exceptionRegisterDocument
+$exceptionEntries = Get-ExceptionEntry -Register $exceptionRegisterDocument
 $driftSummaryPath = Join-Path $OutputPath 'drift-alert-summary.json'
 $driftSummaryDocument = if (Test-Path -Path $driftSummaryPath) {
     Read-JsonFile -Path $driftSummaryPath

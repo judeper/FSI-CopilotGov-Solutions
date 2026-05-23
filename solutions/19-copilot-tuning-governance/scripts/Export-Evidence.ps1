@@ -53,6 +53,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# TenantId accepted as mandatory contract for future Graph wiring; not yet referenced in scaffold path.
+$null = $TenantId
+
 Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\IntegrationConfig.psm1') -Force
 

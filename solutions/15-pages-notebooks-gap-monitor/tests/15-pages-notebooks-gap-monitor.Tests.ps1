@@ -4,7 +4,7 @@ BeforeAll {
     $docsRoot = Join-Path $solutionRoot 'docs'
     $scriptsRoot = Join-Path $solutionRoot 'scripts'
 
-    $requiredFiles = @(
+    $script:requiredFiles = @(
         'README.md',
         'CHANGELOG.md',
         'DELIVERY-CHECKLIST.md',
@@ -23,21 +23,21 @@ BeforeAll {
         'scripts\PngmShared.psm1'
     )
 
-    $defaultConfig = Get-Content (Join-Path $configRoot 'default-config.json') -Raw | ConvertFrom-Json
-    $regulatedConfig = Get-Content (Join-Path $configRoot 'regulated.json') -Raw | ConvertFrom-Json
-    $readmeContent = Get-Content (Join-Path $solutionRoot 'README.md') -Raw
-    $evidenceExportContent = Get-Content (Join-Path $docsRoot 'evidence-export.md') -Raw
+    $script:defaultConfig = Get-Content (Join-Path $configRoot 'default-config.json') -Raw | ConvertFrom-Json
+    $script:regulatedConfig = Get-Content (Join-Path $configRoot 'regulated.json') -Raw | ConvertFrom-Json
+    $script:readmeContent = Get-Content (Join-Path $solutionRoot 'README.md') -Raw
+    $script:evidenceExportContent = Get-Content (Join-Path $docsRoot 'evidence-export.md') -Raw
     $deployScriptPath = Join-Path $scriptsRoot 'Deploy-Solution.ps1'
     $monitorScriptPath = Join-Path $scriptsRoot 'Monitor-Compliance.ps1'
     $exportScriptPath = Join-Path $scriptsRoot 'Export-Evidence.ps1'
-    $scriptPaths = @($deployScriptPath, $monitorScriptPath, $exportScriptPath)
-    $deployScriptContent = Get-Content $deployScriptPath -Raw
+    $script:scriptPaths = @($deployScriptPath, $monitorScriptPath, $exportScriptPath)
+    $script:deployScriptContent = Get-Content $deployScriptPath -Raw
 }
 
 Describe 'Copilot Pages and Notebooks Compliance Gap Monitor' {
     Context 'file presence' {
         It 'has all required files' {
-            foreach ($relativePath in $requiredFiles) {
+            foreach ($relativePath in $script:requiredFiles) {
                 Test-Path (Join-Path $solutionRoot $relativePath) | Should -BeTrue
             }
         }
@@ -45,23 +45,23 @@ Describe 'Copilot Pages and Notebooks Compliance Gap Monitor' {
 
     Context 'configuration' {
         It 'has the correct solution slug, code, and controls' {
-            $defaultConfig.solution | Should -Be '15-pages-notebooks-gap-monitor'
-            $defaultConfig.solutionCode | Should -Be 'PNGM'
-            @($defaultConfig.controls) | Should -HaveCount 4
-            @($defaultConfig.controls) | Should -Contain '2.11'
-            @($defaultConfig.controls) | Should -Contain '3.2'
-            @($defaultConfig.controls) | Should -Contain '3.3'
-            @($defaultConfig.controls) | Should -Contain '3.11'
+            $script:defaultConfig.solution | Should -Be '15-pages-notebooks-gap-monitor'
+            $script:defaultConfig.solutionCode | Should -Be 'PNGM'
+            @($script:defaultConfig.controls) | Should -HaveCount 4
+            @($script:defaultConfig.controls) | Should -Contain '2.11'
+            @($script:defaultConfig.controls) | Should -Contain '3.2'
+            @($script:defaultConfig.controls) | Should -Contain '3.3'
+            @($script:defaultConfig.controls) | Should -Contain '3.11'
         }
 
         It 'enables preservation exception tracking for the regulated tier' {
-            $regulatedConfig.preservationExceptionTracking | Should -BeTrue
+            $script:regulatedConfig.preservationExceptionTracking | Should -BeTrue
         }
     }
 
     Context 'script validation' {
         It 'parses all PowerShell scripts without syntax errors' {
-            foreach ($scriptPath in $scriptPaths) {
+            foreach ($scriptPath in $script:scriptPaths) {
                 $tokens = $null
                 $errors = $null
                 [System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$errors) | Out-Null
@@ -70,20 +70,20 @@ Describe 'Copilot Pages and Notebooks Compliance Gap Monitor' {
         }
 
         It 'supports WhatIf on Deploy-Solution.ps1' {
-            $deployScriptContent | Should -Match 'CmdletBinding\(SupportsShouldProcess\)'
+            $script:deployScriptContent | Should -Match 'CmdletBinding\(SupportsShouldProcess\)'
         }
     }
 
     Context 'documentation content' {
         It 'mentions gap monitoring and SEC 17a-4 in the README' {
-            $readmeContent | Should -Match '(?i)gap'
-            $readmeContent | Should -Match 'SEC 17a-4'
+            $script:readmeContent | Should -Match '(?i)gap'
+            $script:readmeContent | Should -Match 'SEC 17a-4'
         }
 
         It 'references all evidence outputs in evidence-export.md' {
-            $evidenceExportContent | Should -Match 'gap-findings'
-            $evidenceExportContent | Should -Match 'compensating-control-log'
-            $evidenceExportContent | Should -Match 'preservation-exception-register'
+            $script:evidenceExportContent | Should -Match 'gap-findings'
+            $script:evidenceExportContent | Should -Match 'compensating-control-log'
+            $script:evidenceExportContent | Should -Match 'preservation-exception-register'
         }
     }
 }

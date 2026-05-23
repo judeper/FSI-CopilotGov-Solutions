@@ -9,16 +9,16 @@
 
 BeforeAll {
     $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-    $scriptsPath = Join-Path $solutionRoot 'scripts'
-    $configPath = Join-Path $solutionRoot 'config'
-    $docsPath = Join-Path $solutionRoot 'docs'
+    $script:scriptsPath = Join-Path $solutionRoot 'scripts'
+    $script:configPath = Join-Path $solutionRoot 'config'
+    $script:docsPath = Join-Path $solutionRoot 'docs'
 
     function Get-JsonContent {
         param([string]$Path)
         Get-Content -Path $Path -Raw | ConvertFrom-Json
     }
 
-    function Get-ScriptParameterNames {
+    function Get-ScriptParameterName {
         param([string]$Path)
         $tokens = $null
         $errors = $null
@@ -51,19 +51,19 @@ Describe 'DORA Operational Resilience Monitor - File Presence' {
 
     It 'has all required config files' {
         foreach ($path in @('default-config.json', 'baseline.json', 'recommended.json', 'regulated.json')) {
-            Test-Path (Join-Path $configPath $path) | Should -BeTrue
+            Test-Path (Join-Path $script:configPath $path) | Should -BeTrue
         }
     }
 
     It 'has all required doc files' {
         foreach ($path in @('architecture.md', 'deployment-guide.md', 'evidence-export.md', 'prerequisites.md', 'troubleshooting.md')) {
-            Test-Path (Join-Path $docsPath $path) | Should -BeTrue
+            Test-Path (Join-Path $script:docsPath $path) | Should -BeTrue
         }
     }
 
     It 'has all required scripts' {
         foreach ($path in @('Deploy-Solution.ps1', 'Monitor-Compliance.ps1', 'Export-Evidence.ps1')) {
-            Test-Path (Join-Path $scriptsPath $path) | Should -BeTrue
+            Test-Path (Join-Path $script:scriptsPath $path) | Should -BeTrue
         }
     }
 }
@@ -71,34 +71,34 @@ Describe 'DORA Operational Resilience Monitor - File Presence' {
 Describe 'DORA Operational Resilience Monitor - Configuration Validation' {
     Context 'default-config.json' {
         BeforeAll {
-            $defaultConfig = Get-JsonContent -Path (Join-Path $configPath 'default-config.json')
+            $script:defaultConfig = Get-JsonContent -Path (Join-Path $script:configPath 'default-config.json')
         }
 
         It 'has correct solution slug' {
-            $defaultConfig.solution | Should -Be '13-dora-resilience-monitor'
+            $script:defaultConfig.solution | Should -Be '13-dora-resilience-monitor'
         }
 
         It 'has correct controls' {
-            @($defaultConfig.controls) | Should -Contain '2.7'
-            @($defaultConfig.controls) | Should -Contain '4.9'
-            @($defaultConfig.controls) | Should -Contain '4.10'
-            @($defaultConfig.controls) | Should -Contain '4.11'
+            @($script:defaultConfig.controls) | Should -Contain '2.7'
+            @($script:defaultConfig.controls) | Should -Contain '4.9'
+            @($script:defaultConfig.controls) | Should -Contain '4.10'
+            @($script:defaultConfig.controls) | Should -Contain '4.11'
         }
 
         It 'has correct track' {
-            $defaultConfig.track | Should -Be 'D'
+            $script:defaultConfig.track | Should -Be 'D'
         }
 
         It 'has solutionCode DRM' {
-            $defaultConfig.solutionCode | Should -Be 'DRM'
+            $script:defaultConfig.solutionCode | Should -Be 'DRM'
         }
 
         It 'has monitored services list' {
-            @($defaultConfig.defaults.monitoredServices) | Should -Contain 'Exchange Online'
-            @($defaultConfig.defaults.monitoredServices) | Should -Contain 'SharePoint Online'
-            @($defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Teams'
-            @($defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Graph'
-            @($defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Copilot'
+            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Exchange Online'
+            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'SharePoint Online'
+            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Teams'
+            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Graph'
+            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Copilot'
         }
     }
 
@@ -108,7 +108,7 @@ Describe 'DORA Operational Resilience Monitor - Configuration Validation' {
             @{ tier = 'recommended' },
             @{ tier = 'regulated' }
         ) {
-            $config = Get-JsonContent -Path (Join-Path $configPath ("{0}.json" -f $tier))
+            $config = Get-JsonContent -Path (Join-Path $script:configPath ("{0}.json" -f $tier))
             $propertyNames = $config.PSObject.Properties.Name
 
             foreach ($requiredField in @('solution', 'tier', 'controls', 'evidenceRetentionDays', 'notificationMode', 'serviceHealthPollingIntervalMinutes', 'incidentClassification', 'resilienceTestTracking', 'sentinelIntegration', 'powerAutomateFlow')) {
@@ -121,13 +121,13 @@ Describe 'DORA Operational Resilience Monitor - Configuration Validation' {
             @{ tier = 'recommended' },
             @{ tier = 'regulated' }
         ) {
-            $config = Get-JsonContent -Path (Join-Path $configPath ("{0}.json" -f $tier))
+            $config = Get-JsonContent -Path (Join-Path $script:configPath ("{0}.json" -f $tier))
             $config.incidentClassification | Should -Not -BeNullOrEmpty
             $config.incidentClassification.severityThresholds | Should -Not -BeNullOrEmpty
         }
 
         It 'regulated tier has doraArticle17Reporting enabled' {
-            $regulatedConfig = Get-JsonContent -Path (Join-Path $configPath 'regulated.json')
+            $regulatedConfig = Get-JsonContent -Path (Join-Path $script:configPath 'regulated.json')
             $regulatedConfig.incidentClassification.doraArticle17Reporting | Should -BeTrue
         }
     }
@@ -138,17 +138,17 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'Deploy-Solution.ps1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'Deploy-Solution.ps1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
 
         It 'has comment-based help' {
-            Test-CommentBasedHelp -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1') | Should -BeTrue
+            Test-CommentBasedHelp -Path (Join-Path $script:scriptsPath 'Deploy-Solution.ps1') | Should -BeTrue
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Deploy-Solution.ps1')) | Should -Contain 'ConfigurationTier'
         }
     }
 
@@ -156,17 +156,17 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'Monitor-Compliance.ps1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ConfigurationTier'
         }
 
         It 'has ClientSecret parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ClientSecret'
+            (Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ClientSecret'
         }
     }
 
@@ -174,17 +174,17 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'Export-Evidence.ps1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'Export-Evidence.ps1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Export-Evidence.ps1')) | Should -Contain 'ConfigurationTier'
         }
 
         It 'has PeriodStart and PeriodEnd parameters' {
-            $parameterNames = Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')
+            $parameterNames = Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Export-Evidence.ps1')
             $parameterNames | Should -Contain 'PeriodStart'
             $parameterNames | Should -Contain 'PeriodEnd'
         }
@@ -193,42 +193,42 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
 
 Describe 'DORA Operational Resilience Monitor - Documentation Validation' {
     BeforeAll {
-        $readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
-        $architecture = Get-Content -Path (Join-Path $docsPath 'architecture.md') -Raw
-        $evidenceExport = Get-Content -Path (Join-Path $docsPath 'evidence-export.md') -Raw
+        $script:readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
+        $script:architecture = Get-Content -Path (Join-Path $script:docsPath 'architecture.md') -Raw
+        $script:evidenceExport = Get-Content -Path (Join-Path $script:docsPath 'evidence-export.md') -Raw
     }
 
     It 'README.md references DORA' {
-        $readme | Should -Match 'DORA'
+        $script:readme | Should -Match 'DORA'
     }
 
     It 'README.md references all four controls' {
-        $readme | Should -Match '2\.7'
-        $readme | Should -Match '4\.9'
-        $readme | Should -Match '4\.10'
-        $readme | Should -Match '4\.11'
+        $script:readme | Should -Match '2\.7'
+        $script:readme | Should -Match '4\.9'
+        $script:readme | Should -Match '4\.10'
+        $script:readme | Should -Match '4\.11'
     }
 
     It 'evidence-export.md references service-health-log' {
-        $evidenceExport | Should -Match 'service-health-log'
+        $script:evidenceExport | Should -Match 'service-health-log'
     }
 
     It 'evidence-export.md references incident-register' {
-        $evidenceExport | Should -Match 'incident-register'
+        $script:evidenceExport | Should -Match 'incident-register'
     }
 
     It 'evidence-export.md references resilience-test-results' {
-        $evidenceExport | Should -Match 'resilience-test-results'
+        $script:evidenceExport | Should -Match 'resilience-test-results'
     }
 
     It 'architecture.md references DORA Art. 17' {
-        $architecture | Should -Match 'DORA Art\. 17'
+        $script:architecture | Should -Match 'DORA Art\. 17'
     }
 }
 
 Describe 'DORA Operational Resilience Monitor - Runtime honesty validation' {
     It 'Monitor-Compliance.ps1 labels the default local stub path' {
-        $monitorResult = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'monitor') -TenantId '' -ClientId '' 3>$null
+        $monitorResult = & (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'monitor') -TenantId '' -ClientId '' 3>$null
 
         $monitorResult.RuntimeMode | Should -Be 'local-stub'
         $monitorResult.OverallStatus | Should -Not -Be 'implemented'
@@ -240,7 +240,7 @@ Describe 'DORA Operational Resilience Monitor - Runtime honesty validation' {
 
         try {
             $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = '[{"service":"Microsoft Graph","status":"serviceOperational","downtimeMinutes":0,"affectedUserPct":0,"impactDescription":"Graph service is operational."}]'
-            $monitorResult = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'graph-operational') -TenantId '' -ClientId '' 3>$null
+            $monitorResult = & (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'graph-operational') -TenantId '' -ClientId '' 3>$null
 
             $monitorResult.RuntimeMode | Should -Be 'sample-json'
             @($monitorResult.IncidentFindings).Count | Should -Be 0
@@ -256,7 +256,7 @@ Describe 'DORA Operational Resilience Monitor - Runtime honesty validation' {
 
         try {
             $env:DRM_SERVICE_HEALTH_SAMPLE_JSON = '[{"service":"Microsoft Graph","status":"serviceDegradation","downtimeMinutes":5,"affectedUserPct":5,"impactDescription":"Representative service degradation."}]'
-            $monitorResult = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'graph-degradation') -TenantId '' -ClientId '' 3>$null
+            $monitorResult = & (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'graph-degradation') -TenantId '' -ClientId '' 3>$null
 
             $monitorResult.RuntimeMode | Should -Be 'sample-json'
             @($monitorResult.IncidentFindings).Count | Should -Be 1
@@ -279,7 +279,7 @@ Describe 'DORA Operational Resilience Monitor - Runtime honesty validation' {
             $env:AZURE_CLIENT_ID = ''
             Remove-Item Env:AZURE_CLIENT_SECRET -ErrorAction SilentlyContinue
 
-            $exportResult = & (Join-Path $scriptsPath 'Export-Evidence.ps1') -ConfigurationTier recommended -OutputPath (Join-Path $TestDrive 'evidence')
+            $exportResult = & (Join-Path $script:scriptsPath 'Export-Evidence.ps1') -ConfigurationTier recommended -OutputPath (Join-Path $TestDrive 'evidence')
             $package = Get-Content -Path $exportResult.Package.Path -Raw | ConvertFrom-Json -Depth 20
             $serviceHealthLog = Get-Content -Path (Join-Path $TestDrive 'evidence\service-health-log-recommended.json') -Raw | ConvertFrom-Json -Depth 20
 

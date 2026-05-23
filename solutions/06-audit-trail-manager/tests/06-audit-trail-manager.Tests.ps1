@@ -9,14 +9,14 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
     BeforeAll {
         $solutionRoot = Split-Path -Path $PSScriptRoot -Parent
         $configRoot = Join-Path $solutionRoot 'config'
-        $docsRoot = Join-Path $solutionRoot 'docs'
+        $script:docsRoot = Join-Path $solutionRoot 'docs'
         $scriptsRoot = Join-Path $solutionRoot 'scripts'
 
-        $defaultConfigPath = Join-Path $configRoot 'default-config.json'
-        $regulatedConfigPath = Join-Path $configRoot 'regulated.json'
-        $deployScriptPath = Join-Path $scriptsRoot 'Deploy-Solution.ps1'
-        $monitorScriptPath = Join-Path $scriptsRoot 'Monitor-Compliance.ps1'
-        $exportScriptPath = Join-Path $scriptsRoot 'Export-Evidence.ps1'
+        $script:defaultConfigPath = Join-Path $configRoot 'default-config.json'
+        $script:regulatedConfigPath = Join-Path $configRoot 'regulated.json'
+        $script:deployScriptPath = Join-Path $scriptsRoot 'Deploy-Solution.ps1'
+        $script:monitorScriptPath = Join-Path $scriptsRoot 'Monitor-Compliance.ps1'
+        $script:exportScriptPath = Join-Path $scriptsRoot 'Export-Evidence.ps1'
     }
 
     It 'has required configuration files' {
@@ -32,11 +32,11 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
 
     It 'has required documentation files' {
         @(
-            (Join-Path $docsRoot 'architecture.md'),
-            (Join-Path $docsRoot 'deployment-guide.md'),
-            (Join-Path $docsRoot 'evidence-export.md'),
-            (Join-Path $docsRoot 'prerequisites.md'),
-            (Join-Path $docsRoot 'troubleshooting.md')
+            (Join-Path $script:docsRoot 'architecture.md'),
+            (Join-Path $script:docsRoot 'deployment-guide.md'),
+            (Join-Path $script:docsRoot 'evidence-export.md'),
+            (Join-Path $script:docsRoot 'prerequisites.md'),
+            (Join-Path $script:docsRoot 'troubleshooting.md')
         ) | ForEach-Object {
             Test-Path $_ | Should -BeTrue
         }
@@ -53,7 +53,7 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
     }
 
     It 'default-config.json has required fields' {
-        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -Depth 20
+        $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -Depth 20
 
         $config.solution | Should -Be '06-audit-trail-manager'
         $config.controls | Should -Contain '3.1'
@@ -62,24 +62,24 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
     }
 
     It 'regulated.json has evidence retention of at least 365 days' {
-        $config = Get-Content -Path $regulatedConfigPath -Raw | ConvertFrom-Json -Depth 20
+        $config = Get-Content -Path $script:regulatedConfigPath -Raw | ConvertFrom-Json -Depth 20
         [int]$config.evidenceRetentionDays | Should -BeGreaterOrEqual 365
     }
 
     It 'regulated.json documents a retention schedule above 365 days' {
-        $config = Get-Content -Path $regulatedConfigPath -Raw | ConvertFrom-Json -Depth 20
+        $config = Get-Content -Path $script:regulatedConfigPath -Raw | ConvertFrom-Json -Depth 20
         $config.retentionPeriods | Should -Not -BeNullOrEmpty
         [int]$config.retentionPeriods.defaultDays | Should -BeGreaterOrEqual 365
     }
 
     It 'has all solution scripts' {
-        @($deployScriptPath, $monitorScriptPath, $exportScriptPath) | ForEach-Object {
+        @($script:deployScriptPath, $script:monitorScriptPath, $script:exportScriptPath) | ForEach-Object {
             Test-Path $_ | Should -BeTrue
         }
     }
 
     It 'solution scripts pass PowerShell syntax validation' {
-        foreach ($scriptPath in @($deployScriptPath, $monitorScriptPath, $exportScriptPath)) {
+        foreach ($scriptPath in @($script:deployScriptPath, $script:monitorScriptPath, $script:exportScriptPath)) {
             $tokens = $null
             $errors = $null
             [void][System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$errors)
@@ -88,19 +88,19 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
     }
 
     It 'Export-Evidence.ps1 references audit-log-completeness' {
-        $content = Get-Content -Path $exportScriptPath -Raw
+        $content = Get-Content -Path $script:exportScriptPath -Raw
         $content | Should -Match 'audit-log-completeness'
     }
 
     It 'Monitor-Compliance.ps1 references required controls' {
-        $content = Get-Content -Path $monitorScriptPath -Raw
+        $content = Get-Content -Path $script:monitorScriptPath -Raw
         $content | Should -Match '3\.1'
         $content | Should -Match '3\.2'
         $content | Should -Match '3\.3'
     }
 
     It 'Deploy-Solution.ps1 mentions retention' {
-        $content = Get-Content -Path $deployScriptPath -Raw
+        $content = Get-Content -Path $script:deployScriptPath -Raw
         $content | Should -Match '(?i)retention'
     }
 }

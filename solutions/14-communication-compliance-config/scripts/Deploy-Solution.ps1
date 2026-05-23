@@ -74,7 +74,7 @@ function New-PolicyCatalog {
         [hashtable]$Config
     )
 
-    $catalog = Get-PolicyCatalogDefinitions -Config $Config
+    $catalog = Get-PolicyCatalogDefinition -Config $Config
 
     $selectedTemplates = @()
     foreach ($templateId in $Config['policyTemplates']) {
@@ -101,7 +101,7 @@ function New-PolicyCatalog {
     return $selectedTemplates
 }
 
-function New-ReviewerWorkflowSettings {
+function New-ReviewerWorkflowSetting {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -139,7 +139,7 @@ if ($config['solutionCode'] -ne 'CCC') {
 }
 
 $policyTemplates = New-PolicyCatalog -Config $config
-$reviewerWorkflow = New-ReviewerWorkflowSettings -Config $config
+$reviewerWorkflow = New-ReviewerWorkflowSetting -Config $config
 $policyTemplatePath = Join-Path $OutputPath 'policy-templates'
 $manifestPath = Join-Path $OutputPath 'communication-compliance-config-deployment-manifest.json'
 

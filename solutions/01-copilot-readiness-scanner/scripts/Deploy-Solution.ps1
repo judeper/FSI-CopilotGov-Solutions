@@ -56,7 +56,7 @@ function Test-ModuleAvailability {
     return [bool](Get-Module -ListAvailable -Name $Name)
 }
 
-function Test-SolutionPrerequisites {
+function Test-SolutionPrerequisite {
     [CmdletBinding()]
     param()
 
@@ -172,7 +172,7 @@ try {
     $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
 
     Write-Verbose 'Validating local prerequisites.'
-    $prerequisites = Test-SolutionPrerequisites
+    $prerequisites = Test-SolutionPrerequisite
     if (-not $prerequisites.IsReady) {
         $missingItems = @($prerequisites.MissingModules + $prerequisites.MissingSharedModules)
         throw "Prerequisite validation failed. Missing components: $([string]::Join(', ', $missingItems))"

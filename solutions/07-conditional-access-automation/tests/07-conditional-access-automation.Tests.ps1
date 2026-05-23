@@ -1,12 +1,12 @@
 Describe 'Conditional Access Policy Automation for Copilot' {
     BeforeAll {
         $solutionRoot = Split-Path $PSScriptRoot -Parent
-        $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
-        $regulatedConfigPath = Join-Path $solutionRoot 'config\regulated.json'
-        $baselineConfigPath = Join-Path $solutionRoot 'config\baseline.json'
-        $deployScriptPath = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
-        $monitorScriptPath = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
-        $exportScriptPath = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
+        $script:defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
+        $script:regulatedConfigPath = Join-Path $solutionRoot 'config\regulated.json'
+        $script:baselineConfigPath = Join-Path $solutionRoot 'config\baseline.json'
+        $script:deployScriptPath = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
+        $script:monitorScriptPath = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
+        $script:exportScriptPath = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
     }
 
     It 'has required config files' {
@@ -33,7 +33,7 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     }
 
     It 'default-config.json defines required fields' {
-        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         $config.solution | Should -Be '07-conditional-access-automation'
         $config.controls | Should -Contain '2.3'
         $config.ContainsKey('defaults') | Should -BeTrue
@@ -41,33 +41,33 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     }
 
     It 'configuration status stays documentation-first' {
-        foreach ($configPath in @($defaultConfigPath, $baselineConfigPath, $regulatedConfigPath, (Join-Path $solutionRoot 'config\\recommended.json'))) {
+        foreach ($configPath in @($script:defaultConfigPath, $script:baselineConfigPath, $script:regulatedConfigPath, (Join-Path $solutionRoot 'config\\recommended.json'))) {
             $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json -AsHashtable
             $config.status | Should -Be 'Documentation-first scaffold'
         }
     }
 
     It 'default-config.json contains Graph-supported Conditional Access targets' {
-        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         @($config.defaults.copilotAppIds).Count | Should -BeGreaterThan 0
         $config.defaults.copilotAppIds | Should -Contain 'Office365'
         @($config.defaults.copilotAppIds).Count | Should -Be 1
     }
 
     It 'default-config.json requires MFA for all risk tiers' {
-        $config = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         foreach ($tier in @('low', 'medium', 'high')) {
             $config.defaults.riskTiers[$tier].mfaRequired | Should -BeTrue -Because "MFA should be required for the '$tier' risk tier"
         }
     }
 
     It 'regulated.json keeps evidence retention at or above 365 days' {
-        $regulated = Get-Content -Path $regulatedConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $regulated = Get-Content -Path $script:regulatedConfigPath -Raw | ConvertFrom-Json -AsHashtable
         ($regulated.evidenceRetentionDays -ge 365) | Should -BeTrue
     }
 
     It 'all required scripts exist' {
-        foreach ($scriptPath in @($deployScriptPath, $monitorScriptPath, $exportScriptPath)) {
+        foreach ($scriptPath in @($script:deployScriptPath, $script:monitorScriptPath, $script:exportScriptPath)) {
             Test-Path $scriptPath | Should -BeTrue
         }
     }
@@ -82,21 +82,21 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     }
 
     It 'Export-Evidence.ps1 references ca-policy-state' {
-        (Get-Content -Path $exportScriptPath -Raw) | Should -Match 'ca-policy-state'
+        (Get-Content -Path $script:exportScriptPath -Raw) | Should -Match 'ca-policy-state'
     }
 
     It 'Monitor-Compliance.ps1 references controls 2.3 and 2.9' {
-        $content = Get-Content -Path $monitorScriptPath -Raw
+        $content = Get-Content -Path $script:monitorScriptPath -Raw
         $content | Should -Match '2\.3'
         $content | Should -Match '2\.9'
     }
 
     It 'Deploy-Solution.ps1 references Copilot configuration' {
-        (Get-Content -Path $deployScriptPath -Raw) | Should -Match '(?i)copilotappids|copilot'
+        (Get-Content -Path $script:deployScriptPath -Raw) | Should -Match '(?i)copilotappids|copilot'
     }
 
     It 'Deploy-Solution.ps1 New-PolicyTemplate uses correct sessionControls schema' {
-        $content = Get-Content -Path $deployScriptPath -Raw
+        $content = Get-Content -Path $script:deployScriptPath -Raw
         $content | Should -Match 'persistentBrowser\s*=\s*\[ordered\]@\{'
         $content | Should -Match "mode\s*=\s*'never'"
         $content | Should -Match 'isEnabled\s*=\s*\$true'
@@ -106,7 +106,7 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     }
 
     It 'Deploy-Solution.ps1 Get-PolicyRequestBody defaults to report-only mode' {
-        $content = Get-Content -Path $deployScriptPath -Raw
+        $content = Get-Content -Path $script:deployScriptPath -Raw
         $content | Should -Match 'enabledForReportingButNotEnforced'
     }
 
@@ -117,13 +117,13 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     }
 
     It 'Deploy-Solution.ps1 -Execute path includes error handling' {
-        $content = Get-Content -Path $deployScriptPath -Raw
+        $content = Get-Content -Path $script:deployScriptPath -Raw
         $content | Should -Match 'try\s*\{'
         $content | Should -Match 'catch\s*\{'
     }
 
     It 'all three scripts contain sessionControls with correct Graph API format' {
-        foreach ($scriptPath in @($deployScriptPath, $monitorScriptPath, $exportScriptPath)) {
+        foreach ($scriptPath in @($script:deployScriptPath, $script:monitorScriptPath, $script:exportScriptPath)) {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'sessionControls' -Because (Split-Path $scriptPath -Leaf)
             $content | Should -Match 'persistentBrowser' -Because (Split-Path $scriptPath -Leaf)
@@ -132,7 +132,7 @@ Describe 'Conditional Access Policy Automation for Copilot' {
     }
 
     It 'all three scripts document duplicated utility functions' {
-        foreach ($scriptPath in @($deployScriptPath, $monitorScriptPath, $exportScriptPath)) {
+        foreach ($scriptPath in @($script:deployScriptPath, $script:monitorScriptPath, $script:exportScriptPath)) {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'duplicated across' -Because (Split-Path $scriptPath -Leaf)
         }

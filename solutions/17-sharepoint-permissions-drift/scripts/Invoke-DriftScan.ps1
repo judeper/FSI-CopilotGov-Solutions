@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Detects permissions drift by comparing current SharePoint permissions against an approved baseline.
 
@@ -63,6 +63,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# ConfigPath accepted for future per-tenant config overlay; not yet referenced in scaffold path.
+$null = $ConfigPath
+
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
@@ -113,7 +116,7 @@ function Get-RiskTier {
     return 'LOW'
 }
 
-function Compare-PermissionSets {
+function Compare-PermissionSet {
     <#
     .SYNOPSIS
         Compares baseline and current permission sets for a single site.
@@ -281,7 +284,7 @@ function Send-DriftAlert {
     #>
     param(
         [string]$Recipient,
-        [string]$Sender,
+        [string]$SenderAddress,
         [array]$HighRiskItems
     )
 
@@ -315,15 +318,15 @@ function Send-DriftAlert {
             }
         }
 
-        $sendMailUri = if ([string]::IsNullOrWhiteSpace($Sender)) {
+        $sendMailUri = if ([string]::IsNullOrWhiteSpace($SenderAddress)) {
             'https://graph.microsoft.com/v1.0/me/sendMail'
         }
         else {
-            "https://graph.microsoft.com/v1.0/users/$Sender/sendMail"
+            "https://graph.microsoft.com/v1.0/users/$SenderAddress/sendMail"
         }
 
         Invoke-MgGraphRequest -Method POST -Uri $sendMailUri -Body $message
-        $senderDescription = if ([string]::IsNullOrWhiteSpace($Sender)) { 'delegated /me mailbox' } else { $Sender }
+        $senderDescription = if ([string]::IsNullOrWhiteSpace($SenderAddress)) { 'delegated /me mailbox' } else { $SenderAddress }
         Write-Host "Alert email sent to $Recipient from $senderDescription."
     }
     catch {
@@ -410,7 +413,7 @@ Write-Host "Drift report saved: $reportFilePath"
 # Send alert for HIGH-risk items
 $highRiskItems = $driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }
 if ($highRiskItems.Count -gt 0) {
-    Send-DriftAlert -Recipient $AlertRecipient -Sender $AlertSender -HighRiskItems $highRiskItems
+    Send-DriftAlert -Recipient $AlertRecipient -SenderAddress $AlertSender -HighRiskItems $highRiskItems
 }
 
 #endregion

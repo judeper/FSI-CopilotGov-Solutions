@@ -17,7 +17,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
-function Get-SolutionSlugs {
+function Get-SolutionSlug {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -29,7 +29,7 @@ function Get-SolutionSlugs {
     return @($config.solutions.Keys | Sort-Object)
 }
 
-function Get-ExportInvocationParameters {
+function Get-ExportInvocationParameter {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -163,20 +163,20 @@ $null = New-Item -ItemType Directory -Path $outputRootPath -Force
 $results = @()
 
 try {
-    foreach ($slug in Get-SolutionSlugs -RepositoryRoot $repoRoot) {
+    foreach ($slug in Get-SolutionSlug -RepositoryRoot $repoRoot) {
         $solutionRoot = Join-Path $repoRoot ("solutions\{0}" -f $slug)
         $scriptPath = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
         $solutionOutputPath = Join-Path $outputRootPath $slug
         $null = New-Item -ItemType Directory -Path $solutionOutputPath -Force
 
-        $expectedArtifacts = Get-CopilotGovDocumentedArtifactNames -SolutionRoot $solutionRoot
+        $expectedArtifacts = Get-CopilotGovDocumentedArtifactName -SolutionRoot $solutionRoot
         if ($expectedArtifacts.Count -eq 0) {
             $results += New-ValidationResult -Solution $slug -Passed $false -Details @('No documented evidenceOutputs declaration found in config\default-config.json.')
             continue
         }
 
         try {
-            $parameters = Get-ExportInvocationParameters -ScriptPath $scriptPath -OutputPath $solutionOutputPath -ConfigurationTier $ConfigurationTier
+            $parameters = Get-ExportInvocationParameter -ScriptPath $scriptPath -OutputPath $solutionOutputPath -ConfigurationTier $ConfigurationTier
             $allResults = @(& $scriptPath @parameters)
             $result = if ($allResults.Count -gt 0) { $allResults[-1] } else { $null }
         }

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Standard evidence export for SharePoint Permissions Drift Detection.
 

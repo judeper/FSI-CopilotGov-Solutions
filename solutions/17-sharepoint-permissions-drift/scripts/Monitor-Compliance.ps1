@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Orchestrates baseline check and drift scan for SharePoint Permissions Drift Detection.
 

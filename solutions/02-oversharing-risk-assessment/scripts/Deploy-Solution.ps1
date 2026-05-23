@@ -66,6 +66,9 @@ function Test-SharePointAdvancedManagementEntitlement {
         [string]$TenantId
     )
 
+    # Configuration accepted for contract uniformity with sibling Test- functions; not used in scaffold path.
+    $null = $Configuration
+
     $assumeEntitlement = $env:ORA_ASSUME_SAM_ENTITLEMENT -eq '1' -or $env:ORA_ASSUME_SAM_LICENSE -eq '1'
     $status = if ($assumeEntitlement) { 'verified' } else { 'manual-check-required' }
     $notes = if ($status -eq 'verified') {

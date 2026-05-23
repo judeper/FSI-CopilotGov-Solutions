@@ -113,7 +113,7 @@ function Write-JsonArtifact {
     }
 }
 
-function Get-ControlAssessments {
+function Get-ControlAssessment {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -205,7 +205,7 @@ try {
     $periodStartText = $PeriodStart.ToString('yyyyMMdd')
     $periodEndText = $PeriodEnd.ToString('yyyyMMdd')
 
-    $controls = Get-ControlAssessments -Configuration $configuration
+    $controls = Get-ControlAssessment -Configuration $configuration
     $overallReadinessScore = Get-OverallReadinessScore -Controls $controls -Weights $configuration.scoringWeights
 
     $findings = @(

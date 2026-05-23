@@ -54,6 +54,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# TenantUrl accepted for future PnP/Graph connection wiring; not yet referenced in scaffold path.
+$null = $TenantUrl
+
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
@@ -117,7 +120,7 @@ function Get-ItemShareType {
     return $null
 }
 
-function Get-SampleItemPermissions {
+function Get-SampleItemPermission {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -189,7 +192,7 @@ foreach ($siteUrl in $SiteUrls) {
     Write-Verbose "Scanning site: $siteUrl"
 
     try {
-        $siteFindings = @(Get-SampleItemPermissions -SiteUrl $siteUrl)
+        $siteFindings = @(Get-SampleItemPermission -SiteUrl $siteUrl)
         if ($MaxItemsPerLibrary -ge 0) {
             $libraryCounts = @{}
             $siteFindings = @(

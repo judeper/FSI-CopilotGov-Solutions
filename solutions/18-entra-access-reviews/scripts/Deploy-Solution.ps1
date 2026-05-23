@@ -141,6 +141,9 @@ function Test-EntraGovernanceLicense {
         [string]$TenantId
     )
 
+    # Configuration accepted for contract uniformity with sibling Test- functions; not used in scaffold path.
+    $null = $Configuration
+
     $status = if ($env:EAR_ASSUME_GOVERNANCE_LICENSE -eq '1') { 'verified' } else { 'manual-check-required' }
     $notes = if ($status -eq 'verified') {
         'EAR_ASSUME_GOVERNANCE_LICENSE=1 was supplied for stub validation.'

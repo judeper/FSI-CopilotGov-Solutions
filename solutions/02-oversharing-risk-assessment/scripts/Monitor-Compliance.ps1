@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Produces oversharing findings for SharePoint, OneDrive, and Teams.
 
@@ -144,6 +144,9 @@ function Get-SitePermissionAnalysis {
         [string]$SiteName = ''
     )
 
+    # SiteName accepted for future per-site diagnostic logging; not yet referenced in computation.
+    $null = $SiteName
+
     $sharingScope = 'Targeted'
     $anomalyCount = 0
     $exposureReasons = @()
@@ -218,7 +221,7 @@ function Get-SitePermissionAnalysis {
     }
 }
 
-function Get-SiteDataSignals {
+function Get-SiteDataSignal {
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -251,7 +254,7 @@ function Get-SiteDataSignals {
     return $signals
 }
 
-function Get-SharePointOversharingSites {
+function Get-SharePointOversharingSite {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -323,7 +326,7 @@ function Get-SharePointOversharingSites {
         }
 
         $analysis = Get-SitePermissionAnalysis -Permissions $permissions -SiteName $siteName
-        $signals = Get-SiteDataSignals -SiteName $siteName -Configuration $Configuration
+        $signals = Get-SiteDataSignal -SiteName $siteName -Configuration $Configuration
 
         $owner = ''
         try {
@@ -355,7 +358,7 @@ function Get-SharePointOversharingSites {
     return $candidates
 }
 
-function Get-OneDriveOversharingItems {
+function Get-OneDriveOversharingItem {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -419,7 +422,7 @@ function Get-OneDriveOversharingItems {
         $analysis = Get-SitePermissionAnalysis -Permissions $permissions -SiteName $siteName
         if ($analysis.AnomalyCount -eq 0) { continue }
 
-        $signals = Get-SiteDataSignals -SiteName $siteName -Configuration $Configuration
+        $signals = Get-SiteDataSignal -SiteName $siteName -Configuration $Configuration
         $ownerEmail = $siteUrl -replace '^.*personal[/\\]', ''
         if ([string]::IsNullOrWhiteSpace($ownerEmail) -or $ownerEmail -notmatch '@') {
             $ownerEmail = "$ownerEmail@tenant"
@@ -440,7 +443,7 @@ function Get-OneDriveOversharingItems {
     return $candidates
 }
 
-function Get-TeamsOversharingChannels {
+function Get-TeamsOversharingChannel {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -517,7 +520,7 @@ function Get-TeamsOversharingChannels {
         }
 
         $analysis = Get-SitePermissionAnalysis -Permissions $permissions -SiteName $groupName
-        $signals = Get-SiteDataSignals -SiteName $groupName -Configuration $Configuration
+        $signals = Get-SiteDataSignal -SiteName $groupName -Configuration $Configuration
 
         $owner = if (-not [string]::IsNullOrWhiteSpace($groupMail)) { $groupMail } else { "teamowner@tenant" }
 
@@ -808,13 +811,13 @@ if ($PSBoundParameters.ContainsKey('ClientId') -or $UseMgGraph) {
 foreach ($workload in $effectiveWorkloads) {
     switch ($workload) {
         'sharePoint' {
-            $rawCandidates += Get-SharePointOversharingSites -TenantId $TenantId -GraphContext $graphContext -Configuration $configuration
+            $rawCandidates += Get-SharePointOversharingSite -TenantId $TenantId -GraphContext $graphContext -Configuration $configuration
         }
         'oneDrive' {
-            $rawCandidates += Get-OneDriveOversharingItems -TenantId $TenantId -GraphContext $graphContext -Configuration $configuration
+            $rawCandidates += Get-OneDriveOversharingItem -TenantId $TenantId -GraphContext $graphContext -Configuration $configuration
         }
         'teams' {
-            $rawCandidates += Get-TeamsOversharingChannels -TenantId $TenantId -GraphContext $graphContext -Configuration $configuration
+            $rawCandidates += Get-TeamsOversharingChannel -TenantId $TenantId -GraphContext $graphContext -Configuration $configuration
         }
     }
 }

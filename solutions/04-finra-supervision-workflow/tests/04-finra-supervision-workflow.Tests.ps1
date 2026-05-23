@@ -1,8 +1,8 @@
-Describe 'FINRA Supervision Workflow for Copilot solution' {
+﻿Describe 'FINRA Supervision Workflow for Copilot solution' {
     BeforeAll {
         $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
         $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
-        $defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $script:defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
     }
 
     It 'has required configuration files' {
@@ -18,13 +18,13 @@ Describe 'FINRA Supervision Workflow for Copilot solution' {
     }
 
     It 'default-config.json contains required fields' {
-        $defaultConfig['solution']['slug'] | Should -Be '04-finra-supervision-workflow'
-        $defaultConfig['controls'] | Should -Contain '3.4'
-        $defaultConfig['controls'] | Should -Contain '3.5'
-        $defaultConfig['controls'] | Should -Contain '3.6'
-        $defaultConfig['defaults']['samplingRates']['Zone1']['baseline'] | Should -BeGreaterThan 0
-        $defaultConfig['defaults']['samplingRates']['Zone2']['recommended'] | Should -BeGreaterThan 0
-        $defaultConfig['defaults']['samplingRates']['Zone3']['regulated'] | Should -Be 100
+        $script:defaultConfig['solution']['slug'] | Should -Be '04-finra-supervision-workflow'
+        $script:defaultConfig['controls'] | Should -Contain '3.4'
+        $script:defaultConfig['controls'] | Should -Contain '3.5'
+        $script:defaultConfig['controls'] | Should -Contain '3.6'
+        $script:defaultConfig['defaults']['samplingRates']['Zone1']['baseline'] | Should -BeGreaterThan 0
+        $script:defaultConfig['defaults']['samplingRates']['Zone2']['recommended'] | Should -BeGreaterThan 0
+        $script:defaultConfig['defaults']['samplingRates']['Zone3']['regulated'] | Should -Be 100
     }
 
     It 'config tiers have the correct solution slug' {

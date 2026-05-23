@@ -107,7 +107,7 @@ function Get-SolutionConfiguration {
     return $mergedConfig
 }
 
-function Get-PolicyCatalogDefinitions {
+function Get-PolicyCatalogDefinition {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -238,4 +238,4 @@ function Get-PolicyCatalogDefinitions {
     }
 }
 
-Export-ModuleMember -Function ConvertTo-Hashtable, Merge-Hashtable, Get-SolutionConfiguration, Get-PolicyCatalogDefinitions
+Export-ModuleMember -Function ConvertTo-Hashtable, Merge-Hashtable, Get-SolutionConfiguration, Get-PolicyCatalogDefinition

@@ -111,7 +111,7 @@ function Measure-ConnectorRisk {
     return 'high'
 }
 
-function Get-UnapprovedConnectors {
+function Get-UnapprovedConnector {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -297,7 +297,7 @@ try {
         )
     }
 
-    $unapprovedConnectors = Get-UnapprovedConnectors `
+    $unapprovedConnectors = Get-UnapprovedConnector `
         -CurrentInventory $currentInventory `
         -ApprovedBaselineConnectorIds $autoApprovedConnectorIds `
         -ConfigurationTier $ConfigurationTier `

@@ -454,7 +454,7 @@ function New-Finding {
     }
 }
 
-function Get-ExpectedTierRules {
+function Get-ExpectedTierRule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -511,7 +511,7 @@ function Test-TierConfiguration {
     )
 
     $findings = New-Object System.Collections.Generic.List[object]
-    $expectedRules = Get-ExpectedTierRules -Tier $SelectedTier
+    $expectedRules = Get-ExpectedTierRule -Tier $SelectedTier
 
     foreach ($riskTierName in @('low', 'medium', 'high')) {
         $expected = $expectedRules.riskTiers[$riskTierName]
@@ -601,7 +601,7 @@ function ConvertTo-PolicyFingerprint {
     }
 }
 
-function Compare-BaselinePolicies {
+function Compare-BaselinePolicy {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -655,7 +655,7 @@ function Compare-BaselinePolicies {
     return $findings
 }
 
-function Get-ExceptionEntries {
+function Get-ExceptionEntry {
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -729,7 +729,7 @@ $baselineDocument = if (Test-Path -Path $resolvedBaselinePath) {
 else {
     $null
 }
-foreach ($baselineFinding in (Compare-BaselinePolicies -ExpectedPolicies $expectedPolicies -BaselineDocument $baselineDocument)) {
+foreach ($baselineFinding in (Compare-BaselinePolicy -ExpectedPolicies $expectedPolicies -BaselineDocument $baselineDocument)) {
     $findings.Add($baselineFinding)
 }
 
@@ -745,7 +745,7 @@ if (-not $exceptionRegisterExists) {
     $findings.Add((New-Finding -Id 'exception-register-missing' -Severity 'medium' -ControlId '2.6' -Category 'Exception' -Description 'Exception register not found. Initialize the approved access-exception register before production use.'))
 }
 
-$exceptionEntries = Get-ExceptionEntries -Register $exceptionRegisterDocument
+$exceptionEntries = Get-ExceptionEntry -Register $exceptionRegisterDocument
 $expiredExceptions = New-Object System.Collections.Generic.List[object]
 $today = (Get-Date).Date
 foreach ($exceptionEntry in $exceptionEntries) {

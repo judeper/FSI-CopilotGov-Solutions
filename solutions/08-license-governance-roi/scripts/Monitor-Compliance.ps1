@@ -54,6 +54,9 @@ function Get-CopilotUsageReport {
         [hashtable]$Configuration
     )
 
+    # Configuration accepted for future tier-aware filtering; not yet referenced in sample data.
+    $null = $Configuration
+
     return @(
         [pscustomobject]@{ userPrincipalName = 'alex.morgan@contoso.com'; department = 'Treasury'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-3).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.82; riskTier = 'medium' }
         [pscustomobject]@{ userPrincipalName = 'jamie.lee@contoso.com'; department = 'Retail Banking'; assignedSku = 'Microsoft 365 Copilot'; lastActivityDate = (Get-Date).AddDays(-9).ToString('yyyy-MM-dd'); accountEnabled = $true; vivaImpactScore = 0.67; riskTier = 'low' }
@@ -64,7 +67,7 @@ function Get-CopilotUsageReport {
     )
 }
 
-function Get-InactiveSeats {
+function Get-InactiveSeat {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -139,7 +142,7 @@ try {
     }
 
     $usageReport = @(Get-CopilotUsageReport -Configuration $configuration)
-    $inactiveSeats = @(Get-InactiveSeats -UsageReport $usageReport -ThresholdDays $effectiveThreshold)
+    $inactiveSeats = @(Get-InactiveSeat -UsageReport $usageReport -ThresholdDays $effectiveThreshold)
     $metrics = Measure-LicenseUtilization -UsageReport $usageReport -InactiveSeats $inactiveSeats -ThresholdPct ([int]$configuration.reallocationTriggerUtilizationPct) -AnnualizedCostPerSeatUsd ([int]$configuration.defaults.annualizedCostPerSeatUsd)
 
     $flaggedSeats = foreach ($seat in $inactiveSeats) {

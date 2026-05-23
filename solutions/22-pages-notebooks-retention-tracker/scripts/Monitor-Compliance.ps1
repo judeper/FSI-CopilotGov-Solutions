@@ -66,7 +66,7 @@ Import-Module (Join-Path $PSScriptRoot 'PnrtConfig.psm1') -Force
 
 $script:SampleWarning = 'Inventory output came from PNRT sample-data generator and does not confirm live SharePoint Embedded, documented Graph DriveItem/export, or Purview reads.'
 
-function New-PnrtSamplePages {
+function New-PnrtSamplePage {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)] [int]$Count,
@@ -102,7 +102,7 @@ function New-PnrtSamplePages {
     )
 }
 
-function New-PnrtSampleNotebooks {
+function New-PnrtSampleNotebook {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)] [int]$Count,
@@ -133,7 +133,7 @@ function New-PnrtSampleNotebooks {
     )
 }
 
-function New-PnrtSampleLoopComponents {
+function New-PnrtSampleLoopComponent {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)] [int]$Count,
@@ -163,7 +163,7 @@ function New-PnrtSampleLoopComponents {
     )
 }
 
-function New-PnrtInternalSampleLineageEvents {
+function New-PnrtInternalSampleLineageEvent {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)] [int]$Count,
@@ -203,11 +203,11 @@ else {
 
 $resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
 
-$pages = New-PnrtSamplePages -Count ([int]$configuration.defaults.samplePageCount) -RetentionDays ([int]$configuration.pagesRetentionDays)
-$notebooks = New-PnrtSampleNotebooks -Count ([int]$configuration.defaults.sampleNotebookCount) -RetentionDays ([int]$configuration.notebookRetentionDays)
-$loopComponents = New-PnrtSampleLoopComponents -Count ([int]$configuration.defaults.sampleLoopComponentCount) -WorkspaceSeeds @($configuration.defaults.loopWorkspaceSeeds) -IncludeSignedLineage ([bool]$configuration.signedLineageRequired)
+$pages = New-PnrtSamplePage -Count ([int]$configuration.defaults.samplePageCount) -RetentionDays ([int]$configuration.pagesRetentionDays)
+$notebooks = New-PnrtSampleNotebook -Count ([int]$configuration.defaults.sampleNotebookCount) -RetentionDays ([int]$configuration.notebookRetentionDays)
+$loopComponents = New-PnrtSampleLoopComponent -Count ([int]$configuration.defaults.sampleLoopComponentCount) -WorkspaceSeeds @($configuration.defaults.loopWorkspaceSeeds) -IncludeSignedLineage ([bool]$configuration.signedLineageRequired)
 $sampleBranchingEventCount = if ([bool]$configuration.branchingAuditRequired) { [int]$configuration.defaults.sampleBranchingEventCount } else { 0 }
-$internalLineageEvents = New-PnrtInternalSampleLineageEvents -Count $sampleBranchingEventCount -AuditMode ([string]$configuration.branchingAuditMode)
+$internalLineageEvents = New-PnrtInternalSampleLineageEvent -Count $sampleBranchingEventCount -AuditMode ([string]$configuration.branchingAuditMode)
 
 $pagesWithoutLabel = @($pages | Where-Object { [string]::IsNullOrWhiteSpace($_.retentionLabel) })
 $notebooksWithoutLabel = @($notebooks | Where-Object { $_.retentionPolicySource -eq 'none' })

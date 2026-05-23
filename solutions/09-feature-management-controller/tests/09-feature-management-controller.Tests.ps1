@@ -1,11 +1,11 @@
 Describe 'Copilot Feature Management Controller solution' {
     BeforeAll {
         $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-        $deployScript = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
-        $monitorScript = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
-        $exportScript = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
-        $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
-        $regulatedConfigPath = Join-Path $solutionRoot 'config\regulated.json'
+        $script:deployScript = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
+        $script:monitorScript = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
+        $script:exportScript = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
+        $script:defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'
+        $script:regulatedConfigPath = Join-Path $solutionRoot 'config\regulated.json'
     }
 
     It 'has required configuration files' {
@@ -35,13 +35,13 @@ Describe 'Copilot Feature Management Controller solution' {
     }
 
     It 'includes comment-based help in Deploy-Solution.ps1' {
-        (Get-Content -Path $deployScript -Raw) | Should -Match '(?s)<#.*?\.SYNOPSIS.*?#>'
+        (Get-Content -Path $script:deployScript -Raw) | Should -Match '(?s)<#.*?\.SYNOPSIS.*?#>'
     }
 
     It 'accepts BaselinePath in Monitor-Compliance.ps1' {
         $tokens = $null
         $errors = $null
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile($monitorScript, [ref]$tokens, [ref]$errors)
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile($script:monitorScript, [ref]$tokens, [ref]$errors)
         $parameterNames = $ast.ParamBlock.Parameters.Name.VariablePath.UserPath
 
         $errors | Should -BeNullOrEmpty
@@ -49,23 +49,23 @@ Describe 'Copilot Feature Management Controller solution' {
     }
 
     It 'references the FMC solution code in Export-Evidence.ps1' {
-        (Get-Content -Path $exportScript -Raw) | Should -Match "SolutionCode 'FMC'"
+        (Get-Content -Path $script:exportScript -Raw) | Should -Match "SolutionCode 'FMC'"
     }
 
     It 'contains rollout ring or feature configuration in default-config.json' {
-        $defaultConfig = Get-Content -Path $defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
+        $defaultConfig = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         ($defaultConfig.ContainsKey('rolloutRings') -or $defaultConfig.ContainsKey('featureCategories')) | Should -BeTrue
     }
 
     It 'sets regulated evidence retention to at least 365 days' {
-        $regulatedConfig = Get-Content -Path $regulatedConfigPath -Raw | ConvertFrom-Json
+        $regulatedConfig = Get-Content -Path $script:regulatedConfigPath -Raw | ConvertFrom-Json
         [int]$regulatedConfig.evidenceRetentionDays | Should -BeGreaterOrEqual 365
     }
 
     It 'has valid PowerShell syntax in Deploy-Solution.ps1' {
         $tokens = $null
         $errors = $null
-        [System.Management.Automation.Language.Parser]::ParseFile($deployScript, [ref]$tokens, [ref]$errors) | Out-Null
+        [System.Management.Automation.Language.Parser]::ParseFile($script:deployScript, [ref]$tokens, [ref]$errors) | Out-Null
 
         $errors | Should -BeNullOrEmpty
     }
@@ -74,12 +74,12 @@ Describe 'Copilot Feature Management Controller solution' {
 Describe 'FMC functional tests' {
     BeforeAll {
         $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-        $monitorScript = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
-        $deployScript = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
-        $exportScript = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
+        $script:monitorScript = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
+        $script:deployScript = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
+        $script:exportScript = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
 
         # Extract function definitions from scripts using AST for isolated testing
-        foreach ($scriptPath in @($monitorScript, $deployScript, $exportScript)) {
+        foreach ($scriptPath in @($script:monitorScript, $script:deployScript, $script:exportScript)) {
             $tokens = $null; $errors = $null
             $ast = [System.Management.Automation.Language.Parser]::ParseFile(
                 $scriptPath, [ref]$tokens, [ref]$errors)
@@ -317,7 +317,7 @@ Describe 'FMC functional tests' {
         It 'export script has valid PowerShell syntax after changes' {
             $tokens = $null; $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                $exportScript, [ref]$tokens, [ref]$errors) | Out-Null
+                $script:exportScript, [ref]$tokens, [ref]$errors) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
     }

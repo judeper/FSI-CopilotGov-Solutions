@@ -103,7 +103,7 @@ function Test-EvidencePackageHash {
     }
 }
 
-function Get-CopilotGovDocumentedArtifactNames {
+function Get-CopilotGovDocumentedArtifactName {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -362,4 +362,4 @@ function Export-SolutionEvidencePackage {
     }
 }
 
-Export-ModuleMember -Function Get-CopilotGovSha256, Get-CopilotGovEvidenceSchemaPath, Write-CopilotGovSha256File, Test-EvidencePackageHash, Get-CopilotGovDocumentedArtifactNames, Test-CopilotGovEvidencePackage, Export-SolutionEvidencePackage
+Export-ModuleMember -Function Get-CopilotGovSha256, Get-CopilotGovEvidenceSchemaPath, Write-CopilotGovSha256File, Test-EvidencePackageHash, Get-CopilotGovDocumentedArtifactName, Test-CopilotGovEvidencePackage, Export-SolutionEvidencePackage

@@ -1,7 +1,7 @@
 BeforeAll {
     $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-    $expectedControls = @('1.5', '2.2', '3.11', '3.12')
-    $scriptPaths = @(
+    $script:expectedControls = @('1.5', '2.2', '3.11', '3.12')
+    $script:scriptPaths = @(
         Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
         Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
         Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
@@ -71,13 +71,13 @@ Describe 'Configuration content' {
 
         foreach ($relativePath in $configFiles) {
             $config = Get-Content (Join-Path $solutionRoot $relativePath) -Raw | ConvertFrom-Json -Depth 20
-            (Compare-Object -ReferenceObject $expectedControls -DifferenceObject @($config.controls)) | Should -BeNullOrEmpty
+            (Compare-Object -ReferenceObject $script:expectedControls -DifferenceObject @($config.controls)) | Should -BeNullOrEmpty
         }
     }
 }
 
 Describe 'Script syntax validation' {
-    It 'parses <_>' -ForEach $scriptPaths {
+    It 'parses <_>' -ForEach $script:scriptPaths {
         $tokens = $null
         $errors = $null
         $null = [System.Management.Automation.Language.Parser]::ParseFile($_, [ref]$tokens, [ref]$errors)

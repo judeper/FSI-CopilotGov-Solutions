@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Deploys the Pages and Notebooks Retention Tracker (PNRT) for Microsoft Copilot governance.
 

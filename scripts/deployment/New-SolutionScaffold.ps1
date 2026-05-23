@@ -6,6 +6,9 @@ param(
     [string]$DisplayName
 )
 
+# DisplayName is reserved for future scaffold templating (e.g., README header injection).
+$null = $DisplayName
+
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 $solutionRoot = Join-Path $repoRoot (Join-Path 'solutions' $Slug)
 $paths = @(

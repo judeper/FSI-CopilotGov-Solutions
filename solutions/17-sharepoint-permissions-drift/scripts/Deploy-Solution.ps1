@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Validates configuration and prerequisites for SharePoint Permissions Drift Detection.
 

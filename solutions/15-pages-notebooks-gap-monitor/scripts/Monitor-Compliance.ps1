@@ -74,7 +74,7 @@ Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -For
 
 Import-Module (Join-Path $PSScriptRoot 'PngmShared.psm1') -Force
 
-function Get-CopilotPagesRetentionGaps {
+function Get-CopilotPagesRetentionGap {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -89,6 +89,9 @@ function Get-CopilotPagesRetentionGaps {
         [Parameter()]
         [SecureString]$ClientSecret
     )
+
+    # TierConfiguration accepted for future tier-specific gap weighting; not yet referenced.
+    $null = $TierConfiguration
 
     $authenticated = ($TenantId -and $ClientId -and $null -ne $ClientSecret)
     $assessedAt = Get-Date
@@ -131,12 +134,15 @@ function Get-CopilotPagesRetentionGaps {
     }
 }
 
-function Get-NotebooksEDiscoveryGaps {
+function Get-NotebooksEDiscoveryGap {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [pscustomobject]$TierConfiguration
     )
+
+    # TierConfiguration accepted for future tier-specific eDiscovery scoping; not yet referenced.
+    $null = $TierConfiguration
 
     $assessedAt = Get-Date
 
@@ -282,8 +288,8 @@ $defaultConfig = $configuration.Default
 $tierConfig = $configuration.Tier
 $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
 
-$pagesResult = Get-CopilotPagesRetentionGaps -TierConfiguration $tierConfig -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
-$notebookResult = Get-NotebooksEDiscoveryGaps -TierConfiguration $tierConfig
+$pagesResult = Get-CopilotPagesRetentionGap -TierConfiguration $tierConfig -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+$notebookResult = Get-NotebooksEDiscoveryGap -TierConfiguration $tierConfig
 $allGaps = @($pagesResult.gaps) + @($notebookResult.gaps)
 $openGaps = @($allGaps | Where-Object { $_.status -eq 'open' })
 $compensatingControls = Test-CompensatingControlStatus -TierConfiguration $tierConfig -OpenGaps $openGaps

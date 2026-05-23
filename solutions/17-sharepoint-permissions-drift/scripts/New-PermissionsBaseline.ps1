@@ -1,4 +1,4 @@
-# PnP.PowerShell is required for live SharePoint operations.
+﻿# PnP.PowerShell is required for live SharePoint operations.
 # Scripts fall back to representative sample data when PnP is unavailable.
 
 <#
@@ -188,7 +188,7 @@ function Get-SitePermissionsSnapshot {
     catch {
         Write-Warning "PnP enumeration failed for $SiteUrl — $($_.Exception.Message). Using sample data."
         # Disconnect to prevent stale context on re-entry, then return sample data directly
-        try { Disconnect-PnPOnline -ErrorAction SilentlyContinue } catch { }
+        try { Disconnect-PnPOnline -ErrorAction SilentlyContinue } catch { Write-Verbose "Disconnect-PnPOnline failed during fallback path: $($_.Exception.Message)" }
         $pnpContext = $null
         return [pscustomobject]@{
             siteUrl          = $SiteUrl

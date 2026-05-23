@@ -10,16 +10,16 @@
 
 BeforeAll {
     $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-    $scriptsPath = Join-Path $solutionRoot 'scripts'
-    $configPath = Join-Path $solutionRoot 'config'
-    $docsPath = Join-Path $solutionRoot 'docs'
+    $script:scriptsPath = Join-Path $solutionRoot 'scripts'
+    $script:configPath = Join-Path $solutionRoot 'config'
+    $script:docsPath = Join-Path $solutionRoot 'docs'
 
     function Get-JsonContent {
         param([string]$Path)
         Get-Content -Path $Path -Raw | ConvertFrom-Json
     }
 
-    function Get-ScriptParameterNames {
+    function Get-ScriptParameterName {
         param([string]$Path)
         $tokens = $null
         $errors = $null
@@ -78,19 +78,19 @@ Describe 'PNRT - File Presence' {
 
     It 'has all required config files' {
         foreach ($path in @('default-config.json', 'baseline.json', 'recommended.json', 'regulated.json')) {
-            Test-Path (Join-Path $configPath $path) | Should -BeTrue
+            Test-Path (Join-Path $script:configPath $path) | Should -BeTrue
         }
     }
 
     It 'has all required doc files' {
         foreach ($path in @('architecture.md', 'deployment-guide.md', 'evidence-export.md', 'prerequisites.md', 'troubleshooting.md')) {
-            Test-Path (Join-Path $docsPath $path) | Should -BeTrue
+            Test-Path (Join-Path $script:docsPath $path) | Should -BeTrue
         }
     }
 
     It 'has all required scripts' {
         foreach ($path in @('Deploy-Solution.ps1', 'Monitor-Compliance.ps1', 'Export-Evidence.ps1', 'PnrtConfig.psm1')) {
-            Test-Path (Join-Path $scriptsPath $path) | Should -BeTrue
+            Test-Path (Join-Path $script:scriptsPath $path) | Should -BeTrue
         }
     }
 }
@@ -98,37 +98,37 @@ Describe 'PNRT - File Presence' {
 Describe 'PNRT - Configuration Validation' {
     Context 'default-config.json' {
         BeforeAll {
-            $defaultConfig = Get-JsonContent -Path (Join-Path $configPath 'default-config.json')
+            $script:defaultConfig = Get-JsonContent -Path (Join-Path $script:configPath 'default-config.json')
         }
 
         It 'has correct solution slug' {
-            $defaultConfig.solution | Should -Be '22-pages-notebooks-retention-tracker'
+            $script:defaultConfig.solution | Should -Be '22-pages-notebooks-retention-tracker'
         }
 
         It 'has solutionCode PNRT' {
-            $defaultConfig.solutionCode | Should -Be 'PNRT'
+            $script:defaultConfig.solutionCode | Should -Be 'PNRT'
         }
 
         It 'has correct track' {
-            $defaultConfig.track | Should -Be 'D'
+            $script:defaultConfig.track | Should -Be 'D'
         }
 
         It 'has primary controls 3.14 and 3.2' {
-            @($defaultConfig.primaryControls) | Should -Contain '3.14'
-            @($defaultConfig.primaryControls) | Should -Contain '3.2'
+            @($script:defaultConfig.primaryControls) | Should -Contain '3.14'
+            @($script:defaultConfig.primaryControls) | Should -Contain '3.2'
         }
 
         It 'has supporting controls 3.3, 3.11, and 2.11' {
-            @($defaultConfig.supportingControls) | Should -Contain '3.3'
-            @($defaultConfig.supportingControls) | Should -Contain '3.11'
-            @($defaultConfig.supportingControls) | Should -Contain '2.11'
+            @($script:defaultConfig.supportingControls) | Should -Contain '3.3'
+            @($script:defaultConfig.supportingControls) | Should -Contain '3.11'
+            @($script:defaultConfig.supportingControls) | Should -Contain '2.11'
         }
 
         It 'has all four evidence outputs' {
-            @($defaultConfig.evidenceOutputs) | Should -Contain 'pages-retention-inventory'
-            @($defaultConfig.evidenceOutputs) | Should -Contain 'notebook-retention-log'
-            @($defaultConfig.evidenceOutputs) | Should -Contain 'loop-component-lineage'
-            @($defaultConfig.evidenceOutputs) | Should -Contain 'branching-event-log'
+            @($script:defaultConfig.evidenceOutputs) | Should -Contain 'pages-retention-inventory'
+            @($script:defaultConfig.evidenceOutputs) | Should -Contain 'notebook-retention-log'
+            @($script:defaultConfig.evidenceOutputs) | Should -Contain 'loop-component-lineage'
+            @($script:defaultConfig.evidenceOutputs) | Should -Contain 'branching-event-log'
         }
     }
 
@@ -138,7 +138,7 @@ Describe 'PNRT - Configuration Validation' {
             @{ tier = 'recommended' },
             @{ tier = 'regulated' }
         ) {
-            $config = Get-JsonContent -Path (Join-Path $configPath ("{0}.json" -f $tier))
+            $config = Get-JsonContent -Path (Join-Path $script:configPath ("{0}.json" -f $tier))
             $propertyNames = $config.PSObject.Properties.Name
 
             foreach ($requiredField in @('solution', 'tier', 'controls', 'evidenceRetentionDays', 'pagesRetentionDays', 'notebookRetentionDays', 'branchingAuditMode', 'branchingAuditRequired', 'retentionLabelCoverage', 'powerAutomateFlow')) {
@@ -147,7 +147,7 @@ Describe 'PNRT - Configuration Validation' {
         }
 
         It 'regulated tier requires preservation lock and signed lineage' {
-            $regulatedConfig = Get-JsonContent -Path (Join-Path $configPath 'regulated.json')
+            $regulatedConfig = Get-JsonContent -Path (Join-Path $script:configPath 'regulated.json')
             $regulatedConfig.preservationLockRequired | Should -BeTrue
             $regulatedConfig.signedLineageRequired | Should -BeTrue
         }
@@ -155,7 +155,7 @@ Describe 'PNRT - Configuration Validation' {
 
     Context 'PnrtConfig.psm1 range validation' {
         BeforeAll {
-            Import-Module (Join-Path $scriptsPath 'PnrtConfig.psm1') -Force
+            Import-Module (Join-Path $script:scriptsPath 'PnrtConfig.psm1') -Force
         }
 
         It 'rejects zero, negative, and out-of-range numeric settings' {
@@ -183,17 +183,17 @@ Describe 'PNRT - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'Deploy-Solution.ps1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'Deploy-Solution.ps1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
 
         It 'has comment-based help' {
-            Test-CommentBasedHelp -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1') | Should -BeTrue
+            Test-CommentBasedHelp -Path (Join-Path $script:scriptsPath 'Deploy-Solution.ps1') | Should -BeTrue
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Deploy-Solution.ps1')) | Should -Contain 'ConfigurationTier'
         }
     }
 
@@ -201,13 +201,13 @@ Describe 'PNRT - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'Monitor-Compliance.ps1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
 
         It 'has ConfigurationTier and ClientSecret parameters' {
-            $parameterNames = Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')
+            $parameterNames = Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1')
             $parameterNames | Should -Contain 'ConfigurationTier'
             $parameterNames | Should -Contain 'ClientSecret'
         }
@@ -217,13 +217,13 @@ Describe 'PNRT - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'Export-Evidence.ps1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'Export-Evidence.ps1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
 
         It 'has PeriodStart and PeriodEnd parameters' {
-            $parameterNames = Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')
+            $parameterNames = Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Export-Evidence.ps1')
             $parameterNames | Should -Contain 'PeriodStart'
             $parameterNames | Should -Contain 'PeriodEnd'
         }
@@ -233,7 +233,7 @@ Describe 'PNRT - Script Validation' {
         It 'passes PowerShell syntax check' {
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile(
-                (Join-Path $scriptsPath 'PnrtConfig.psm1'), [ref]$null, [ref]$errors
+                (Join-Path $script:scriptsPath 'PnrtConfig.psm1'), [ref]$null, [ref]$errors
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
@@ -243,7 +243,7 @@ Describe 'PNRT - Script Validation' {
 Describe 'PNRT - Script Smoke Tests' {
     It 'runs Deploy-Solution.ps1 and writes a deployment manifest' {
         $deployOutputPath = Join-Path $smokeOutputPath 'deploy'
-        $manifest = & (Join-Path $scriptsPath 'Deploy-Solution.ps1') -ConfigurationTier baseline -OutputPath $deployOutputPath -TenantId '00000000-0000-0000-0000-000000000000'
+        $manifest = & (Join-Path $script:scriptsPath 'Deploy-Solution.ps1') -ConfigurationTier baseline -OutputPath $deployOutputPath -TenantId '00000000-0000-0000-0000-000000000000'
         $manifestPath = Join-Path $deployOutputPath '22-pages-notebooks-retention-tracker-deployment-baseline.json'
 
         Test-Path -Path $manifestPath -PathType Leaf | Should -BeTrue
@@ -253,7 +253,7 @@ Describe 'PNRT - Script Smoke Tests' {
 
     It 'runs Monitor-Compliance.ps1 and writes a sample-data snapshot' {
         $monitorOutputPath = Join-Path $smokeOutputPath 'monitor'
-        $snapshot = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath $monitorOutputPath -PassThru
+        $snapshot = & (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath $monitorOutputPath -PassThru
         $snapshotPath = Join-Path $monitorOutputPath 'monitor-snapshot-baseline.json'
 
         Test-Path -Path $snapshotPath -PathType Leaf | Should -BeTrue
@@ -265,7 +265,7 @@ Describe 'PNRT - Script Smoke Tests' {
 
     It 'runs Export-Evidence.ps1 and writes artifacts with matching SHA-256 companions' {
         $evidenceOutputPath = Join-Path $smokeOutputPath 'evidence'
-        $result = & (Join-Path $scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath $evidenceOutputPath -PeriodStart (Get-Date).Date.AddDays(-1) -PeriodEnd (Get-Date).Date -PassThru
+        $result = & (Join-Path $script:scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath $evidenceOutputPath -PeriodStart (Get-Date).Date.AddDays(-1) -PeriodEnd (Get-Date).Date -PassThru
 
         @($result.Artifacts).Count | Should -Be 4
         foreach ($artifact in @($result.Artifacts)) {
@@ -278,23 +278,23 @@ Describe 'PNRT - Script Smoke Tests' {
 
 Describe 'PNRT - Documentation Validation' {
     BeforeAll {
-        $readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
-        $evidenceExport = Get-Content -Path (Join-Path $docsPath 'evidence-export.md') -Raw
+        $script:readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
+        $script:evidenceExport = Get-Content -Path (Join-Path $script:docsPath 'evidence-export.md') -Raw
     }
 
     It 'README.md references SEC Rule 17a-4 with applicability caveat' {
-        $readme | Should -Match 'SEC Rule 17a-4'
-        $readme | Should -Match 'where applicable'
+        $script:readme | Should -Match 'SEC Rule 17a-4'
+        $script:readme | Should -Match 'where applicable'
     }
 
     It 'README.md references FINRA Rule 4511' {
-        $readme | Should -Match 'FINRA Rule 4511'
+        $script:readme | Should -Match 'FINRA Rule 4511'
     }
 
     It 'evidence-export.md references all four evidence outputs' {
-        $evidenceExport | Should -Match 'pages-retention-inventory'
-        $evidenceExport | Should -Match 'notebook-retention-log'
-        $evidenceExport | Should -Match 'loop-component-lineage'
-        $evidenceExport | Should -Match 'branching-event-log'
+        $script:evidenceExport | Should -Match 'pages-retention-inventory'
+        $script:evidenceExport | Should -Match 'notebook-retention-log'
+        $script:evidenceExport | Should -Match 'loop-component-lineage'
+        $script:evidenceExport | Should -Match 'branching-event-log'
     }
 }

@@ -76,7 +76,7 @@ function New-PolicyCatalog {
         [datetime]$PublishedAt
     )
 
-    $catalog = Get-PolicyCatalogDefinitions -Config $Config
+    $catalog = Get-PolicyCatalogDefinition -Config $Config
 
     $selectedPolicies = @()
     foreach ($templateId in $Config['policyTemplates']) {
@@ -99,7 +99,7 @@ function New-PolicyCatalog {
     return $selectedPolicies
 }
 
-function New-ReviewerQueueMetrics {
+function New-ReviewerQueueMetric {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -163,7 +163,7 @@ $artifactRoot = Join-Path $OutputPath 'artifact-data'
 $null = New-Item -ItemType Directory -Path $artifactRoot -Force
 
 $policyTemplateExport = New-PolicyCatalog -Config $config -CreatedAt $PeriodStart -PublishedAt $PeriodEnd
-$reviewerQueueMetrics = New-ReviewerQueueMetrics -Config $config -AsOfDate $PeriodEnd
+$reviewerQueueMetrics = New-ReviewerQueueMetric -Config $config -AsOfDate $PeriodEnd
 $lexiconUpdateLog = New-LexiconUpdateLog -Config $config
 
 $policyTemplatePath = Join-Path $artifactRoot 'policy-template-export.json'

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Exports evidence for the Oversharing Risk Assessment and Remediation solution.
 
@@ -83,6 +83,9 @@ else {
     # Returns IsValid=$true because full schema/hash validation requires the shared module.
     function Test-CopilotGovEvidencePackage {
         param([Parameter(Mandatory)][string]$Path, [string[]]$ExpectedArtifacts = @())
+        # Path and ExpectedArtifacts accepted for signature parity with the shared module's validator.
+        $null = $Path
+        $null = $ExpectedArtifacts
         Write-Warning 'Using fallback evidence validator — shared module EvidenceExport.psm1 was not loaded. Skipping schema and hash checks.'
         return [pscustomobject]@{ IsValid = $true; Errors = @() }
     }
