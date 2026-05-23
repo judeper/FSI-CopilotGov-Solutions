@@ -13,9 +13,13 @@ jobs:
     name: Dependency Review
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      # No checkout is required: actions/dependency-review-action@v4 uses the
+      # GitHub Dependency Graph compare API (base vs head SHAs) and does not
+      # need a working tree for the default/inline configuration. Re-add a
+      # `actions/checkout@v4` step only if a local `config-file:` is introduced.
+      # Background: the prior checkout step failed deterministically with
+      # `fatal: could not read Username for 'https://github.com'` when fetching
+      # the lazy `refs/pull/N/merge` ref for this workflow only.
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
