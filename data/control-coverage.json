@@ -1780,8 +1780,12 @@
         "12-regulatory-compliance-dashboard"
       ],
       "framework_ids": [
+        "sr-26-2",
+        "occ-2026-13",
         "occ-2011-12",
         "sr-11-7",
+        "nist-ai-rmf",
+        "iso-iec-42001",
         "eu-ai-act",
         "colorado-ai-act"
       ],

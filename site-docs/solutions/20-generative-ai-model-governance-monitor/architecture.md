@@ -70,7 +70,7 @@ Records the cadence and content of vendor governance review for Microsoft and ot
 
 ## Integration Points (Future)
 
-These integrations are documented but not implemented in v0.1.1:
+These integrations are documented but not implemented in v0.1.2:
 
 - **Microsoft Foundry / Azure Resource Manager inventory metadata** — project, deployment, model family, deployment type, region or cloud, lifecycle, and owner attributes for Foundry and Azure OpenAI resources
 - **Azure AI Content Safety** — resource status, Prompt Shields, groundedness, protected-material, and filter-threshold configuration evidence for model deployments where applicable

@@ -31,7 +31,7 @@
 
 .NOTES
     Solution: Generative AI Model Governance Monitor (GMG)
-    Version: v0.1.1
+    Version: v0.1.2
     Documentation-first: scripts use representative sample data.
 #>
 [CmdletBinding()]

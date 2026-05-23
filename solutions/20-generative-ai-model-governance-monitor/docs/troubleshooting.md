@@ -26,7 +26,7 @@ Get-ChildItem scripts\*.ps1 | ForEach-Object {
 
 ### Script reports representative sample data
 
-This is expected. v0.1.1 is documentation-first. Live integration with Microsoft Graph, Microsoft Purview, Microsoft Foundry, Azure OpenAI, Azure AI Content Safety, or Sentinel is deferred.
+This is expected. v0.1.2 is documentation-first. Live integration with Microsoft Graph, Microsoft Purview, Microsoft Foundry, Azure OpenAI, Azure AI Content Safety, or Sentinel is deferred.
 
 ## Evidence Issues
 

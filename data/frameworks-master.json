@@ -393,6 +393,46 @@
     ]
   },
   {
+    "id": "sr-26-2",
+    "display_name": "SR 26-2",
+    "title": "Federal Reserve SR 26-2",
+    "issuer": "Federal Reserve",
+    "category": "model-risk",
+    "aliases": [
+      "Federal Reserve SR 26-2",
+      "SR 26-2"
+    ],
+    "keywords": [
+      "sr 26-2"
+    ],
+    "controls": [
+      "3.8"
+    ],
+    "solutions": [
+      "20-generative-ai-model-governance-monitor"
+    ]
+  },
+  {
+    "id": "occ-2026-13",
+    "display_name": "OCC 2026-13",
+    "title": "OCC Bulletin 2026-13",
+    "issuer": "OCC",
+    "category": "model-risk",
+    "aliases": [
+      "OCC Bulletin 2026-13"
+    ],
+    "keywords": [
+      "occ 2026-13",
+      "occ bulletin 2026-13"
+    ],
+    "controls": [
+      "3.8"
+    ],
+    "solutions": [
+      "20-generative-ai-model-governance-monitor"
+    ]
+  },
+  {
     "id": "occ-2011-12",
     "display_name": "OCC 2011-12",
     "title": "OCC 2011-12 / Bulletin 2013-29",
@@ -452,6 +492,46 @@
     "solutions": [
       "12-regulatory-compliance-dashboard",
       "19-copilot-tuning-governance",
+      "20-generative-ai-model-governance-monitor"
+    ]
+  },
+  {
+    "id": "nist-ai-rmf",
+    "display_name": "NIST AI RMF 1.0",
+    "title": "NIST AI Risk Management Framework 1.0",
+    "issuer": "NIST",
+    "category": "ai-risk-management",
+    "aliases": [
+      "NIST AI RMF 1.0",
+      "NIST AI Risk Management Framework 1.0"
+    ],
+    "keywords": [
+      "nist ai rmf"
+    ],
+    "controls": [
+      "3.8"
+    ],
+    "solutions": [
+      "20-generative-ai-model-governance-monitor"
+    ]
+  },
+  {
+    "id": "iso-iec-42001",
+    "display_name": "ISO/IEC 42001",
+    "title": "ISO/IEC 42001 Artificial Intelligence Management System",
+    "issuer": "ISO/IEC",
+    "category": "ai-management-system",
+    "aliases": [
+      "ISO/IEC 42001"
+    ],
+    "keywords": [
+      "iso 42001",
+      "iso/iec 42001"
+    ],
+    "controls": [
+      "3.8"
+    ],
+    "solutions": [
       "20-generative-ai-model-governance-monitor"
     ]
   },
@@ -551,8 +631,7 @@
       "01-copilot-readiness-scanner",
       "10-connector-plugin-governance",
       "11-risk-tiered-rollout",
-      "19-copilot-tuning-governance",
-      "20-generative-ai-model-governance-monitor"
+      "19-copilot-tuning-governance"
     ]
   },
   {

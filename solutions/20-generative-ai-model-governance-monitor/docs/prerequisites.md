@@ -19,7 +19,7 @@
 - PowerShell 7.2 or later
 - Pester 5.x for running the included smoke tests
 
-The repository scripts are documentation-first and do not require Microsoft Graph SDK, Azure PowerShell, or Azure CLI modules in v0.1.1.
+The repository scripts are documentation-first and do not require Microsoft Graph SDK, Azure PowerShell, or Azure CLI modules in v0.1.2.
 
 ## Operating Model Requirements
 

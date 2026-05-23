@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Review [docs/prerequisites.md](prerequisites.md) before deployment. The deployment script is documentation-first and does not require live Microsoft 365, Microsoft Foundry, Azure OpenAI, Microsoft Purview, or Azure AI Content Safety connectivity in v0.1.1.
+Review [docs/prerequisites.md](prerequisites.md) before deployment. The deployment script is documentation-first and does not require live Microsoft 365, Microsoft Foundry, Azure OpenAI, Microsoft Purview, or Azure AI Content Safety connectivity in v0.1.2.
 
 ## Step 1: Clone and Configure
 

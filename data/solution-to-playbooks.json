@@ -2463,9 +2463,12 @@
     "solution": "20-generative-ai-model-governance-monitor",
     "display_name": "Generative AI Model Governance Monitor",
     "framework_ids": [
+      "sr-26-2",
+      "occ-2026-13",
       "occ-2011-12",
       "sr-11-7",
-      "interagency-ai-guidance"
+      "nist-ai-rmf",
+      "iso-iec-42001"
     ],
     "controls": [
       {
