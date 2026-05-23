@@ -62,7 +62,7 @@ Documents Purview audit-log and version-history context for Pages and Notebooks.
 
 ### Evidence Packager
 
-Creates the four PNRT JSON artifacts and a SHA-256 file for each. Designed to plug into the shared `Export-SolutionEvidencePackage` function when tighter integration is wired.
+Creates the four PNRT JSON artifacts and a SHA-256 file for each, then assembles the shared package with `Export-SolutionEvidencePackage` for repository-wide evidence-schema alignment.
 
 ## Integration Points
 

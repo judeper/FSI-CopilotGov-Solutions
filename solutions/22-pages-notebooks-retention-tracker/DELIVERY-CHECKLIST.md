@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | Pages and Notebooks Retention Tracker |
 | Solution Code | PNRT |
-| Version | v0.1.1 |
+| Version | v0.1.2 |
 | Track | D |
 | Priority | P1 |
 | Primary Controls | 3.14, 3.2 |

@@ -31,7 +31,7 @@
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding()]
 param(
@@ -55,8 +55,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'PnrtConfig.psm1') -Force
-Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\IntegrationConfig.psm1') -Force
 
 function Write-PnrtArtifactFile {
     [CmdletBinding()]
@@ -68,15 +69,12 @@ function Write-PnrtArtifactFile {
     $directory = Split-Path -Path $Path -Parent
     $null = New-Item -ItemType Directory -Path $directory -Force
     $Content | ConvertTo-Json -Depth 10 | Set-Content -Path $Path -Encoding utf8
-
-    $hash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
-    $hashPath = "$Path.sha256"
-    "$hash  $(Split-Path -Leaf $Path)" | Set-Content -Path $hashPath -Encoding utf8
+    $hashInfo = Write-CopilotGovSha256File -Path $Path
 
     return [pscustomobject]@{
         Path = $Path
-        Hash = $hash
-        HashPath = $hashPath
+        Hash = $hashInfo.Hash
+        HashPath = $hashInfo.HashPath
     }
 }
 
@@ -125,6 +123,7 @@ $loopFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("loop-c
 Write-Verbose 'Building branching-event-log internal sample lineage artifact.'
 $branchingArtifact = [ordered]@{} + $baseEnvelope
 $branchingArtifact.internalSampleLineageMode = $configuration.branchingAuditMode
+$branchingArtifact.branchingAuditRequired = [bool]$configuration.branchingAuditRequired
 $branchingArtifact.documentedEvidence = @('Purview audit logs', 'Version history export in Purview or Graph API where documented')
 $branchingArtifact.records = @($snapshot.InternalSampleLineageEvents)
 $branchingFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("branching-event-log-{0}.json" -f $ConfigurationTier)) -Content $branchingArtifact
@@ -167,44 +166,37 @@ $artifacts = @(
 $recordCount = @($snapshot.Pages).Count + @($snapshot.Notebooks).Count + @($snapshot.LoopComponents).Count + @($snapshot.InternalSampleLineageEvents).Count
 $exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
 
-$summary = [pscustomobject]@{
+$summary = @{
     overallStatus = 'partial'
     recordCount = $recordCount
+    findingCount = 0
     coverageGapCount = [int]$snapshot.CoverageGapCount
     exceptionCount = $exceptionCount
 }
 
-$package = [ordered]@{
-    metadata = [ordered]@{
-        solution = $configuration.solution
-        solutionCode = $configuration.solutionCode
-        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
-        exportedAt = (Get-Date).ToString('o')
-        tier = $ConfigurationTier
+Write-Verbose 'Creating PNRT evidence package with shared exporter.'
+$package = Export-SolutionEvidencePackage `
+    -Solution $configuration.solution `
+    -SolutionCode $configuration.solutionCode `
+    -Tier $ConfigurationTier `
+    -OutputPath $resolvedOutputPath `
+    -Summary $summary `
+    -Controls $controls `
+    -Artifacts $artifacts `
+    -PackageFileName ("22-pages-notebooks-retention-tracker-evidence-{0}.json" -f $ConfigurationTier) `
+    -ExpectedArtifacts @($configuration.evidenceOutputs) `
+    -AdditionalMetadata @{
         runtimeMode = $snapshot.RuntimeMode
+        warning = $snapshot.StatusWarning
     }
-    summary = [ordered]@{
-        overallStatus = 'partial'
-        recordCount = $recordCount
-        findingCount = 0
-        exceptionCount = $exceptionCount
-        coverageGapCount = [int]$snapshot.CoverageGapCount
-    }
-    controls = $controls
-    artifacts = $artifacts
-}
-
-$packagePath = Join-Path $resolvedOutputPath ("22-pages-notebooks-retention-tracker-evidence-{0}.json" -f $ConfigurationTier)
-$package | ConvertTo-Json -Depth 10 | Set-Content -Path $packagePath -Encoding utf8
-$packageHash = (Get-FileHash -Path $packagePath -Algorithm SHA256).Hash.ToLowerInvariant()
-"$packageHash  $(Split-Path -Leaf $packagePath)" | Set-Content -Path "$packagePath.sha256" -Encoding utf8
 
 $result = [pscustomobject]@{
     Summary = $summary
     Controls = $controls
     Artifacts = $artifacts
     RuntimeMode = $snapshot.RuntimeMode
-    PackagePath = $packagePath
+    PackagePath = $package.Path
+    Package = $package
 }
 
 Write-Host (
@@ -212,7 +204,7 @@ Write-Host (
     $ConfigurationTier,
     $artifacts.Count,
     $recordCount,
-    $summary.coverageGapCount
+    $summary['coverageGapCount']
 )
 
 if ($PassThru) {

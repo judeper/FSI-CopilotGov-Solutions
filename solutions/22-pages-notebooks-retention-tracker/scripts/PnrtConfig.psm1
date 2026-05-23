@@ -55,6 +55,50 @@ function Get-PnrtConfiguration {
     }
 }
 
+function Test-PnrtPositiveIntegerField {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Configuration,
+
+        [Parameter(Mandatory)]
+        [string]$FieldName
+    )
+
+    $parsedValue = 0
+    if (-not [int]::TryParse([string]$Configuration[$FieldName], [ref]$parsedValue) -or $parsedValue -le 0) {
+        throw "PNRT configuration field [$FieldName] must be a positive integer greater than zero."
+    }
+}
+
+function Test-PnrtPercentageField {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Configuration,
+
+        [Parameter(Mandatory)]
+        [string]$SectionName,
+
+        [Parameter(Mandatory)]
+        [string]$FieldName
+    )
+
+    if (-not $Configuration.Contains($SectionName) -or $Configuration[$SectionName] -isnot [System.Collections.IDictionary]) {
+        throw "PNRT configuration section [$SectionName] must be present for percentage validation."
+    }
+
+    $section = $Configuration[$SectionName]
+    if (-not $section.Contains($FieldName) -or $null -eq $section[$FieldName]) {
+        throw "PNRT configuration field [$SectionName.$FieldName] must be present for percentage validation."
+    }
+
+    $parsedValue = 0
+    if (-not [int]::TryParse([string]$section[$FieldName], [ref]$parsedValue) -or $parsedValue -le 0 -or $parsedValue -gt 100) {
+        throw "PNRT configuration field [$SectionName.$FieldName] must be an integer percentage from 1 through 100."
+    }
+}
+
 function Test-PnrtConfiguration {
     [CmdletBinding()]
     param(
@@ -77,6 +121,7 @@ function Test-PnrtConfiguration {
         'pagesRetentionDays',
         'notebookRetentionDays',
         'branchingAuditMode',
+        'branchingAuditRequired',
         'retentionLabelCoverage',
         'powerAutomateFlow'
     )
@@ -103,6 +148,16 @@ function Test-PnrtConfiguration {
 
     if (-not $Configuration.defaults.Contains('monitoredArtifactTypes') -or @($Configuration.defaults.monitoredArtifactTypes).Count -lt 3) {
         throw 'PNRT configuration must define at least three monitored artifact types.'
+    }
+
+    foreach ($numericField in @('evidenceRetentionDays', 'pagesRetentionDays', 'notebookRetentionDays')) {
+        Test-PnrtPositiveIntegerField -Configuration $Configuration -FieldName $numericField
+    }
+
+    Test-PnrtPercentageField -Configuration $Configuration -SectionName 'retentionLabelCoverage' -FieldName 'minimumCoveragePct'
+
+    if ($Configuration['branchingAuditRequired'] -isnot [bool]) {
+        throw 'PNRT configuration field [branchingAuditRequired] must be a Boolean value.'
     }
 }
 

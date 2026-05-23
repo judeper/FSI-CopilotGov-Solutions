@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## v0.1.2 — 2026-05-23 — Council review remediation
+
+### Fixed
+- F-04: Added configuration range checks for evidence retention days, Pages retention days, Notebook retention days, and retention-label coverage percentages.
+- F-07: Added Pester smoke tests that execute deployment, monitoring, and evidence export scripts with a test output path and recompute SHA-256 companion hashes.
+- F-12: Replaced imprecise Graph module prerequisite wording with exact Microsoft Graph PowerShell submodule names.
+
+### Dead config
+- F-10: Wired `branchingAuditRequired` into configuration validation, deployment manifests, and internal sample lineage generation.
+
 ## [v0.1.1] - 2026-05-04
 
 ### Changed
