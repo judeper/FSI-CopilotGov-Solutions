@@ -1,6 +1,6 @@
 # Copilot Studio Agent Lifecycle Tracker
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** C
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft Copilot Studio or Power Platform services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 

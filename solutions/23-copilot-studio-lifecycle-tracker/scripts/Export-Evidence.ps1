@@ -30,7 +30,7 @@
 
 .NOTES
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding()]
 param(
@@ -55,7 +55,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 Import-Module (Join-Path $PSScriptRoot 'CsltConfig.psm1') -Force
-Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\IntegrationConfig.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot '..\..\..\scripts\common\EvidenceExport.psm1') -Force
 
 function Write-Sha256Companion {
     [CmdletBinding()]
@@ -179,35 +179,36 @@ $artifacts = @(
     [pscustomobject]@{ name = 'deprecation-evidence';      type = 'json'; path = $deprecFile.Path;    hash = $deprecFile.Hash }
 )
 
-$package = [pscustomobject]@{
-    metadata = [ordered]@{
-        solution = $configuration.solution
-        solutionCode = $configuration.solutionCode
-        exportVersion = (Get-CopilotGovEvidenceSchemaVersion)
-        version = $configuration.version
-        tier = $ConfigurationTier
-        exportedAt = $now.ToString('o')
-    }
-    summary = [ordered]@{
-        overallStatus = 'partial'
-        recordCount = ($inventory.records.Count + $approvals.records.Count + $versions.records.Count + $deprecations.records.Count)
-        findingCount = 0
-        exceptionCount = 0
-    }
-    controls = @(
-        [pscustomobject]@{ controlId = '4.14'; status = 'partial' },
-        [pscustomobject]@{ controlId = '4.13'; status = 'partial' },
-        [pscustomobject]@{ controlId = '1.10'; status = 'monitor-only' },
-        [pscustomobject]@{ controlId = '1.16'; status = 'monitor-only' },
-        [pscustomobject]@{ controlId = '4.5'; status = 'monitor-only' },
-        [pscustomobject]@{ controlId = '4.12'; status = 'monitor-only' }
-    )
-    artifacts = $artifacts
+$summary = @{
+    overallStatus = 'partial'
+    recordCount = ($inventory.records.Count + $approvals.records.Count + $versions.records.Count + $deprecations.records.Count)
+    findingCount = 0
+    exceptionCount = 0
 }
 
-$packagePath = Join-Path $resolvedOutputPath '23-copilot-studio-lifecycle-tracker-evidence.json'
-$package | ConvertTo-Json -Depth 10 | Set-Content -Path $packagePath -Encoding utf8
-$null = Write-Sha256Companion -Path $packagePath
+$controls = @(
+    [pscustomobject]@{ controlId = '4.14'; status = 'partial' },
+    [pscustomobject]@{ controlId = '4.13'; status = 'partial' },
+    [pscustomobject]@{ controlId = '1.10'; status = 'monitor-only' },
+    [pscustomobject]@{ controlId = '1.16'; status = 'monitor-only' },
+    [pscustomobject]@{ controlId = '4.5'; status = 'monitor-only' },
+    [pscustomobject]@{ controlId = '4.12'; status = 'monitor-only' }
+)
+
+$packageFileName = '23-copilot-studio-lifecycle-tracker-evidence.json'
+$packageInfo = Export-SolutionEvidencePackage `
+    -Solution $configuration.solution `
+    -SolutionCode $configuration.solutionCode `
+    -Tier $ConfigurationTier `
+    -OutputPath $resolvedOutputPath `
+    -Summary $summary `
+    -Controls $controls `
+    -Artifacts $artifacts `
+    -PackageFileName $packageFileName `
+    -ExpectedArtifacts @($configuration.evidenceOutputs) `
+    -AdditionalMetadata @{ version = $configuration.version }
+
+$package = Get-Content -Path $packageInfo.Path -Raw -Encoding utf8 | ConvertFrom-Json -Depth 20
 
 Write-Host (
     "CSLT evidence export [{0}]: {1} artifacts written to {2}." -f

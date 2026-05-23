@@ -64,7 +64,7 @@ Captures deprecation notices and final disposition records for retired agents.
 
 ## Package Contract
 
-CSLT exports evidence as JSON plus SHA-256 companion files. The four artifacts are created first, and then `scripts/Export-Evidence.ps1` calls the shared `Export-SolutionEvidencePackage` function to create the final package aligned to `data/evidence-schema.json`.
+CSLT exports evidence as JSON plus SHA-256 companion files. The four artifacts are created first, and then `scripts/Export-Evidence.ps1` passes the artifact manifest to the shared `Export-SolutionEvidencePackage` function, which writes and validates the final package against `data/evidence-schema.json`.
 
 The package contract contains:
 
