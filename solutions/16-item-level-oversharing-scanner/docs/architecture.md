@@ -78,21 +78,21 @@ Solution 16 provides a documentation-first pattern for detecting item-level over
 2. The deployment process checks that solution 02-oversharing-risk-assessment has exported site-level findings that can guide item-level scanning scope.
 3. `Get-ItemLevelPermissions.ps1` connects to SharePoint via PnP PowerShell and enumerates all document libraries in each target site. For each item (file or folder), it retrieves permission entries and flags those that indicate oversharing.
 4. The scan produces a flat CSV with one row per overshared item, including the site URL, library name, item path, share type, sensitivity label, and last modified date.
-5. `Export-OversharedItems.ps1` reads the scan CSV and applies risk scoring based on sharing type and sensitivity label. Content-type weights from `config/risk-thresholds.json` are applied to produce a final weighted score.
-6. Items are classified as HIGH (anyone links, external users with sensitive labels), MEDIUM (org-wide edit links, external users without sensitive labels), or LOW (broad group access without sensitive labels).
+5. `Export-OversharedItems.ps1` reads the scan CSV, calculates a base score by sharing type, applies content-type weights from `config/risk-thresholds.json`, and maps the weighted score to the configured thresholds in `config/default-config.json`.
+6. Items are classified as HIGH, MEDIUM, or LOW from the weighted score, with sensitive-label floors for higher-risk sharing patterns such as external users and broad groups.
 7. `Invoke-BulkRemediation.ps1` reads the scored report and applies remediation actions. HIGH items always require approval. MEDIUM and LOW items follow the policy defined in `config/remediation-policy.json`.
 8. `Export-Evidence.ps1` packages scan results, scored reports, and remediation actions into schema-aligned JSON plus SHA-256 checksum files.
 
 ## Risk Classification Engine
 
-The classification engine assigns a base risk score based on sharing type, then applies content-type weighting multipliers.
+The classification engine assigns a base risk score based on sharing type, applies content-type weighting multipliers, then maps the weighted score to `riskThresholds` from `config/default-config.json` (HIGH >= 70, MEDIUM >= 40 by default). Sensitive-label rules keep anonymous links and external sensitive sharing at HIGH and raise broad-group sensitive sharing to at least MEDIUM.
 
 | Share Type | Base Score | Risk Interpretation |
 |------------|-----------|---------------------|
-| AnyoneLink | 90 | Always HIGH — anonymous access to any content is the highest risk |
-| ExternalUser | 70 | HIGH when combined with sensitive label; MEDIUM otherwise |
-| OrgLinkEdit | 50 | MEDIUM — organization-wide edit access exceeds least-privilege |
-| BroadGroup | 30 | LOW — broad internal groups such as "Everyone" or "All Company" |
+| AnyoneLink | 90 | HIGH floor — anonymous access remains the highest-risk sharing pattern |
+| ExternalUser | 70 | HIGH at default thresholds; sensitive labels keep the tier HIGH |
+| OrgLinkEdit | 50 | MEDIUM before content weighting; can elevate to HIGH when weighted score crosses the configured threshold |
+| BroadGroup | 30 | LOW for broad internal groups without sensitive labels; MEDIUM floor when a sensitive label is present |
 
 Content-type weighting multipliers:
 

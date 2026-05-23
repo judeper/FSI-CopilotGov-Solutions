@@ -144,6 +144,20 @@ function Get-Configuration {
 }
 
 $configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
+$scanWorkloads = @($configuration.scanWorkloads)
+if ($scanWorkloads.Count -eq 0) {
+    $scanWorkloads = @('sharePoint')
+}
+
+$unsupportedWorkloads = @($scanWorkloads | Where-Object { $_ -ne 'sharePoint' })
+foreach ($workload in $unsupportedWorkloads) {
+    Write-Warning "Workload '$workload' is roadmap-only in this documentation-first scaffold; current scripts enumerate SharePoint site URLs only."
+}
+
+if ($scanWorkloads -notcontains 'sharePoint') {
+    Write-Warning 'No SharePoint workload is configured for this monitoring run. Returning empty results.'
+    return @()
+}
 
 if (-not $SiteUrls) {
     $SiteUrls = @(
@@ -152,6 +166,14 @@ if (-not $SiteUrls) {
         "https://contoso.sharepoint.com/sites/compliance"
     )
 }
+
+$maxSitesPerRun = [int]$configuration.maxSitesPerRun
+if ($maxSitesPerRun -gt 0 -and @($SiteUrls).Count -gt $maxSitesPerRun) {
+    Write-Warning "Limiting SharePoint scan from $(@($SiteUrls).Count) sites to maxSitesPerRun=$maxSitesPerRun."
+    $SiteUrls = @($SiteUrls | Select-Object -First $maxSitesPerRun)
+}
+
+$maxItemsPerLibrary = [int]$configuration.maxItemsPerLibrary
 
 $scanOutputPath = if ($ExportPath) {
     Join-Path ([System.IO.Path]::GetFullPath($ExportPath)) 'scan'
@@ -173,7 +195,7 @@ $scoreScript = Join-Path $PSScriptRoot 'Export-OversharedItems.ps1'
 Write-Verbose "Starting item-level scan for $($SiteUrls.Count) sites"
 
 try {
-    $scanResult = & $scanScript -SiteUrls $SiteUrls -TenantUrl $TenantUrl -OutputPath $scanOutputPath
+    $scanResult = & $scanScript -SiteUrls $SiteUrls -TenantUrl $TenantUrl -OutputPath $scanOutputPath -MaxItemsPerLibrary $maxItemsPerLibrary
     Write-Verbose "Scan complete: $($scanResult.ItemsFound) items found"
 }
 catch {

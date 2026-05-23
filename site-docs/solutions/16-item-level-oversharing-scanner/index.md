@@ -1,6 +1,6 @@
 # Item-Level Oversharing Scanner
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -18,7 +18,7 @@ The solution implements a 3-script pipeline:
 
 3. **Remediate** (`Invoke-BulkRemediation.ps1`) — Processes the scored report and documents remediation actions such as removing sharing links, removing external user permissions, or downgrading organization links from Edit to View. HIGH-risk items always require approval before action. MEDIUM and LOW items follow the policy defined in `config/remediation-policy.json`, which defaults to approval-gate mode.
 
-Risk thresholds are configurable through `config/risk-thresholds.json`, which defines base risk scores for each sharing type and content-type weighting multipliers for FSI-sensitive categories such as customer PII, trading data, legal documents, and regulatory filings.
+Risk thresholds are configurable through `config/default-config.json`, while `config/risk-thresholds.json` defines base risk scores for each sharing type and content-type weighting multipliers for FSI-sensitive categories such as customer PII, trading data, legal documents, and regulatory filings.
 
 By default, all remediation tiers use approval-gate mode. Auto-remediation is intentionally disabled because FSI content typically requires legal, compliance, and records-management review before permissions are changed.
 
@@ -91,7 +91,6 @@ Solution 16 depends on the site-level oversharing assessment from solution 02 to
 
 > **Coverage state** (per [Control Coverage Honesty](../../reference/control-coverage-honesty.md)):
 > 5 control(s) are **evidence-export-ready** in scaffold form: 1.2, 1.3, 1.4, 1.6, 2.5.
-> 1 control(s) is/are **documentation-only** (listed in metadata but not yet exercised by scripts/tests in this scaffold): 1.14.
 
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|

@@ -3,10 +3,10 @@
 Exports evidence for the Item-Level Oversharing Scanner solution.
 
 .DESCRIPTION
-Runs the monitoring workflow, builds the item-oversharing-findings,
-risk-scored-report, and remediation-actions artifacts, packages them into
-the shared evidence schema format, and writes SHA-256 checksum files for
-each JSON output.
+Packages existing item-oversharing-findings, risk-scored-report, and
+remediation-actions artifacts into the shared evidence schema format, and
+writes SHA-256 checksum files for each JSON output. Use RunFreshMonitor to
+explicitly generate a run-specific monitoring artifact set before packaging.
 
 .PARAMETER ConfigurationTier
 Selects the governance tier to apply. Supported values are baseline,
@@ -23,6 +23,24 @@ Start date of the reporting period.
 
 .PARAMETER PeriodEnd
 End date of the reporting period.
+
+.PARAMETER ScanFindingsPath
+Path to an existing item-permissions.csv artifact to package. Defaults to the
+standard scan artifact path and falls back to the committed monitor sample when
+that file exists.
+
+.PARAMETER ScoredReportPath
+Path to an existing risk-scored-report.csv artifact to package. Defaults to the
+standard scored artifact path and falls back to the committed monitor sample
+when that file exists.
+
+.PARAMETER RemediationLogPath
+Path to an existing remediation-log.json artifact to package when available.
+When absent, remediation action evidence is derived from the scored report.
+
+.PARAMETER RunFreshMonitor
+Explicitly runs Monitor-Compliance.ps1 into a run-specific output directory
+under OutputPath before packaging evidence.
 
 .EXAMPLE
 .\Export-Evidence.ps1 -ConfigurationTier recommended -TenantId 00000000-0000-0000-0000-000000000000 -OutputPath .\artifacts\evidence
@@ -47,7 +65,19 @@ param(
     [datetime]$PeriodStart = ((Get-Date).Date.AddDays(-7)),
 
     [Parameter()]
-    [datetime]$PeriodEnd = (Get-Date).Date
+    [datetime]$PeriodEnd = (Get-Date).Date,
+
+    [Parameter()]
+    [string]$ScanFindingsPath = (Join-Path $PSScriptRoot '..\artifacts\scan\item-permissions.csv'),
+
+    [Parameter()]
+    [string]$ScoredReportPath = (Join-Path $PSScriptRoot '..\artifacts\scored\risk-scored-report.csv'),
+
+    [Parameter()]
+    [string]$RemediationLogPath = (Join-Path $PSScriptRoot '..\artifacts\remediation\remediation-log.json'),
+
+    [Parameter()]
+    [switch]$RunFreshMonitor
 )
 
 Set-StrictMode -Version Latest
@@ -183,18 +213,55 @@ if ($PeriodStart -gt $PeriodEnd) {
 }
 
 $configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
-$monitorScriptPath = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
-
-$monitorParameters = @{
-    ConfigurationTier = $ConfigurationTier
-    TenantId = $TenantId
-}
-
-$scoredItems = @(& $monitorScriptPath @monitorParameters)
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -Path $outputRoot -ItemType Directory -Force
 
-$itemFindings = foreach ($item in $scoredItems) {
+if ($RunFreshMonitor) {
+    $monitorScriptPath = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
+    $monitorOutputPath = Join-Path $outputRoot ('monitor-run-{0}' -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $monitorParameters = @{
+        ConfigurationTier = $ConfigurationTier
+        TenantId = $TenantId
+        ExportPath = $monitorOutputPath
+    }
+
+    $null = & $monitorScriptPath @monitorParameters
+    $ScanFindingsPath = Join-Path $monitorOutputPath 'scan\item-permissions.csv'
+    $ScoredReportPath = Join-Path $monitorOutputPath 'scored\risk-scored-report.csv'
+    if (-not $PSBoundParameters.ContainsKey('RemediationLogPath')) {
+        $RemediationLogPath = Join-Path $monitorOutputPath 'remediation\remediation-log.json'
+    }
+}
+else {
+    if (-not (Test-Path -Path $ScoredReportPath) -and -not $PSBoundParameters.ContainsKey('ScoredReportPath')) {
+        $monitorScoredReportPath = Join-Path $PSScriptRoot '..\artifacts\monitor\scored\risk-scored-report.csv'
+        if (Test-Path -Path $monitorScoredReportPath) {
+            $ScoredReportPath = $monitorScoredReportPath
+        }
+    }
+
+    if (-not (Test-Path -Path $ScanFindingsPath) -and -not $PSBoundParameters.ContainsKey('ScanFindingsPath')) {
+        $monitorScanFindingsPath = Join-Path $PSScriptRoot '..\artifacts\monitor\scan\item-permissions.csv'
+        if (Test-Path -Path $monitorScanFindingsPath) {
+            $ScanFindingsPath = $monitorScanFindingsPath
+        }
+    }
+}
+
+if (-not (Test-Path -Path $ScoredReportPath)) {
+    throw "Scored report not found at $ScoredReportPath. Run the scan/score pipeline first or pass -RunFreshMonitor."
+}
+
+$scoredItems = @(Import-Csv -Path $ScoredReportPath -Encoding UTF8)
+$scanFindings = if (Test-Path -Path $ScanFindingsPath) {
+    @(Import-Csv -Path $ScanFindingsPath -Encoding UTF8)
+}
+else {
+    Write-Warning "Scan findings not found at $ScanFindingsPath. Packaging scored items as item findings."
+    @($scoredItems)
+}
+
+$itemFindings = foreach ($item in $scanFindings) {
     [pscustomobject]@{
         siteUrl = $item.SiteUrl
         libraryName = $item.LibraryName
@@ -223,31 +290,55 @@ $riskReport = foreach ($item in $scoredItems) {
     }
 }
 
-$actionIndex = 1
-$remediationActions = foreach ($item in ($scoredItems | Sort-Object -Property @{ Expression = 'WeightedScore'; Descending = $true })) {
-    $action = switch ($item.ShareType) {
-        'AnyoneLink' { 'Remove anonymous sharing link' }
-        'ExternalUser' { 'Remove external user permission' }
-        'OrgLink' { 'Downgrade organization link from Edit to View' }
-        'BroadGroup' { 'Remove broad group permission' }
-        default { 'Review manually' }
-    }
+$existingRemediationActions = @()
+if (Test-Path -Path $RemediationLogPath) {
+    $existingRemediationActions = @((Get-Content -Path $RemediationLogPath -Raw) | ConvertFrom-Json)
+}
 
-    [pscustomobject]@{
-        actionId = ('IOS-{0:D4}' -f $actionIndex)
-        siteUrl = $item.SiteUrl
-        itemPath = $item.ItemPath
-        shareType = $item.ShareType
-        riskTier = $item.RiskTier
-        action = $action
-        status = 'pending-approval'
-        approvalRequired = $true
-        approvedBy = $null
-        executedAt = $null
-        notes = 'Evidence export record. Remediation requires approval.'
+if (@($existingRemediationActions).Count -gt 0) {
+    $remediationActions = foreach ($actionRecord in $existingRemediationActions) {
+        [pscustomobject]@{
+            actionId = $actionRecord.actionId
+            siteUrl = $actionRecord.siteUrl
+            itemPath = $actionRecord.itemPath
+            shareType = $actionRecord.shareType
+            riskTier = $actionRecord.riskTier
+            action = $actionRecord.action
+            status = $actionRecord.status
+            approvalRequired = [bool]$actionRecord.approvalRequired
+            approvedBy = $actionRecord.approvedBy
+            executedAt = $actionRecord.executedAt
+            notes = $actionRecord.notes
+        }
     }
+}
+else {
+    $actionIndex = 1
+    $remediationActions = foreach ($item in ($scoredItems | Sort-Object -Property @{ Expression = { [double]$_.WeightedScore }; Descending = $true })) {
+        $action = switch ($item.ShareType) {
+            'AnyoneLink' { 'Remove anonymous sharing link' }
+            'ExternalUser' { 'Remove external user permission' }
+            'OrgLink' { 'Downgrade organization link from Edit to View' }
+            'BroadGroup' { 'Remove broad group permission' }
+            default { 'Review manually' }
+        }
 
-    $actionIndex++
+        [pscustomobject]@{
+            actionId = ('IOS-{0:D4}' -f $actionIndex)
+            siteUrl = $item.SiteUrl
+            itemPath = $item.ItemPath
+            shareType = $item.ShareType
+            riskTier = $item.RiskTier
+            action = $action
+            status = 'pending-approval'
+            approvalRequired = $true
+            approvedBy = $null
+            executedAt = $null
+            notes = 'Evidence export record. Remediation requires approval.'
+        }
+
+        $actionIndex++
+    }
 }
 
 $artifacts = @()
