@@ -49,7 +49,7 @@
       ],
       "approvalMode": "rollout-board",
       "gateCriteria": [
-        "trainingCompletion",
+        "analyticsFeedConfigured",
         "backlogWithinThreshold",
         "dashboardHealthy"
       ]
@@ -92,7 +92,8 @@
     "vivaInsightsEnabled": true
   },
   "resilience": {
-    "doraGateRequired": true
+    "doraGateRequired": true,
+    "doraReviewCompleted": false
   },
   "gateThresholds": {
     "minimumPilotReadinessPercent": 96,

@@ -206,6 +206,13 @@ function Invoke-WaveReadinessCheck {
     )
 
     $eligibleUsers = @($CandidateUsers | Where-Object { $WaveDefinition.includedRiskTiers -contains $_.RiskTier })
+    $manualReviewRequiredTiers = @($Configuration.manualReviewRequiredTiers)
+    $manualReviewUsers = @(
+        $CandidateUsers | Where-Object {
+            ($manualReviewRequiredTiers -contains $_.RiskTier) -and
+            ($WaveDefinition.includedRiskTiers -notcontains $_.RiskTier)
+        }
+    )
     $assessments = @()
 
     foreach ($user in $eligibleUsers) {
@@ -271,6 +278,7 @@ function Invoke-WaveReadinessCheck {
         CohortUsers = $cohortUsers
         QueuedUsers = $queuedUsers
         BlockedUsers = $blockedUsers
+        ManualReviewUsers = $manualReviewUsers
     }
 }
 
@@ -324,6 +332,7 @@ function New-WaveManifest {
             name = $WaveDefinition.name
             maxUsers = [int]$WaveDefinition.maxUsers
             includedRiskTiers = @($WaveDefinition.includedRiskTiers)
+            manualReviewRequiredTiers = @($Configuration.manualReviewRequiredTiers)
             gateCriteria = @($WaveDefinition.gateCriteria)
             approvalMode = $WaveDefinition.approvalMode
         }
@@ -331,6 +340,7 @@ function New-WaveManifest {
             eligibleUserCount = $ReadinessResult.EligibleUserCount
             readyUserCount = $ReadinessResult.ReadyUserCount
             blockedUserCount = $ReadinessResult.BlockedUserCount
+            manualReviewUserCount = @($ReadinessResult.ManualReviewUsers).Count
             readinessPercent = $ReadinessResult.ReadinessPercent
             gateReady = $ReadinessResult.GateReady
         }
@@ -353,6 +363,16 @@ function New-WaveManifest {
                     riskTier = $_.RiskTier
                     blockers = @($_.Blockers)
                     readinessScore = $_.ReadinessScore
+                }
+            }
+        )
+        manualReviewUsers = @(
+            $ReadinessResult.ManualReviewUsers | ForEach-Object {
+                [pscustomobject]@{
+                    userPrincipalName = $_.UserPrincipalName
+                    riskTier = $_.RiskTier
+                    department = $_.Department
+                    reviewReason = 'Risk tier requires manual review before inclusion in this governance tier.'
                 }
             }
         )

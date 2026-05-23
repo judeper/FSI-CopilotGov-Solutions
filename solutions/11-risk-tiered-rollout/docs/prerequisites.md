@@ -30,6 +30,12 @@ The rollout automation design assumes the following least-privileged Microsoft G
 - Power BI workspace access for the rollout-health dashboard model
 - Power Platform environment access for deploying documentation-first flows and tables
 
+## Local Script Module Dependencies
+
+- `scripts\common\IntegrationConfig.psm1` from the repository shared module folder
+- `scripts\common\EvidenceExport.psm1` from the repository shared module folder
+- `solutions\11-risk-tiered-rollout\scripts\RolloutConfig.psm1` for local tier-configuration loading
+
 ## Governance and Operating Model Requirements
 
 - Change Advisory Board process for gate approvals, especially for regulated Wave 3 activity

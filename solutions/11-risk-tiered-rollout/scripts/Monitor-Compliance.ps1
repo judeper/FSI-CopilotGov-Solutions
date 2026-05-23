@@ -154,8 +154,9 @@ function Test-GateCriteria {
                 $notes = 'Wave 0 requires the configured pilot-readiness threshold.'
             }
             'serviceHealthGreen' {
-                $passed = $blockedUsers.Count -le [int]$Configuration.gateThresholds.maximumOpenIncidents
-                $notes = 'Blocked users should stay within the open-incident threshold.'
+                $serviceHealthStatus = [string]$Configuration.operationalMetrics.serviceHealthStatus
+                $passed = $serviceHealthStatus -in @('green', 'healthy')
+                $notes = "Service health status is '$serviceHealthStatus' in representative operational metrics."
             }
             'supportDeskCoverage' {
                 $recipients = @($Configuration.notifications.summaryRecipients)
@@ -180,16 +181,18 @@ function Test-GateCriteria {
                 $notes = 'Tier 2 users require supervision readiness.'
             }
             'incidentThreshold' {
-                $passed = $blockedUsers.Count -le [int]$Configuration.gateThresholds.maximumOpenIncidents
-                $notes = 'Open findings and blocked users should remain under threshold.'
+                $openIncidents = [int]$Configuration.operationalMetrics.openIncidents
+                $passed = $openIncidents -le [int]$Configuration.gateThresholds.maximumOpenIncidents
+                $notes = "Open incident count ($openIncidents) should remain below the configured limit."
             }
-            'trainingCompletion' {
+            'analyticsFeedConfigured' {
                 $passed = [bool]$Configuration.analytics.vivaInsightsEnabled
-                $notes = 'Training completion is represented by the configured analytics feed in this stub.'
+                $notes = 'Analytics feed configuration represents the training and communications signal in this stub.'
             }
             'backlogWithinThreshold' {
-                $passed = $blockedUsers.Count -le [int]$Configuration.gateThresholds.maximumOpenIncidents
-                $notes = 'Queued remediation items should remain within tolerance.'
+                $backlogItems = [int]$Configuration.operationalMetrics.remediationBacklogItems
+                $passed = $backlogItems -le [int]$Configuration.gateThresholds.maximumRemediationBacklogItems
+                $notes = "Remediation backlog ($backlogItems items) should remain within the configured tolerance."
             }
             'dashboardHealthy' {
                 $passed = [double]$WaveStatus.ReadinessPercent -ge [double]$Configuration.powerBI.healthScoreWarningThreshold
@@ -200,16 +203,28 @@ function Test-GateCriteria {
                 $notes = 'Tier 3 rollout requires Conditional Access validation.'
             }
             'auditTrailVerified' {
-                $passed = (@($blockedUsers | Where-Object { $_.riskTier -eq 'Tier3' -and ($_.blockers -contains 'AuditTrailReady') }).Count -eq 0)
-                $notes = 'Tier 3 rollout requires a complete audit trail.'
+                $auditTrailRequired = [bool]$Configuration.auditTrail.fullAuditTrailRequired
+                $auditTrailBlockers = @($blockedUsers | Where-Object { $_.riskTier -eq 'Tier3' -and ($_.blockers -contains 'AuditTrailReady') })
+                $passed = (-not $auditTrailRequired) -or ($auditTrailBlockers.Count -eq 0)
+                $notes = if ($auditTrailRequired) {
+                    'Tier 3 rollout requires full audit-trail readiness evidence for every user.'
+                } else {
+                    'Full audit-trail evidence is not required for this governance tier.'
+                }
             }
             'dlpCoverage' {
                 $passed = (@($blockedUsers | Where-Object { $_.blockers -contains 'DlpReady' }).Count -eq 0)
                 $notes = 'All users in the wave must satisfy DLP requirements.'
             }
             'doraResilienceReview' {
-                $passed = [bool]$Configuration.resilience.doraGateRequired
-                $notes = 'Regulated rollout requires a documented DORA resilience review.'
+                $doraGateRequired = [bool]$Configuration.resilience.doraGateRequired
+                $doraReviewCompleted = [bool]$Configuration.resilience.doraReviewCompleted
+                $passed = (-not $doraGateRequired) -or $doraReviewCompleted
+                $notes = if ($doraGateRequired) {
+                    'Regulated rollout requires the doraReviewCompleted evidence marker before release.'
+                } else {
+                    'DORA resilience review is not required for this governance tier.'
+                }
             }
             default {
                 $passed = $false

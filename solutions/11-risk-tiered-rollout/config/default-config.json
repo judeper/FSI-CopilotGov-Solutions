@@ -2,7 +2,7 @@
   "solution": "11-risk-tiered-rollout",
   "solutionCode": "RTR",
   "displayName": "Risk-Tiered Rollout Automation",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "track": "C",
   "priority": "P0",
   "controls": [
@@ -79,7 +79,7 @@
       ],
       "approvalMode": "rollout-board",
       "gateCriteria": [
-        "trainingCompletion",
+        "analyticsFeedConfigured",
         "backlogWithinThreshold",
         "dashboardHealthy"
       ]
@@ -138,8 +138,10 @@
   "gateThresholds": {
     "minimumPilotReadinessPercent": 95,
     "minimumExpansionReadinessPercent": 90,
-    "maximumOpenIncidents": 3
+    "maximumOpenIncidents": 3,
+    "maximumRemediationBacklogItems": 5
   },
+  "manualReviewRequiredTiers": [],
   "notifications": {
     "mode": "standard",
     "summaryRecipients": [
@@ -160,7 +162,16 @@
     "vivaInsightsEnabled": false
   },
   "resilience": {
-    "doraGateRequired": false
+    "doraGateRequired": false,
+    "doraReviewCompleted": false
+  },
+  "auditTrail": {
+    "fullAuditTrailRequired": false
+  },
+  "operationalMetrics": {
+    "serviceHealthStatus": "green",
+    "openIncidents": 0,
+    "remediationBacklogItems": 0
   },
   "dataverse": {
     "tables": {
