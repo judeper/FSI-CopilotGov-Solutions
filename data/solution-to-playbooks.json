@@ -1256,6 +1256,32 @@
         ]
       },
       {
+        "control_id": "2.16",
+        "title": "Federated Copilot Connector and Model Context Protocol (MCP) Governance",
+        "playbooks": [
+          {
+            "type": "portal-walkthrough",
+            "title": "Portal Walkthrough",
+            "path": "docs/playbooks/control-implementations/2.16/portal-walkthrough.md"
+          },
+          {
+            "type": "powershell-setup",
+            "title": "PowerShell Setup",
+            "path": "docs/playbooks/control-implementations/2.16/powershell-setup.md"
+          },
+          {
+            "type": "verification-testing",
+            "title": "Verification and Testing",
+            "path": "docs/playbooks/control-implementations/2.16/verification-testing.md"
+          },
+          {
+            "type": "troubleshooting",
+            "title": "Troubleshooting",
+            "path": "docs/playbooks/control-implementations/2.16/troubleshooting.md"
+          }
+        ]
+      },
+      {
         "control_id": "4.13",
         "title": "Copilot Extensibility Governance (Plugin Lifecycle, Connector Monitoring)",
         "playbooks": [

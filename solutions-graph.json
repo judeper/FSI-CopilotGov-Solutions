@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-05-23T04:12:40Z",
+  "generatedAt": "2026-05-23T06:53:33Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -216,12 +216,13 @@
       "id": "10-connector-plugin-governance",
       "name": "Copilot Connector and Plugin Governance",
       "tier": 3,
-      "version": "0.1.1",
+      "version": "0.2.1",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.13",
         "2.13",
         "2.14",
+        "2.16",
         "4.13"
       ],
       "docFileCount": 8,

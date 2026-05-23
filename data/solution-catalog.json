@@ -618,7 +618,7 @@
     "domain": "operations-analytics",
     "priority": "P1",
     "phase": 3,
-    "version": "v0.1.1",
+    "version": "v0.2.1",
     "solution_type": [
       "PowerShell",
       "Power Automate",
@@ -628,6 +628,7 @@
       "1.13",
       "2.13",
       "2.14",
+      "2.16",
       "4.13"
     ],
     "supporting_controls": [],
@@ -658,9 +659,10 @@
       "1.13",
       "2.13",
       "2.14",
+      "2.16",
       "4.13"
     ],
-    "control_count": 4,
+    "control_count": 5,
     "code": "CPG",
     "documentation_pages": [
       "architecture.md",

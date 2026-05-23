@@ -233,7 +233,7 @@
       "slug": "10-connector-plugin-governance",
       "tier": 3,
       "name": "Copilot Connector and Plugin Governance",
-      "version": "0.1.1",
+      "version": "0.2.1",
       "domain": "operations-analytics",
       "summary": "Documents connector and plugin inventory patterns, approval routing, and data-flow decision records for extensibility governance scenarios.",
       "repoPath": "solutions/10-connector-plugin-governance",
