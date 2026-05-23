@@ -197,7 +197,13 @@ function Test-ApprovalSLA {
 
 try {
     $config = Get-ConnectorGovernanceConfiguration -SolutionRoot $solutionRoot -Tier $ConfigurationTier
-    $baselineApprovedConnectorIds = @($config.Baseline.approvalModel.autoApprovedConnectorIds)
+    $autoApprovedConnectorIds = @()
+    if ($config.Tier.approvalModel.PSObject.Properties.Name -contains 'autoApprovedConnectorIds') {
+        $autoApprovedConnectorIds = @($config.Tier.approvalModel.autoApprovedConnectorIds)
+    }
+    if ($autoApprovedConnectorIds.Count -eq 0) {
+        $autoApprovedConnectorIds = @($config.Baseline.approvalModel.autoApprovedConnectorIds)
+    }
 
     $inventoryPath = Join-Path $OutputPath 'cpg-connector-inventory.json'
     $approvalRegisterPath = Join-Path $OutputPath 'cpg-approval-register.json'
@@ -216,8 +222,28 @@ try {
                 approvalStatus = if ($ConfigurationTier -eq 'regulated') { 'pending-regulated-review' } else { 'approved' }
             }
             [pscustomobject]@{
+                connectorId = 'shared_teams'
+                displayName = 'Microsoft Teams'
+                publisherType = 'microsoft'
+                certification = 'Microsoft'
+                allowsExternalEgress = $false
+                supportsFinancialData = $false
+                dataFlowBoundaries = @('internal-m365')
+                approvalStatus = if ($ConfigurationTier -eq 'regulated') { 'pending-regulated-review' } else { 'approved' }
+            }
+            [pscustomobject]@{
                 connectorId = 'shared_salesforce'
                 displayName = 'Salesforce'
+                publisherType = 'third-party'
+                certification = 'Certified'
+                allowsExternalEgress = $true
+                supportsFinancialData = $false
+                dataFlowBoundaries = @('certified-third-party')
+                approvalStatus = 'pending-security-review'
+            }
+            [pscustomobject]@{
+                connectorId = 'shared_servicenow'
+                displayName = 'ServiceNow'
                 publisherType = 'third-party'
                 certification = 'Certified'
                 allowsExternalEgress = $true
@@ -273,7 +299,7 @@ try {
 
     $unapprovedConnectors = Get-UnapprovedConnectors `
         -CurrentInventory $currentInventory `
-        -ApprovedBaselineConnectorIds $baselineApprovedConnectorIds `
+        -ApprovedBaselineConnectorIds $autoApprovedConnectorIds `
         -ConfigurationTier $ConfigurationTier `
         -DefaultConfig $config.Default
 

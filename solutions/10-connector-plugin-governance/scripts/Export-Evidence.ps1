@@ -112,6 +112,7 @@ $config = Get-CpgConfiguration -Tier $ConfigurationTier
 $resolvedOutputPath = [IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
 $exportedAt = (Get-Date).ToString('o')
+$evidenceRetentionDays = [int]$config.evidenceRetentionDays
 
 $connectorInventory = @(
     [pscustomobject]@{
@@ -120,6 +121,20 @@ $connectorInventory = @(
         publisher = 'Microsoft'
         riskLevel = 'low'
         approvalStatus = if (@($config.approvalModel.autoApprovedConnectorIds) -contains 'shared_sharepointonline') { 'approved' } else { 'pending-security-review' }
+        dataFlowBoundaries = @('internal-m365')
+        assetType = 'connector'
+        publisherType = 'microsoft'
+        certification = 'built-in'
+        lastSeen = $exportedAt
+        classificationReason = 'Microsoft-built connector with no external data egress.'
+        requiresDataFlowAttestation = $false
+    }
+    [pscustomobject]@{
+        connectorId = 'shared_teams'
+        displayName = 'Microsoft Teams'
+        publisher = 'Microsoft'
+        riskLevel = 'low'
+        approvalStatus = if (@($config.approvalModel.autoApprovedConnectorIds) -contains 'shared_teams') { 'approved' } else { 'pending-security-review' }
         dataFlowBoundaries = @('internal-m365')
         assetType = 'connector'
         publisherType = 'microsoft'
@@ -140,6 +155,20 @@ $connectorInventory = @(
         certification = 'certified'
         lastSeen = $exportedAt
         classificationReason = 'Certified third-party connector with controlled external egress.'
+        requiresDataFlowAttestation = [bool]$config.dataFlowPolicy.requireAttestationForExternalEgress
+    }
+    [pscustomobject]@{
+        connectorId = 'shared_servicenow'
+        displayName = 'ServiceNow'
+        publisher = 'ServiceNow'
+        riskLevel = 'medium'
+        approvalStatus = 'pending-security-review'
+        dataFlowBoundaries = @('certified-third-party')
+        assetType = 'plugin'
+        publisherType = 'certified-third-party'
+        certification = 'certified'
+        lastSeen = $exportedAt
+        classificationReason = 'Certified third-party plugin with controlled external egress.'
         requiresDataFlowAttestation = [bool]$config.dataFlowPolicy.requireAttestationForExternalEgress
     }
     [pscustomobject]@{
@@ -212,7 +241,7 @@ $dataFlowAttestations = @(
             reviewedBy = if ($connector.riskLevel -eq 'high') { 'ThirdPartyRiskManagement' } else { 'Security Architecture' }
             attestedOn = $exportedAt
             expirationDate = if ($config.dataFlowPolicy.ContainsKey('requireAnnualReattestation') -and $config.dataFlowPolicy.requireAnnualReattestation) {
-                (Get-Date).AddDays(365).ToString('yyyy-MM-dd')
+                (Get-Date).AddDays($evidenceRetentionDays).ToString('o')
             }
             else {
                 $null

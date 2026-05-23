@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.2.1] — 2026-05-23 — Council review remediation
+
+### VERIFIED-BUG
+
+- Broadened Dataverse URL validation to accept sovereign cloud Dataverse hosts and environment paths.
+- Standardized data-flow attestation expiration timestamps on ISO 8601 format.
+- Aligned deployment, monitoring, and evidence-export sample connector inventories to the same six representative records.
+
+### VERIFIED-DEAD-CONFIG
+
+- Read active-tier `autoApprovedConnectorIds` when classifying connector approval status, falling back to baseline when the active tier does not define an override.
+- Mapped deployment attestation expiration to the active tier `evidenceRetentionDays` setting.
+
+### VERIFIED-VERSION-DRIFT
+
+- Aligned the solution metadata with documentation-only control 2.16 and bumped catalog-facing version metadata to v0.2.1.
+
 ## v0.2.0
 
 - Added cross-reference to Solution 19 (Agent Lifecycle and Deployment Governance) for agent-specific lifecycle governance coverage.

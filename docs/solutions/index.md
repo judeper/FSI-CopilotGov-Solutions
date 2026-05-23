@@ -29,7 +29,7 @@ The catalog is grouped by the four implementation tracks used for fleet executio
 |----------|----------|----------|
 | [License Governance and ROI Tracker](08-license-governance-roi/index.md) | P1 | 1.9, 4.5, 4.6, 4.8 |
 | [Copilot Feature Management Controller](09-feature-management-controller/index.md) | P1 | 2.6, 4.1, 4.2, 4.3, 4.4, 4.12, 4.13 |
-| [Copilot Connector and Plugin Governance](10-connector-plugin-governance/index.md) | P1 | 1.13, 2.13, 2.14, 4.13 |
+| [Copilot Connector and Plugin Governance](10-connector-plugin-governance/index.md) | P1 | 1.13, 2.13, 2.14, 2.16, 4.13 |
 | [Risk-Tiered Rollout Automation](11-risk-tiered-rollout/index.md) | P0 | 1.9, 1.11, 1.12, 4.12 |
 | [Regulatory Compliance Dashboard](12-regulatory-compliance-dashboard/index.md) | P0 | 3.7, 3.8, 3.12, 3.13, 4.5, 4.7 |
 

@@ -60,7 +60,16 @@ param(
     [string]$Environment,
 
     [Parameter(Mandatory)]
-    [ValidatePattern('^https://[\w\-\.]+\.dynamics\.com/?$')]
+    [ValidateScript({
+        try {
+            $uri = [uri]$_
+            if ($uri.Scheme -ne 'https') { return $false }
+            return $uri.Host -match '(^|\.)dynamics\.(com|cn|de|us)$'
+        }
+        catch {
+            return $false
+        }
+    })]
     [string]$DataverseUrl,
 
     [Parameter(Mandatory)]
@@ -391,7 +400,14 @@ try {
     Write-Verbose 'Loading connector governance configuration.'
     $config = Get-ConnectorGovernanceConfiguration -SolutionRoot $solutionRoot -Tier $ConfigurationTier
     $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
-    $baselineApprovedConnectorIds = @($config.Baseline.approvalModel.autoApprovedConnectorIds)
+    $autoApprovedConnectorIds = @()
+    if ($config.Tier.approvalModel.PSObject.Properties.Name -contains 'autoApprovedConnectorIds') {
+        $autoApprovedConnectorIds = @($config.Tier.approvalModel.autoApprovedConnectorIds)
+    }
+    if ($autoApprovedConnectorIds.Count -eq 0) {
+        $autoApprovedConnectorIds = @($config.Baseline.approvalModel.autoApprovedConnectorIds)
+    }
+    $attestationExpirationDays = [int]$config.Tier.evidenceRetentionDays
 
     Write-Verbose 'Connecting to the Power Platform Admin API inventory path.'
     $adminApiConnection = [pscustomobject]@{
@@ -423,7 +439,7 @@ try {
             -ConfigurationTier $ConfigurationTier `
             -DefaultConfig $config.Default `
             -TierConfig $config.Tier `
-            -BaselineApprovedConnectorIds $baselineApprovedConnectorIds
+            -BaselineApprovedConnectorIds $autoApprovedConnectorIds
     })
 
     $approvalRequests = @(
@@ -442,7 +458,7 @@ try {
             businessJustification = 'Documented business justification is required before production enablement.'
             reviewedBy = $ApproverEmail
             attestedOn = (Get-Date).ToString('o')
-            expirationDate = if ($ConfigurationTier -eq 'regulated') { (Get-Date).AddDays(365).ToString('o') } else { (Get-Date).AddDays(180).ToString('o') }
+            expirationDate = (Get-Date).AddDays($attestationExpirationDays).ToString('o')
             status = if ($assessment.approvalStatus -eq 'approved') { 'approved' } elseif ($assessment.approvalStatus -eq 'blocked') { 'exception' } else { 'pending' }
         }
     })
