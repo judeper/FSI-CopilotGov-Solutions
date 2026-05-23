@@ -6,10 +6,10 @@
     Captures a permissions baseline snapshot for SharePoint Online sites.
 
 .DESCRIPTION
-    Connects to SharePoint Online sites using PnP PowerShell and captures the current
-    permissions state as the approved baseline. For each site, the script records
-    site-level sharing settings, unique permission entries on lists and libraries,
-    sharing links, and external user access.
+    Returns representative permissions baseline snapshots for documentation and testing.
+    The PnP tenant-binding block is illustrative and marks where production code would
+    capture site-level sharing settings, unique permission entries, sharing links, and
+    external user access after live enumeration is added.
 
     The baseline is saved to a timestamped JSON file and a pointer file
     (latest-baseline.json) is updated to reference the most recent capture.
@@ -146,7 +146,8 @@ function Get-SitePermissionsSnapshot {
         }
     }
 
-    # Live PnP enumeration would go here
+    # Illustrative tenant-binding scaffold only. A production implementation must enumerate
+    # role assignments/properties directly; this block is not complete live coverage.
     try {
         Connect-PnPOnline -Url $SiteUrl -ErrorAction Stop
         $siteSharing = Get-PnPSite -Includes SharingCapability -ErrorAction Stop
@@ -181,6 +182,7 @@ function Get-SitePermissionsSnapshot {
             uniquePermissions = $permissions
             sharingLinks      = @()
             externalUsers     = @()
+            dataSource        = 'illustrative-pnp-binding-placeholder'
         }
     }
     catch {

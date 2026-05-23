@@ -7,6 +7,5 @@
   "scanFrequencyHours": 24,
   "enableAlertNotifications": true,
   "enableAutoReversion": false,
-  "baselineRetentionDays": 90,
-  "enableSiteOwnerNotifications": true
+  "baselineRetentionDays": 90
 }

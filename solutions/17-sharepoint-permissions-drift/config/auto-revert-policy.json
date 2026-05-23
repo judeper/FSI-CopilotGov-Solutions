@@ -8,6 +8,7 @@
   },
   "approvalGate": {
     "notifyVia": "email",
+    "senderMailbox": "compliance-automation@contoso.com",
     "approvers": ["site-owner", "compliance-officer"],
     "approvalWindowHours": 48,
     "onTimeout": "escalate"

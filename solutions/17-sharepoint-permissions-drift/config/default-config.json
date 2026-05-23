@@ -1,7 +1,7 @@
 {
   "solution": "17-sharepoint-permissions-drift",
   "displayName": "SharePoint Permissions Drift Detection",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "solutionCode": "SPD",
   "track": "A",
   "priority": "P1",
@@ -22,6 +22,7 @@
   ],
   "evidenceOutputs": [
     "drift-report",
+    "drift-findings-csv",
     "baseline-snapshot",
     "reversion-log"
   ],
@@ -45,6 +46,10 @@
     "permissionLevelElevated": 15,
     "fsiDataClassifierMatch": 15,
     "multipleConcurrentDrifts": 10
+  },
+  "configurationNotes": {
+    "driftTypeWeights": "Illustrative design weights for future tenant-bound scoring; Invoke-DriftScan.ps1 currently uses fixed scaffold scoring for permission-level and principal-type samples.",
+    "tierNotificationFlags": "Site-owner notification and high-risk approval flags are omitted from tier configs until those behaviors are wired into scripts; use auto-revert-policy.json for approval-gate behavior."
   },
   "scanWorkloads": [
     "sharePoint"

@@ -2,7 +2,7 @@
 
 ## Evidence Package Overview
 
-Solution 17 produces three categories of evidence artifacts suitable for regulatory examination response, internal audit, and compliance attestation.
+Solution 17 produces four categories of evidence artifacts suitable for regulatory examination response, internal audit, and compliance attestation.
 
 All evidence artifacts include SHA-256 companion files (`.sha256`) for integrity verification.
 
@@ -10,19 +10,19 @@ All evidence artifacts include SHA-256 companion files (`.sha256`) for integrity
 
 ### 1. Drift Report (`drift-report`)
 
-Detailed record of every permissions change detected relative to the approved baseline.
+Detailed record of representative permissions changes relative to the approved baseline pattern.
 
 | Field | Description |
 |-------|-------------|
-| `siteUrl` | SharePoint site where drift was detected |
+| `siteUrl` | SharePoint site associated with the representative drift item |
 | `itemPath` | Specific list, library, or item path |
 | `driftType` | ADDED, REMOVED, or CHANGED |
 | `before` | Permission state in baseline |
-| `after` | Current permission state |
+| `after` | Representative post-drift permission state |
 | `riskScore` | Numeric risk score (0–100) |
 | `riskTier` | HIGH, MEDIUM, or LOW |
 | `detectedAt` | ISO 8601 timestamp of detection |
-| `reversionStatus` | auto-reverted, approval-pending, approved, escalated |
+| `reversionStatus` | Intended workflow status such as approval-pending or reversion-intent logged |
 
 ### 2. Baseline Snapshot (`baseline-snapshot`)
 
@@ -32,14 +32,18 @@ Point-in-time record of the approved permissions state used as the comparison re
 |-------|-------------|
 | `capturedAt` | ISO 8601 timestamp of baseline capture |
 | `siteUrl` | SharePoint site URL |
-| `sharingSettings` | Site-level sharing configuration |
-| `uniquePermissions` | List and library entries with unique (broken inheritance) permissions |
-| `sharingLinks` | Active sharing links by type (anonymous, organization, specific people) |
-| `externalUsers` | External user access grants |
+| `sharingSettings` | Representative site-level sharing configuration; live comparison requires tenant binding |
+| `uniquePermissions` | List and library entries with unique (broken inheritance) permissions in scaffold samples |
+| `sharingLinks` | Representative sharing-link examples until live link enumeration is added |
+| `externalUsers` | Representative external-user examples until live external-user enumeration is added |
 
-### 3. Reversion Log (`reversion-log`)
+### 3. Drift Findings CSV (`drift-findings-csv`)
 
-Record of all reversion actions taken, including both auto-reverted and approval-gated items.
+Examiner-friendly tabular view of the same drift items as the JSON drift-report, with each before/after permission entry flattened into one row. The CSV is companioned by a `.sha256` integrity file and is referenced from `evidence-summary.json` as a first-class artifact.
+
+### 4. Reversion Log (`reversion-log`)
+
+Record of scaffold reversion intent and approval-gated items; live actions require tenant binding or an external workflow.
 
 | Field | Description |
 |-------|-------------|
@@ -49,8 +53,8 @@ Record of all reversion actions taken, including both auto-reverted and approval
 | `driftType` | Original drift classification |
 | `beforeReversion` | Permission state before reversion |
 | `afterReversion` | Permission state after reversion |
-| `actionedBy` | User or system account that performed the reversion |
-| `actionedAt` | ISO 8601 timestamp of reversion action |
+| `actionedBy` | User or system account associated with the reversion-intent record |
+| `actionedAt` | ISO 8601 timestamp of reversion-intent logging |
 | `approvalId` | Reference to approval record (if approval-gated) |
 
 ## Control Status Mapping
@@ -83,7 +87,7 @@ Retention values align with FINRA Rule 4511 record-keeping requirements and SEC 
 
 ```powershell
 .\scripts\Export-DriftEvidence.ps1 `
-    -DriftReportPath "./reports/drift-report-latest.json" `
+    -DriftReportPath "./reports/drift-report-20250101T120000.json" `
     -BaselinePath "./baselines/latest-baseline.json" `
     -OutputPath "./evidence"
 ```
@@ -93,6 +97,7 @@ This produces:
 ```
 evidence/
 ├── drift-findings.csv
+├── drift-findings.csv.sha256
 ├── drift-findings.json
 ├── drift-findings.json.sha256
 ├── evidence-summary.json
