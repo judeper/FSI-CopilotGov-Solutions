@@ -91,21 +91,49 @@ function Get-ReviewerQueueMetrics {
     )
 
     # Requires Purview compliance portal API or Graph Beta support.
-    return [pscustomobject]@{
-        snapshotDate = (Get-Date).ToString('o')
+    $reviewerSlaHours = [int]$Config['reviewerSlaHours']
+    $thresholdConfig = if ($Config.ContainsKey('queueHealthThresholds')) { $Config['queueHealthThresholds'] } else { @{} }
+    $queueHealthThresholds = [pscustomobject]@{
+        maxAverageAgeHours = if ($thresholdConfig.ContainsKey('maxAverageAgeHours')) { [int]$thresholdConfig['maxAverageAgeHours'] } else { $reviewerSlaHours }
+        maxP90AgeHours = if ($thresholdConfig.ContainsKey('maxP90AgeHours')) { [int]$thresholdConfig['maxP90AgeHours'] } else { ($reviewerSlaHours * 3) }
+        maxOverdueCount = if ($thresholdConfig.ContainsKey('maxOverdueCount')) { [int]$thresholdConfig['maxOverdueCount'] } else { 0 }
+    }
+    $queueSnapshot = [ordered]@{
         totalPending = 0
         avgAgeHours = 0
         p90AgeHours = 0
         dispositionBreakdown = @()
         escalatedCount = 0
         overdueCount = 0
-        reviewerSlaHours = [int]$Config['reviewerSlaHours']
-        queueHealthy = $false
+    }
+    $averageAgeWithinThreshold = ($queueSnapshot['avgAgeHours'] -le $queueHealthThresholds.maxAverageAgeHours)
+    $p90AgeWithinThreshold = ($queueSnapshot['p90AgeHours'] -le $queueHealthThresholds.maxP90AgeHours)
+    $overdueCountWithinThreshold = ($queueSnapshot['overdueCount'] -le $queueHealthThresholds.maxOverdueCount)
+    $tenantSupplied = -not [string]::IsNullOrWhiteSpace($TenantId)
+    $clientSupplied = -not [string]::IsNullOrWhiteSpace($ClientId)
+    $secretSupplied = ($null -ne $ClientSecret) -and ($ClientSecret.Length -gt 0)
+
+    return [pscustomobject]@{
+        snapshotDate = (Get-Date).ToString('o')
+        totalPending = $queueSnapshot['totalPending']
+        avgAgeHours = $queueSnapshot['avgAgeHours']
+        p90AgeHours = $queueSnapshot['p90AgeHours']
+        dispositionBreakdown = $queueSnapshot['dispositionBreakdown']
+        escalatedCount = $queueSnapshot['escalatedCount']
+        overdueCount = $queueSnapshot['overdueCount']
+        reviewerSlaHours = $reviewerSlaHours
+        queueHealthThresholds = $queueHealthThresholds
+        queueHealthEvaluation = [pscustomobject]@{
+            averageAgeWithinThreshold = $averageAgeWithinThreshold
+            p90AgeWithinThreshold = $p90AgeWithinThreshold
+            overdueCountWithinThreshold = $overdueCountWithinThreshold
+        }
+        queueHealthy = ($averageAgeWithinThreshold -and $p90AgeWithinThreshold -and $overdueCountWithinThreshold)
         collectionMethod = 'manual-portal-export'
-        tenantId = if ([string]::IsNullOrWhiteSpace($TenantId)) { 'not-provided' } else { $TenantId }
-        clientId = if ([string]::IsNullOrWhiteSpace($ClientId)) { 'not-provided' } else { $ClientId }
-        credentialSupplied = [bool]($TenantId -or $ClientId -or $ClientSecret)
-        notes = 'Queue metrics require Purview compliance portal API or Graph Beta support; manual export is currently required.'
+        tenantId = if ($tenantSupplied) { $TenantId } else { 'not-provided' }
+        clientId = if ($clientSupplied) { $ClientId } else { 'not-provided' }
+        credentialSupplied = ($tenantSupplied -or $clientSupplied -or $secretSupplied)
+        notes = 'Queue metrics require Purview compliance portal API or Graph Beta support; threshold evaluation uses the configured manual-export placeholders until customer queue data is supplied.'
     }
 }
 

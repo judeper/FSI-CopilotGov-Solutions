@@ -46,8 +46,8 @@ Schema:
 | Field | Type | Description |
 |-------|------|-------------|
 | `updateDate` | string | ISO 8601 or ISO date value for the lexicon change |
-| `wordAdded[]` | array | Words or phrases added to the supervised lexicon |
-| `wordRemoved[]` | array | Words or phrases removed from the supervised lexicon |
+| `wordAdded` | string[] | Words or phrases added to the supervised lexicon |
+| `wordRemoved` | string[] | Words or phrases removed from the supervised lexicon |
 | `updatedBy` | string | Owner who applied the change |
 | `approvedBy` | string | Approver for the lexicon change |
 | `policyVersion` | string | Version aligned to the published policy set |
@@ -103,6 +103,6 @@ These fields are recommended additions to the evidence package. They document th
 
 ## Operational Notes
 
-- Evidence export packages generated content and documented monitoring data; it does not attest that all policies are published unless customer operations maintain the required portal records.
+- Evidence export packages contain generated content and documented monitoring data; they do not attest that all policies are published unless customer operations maintain the required portal records.
 - Queue metrics may reflect documentation-first monitoring if automated collection is not available.
 - Lexicon approvals should be retained alongside the generated JSON artifacts for examinations.

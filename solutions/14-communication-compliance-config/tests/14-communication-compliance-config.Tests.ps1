@@ -33,6 +33,10 @@ Describe 'Microsoft Purview Communication Compliance Configurator' {
             (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'),
             (Join-Path $solutionRoot 'scripts\CCC-Common.psm1')
         )
+        $deployScript = Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'
+        $monitorScript = Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'
+        $exportScript = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
+        $testArtifactRoot = Join-Path $solutionRoot 'artifacts\pester-tests'
     }
 
     Context 'File presence' {
@@ -94,6 +98,98 @@ Describe 'Microsoft Purview Communication Compliance Configurator' {
 
         It 'references reviewer-queue-metrics in the evidence export guide' {
             $evidenceDocContent | Should -Match 'reviewer-queue-metrics'
+        }
+    }
+
+    Context 'Script output contracts' {
+        BeforeAll {
+            if (Test-Path -Path $testArtifactRoot) {
+                Remove-Item -Path $testArtifactRoot -Recurse -Force
+            }
+            $null = New-Item -ItemType Directory -Path $testArtifactRoot -Force
+        }
+
+        It 'returns the expected deployment output schema and tier progression' {
+            $results = @{}
+            foreach ($tier in @('baseline', 'recommended', 'regulated')) {
+                $results[$tier] = & $deployScript -ConfigurationTier $tier -OutputPath (Join-Path $testArtifactRoot "deploy-$tier") -TenantId '' -WhatIf
+            }
+
+            $expectedProperties = @(
+                'Solution',
+                'SolutionCode',
+                'Tier',
+                'TierLabel',
+                'TierValue',
+                'TenantId',
+                'PolicyTemplateCount',
+                'ReviewerSlaHours',
+                'SamplingRate',
+                'PolicyTemplatePath',
+                'ManifestPath',
+                'ManualPortalDeploymentRequired',
+                'AllCopilotContentMonitored',
+                'Dependency'
+            )
+
+            foreach ($tier in $results.Keys) {
+                foreach ($property in $expectedProperties) {
+                    $results[$tier].PSObject.Properties.Name | Should -Contain $property
+                }
+            }
+
+            ($results['baseline'].PolicyTemplateCount -lt $results['recommended'].PolicyTemplateCount) | Should -BeTrue
+            ($results['recommended'].PolicyTemplateCount -lt $results['regulated'].PolicyTemplateCount) | Should -BeTrue
+            ($results['baseline'].ReviewerSlaHours -gt $results['recommended'].ReviewerSlaHours) | Should -BeTrue
+            ($results['recommended'].ReviewerSlaHours -gt $results['regulated'].ReviewerSlaHours) | Should -BeTrue
+            ($results['baseline'].SamplingRate -lt $results['recommended'].SamplingRate) | Should -BeTrue
+            ($results['recommended'].SamplingRate -lt $results['regulated'].SamplingRate) | Should -BeTrue
+            $results['regulated'].AllCopilotContentMonitored | Should -BeTrue
+        }
+
+        It 'returns the expected monitoring output schema and applies queue thresholds' {
+            $outputPath = Join-Path $testArtifactRoot 'monitor-regulated'
+            $emptySecret = [System.Security.SecureString]::new()
+            $result = & $monitorScript -ConfigurationTier regulated -OutputPath $outputPath -TenantId '' -ClientId '' -ClientSecret $emptySecret -PassThru
+
+            foreach ($property in @('solution', 'solutionCode', 'displayName', 'tier', 'tierLabel', 'generatedAt', 'overallStatus', 'statusScore', 'queueMetrics', 'policyCoverage', 'lexiconStatus')) {
+                $result.PSObject.Properties.Name | Should -Contain $property
+            }
+
+            foreach ($property in @('snapshotDate', 'totalPending', 'avgAgeHours', 'p90AgeHours', 'dispositionBreakdown', 'escalatedCount', 'overdueCount', 'reviewerSlaHours', 'queueHealthThresholds', 'queueHealthEvaluation', 'queueHealthy', 'collectionMethod', 'tenantId', 'clientId', 'credentialSupplied', 'notes')) {
+                $result.queueMetrics.PSObject.Properties.Name | Should -Contain $property
+            }
+
+            $result.queueMetrics.queueHealthThresholds.maxAverageAgeHours | Should -Be 24
+            $result.queueMetrics.queueHealthThresholds.maxP90AgeHours | Should -Be 72
+            $result.queueMetrics.queueHealthThresholds.maxOverdueCount | Should -Be 5
+            $result.queueMetrics.queueHealthEvaluation.averageAgeWithinThreshold | Should -BeTrue
+            $result.queueMetrics.credentialSupplied | Should -BeFalse
+            Test-Path -Path (Join-Path $outputPath 'communication-compliance-status.json') | Should -BeTrue
+        }
+
+        It 'returns the expected evidence output schema and lexicon artifact fields' {
+            $outputPath = Join-Path $testArtifactRoot 'evidence-baseline'
+            $result = & $exportScript -ConfigurationTier baseline -OutputPath $outputPath -PeriodStart ([datetime]'2026-05-01T00:00:00Z') -PeriodEnd ([datetime]'2026-05-23T00:00:00Z') -PassThru
+
+            foreach ($property in @('Solution', 'SolutionCode', 'Tier', 'TierLabel', 'OverallStatus', 'OverallStatusScore', 'PeriodStart', 'PeriodEnd', 'ArtifactCount', 'PackagePath', 'PackageHash')) {
+                $result.PSObject.Properties.Name | Should -Contain $property
+            }
+
+            $result.ArtifactCount | Should -Be 3
+            Test-Path -Path $result.PackagePath | Should -BeTrue
+            $lexiconLogPath = Join-Path $outputPath 'artifact-data\lexicon-update-log.json'
+            $lexiconLog = Get-Content -Path $lexiconLogPath -Raw | ConvertFrom-Json
+            $lexiconLog.PSObject.Properties.Name | Should -Contain 'wordAdded'
+            $lexiconLog.PSObject.Properties.Name | Should -Contain 'wordRemoved'
+            @($lexiconLog.wordAdded).Count | Should -BeGreaterThan 0
+            @($lexiconLog.wordRemoved).Count | Should -BeGreaterThan 0
+        }
+
+        AfterAll {
+            if (Test-Path -Path $testArtifactRoot) {
+                Remove-Item -Path $testArtifactRoot -Recurse -Force
+            }
         }
     }
 

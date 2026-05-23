@@ -38,7 +38,7 @@
     Solution: Microsoft Purview Communication Compliance Configurator (CCC)
     Controls:  2.10, 3.4, 3.5, 3.6, 3.9
     Regulations: FINRA 2210, FINRA 3110, SEC Reg BI, FCA SYSC 10
-    Version: v0.2.1
+    Version: v0.2.2
 
     IMPORTANT: Microsoft Purview Communication Compliance policy deployment requires manual steps
     in the Microsoft Purview compliance portal. This script generates the policy
@@ -111,6 +111,7 @@ function New-ReviewerWorkflowSettings {
     $defaults = $Config['reviewerWorkflowDefaults']
     $hasDualReview = $Config.ContainsKey('requireDualReview') -and [bool]$Config['requireDualReview']
     $hasEscalationThreshold = $Config.ContainsKey('escalationThresholdHours')
+    $allCopilotContentMonitored = $Config.ContainsKey('allCopilotContentMonitored') -and [bool]$Config['allCopilotContentMonitored']
 
     return [pscustomobject]@{
         defaultReviewerGroup = $defaults['defaultReviewerGroup']
@@ -121,6 +122,7 @@ function New-ReviewerWorkflowSettings {
         escalationEnabled = [bool]$Config['escalationEnabled']
         escalationThresholdHours = if ($hasEscalationThreshold) { [int]$Config['escalationThresholdHours'] } else { [int]$Config['reviewerSlaHours'] }
         requireDualReview = $hasDualReview
+        allCopilotContentMonitored = $allCopilotContentMonitored
         dualReviewApprovers = if ($Config.ContainsKey('dualReviewApprovers')) { [int]$Config['dualReviewApprovers'] } else { 1 }
         dispositions = $defaults['dispositions']
         escalationTriggers = $defaults['escalationTriggers']
@@ -159,6 +161,7 @@ $deploymentManifest = [ordered]@{
     connectionReferences = $config['connectionReferences']
     environmentVariables = $config['environmentVariables']
     reviewerWorkflow = $reviewerWorkflow
+    allCopilotContentMonitored = [bool]$reviewerWorkflow.allCopilotContentMonitored
     policyTemplates = $policyTemplates
     manualPortalDeploymentRequired = [bool]$config['manualPortalDeploymentRequired']
     deploymentMode = 'documentation-first'
@@ -199,5 +202,6 @@ if ($PSCmdlet.ShouldProcess($manifestPath, 'Write deployment manifest')) {
     PolicyTemplatePath = $policyTemplatePath
     ManifestPath = $manifestPath
     ManualPortalDeploymentRequired = [bool]$config['manualPortalDeploymentRequired']
+    AllCopilotContentMonitored = [bool]$reviewerWorkflow.allCopilotContentMonitored
     Dependency = ($config['dependencies'] -join ', ')
 }
