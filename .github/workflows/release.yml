@@ -80,28 +80,28 @@ jobs:
 
       - name: Attest Python dependency SBOM
         if: hashFiles('sbom-python-docs.cdx.json') != ''
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: sbom-python-docs.cdx.json
           push-to-registry: false
 
       - name: Attest Python project SBOM
         if: hashFiles('sbom-python-project.cdx.json') != ''
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: sbom-python-project.cdx.json
           push-to-registry: false
 
       - name: Attest repository-content SBOM
         if: hashFiles('sbom-repo.cdx.json') != ''
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: sbom-repo.cdx.json
           push-to-registry: false
 
       - name: Attest release manifest
         if: hashFiles('RELEASE-MANIFEST.txt') != ''
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: RELEASE-MANIFEST.txt
           push-to-registry: false
