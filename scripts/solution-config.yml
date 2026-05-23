@@ -385,7 +385,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.1.1",
+      "version": "v0.1.2",
       "controls": [
         "1.16",
         "3.8"

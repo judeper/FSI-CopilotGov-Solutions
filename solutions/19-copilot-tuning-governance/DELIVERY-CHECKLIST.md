@@ -104,13 +104,13 @@ Use this checklist to move solution 19 from documentation review into controlled
 
 ## Customer Validation
 
-- [ ] Review `docs\getting-started\prerequisites.md` with the customer platform owner.
-- [ ] Review `docs\getting-started\identity-and-secrets-prep.md` with the identity or security owner.
-- [ ] Review `docs\operational-handbook.md`, `docs\operational-raci.md`, and `docs\operational-cadence.md` with the steady-state operations team.
-- [ ] Review `docs\escalation-procedures.md` with support and compliance stakeholders.
+- [ ] Review `docs\prerequisites.md` with the customer platform owner.
+- [ ] Review `..\..\docs\getting-started\identity-and-secrets-prep.md` with the identity or security owner.
+- [ ] Review `docs\deployment-guide.md`, `docs\troubleshooting.md`, and `..\..\docs\operational-handbook.md` with the steady-state operations team.
+- [ ] Review `..\..\docs\operational-raci.md`, `..\..\docs\operational-cadence.md`, and `..\..\docs\escalation-procedures.md` with support and compliance stakeholders.
 - [ ] Run the deployment and monitoring scripts in a non-production tenant and review the outputs.
 - [ ] Confirm the evidence package metadata, control statuses, and artifact hashes.
-- [ ] Customer has reviewed `docs\documentation-vs-runnable-assets-guide.md` and confirmed understanding of what is and is not deployed by the repository.
+- [ ] Customer has reviewed `..\..\docs\documentation-vs-runnable-assets-guide.md` and confirmed understanding of what is and is not deployed by the repository.
 
 ## Sign-Off Items
 
