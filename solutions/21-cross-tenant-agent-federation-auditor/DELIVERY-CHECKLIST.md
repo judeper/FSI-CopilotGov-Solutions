@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | Cross-Tenant Agent Federation Auditor |
 | Solution Code | CTAF |
-| Version | v0.1.1 |
+| Version | v0.1.2 |
 | Track | B |
 | Priority | P1 |
 | Primary Controls | 2.17, 2.16 |

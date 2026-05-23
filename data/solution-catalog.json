@@ -1380,7 +1380,7 @@
     "domain": "security-compliance",
     "priority": "P1",
     "phase": 3,
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "solution_type": [
       "PowerShell"
     ],

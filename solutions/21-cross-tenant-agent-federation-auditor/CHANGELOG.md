@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.2 — 2026-05-23 — Council review remediation
+
+### VERIFIED-BUG
+- Replaced custom evidence package assembly with the shared `Export-SolutionEvidencePackage` helper while preserving sample-mode metadata, controls, and artifact references.
+- Extended CTAF configuration validation to require tier fields consumed by deployment output.
+
+### VERIFIED-DOC-OVERCLAIM
+- Corrected the regulated retention label from seven years to five years for the configured 1825-day value.
+- Clarified troubleshooting guidance so required-field documentation matches the validator.
+
+### VERIFIED-DEAD-CONFIG
+- Loaded `mcpAttestationRevalidationRequired` from tier configuration and surfaced it in deployment manifests, defaulting to `false` when absent.
+
 ## [v0.1.1] - 2026-05-04
 
 ### Changed

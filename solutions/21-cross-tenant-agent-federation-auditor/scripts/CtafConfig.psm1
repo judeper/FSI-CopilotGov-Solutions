@@ -45,6 +45,12 @@ function Get-CtafConfiguration {
         supportingControls                = $tierConfig.supportingControls
         federationReviewCadenceDays       = $tierConfig.federationReviewCadenceDays
         mcpTrustAttestationRequired       = $tierConfig.mcpTrustAttestationRequired
+        mcpAttestationRevalidationRequired = if ($tierConfig.Contains('mcpAttestationRevalidationRequired')) {
+            $tierConfig.mcpAttestationRevalidationRequired
+        }
+        else {
+            $false
+        }
         agentIdSigningRequired            = $tierConfig.agentIdSigningRequired
         agentIdKeyRotationTrackingEnabled = $tierConfig.agentIdKeyRotationTrackingEnabled
         crossTenantAuditLogRetentionDays  = $tierConfig.crossTenantAuditLogRetentionDays
@@ -72,6 +78,10 @@ function Test-CtafConfiguration {
         'tier',
         'primaryControls',
         'federationReviewCadenceDays',
+        'mcpTrustAttestationRequired',
+        'agentIdSigningRequired',
+        'agentIdKeyRotationTrackingEnabled',
+        'crossTenantAuditLogRetentionDays',
         'evidenceRetentionDays',
         'notificationMode',
         'copilotStudioPublishing',
