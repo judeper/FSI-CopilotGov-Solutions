@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Exports permissions drift findings into a compliance evidence package.
 

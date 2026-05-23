@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Exports Copilot Studio agent lifecycle evidence for supervisory review.
 

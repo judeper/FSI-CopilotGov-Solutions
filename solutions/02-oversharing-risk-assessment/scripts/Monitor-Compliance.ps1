@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Produces oversharing findings for SharePoint, OneDrive, and Teams.
 

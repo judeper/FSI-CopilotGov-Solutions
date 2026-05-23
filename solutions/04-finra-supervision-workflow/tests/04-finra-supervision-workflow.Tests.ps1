@@ -1,4 +1,4 @@
-Describe 'FINRA Supervision Workflow for Copilot solution' {
+﻿Describe 'FINRA Supervision Workflow for Copilot solution' {
     BeforeAll {
         $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
         $defaultConfigPath = Join-Path $solutionRoot 'config\default-config.json'

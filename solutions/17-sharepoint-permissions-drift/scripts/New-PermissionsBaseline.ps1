@@ -1,4 +1,4 @@
-# PnP.PowerShell is required for live SharePoint operations.
+﻿# PnP.PowerShell is required for live SharePoint operations.
 # Scripts fall back to representative sample data when PnP is unavailable.
 
 <#

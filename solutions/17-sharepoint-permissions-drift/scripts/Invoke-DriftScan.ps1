@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Detects permissions drift by comparing current SharePoint permissions against an approved baseline.
 

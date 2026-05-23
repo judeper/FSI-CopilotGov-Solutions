@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     $solutionRoot = Join-Path $PSScriptRoot '..'
 }
 
