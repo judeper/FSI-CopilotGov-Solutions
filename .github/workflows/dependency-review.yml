@@ -16,7 +16,7 @@ jobs:
       # No checkout is required: actions/dependency-review-action@v4 uses the
       # GitHub Dependency Graph compare API (base vs head SHAs) and does not
       # need a working tree for the default/inline configuration. Re-add a
-      # `actions/checkout@v4` step only if a local `config-file:` is introduced.
+      # `actions/checkout@v6` step only if a local `config-file:` is introduced.
       # Background: the prior checkout step failed deterministically with
       # `fatal: could not read Username for 'https://github.com'` when fetching
       # the lazy `refs/pull/N/merge` ref for this workflow only.
