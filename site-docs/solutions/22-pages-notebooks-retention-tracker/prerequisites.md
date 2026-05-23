@@ -27,7 +27,7 @@ Admin consent is typically required before these permissions can be used in prod
 ## PowerShell Requirements
 
 - PowerShell 7.2 or later
-- `Microsoft.Graph` modules for Notes and Sites
+- `Microsoft.Graph.Authentication`, `Microsoft.Graph.Notes`, and `Microsoft.Graph.Sites` PowerShell modules (plus `Microsoft.Graph.Files` if a live DriveItem/export inventory path is added)
 - Pester 5 or later for tests
 
 ## Network Requirements

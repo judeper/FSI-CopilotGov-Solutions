@@ -65,7 +65,7 @@ Repository-only internal sample lineage rows plus documented Purview audit/versi
 
 ## Package Contract
 
-PNRT exports each artifact as a JSON file plus a SHA-256 companion. The four artifacts are produced by `scripts/Export-Evidence.ps1` and can be wrapped by the shared `Export-SolutionEvidencePackage` function for downstream packaging.
+PNRT exports each artifact as a JSON file plus a SHA-256 companion. The four artifacts are produced by `scripts/Export-Evidence.ps1` and packaged through the shared `Export-SolutionEvidencePackage` function for repository-wide evidence-schema alignment.
 
 The package contract contains:
 

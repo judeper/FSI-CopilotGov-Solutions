@@ -33,7 +33,7 @@
     Solution: Pages and Notebooks Retention Tracker (PNRT)
     Primary Controls: 3.14, 3.2
     Supporting Controls: 3.3, 3.11, 2.11
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -93,6 +93,7 @@ $deploymentManifest = [pscustomobject]@{
     pagesRetentionDays = $configuration.pagesRetentionDays
     notebookRetentionDays = $configuration.notebookRetentionDays
     internalSampleLineageMode = $configuration.branchingAuditMode
+    branchingAuditRequired = [bool]$configuration.branchingAuditRequired
     documentedEvidenceSurfaces = @('SharePoint Embedded containers', 'Purview audit logs', 'Purview retention policies and limited labels', 'Graph DriveItem/export where documented')
     loopProvenanceRequired = [bool]$configuration.loopProvenanceRequired
     preservationLockRequired = [bool]$configuration.preservationLockRequired
@@ -124,11 +125,12 @@ else {
 }
 
 Write-Host (
-    "Deployment summary: PNRT tier [{0}] - Pages retention {1} days, OneNote section retention {2} days, internal sample lineage mode [{3}], Loop provenance required: {4}." -f
+    "Deployment summary: PNRT tier [{0}] - Pages retention {1} days, OneNote section retention {2} days, internal sample lineage mode [{3}], branching audit required: {4}, Loop provenance required: {5}." -f
     $ConfigurationTier,
     $configuration.pagesRetentionDays,
     $configuration.notebookRetentionDays,
     $configuration.branchingAuditMode,
+    [bool]$configuration.branchingAuditRequired,
     [bool]$configuration.loopProvenanceRequired
 )
 

@@ -4,7 +4,8 @@
     Pester tests for the Pages and Notebooks Retention Tracker (PNRT) scaffold.
 .DESCRIPTION
     Validates that all required files exist, configuration files contain expected
-    fields, and scripts have the required parameters and help content.
+    fields, scripts have the required parameters and help content, and sample-data
+    smoke tests produce expected artifacts.
 #>
 
 BeforeAll {
@@ -33,6 +34,32 @@ BeforeAll {
     function Test-CommentBasedHelp {
         param([string]$Path)
         return ((Get-Content -Path $Path -Raw) -match '(?s)<#.*?\.SYNOPSIS')
+    }
+
+    function Assert-HashCompanionMatchesFile {
+        param([string]$Path)
+
+        Test-Path -Path $Path -PathType Leaf | Should -BeTrue
+        $hashPath = "$Path.sha256"
+        Test-Path -Path $hashPath -PathType Leaf | Should -BeTrue
+
+        $actualHash = (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+        $hashLine = (Get-Content -Path $hashPath -Raw -Encoding utf8).Trim()
+        $fileNamePattern = [regex]::Escape([IO.Path]::GetFileName($Path))
+
+        $hashLine | Should -Match ("^[0-9a-f]{{64}}  {0}$" -f $fileNamePattern)
+        (($hashLine -split '\s+')[0]) | Should -Be $actualHash
+    }
+
+    $smokeOutputPath = Join-Path $solutionRoot 'artifacts\pester-smoke'
+    if (Test-Path -Path $smokeOutputPath) {
+        Remove-Item -Path $smokeOutputPath -Recurse -Force
+    }
+}
+
+AfterAll {
+    if ($smokeOutputPath -and (Test-Path -Path $smokeOutputPath)) {
+        Remove-Item -Path $smokeOutputPath -Recurse -Force
     }
 }
 
@@ -114,7 +141,7 @@ Describe 'PNRT - Configuration Validation' {
             $config = Get-JsonContent -Path (Join-Path $configPath ("{0}.json" -f $tier))
             $propertyNames = $config.PSObject.Properties.Name
 
-            foreach ($requiredField in @('solution', 'tier', 'controls', 'evidenceRetentionDays', 'pagesRetentionDays', 'notebookRetentionDays', 'branchingAuditMode', 'retentionLabelCoverage', 'powerAutomateFlow')) {
+            foreach ($requiredField in @('solution', 'tier', 'controls', 'evidenceRetentionDays', 'pagesRetentionDays', 'notebookRetentionDays', 'branchingAuditMode', 'branchingAuditRequired', 'retentionLabelCoverage', 'powerAutomateFlow')) {
                 $propertyNames | Should -Contain $requiredField
             }
         }
@@ -123,6 +150,30 @@ Describe 'PNRT - Configuration Validation' {
             $regulatedConfig = Get-JsonContent -Path (Join-Path $configPath 'regulated.json')
             $regulatedConfig.preservationLockRequired | Should -BeTrue
             $regulatedConfig.signedLineageRequired | Should -BeTrue
+        }
+    }
+
+    Context 'PnrtConfig.psm1 range validation' {
+        BeforeAll {
+            Import-Module (Join-Path $scriptsPath 'PnrtConfig.psm1') -Force
+        }
+
+        It 'rejects zero, negative, and out-of-range numeric settings' {
+            $zeroPages = Get-PnrtConfiguration -Tier baseline
+            $zeroPages['pagesRetentionDays'] = 0
+            { Test-PnrtConfiguration -Configuration $zeroPages } | Should -Throw '*pagesRetentionDays*'
+
+            $negativeNotebook = Get-PnrtConfiguration -Tier baseline
+            $negativeNotebook['notebookRetentionDays'] = -1
+            { Test-PnrtConfiguration -Configuration $negativeNotebook } | Should -Throw '*notebookRetentionDays*'
+
+            $zeroEvidence = Get-PnrtConfiguration -Tier baseline
+            $zeroEvidence['evidenceRetentionDays'] = 0
+            { Test-PnrtConfiguration -Configuration $zeroEvidence } | Should -Throw '*evidenceRetentionDays*'
+
+            $invalidCoverage = Get-PnrtConfiguration -Tier baseline
+            $invalidCoverage['retentionLabelCoverage']['minimumCoveragePct'] = 101
+            { Test-PnrtConfiguration -Configuration $invalidCoverage } | Should -Throw '*minimumCoveragePct*'
         }
     }
 }
@@ -186,6 +237,42 @@ Describe 'PNRT - Script Validation' {
             ) | Out-Null
             $errors | Should -BeNullOrEmpty
         }
+    }
+}
+
+Describe 'PNRT - Script Smoke Tests' {
+    It 'runs Deploy-Solution.ps1 and writes a deployment manifest' {
+        $deployOutputPath = Join-Path $smokeOutputPath 'deploy'
+        $manifest = & (Join-Path $scriptsPath 'Deploy-Solution.ps1') -ConfigurationTier baseline -OutputPath $deployOutputPath -TenantId '00000000-0000-0000-0000-000000000000'
+        $manifestPath = Join-Path $deployOutputPath '22-pages-notebooks-retention-tracker-deployment-baseline.json'
+
+        Test-Path -Path $manifestPath -PathType Leaf | Should -BeTrue
+        $manifest.solution | Should -Be '22-pages-notebooks-retention-tracker'
+        $manifest.branchingAuditRequired | Should -BeTrue
+    }
+
+    It 'runs Monitor-Compliance.ps1 and writes a sample-data snapshot' {
+        $monitorOutputPath = Join-Path $smokeOutputPath 'monitor'
+        $snapshot = & (Join-Path $scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath $monitorOutputPath -PassThru
+        $snapshotPath = Join-Path $monitorOutputPath 'monitor-snapshot-baseline.json'
+
+        Test-Path -Path $snapshotPath -PathType Leaf | Should -BeTrue
+        $snapshot.RuntimeMode | Should -Be 'sample-data'
+        @($snapshot.Pages).Count | Should -BeGreaterThan 0
+        @($snapshot.InternalSampleLineageEvents).Count | Should -BeGreaterThan 0
+        $snapshot.BranchingAuditRequired | Should -BeTrue
+    }
+
+    It 'runs Export-Evidence.ps1 and writes artifacts with matching SHA-256 companions' {
+        $evidenceOutputPath = Join-Path $smokeOutputPath 'evidence'
+        $result = & (Join-Path $scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath $evidenceOutputPath -PeriodStart (Get-Date).Date.AddDays(-1) -PeriodEnd (Get-Date).Date -PassThru
+
+        @($result.Artifacts).Count | Should -Be 4
+        foreach ($artifact in @($result.Artifacts)) {
+            Assert-HashCompanionMatchesFile -Path $artifact.path
+        }
+
+        Assert-HashCompanionMatchesFile -Path $result.PackagePath
     }
 }
 

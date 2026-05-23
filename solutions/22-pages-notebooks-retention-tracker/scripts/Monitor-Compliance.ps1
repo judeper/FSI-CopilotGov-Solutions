@@ -35,7 +35,7 @@
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding()]
 param(
@@ -206,7 +206,8 @@ $resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).Fu
 $pages = New-PnrtSamplePages -Count ([int]$configuration.defaults.samplePageCount) -RetentionDays ([int]$configuration.pagesRetentionDays)
 $notebooks = New-PnrtSampleNotebooks -Count ([int]$configuration.defaults.sampleNotebookCount) -RetentionDays ([int]$configuration.notebookRetentionDays)
 $loopComponents = New-PnrtSampleLoopComponents -Count ([int]$configuration.defaults.sampleLoopComponentCount) -WorkspaceSeeds @($configuration.defaults.loopWorkspaceSeeds) -IncludeSignedLineage ([bool]$configuration.signedLineageRequired)
-$internalLineageEvents = New-PnrtInternalSampleLineageEvents -Count ([int]$configuration.defaults.sampleBranchingEventCount) -AuditMode ([string]$configuration.branchingAuditMode)
+$sampleBranchingEventCount = if ([bool]$configuration.branchingAuditRequired) { [int]$configuration.defaults.sampleBranchingEventCount } else { 0 }
+$internalLineageEvents = New-PnrtInternalSampleLineageEvents -Count $sampleBranchingEventCount -AuditMode ([string]$configuration.branchingAuditMode)
 
 $pagesWithoutLabel = @($pages | Where-Object { [string]::IsNullOrWhiteSpace($_.retentionLabel) })
 $notebooksWithoutLabel = @($notebooks | Where-Object { $_.retentionPolicySource -eq 'none' })
@@ -225,6 +226,7 @@ $status = [pscustomobject]@{
     CoverageGapCount = $coverageGapCount
     PagesWithoutLabel = $pagesWithoutLabel.Count
     NotebooksWithoutLabel = $notebooksWithoutLabel.Count
+    BranchingAuditRequired = [bool]$configuration.branchingAuditRequired
     PreservationLockRequired = [bool]$configuration.preservationLockRequired
     SignedLineageRequired = [bool]$configuration.signedLineageRequired
 }
