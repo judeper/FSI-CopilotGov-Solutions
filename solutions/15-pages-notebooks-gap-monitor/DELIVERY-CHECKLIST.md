@@ -4,7 +4,7 @@
 
 - Solution: Copilot Pages and Notebooks Compliance Gap Monitor
 - Solution code: PNGM
-- Version: v0.1.1
+- Version: v0.1.2
 - Track: D
 - Priority: P2
 - Dependency: 06-audit-trail-manager

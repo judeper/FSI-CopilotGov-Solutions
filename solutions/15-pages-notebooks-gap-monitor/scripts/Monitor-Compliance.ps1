@@ -44,7 +44,7 @@
     Controls: 2.11, 3.2, 3.3, 3.11
     Status model: monitor-only by default, partial when compensating controls are in place
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -101,7 +101,7 @@ function Get-CopilotPagesRetentionGaps {
                 gapId = 'PNGM-GAP-001'
                 description = 'Purview retention policies configured for All SharePoint Sites are supported for Copilot Pages and Copilot Notebooks; tenant policy scope and evidence should be validated for this baseline.'
                 affectedCapability = 'Copilot Pages and Notebooks retention policy validation'
-                regulations = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
+                affectedRegulation = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
                 severity = 'medium'
                 discoveredAt = $assessedAt.AddDays(-30).ToString('o')
                 status = 'validation-required'
@@ -111,7 +111,7 @@ function Get-CopilotPagesRetentionGaps {
                 gapId = 'PNGM-GAP-004'
                 description = 'Pages security and sharing restrictions require manual review, and Information Barriers are not supported for content stored in SharePoint Embedded containers.'
                 affectedCapability = 'Copilot Pages security, sharing, and Information Barriers'
-                regulations = @('FINRA 4511', 'SOX 404')
+                affectedRegulation = @('FINRA 4511', 'SOX 404')
                 severity = 'high'
                 discoveredAt = $assessedAt.AddDays(-14).ToString('o')
                 status = 'open'
@@ -121,7 +121,7 @@ function Get-CopilotPagesRetentionGaps {
                 gapId = 'PNGM-GAP-005'
                 description = 'Legal hold requires manual SharePoint Embedded container addition per user, and retention labels have limited manual support for Pages, Notebooks, and Loop content.'
                 affectedCapability = 'Legal hold and retention label limitations'
-                regulations = @('SEC 17a-4', 'FINRA 4511')
+                affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
                 severity = 'high'
                 discoveredAt = $assessedAt.AddDays(-28).ToString('o')
                 status = 'open'
@@ -148,7 +148,7 @@ function Get-NotebooksEDiscoveryGaps {
                 gapId = 'PNGM-GAP-002'
                 description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page and .loop files in review sets is not available.'
                 affectedCapability = 'Purview eDiscovery review-set full-text search'
-                regulations = @('SEC 17a-4', 'FINRA 4511')
+                affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
                 severity = 'high'
                 discoveredAt = $assessedAt.AddDays(-21).ToString('o')
                 status = 'open'
@@ -158,7 +158,7 @@ function Get-NotebooksEDiscoveryGaps {
                 gapId = 'PNGM-GAP-003'
                 description = 'Copilot Notebooks create .pod files in SharePoint Embedded containers; notebook storage, retention policy scope, and export evidence require tenant validation.'
                 affectedCapability = 'Notebooks preservation verification'
-                regulations = @('FINRA 4511', 'SOX 404')
+                affectedRegulation = @('FINRA 4511', 'SOX 404')
                 severity = 'medium'
                 discoveredAt = $assessedAt.AddDays(-10).ToString('o')
                 status = 'validation-required'
@@ -208,7 +208,7 @@ function Test-CompensatingControlStatus {
             controlType = 'access-review'
             lastValidatedAt = $now.AddDays(-2).ToString('o')
             reviewDueDate = $now.AddDays(14).ToString('o')
-            status = $(if ($controlsRequired -and $TierConfiguration.tier -eq 'regulated') { 'in-place' } elseif ($controlsRequired) { 'planned' } else { 'planned' })
+            status = $(if ($controlsRequired -and $TierConfiguration.tier -eq 'regulated') { 'in-place' } else { 'planned' })
         }
         [pscustomobject]@{
             controlId = 'PNGM-CC-004'
@@ -321,6 +321,7 @@ $statusPayload = [ordered]@{
     solution = $defaultConfig.solution
     solutionCode = $defaultConfig.solutionCode
     displayName = $defaultConfig.displayName
+    frameworkIds = @($defaultConfig.framework_ids)
     tier = $ConfigurationTier
     tierDefinition = $tierDefinition
     assessedAt = (Get-Date).ToString('o')
@@ -344,8 +345,10 @@ $statusPayload = [ordered]@{
     outputPath = $statusFile
 }
 
-$null = New-Item -ItemType Directory -Path $OutputPath -Force
-$statusPayload | ConvertTo-Json -Depth 8 | Set-Content -Path $statusFile -Encoding utf8
+if ($PSCmdlet.ShouldProcess($statusFile, 'Write compliance status snapshot')) {
+    $null = New-Item -ItemType Directory -Path $OutputPath -Force
+    $statusPayload | ConvertTo-Json -Depth 8 | Set-Content -Path $statusFile -Encoding utf8
+}
 
 if ($PassThru) {
     $statusPayload

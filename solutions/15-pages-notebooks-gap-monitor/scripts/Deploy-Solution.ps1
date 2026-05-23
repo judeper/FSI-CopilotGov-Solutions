@@ -39,7 +39,7 @@
     Solution: Copilot Pages and Notebooks Compliance Gap Monitor (PNGM)
     Controls: 2.11, 3.2, 3.3, 3.11
     Regulations: SEC 17a-4, FINRA 4511, SOX 404
-    Version: v0.1.1
+    Version: v0.1.2
 
     NOTE: This solution documents compliance gaps. It does NOT automatically
     remediate retention or Microsoft Purview eDiscovery configurations. All gap remediations
@@ -77,7 +77,7 @@ function Get-KnownGapBaseline {
             gapId = 'PNGM-GAP-001'
             description = 'Purview retention policies configured for All SharePoint Sites are supported for Copilot Pages and Copilot Notebooks; tenant policy scope and evidence should be validated for regulated records.'
             affectedCapability = 'Copilot Pages and Notebooks retention policy validation'
-            regulations = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
+            affectedRegulation = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
             severity = 'medium'
             status = 'validation-required'
             discoveredAt = $generatedAt.AddDays(-30).ToString('o')
@@ -91,7 +91,7 @@ function Get-KnownGapBaseline {
             gapId = 'PNGM-GAP-002'
             description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page and .loop files in review sets is not available.'
             affectedCapability = 'Purview eDiscovery review-set full-text search'
-            regulations = @('SEC 17a-4', 'FINRA 4511')
+            affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
             severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-21).ToString('o')
@@ -105,7 +105,7 @@ function Get-KnownGapBaseline {
             gapId = 'PNGM-GAP-003'
             description = 'Copilot Notebooks create .pod files in SharePoint Embedded containers; notebook storage, retention policy scope, and export evidence require tenant validation.'
             affectedCapability = 'Notebooks preservation verification'
-            regulations = @('FINRA 4511', 'SOX 404')
+            affectedRegulation = @('FINRA 4511', 'SOX 404')
             severity = 'medium'
             status = 'validation-required'
             discoveredAt = $generatedAt.AddDays(-14).ToString('o')
@@ -119,7 +119,7 @@ function Get-KnownGapBaseline {
             gapId = 'PNGM-GAP-004'
             description = 'Copilot Pages security and sharing settings require manual review, and Information Barriers are not supported for SharePoint Embedded content.'
             affectedCapability = 'Copilot Pages security, sharing, and Information Barriers'
-            regulations = @('FINRA 4511', 'SOX 404')
+            affectedRegulation = @('FINRA 4511', 'SOX 404')
             severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-7).ToString('o')
@@ -133,7 +133,7 @@ function Get-KnownGapBaseline {
             gapId = 'PNGM-GAP-005'
             description = 'Legal hold for Copilot Pages, Copilot Notebooks, and Loop My workspace content requires manual SharePoint Embedded container addition per user, and retention labels have limited manual support.'
             affectedCapability = 'Legal hold and retention label limitations'
-            regulations = @('SEC 17a-4', 'FINRA 4511')
+            affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
             severity = 'high'
             status = 'open'
             discoveredAt = $generatedAt.AddDays(-28).ToString('o')
@@ -168,6 +168,7 @@ $deploymentManifest = [ordered]@{
     phase = $defaultConfig.phase
     controls = @($defaultConfig.controls)
     regulations = @($defaultConfig.regulations)
+    frameworkIds = @($defaultConfig.framework_ids)
     dependencies = @($defaultConfig.dependencies)
     evidenceOutputs = @($defaultConfig.evidenceOutputs)
     knownGapCategories = @($defaultConfig.knownGapCategories)
@@ -199,6 +200,7 @@ $gapRegister = [ordered]@{
     solution = $defaultConfig.solution
     solutionCode = $defaultConfig.solutionCode
     displayName = $defaultConfig.displayName
+    frameworkIds = @($defaultConfig.framework_ids)
     tier = $ConfigurationTier
     exportedAt = (Get-Date).ToString('o')
     gapCount = $knownGaps.Count

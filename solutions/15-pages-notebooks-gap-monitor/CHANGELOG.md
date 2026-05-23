@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [v0.1.2] - 2026-05-23 — Council review remediation
+
+### VERIFIED-BUG
+- Standardized per-gap regulation metadata on `affectedRegulation` across deployment, monitoring, and evidence outputs.
+- Added `SupportsShouldProcess` handling to the compliance monitor file write path for `-WhatIf` previews.
+- Simplified redundant compensating-control status logic without changing the resulting status model.
+
+### VERIFIED-DEAD-CONFIG
+- Wired configured regulatory `framework_ids` into generated manifest, status, and evidence metadata.
+
 ## [v0.1.1] - 2026-05-04
 
 ### Changed
