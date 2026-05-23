@@ -2,7 +2,7 @@
   "solution": "12-regulatory-compliance-dashboard",
   "solutionCode": "RCD",
   "displayName": "Regulatory Compliance Dashboard",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P0",
@@ -29,6 +29,10 @@
     "eu-ai-act",
     "colorado-ai-act"
   ],
+  "configurationNotes": {
+    "framework_ids": "Reference catalog aligned to frameworks-master.json; regulatoryFrameworks lists the currently documented dashboard views. Additional IDs are reserved for future mappings and are not live integrations in the repository scaffold.",
+    "defaults.freshnessCheckCadence": "Illustrative cadence metadata for customer-implemented freshness monitoring flows; sample scripts use freshnessThresholdHours for seeded output until tenant binding is added."
+  },
   "evidenceOutputs": [
     "control-status-snapshot",
     "framework-coverage-matrix",
