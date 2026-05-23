@@ -403,7 +403,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P1",
-      "version": "v0.1.1",
+      "version": "v0.1.2",
       "controls": [
         "3.8a",
         "3.8",
