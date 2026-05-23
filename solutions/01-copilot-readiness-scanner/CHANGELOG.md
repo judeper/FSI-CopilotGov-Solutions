@@ -2,6 +2,16 @@
 
 All notable changes to this solution are documented in this file.
 
+## [v0.2.2] — 2026-05-23 — Council review remediation
+
+### Fixed
+
+- Finding #3: Corrected the evidence package contract schema path in `docs/evidence-export.md` to use the docs-relative `../../../data/evidence-schema.json`.
+
+### Version drift
+
+- Council version drift note: Aligned README, default configuration, delivery checklist, and catalog metadata to `v0.2.2`.
+
 ## [v0.2.1] - 2026-05-04
 
 ### Changed
