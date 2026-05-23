@@ -4,6 +4,18 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog, and this repository uses semantic versioning for solution content.
 
+## [v0.2.2] - 2026-05-23
+
+### VERIFIED-BUG
+
+- Sourced `ca-policy-state` control IDs from `config\default-config.json` instead of hardcoding them in the evidence export artifact.
+- Made live Graph policy-creation failures terminate after retry exhaustion so failed policies are not omitted from script results.
+
+### VERIFIED-DEAD-CONFIG
+
+- Annotated pending framework crosswalk IDs in `config\default-config.json` so unreferenced framework mappings are clearly marked as illustrative/pending.
+- Removed the temporary parse-check script because the Pester suite already parses all solution scripts.
+
 ## [v0.2.1] - 2026-05-04
 
 ### Fixed

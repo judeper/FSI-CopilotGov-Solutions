@@ -581,6 +581,7 @@ if ($Execute) {
         $maxRetries = 3
         $retryDelays = @(2, 4, 8)
         $succeeded = $false
+        $lastFailureMessage = ''
         for ($attempt = 0; $attempt -lt $maxRetries; $attempt++) {
             try {
                 Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies' -Body $jsonBody -ContentType 'application/json' | Out-Null
@@ -588,6 +589,7 @@ if ($Execute) {
                 break
             }
             catch {
+                $lastFailureMessage = $_.Exception.Message
                 $statusCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 }
                 if (($statusCode -eq 429 -or $statusCode -eq 503) -and $attempt -lt ($maxRetries - 1)) {
                     Write-Warning ("Transient error (HTTP {0}) creating policy '{1}'. Retrying in {2}s (attempt {3}/{4})." -f $statusCode, $policyName, $retryDelays[$attempt], ($attempt + 2), $maxRetries)
@@ -597,6 +599,9 @@ if ($Execute) {
                     Write-Error ("Failed to create Conditional Access policy '{0}': {1}" -f $policyName, $_.Exception.Message)
                 }
             }
+        }
+        if (-not $succeeded) {
+            throw ("Failed to create Conditional Access policy '{0}' after {1} attempts: {2}" -f $policyName, $maxRetries, $lastFailureMessage)
         }
     }
 }
