@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## v0.1.2 — 2026-05-23 — Council review remediation
+
+### Fixed
+- F-02: Routed `scripts/Export-Evidence.ps1` through `Export-SolutionEvidencePackage` so package creation runs shared schema, hash, and artifact-completeness validation.
+
+### Documentation tightened
+- F-01: Aligned evidence-export guidance with the shared evidence package helper now used by the export script.
+- F-04: Reconciled the documented `EvidenceExport.psm1` dependency with the export script by importing and using the shared module.
+
 ## [v0.1.1] - 2026-05-04
 
 ### Changed

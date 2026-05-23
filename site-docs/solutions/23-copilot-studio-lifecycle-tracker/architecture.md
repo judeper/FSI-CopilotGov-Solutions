@@ -88,7 +88,7 @@ The Evidence Packager creates `agent-lifecycle-inventory`, `publishing-approval-
 ### Microsoft Purview Audit (optional)
 
 - Purpose: Optional enrichment with Copilot Studio audit-log signals where Purview is licensed and configured
-- Status: Documented; not implemented in v0.1.1
+- Status: Documented; not implemented in v0.1.2
 
 ## Dataverse Tables
 

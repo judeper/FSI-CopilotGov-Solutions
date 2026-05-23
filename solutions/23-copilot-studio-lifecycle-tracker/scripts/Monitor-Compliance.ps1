@@ -23,7 +23,7 @@
 
 .NOTES
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding()]
 param(

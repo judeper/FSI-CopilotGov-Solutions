@@ -467,7 +467,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P1",
-      "version": "v0.1.1",
+      "version": "v0.1.2",
       "controls": [
         "4.14",
         "4.13",
