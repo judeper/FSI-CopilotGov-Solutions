@@ -102,6 +102,7 @@ function Get-ResolvedConfiguration {
 }
 
 function Write-JsonFile {
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -116,6 +117,7 @@ function Write-JsonFile {
 }
 
 function Write-Sha256CompanionFile {
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path

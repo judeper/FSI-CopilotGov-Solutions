@@ -144,19 +144,19 @@ function ConvertTo-Array {
     )
 
     if ($null -eq $InputObject) {
-        Write-Output -NoEnumerate @()
+        Write-Output -NoEnumerate -InputObject @()
         return
     }
 
     if ($InputObject -is [System.Array]) {
-        Write-Output -NoEnumerate @($InputObject)
+        Write-Output -NoEnumerate -InputObject @($InputObject)
         return
     }
 
     if ($InputObject -is [System.Collections.IEnumerable] -and -not ($InputObject -is [string])) {
-        Write-Output -NoEnumerate @($InputObject)
+        Write-Output -NoEnumerate -InputObject @($InputObject)
         return
     }
 
-    Write-Output -NoEnumerate @($InputObject)
+    Write-Output -NoEnumerate -InputObject @($InputObject)
 }

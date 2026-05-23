@@ -153,7 +153,7 @@ function Send-ApprovalRequest {
     param(
         [pscustomobject]$DriftItem,
         [pscustomobject]$ApprovalGate,
-        [string]$Sender
+        [string]$SenderAddress
     )
 
     $graphContext = $null
@@ -169,8 +169,8 @@ function Send-ApprovalRequest {
         return
     }
 
-    $senderMailbox = if (-not [string]::IsNullOrWhiteSpace($Sender)) {
-        $Sender
+    $senderMailbox = if (-not [string]::IsNullOrWhiteSpace($SenderAddress)) {
+        $SenderAddress
     }
     elseif ($ApprovalGate.PSObject.Properties.Name -contains 'senderMailbox') {
         $ApprovalGate.senderMailbox
@@ -364,7 +364,7 @@ foreach ($item in $driftReport.items) {
         $pendingApprovals += $approvalRecord
 
         # Send approval request email
-        Send-ApprovalRequest -DriftItem $item -ApprovalGate $policy.approvalGate -Sender $ApprovalSender
+        Send-ApprovalRequest -DriftItem $item -ApprovalGate $policy.approvalGate -SenderAddress $ApprovalSender
     }
 }
 
