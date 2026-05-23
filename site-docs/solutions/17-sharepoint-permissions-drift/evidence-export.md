@@ -2,7 +2,7 @@
 
 ## Evidence Package Overview
 
-Solution 17 produces three categories of evidence artifacts suitable for regulatory examination response, internal audit, and compliance attestation.
+Solution 17 produces four categories of evidence artifacts suitable for regulatory examination response, internal audit, and compliance attestation.
 
 All evidence artifacts include SHA-256 companion files (`.sha256`) for integrity verification.
 
@@ -37,7 +37,11 @@ Point-in-time record of the approved permissions state used as the comparison re
 | `sharingLinks` | Representative sharing-link examples until live link enumeration is added |
 | `externalUsers` | Representative external-user examples until live external-user enumeration is added |
 
-### 3. Reversion Log (`reversion-log`)
+### 3. Drift Findings CSV (`drift-findings-csv`)
+
+Examiner-friendly tabular view of the same drift items as the JSON drift-report, with each before/after permission entry flattened into one row. The CSV is companioned by a `.sha256` integrity file and is referenced from `evidence-summary.json` as a first-class artifact.
+
+### 4. Reversion Log (`reversion-log`)
 
 Record of scaffold reversion intent and approval-gated items; live actions require tenant binding or an external workflow.
 

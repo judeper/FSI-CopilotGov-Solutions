@@ -251,14 +251,14 @@ $evidenceSummary = [pscustomobject]@{
         findingCount   = $driftItems.Count
         exceptionCount = 0
         byDriftType    = [pscustomobject]@{
-            added   = ($driftItems | Where-Object { $_.DriftType -eq 'ADDED' }).Count
-            removed = ($driftItems | Where-Object { $_.DriftType -eq 'REMOVED' }).Count
-            changed = ($driftItems | Where-Object { $_.DriftType -eq 'CHANGED' }).Count
+            added   = @($driftItems | Where-Object { $_.DriftType -eq 'ADDED' }).Count
+            removed = @($driftItems | Where-Object { $_.DriftType -eq 'REMOVED' }).Count
+            changed = @($driftItems | Where-Object { $_.DriftType -eq 'CHANGED' }).Count
         }
         byRiskTier     = [pscustomobject]@{
-            high   = ($driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }).Count
-            medium = ($driftItems | Where-Object { $_.RiskTier -eq 'MEDIUM' }).Count
-            low    = ($driftItems | Where-Object { $_.RiskTier -eq 'LOW' }).Count
+            high   = @($driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }).Count
+            medium = @($driftItems | Where-Object { $_.RiskTier -eq 'MEDIUM' }).Count
+            low    = @($driftItems | Where-Object { $_.RiskTier -eq 'LOW' }).Count
         }
     }
     controls   = @(

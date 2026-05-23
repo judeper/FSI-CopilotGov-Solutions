@@ -22,6 +22,7 @@
   ],
   "evidenceOutputs": [
     "drift-report",
+    "drift-findings-csv",
     "baseline-snapshot",
     "reversion-log"
   ],
