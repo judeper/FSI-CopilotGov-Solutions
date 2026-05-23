@@ -18,7 +18,7 @@ BeforeAll {
         Get-Content -Path $Path -Raw | ConvertFrom-Json
     }
 
-    function Get-ScriptParameterNames {
+    function Get-ScriptParameterName {
         param([string]$Path)
         $tokens = $null
         $errors = $null
@@ -148,7 +148,7 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1')) | Should -Contain 'ConfigurationTier'
         }
     }
 
@@ -162,11 +162,11 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ConfigurationTier'
         }
 
         It 'has ClientSecret parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ClientSecret'
+            (Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1')) | Should -Contain 'ClientSecret'
         }
     }
 
@@ -180,11 +180,11 @@ Describe 'DORA Operational Resilience Monitor - Script Validation' {
         }
 
         It 'has ConfigurationTier parameter' {
-            (Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')) | Should -Contain 'ConfigurationTier'
+            (Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')) | Should -Contain 'ConfigurationTier'
         }
 
         It 'has PeriodStart and PeriodEnd parameters' {
-            $parameterNames = Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')
+            $parameterNames = Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Export-Evidence.ps1')
             $parameterNames | Should -Contain 'PeriodStart'
             $parameterNames | Should -Contain 'PeriodEnd'
         }

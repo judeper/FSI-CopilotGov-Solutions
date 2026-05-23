@@ -156,7 +156,7 @@ function New-ArtifactRecord {
     }
 }
 
-function Get-ControlStatuses {
+function Get-ControlStatus {
     return @(
         [pscustomobject]@{
             controlId = '1.5'
@@ -277,7 +277,7 @@ $package = [pscustomobject]@{
         tier = $ConfigurationTier
     }
     summary = $summary
-    controls = Get-ControlStatuses
+    controls = Get-ControlStatus
     artifacts = $artifacts
 }
 

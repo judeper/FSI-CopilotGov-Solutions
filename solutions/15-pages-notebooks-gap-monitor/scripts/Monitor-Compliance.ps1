@@ -74,7 +74,7 @@ Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -For
 
 Import-Module (Join-Path $PSScriptRoot 'PngmShared.psm1') -Force
 
-function Get-CopilotPagesRetentionGaps {
+function Get-CopilotPagesRetentionGap {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -131,7 +131,7 @@ function Get-CopilotPagesRetentionGaps {
     }
 }
 
-function Get-NotebooksEDiscoveryGaps {
+function Get-NotebooksEDiscoveryGap {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -282,8 +282,8 @@ $defaultConfig = $configuration.Default
 $tierConfig = $configuration.Tier
 $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
 
-$pagesResult = Get-CopilotPagesRetentionGaps -TierConfiguration $tierConfig -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
-$notebookResult = Get-NotebooksEDiscoveryGaps -TierConfiguration $tierConfig
+$pagesResult = Get-CopilotPagesRetentionGap -TierConfiguration $tierConfig -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+$notebookResult = Get-NotebooksEDiscoveryGap -TierConfiguration $tierConfig
 $allGaps = @($pagesResult.gaps) + @($notebookResult.gaps)
 $openGaps = @($allGaps | Where-Object { $_.status -eq 'open' })
 $compensatingControls = Test-CompensatingControlStatus -TierConfiguration $tierConfig -OpenGaps $openGaps

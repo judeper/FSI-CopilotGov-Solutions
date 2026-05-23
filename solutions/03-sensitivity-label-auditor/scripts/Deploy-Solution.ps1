@@ -146,7 +146,7 @@ function Test-PurviewLicensing {
     }
 }
 
-function Test-LabelTaxonomyExists {
+function Test-LabelTaxonomy {
     param(
         [Parameter(Mandatory)]
         [pscustomobject]$Configuration
@@ -184,7 +184,7 @@ function Get-LabelTaxonomySnapshot {
     }
 }
 
-function Test-UpstreamDependencies {
+function Test-UpstreamDependency {
     $solutionRoot = Get-SolutionRoot
     $dep01Path = Resolve-OptionalPath -Path (Join-Path $solutionRoot '..\01-copilot-readiness-scanner')
     $dep02Path = Resolve-OptionalPath -Path (Join-Path $solutionRoot '..\02-oversharing-risk-assessment')
@@ -255,9 +255,9 @@ function New-DeploymentManifest {
 
 $configuration = Get-ResolvedConfiguration -Tier $ConfigurationTier -RequestedWorkloads $WorkloadsToAudit
 $licensingCheck = Test-PurviewLicensing -Configuration $configuration
-$taxonomyCheck = Test-LabelTaxonomyExists -Configuration $configuration
+$taxonomyCheck = Test-LabelTaxonomy -Configuration $configuration
 $taxonomySnapshot = Get-LabelTaxonomySnapshot -Configuration $configuration
-$dependencyChecks = Test-UpstreamDependencies
+$dependencyChecks = Test-UpstreamDependency
 $deploymentManifest = New-DeploymentManifest -Configuration $configuration -LicensingCheck $licensingCheck -TaxonomyCheck $taxonomyCheck -TaxonomySnapshot $taxonomySnapshot -Dependencies $dependencyChecks -Tenant $TenantId
 
 $resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)

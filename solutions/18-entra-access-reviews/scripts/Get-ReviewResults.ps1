@@ -55,7 +55,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
-function Get-SampleReviewDecisions {
+function Get-SampleReviewDecision {
     [CmdletBinding()]
     param()
 
@@ -128,7 +128,7 @@ function Get-SampleReviewDecisions {
     )
 }
 
-function Get-ReviewDecisions {
+function Get-ReviewDecision {
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -192,7 +192,7 @@ function Get-ReviewDecisions {
     }
 
     Write-Warning 'Using representative sample data. Connect to Graph API for production use.'
-    return Get-SampleReviewDecisions
+    return Get-SampleReviewDecision
 }
 
 function Test-ApproachingExpiry {
@@ -259,7 +259,7 @@ else {
     $graphContext = New-CopilotGovGraphContext -TenantId $TenantId
 }
 
-$decisions = Get-ReviewDecisions -GraphContext $graphContext
+$decisions = Get-ReviewDecision -GraphContext $graphContext
 $escalationItems = Test-ApproachingExpiry -Decisions $decisions
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)

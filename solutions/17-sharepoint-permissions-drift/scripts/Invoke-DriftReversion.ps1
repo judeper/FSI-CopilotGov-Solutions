@@ -232,7 +232,7 @@ function Get-PendingApprovalKey {
     return $null
 }
 
-function Read-PendingApprovals {
+function Read-PendingApproval {
     param([string]$Path)
 
     if (-not (Test-Path $Path)) { return @() }
@@ -243,7 +243,7 @@ function Read-PendingApprovals {
     return @(ConvertFrom-Json -InputObject $raw)
 }
 
-function Merge-PendingApprovals {
+function Merge-PendingApproval {
     param(
         [array]$ExistingApprovals,
         [array]$NewApprovals
@@ -314,7 +314,7 @@ if ($driftReport.totalDriftItems -eq 0) {
 
 $reportDir = Split-Path $DriftReportPath -Parent
 $pendingApprovalsPath = Join-Path $reportDir 'pending-approvals.json'
-$existingPendingApprovals = Read-PendingApprovals -Path $pendingApprovalsPath
+$existingPendingApprovals = Read-PendingApproval -Path $pendingApprovalsPath
 
 Write-Host "Processing $($driftReport.totalDriftItems) drift item(s) with reversion mode: $($policy.reversionMode)"
 
@@ -376,7 +376,7 @@ if ($reversionLog.Count -gt 0) {
 }
 
 # Save pending approvals, preserving records from prior runs.
-$mergedPendingApprovals = Merge-PendingApprovals -ExistingApprovals $existingPendingApprovals -NewApprovals $pendingApprovals
+$mergedPendingApprovals = Merge-PendingApproval -ExistingApprovals $existingPendingApprovals -NewApprovals $pendingApprovals
 if ($mergedPendingApprovals.Count -gt 0) {
     $mergedPendingApprovals | ConvertTo-Json -Depth 10 | Set-Content -Path $pendingApprovalsPath -Encoding UTF8
     Write-Host "Pending approvals saved: $pendingApprovalsPath"

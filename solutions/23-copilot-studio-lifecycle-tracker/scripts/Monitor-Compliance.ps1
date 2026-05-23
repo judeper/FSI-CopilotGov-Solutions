@@ -95,7 +95,7 @@ function Get-PublishingApprovalStub {
     })
 }
 
-function Get-LifecycleReviewFindings {
+function Get-LifecycleReviewFinding {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -132,7 +132,7 @@ Write-Warning $script:StubWarning
 
 $inventory = Get-AgentInventoryStub -Environments @($configuration.defaults.monitoredEnvironments)
 $approvals = Get-PublishingApprovalStub -Configuration $configuration
-$findings = Get-LifecycleReviewFindings -Inventory $inventory -CadenceDays $configuration.lifecycleReviewCadenceDays
+$findings = Get-LifecycleReviewFinding -Inventory $inventory -CadenceDays $configuration.lifecycleReviewCadenceDays
 
 $status = [pscustomobject]@{
     solution = $configuration.solution

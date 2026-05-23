@@ -83,7 +83,7 @@ function Get-ConfigValue {
     return $DefaultValue
 }
 
-function Get-RiskThresholds {
+function Get-RiskThreshold {
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -247,7 +247,7 @@ catch {
     }
 }
 
-$riskThresholds = Get-RiskThresholds -RiskConfig $riskConfig
+$riskThresholds = Get-RiskThreshold -RiskConfig $riskConfig
 
 try {
     $items = Import-Csv -Path $InputPath -Encoding UTF8

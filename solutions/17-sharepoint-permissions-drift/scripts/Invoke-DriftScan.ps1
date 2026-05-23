@@ -113,7 +113,7 @@ function Get-RiskTier {
     return 'LOW'
 }
 
-function Compare-PermissionSets {
+function Compare-PermissionSet {
     <#
     .SYNOPSIS
         Compares baseline and current permission sets for a single site.

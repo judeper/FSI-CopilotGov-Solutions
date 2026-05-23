@@ -117,7 +117,7 @@ function Get-ItemShareType {
     return $null
 }
 
-function Get-SampleItemPermissions {
+function Get-SampleItemPermission {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -189,7 +189,7 @@ foreach ($siteUrl in $SiteUrls) {
     Write-Verbose "Scanning site: $siteUrl"
 
     try {
-        $siteFindings = @(Get-SampleItemPermissions -SiteUrl $siteUrl)
+        $siteFindings = @(Get-SampleItemPermission -SiteUrl $siteUrl)
         if ($MaxItemsPerLibrary -ge 0) {
             $libraryCounts = @{}
             $siteFindings = @(

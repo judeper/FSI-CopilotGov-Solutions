@@ -126,7 +126,7 @@ function Get-WaveStatus {
     }
 }
 
-function Test-GateCriteria {
+function Test-GateCriterion {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -308,7 +308,7 @@ function Measure-RolloutHealth {
 try {
     $configuration = Get-RolloutConfiguration -Tier $ConfigurationTier -SolutionRoot $solutionRoot
     $waveStatus = Get-WaveStatus -Configuration $configuration -SelectedWaveNumber $WaveNumber -ArtifactRoot $OutputPath
-    $gateCriteria = Test-GateCriteria -WaveStatus $waveStatus -Configuration $configuration
+    $gateCriteria = Test-GateCriterion -WaveStatus $waveStatus -Configuration $configuration
     $waveHealth = Measure-RolloutHealth -WaveStatus $waveStatus -GateCriteriaResult $gateCriteria
 
     $result = [pscustomobject]@{

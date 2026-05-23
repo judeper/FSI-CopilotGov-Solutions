@@ -75,7 +75,7 @@ function New-BaselineSnapshot {
         copilotPolicyLocation = [string]$DefaultConfig.defaults.copilotPolicyLocation
         copilotCapabilities = @($DefaultConfig.defaults.copilotCapabilities)
         complementaryWorkloadDlpPolicyLocations = @($TierConfig.copilotWorkloads)
-        monitoredCapabilities = Get-CopilotCapabilityIds -DefaultConfig $DefaultConfig
+        monitoredCapabilities = Get-CopilotCapabilityId -DefaultConfig $DefaultConfig
         policyModes = [ordered]@{
             default = $defaultMode
             highSensitivity = $highSensitivityMode

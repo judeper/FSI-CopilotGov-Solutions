@@ -67,7 +67,7 @@ Import-Module (Join-Path $repoRoot 'scripts\common\DataverseHelpers.psm1') -Forc
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
-function Merge-RolloutRingDefinitions {
+function Merge-RolloutRingDefinition {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -134,7 +134,7 @@ function Get-FmcConfiguration {
         graph                        = $defaultConfig.graph
         dataverse                    = $defaultConfig.dataverse
         featureCategories            = $defaultConfig.featureCategories
-        rolloutRings                 = if ($tierConfig.ContainsKey('rolloutRings')) { Merge-RolloutRingDefinitions -DefaultRings $defaultConfig.rolloutRings -TierRings $tierConfig.rolloutRings } else { $defaultConfig.rolloutRings }
+        rolloutRings                 = if ($tierConfig.ContainsKey('rolloutRings')) { Merge-RolloutRingDefinition -DefaultRings $defaultConfig.rolloutRings -TierRings $tierConfig.rolloutRings } else { $defaultConfig.rolloutRings }
         powerAutomate                = $defaultConfig.powerAutomate
         driftAlertThreshold          = if ($tierConfig.ContainsKey('driftAlertThreshold')) { [int]$tierConfig.driftAlertThreshold } else { [int]$defaultConfig.driftAlertThreshold }
         driftMonitoring              = $tierConfig.driftMonitoring
@@ -286,7 +286,7 @@ function New-FeatureBaseline {
     }
 }
 
-function Get-DataverseContracts {
+function Get-DataverseContract {
     [CmdletBinding()]
     param()
 
@@ -336,7 +336,7 @@ try {
     $graphContext = Connect-FmcGraphContext -TenantId $TenantId -GraphConfig $configuration.graph -Environment $Environment
     $inventory = Get-CopilotFeatureInventory -Configuration $configuration -GraphContext $graphContext -Environment $Environment
     $baseline = New-FeatureBaseline -Inventory $inventory -Configuration $configuration -GraphContext $graphContext -Environment $Environment
-    $dataverseContracts = Get-DataverseContracts
+    $dataverseContracts = Get-DataverseContract
     $flowPlan = Get-PowerAutomateFlowPlan -Configuration $configuration -Environment $Environment -BaselineOnly:$BaselineOnly
 
     $rolloutPlan = @()

@@ -42,7 +42,7 @@ Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -For
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $solutionRoot 'scripts\RolloutConfig.psm1') -Force
 
-function Get-ControlStatuses {
+function Get-ControlStatus {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -247,7 +247,7 @@ try {
     $approvalArtifact = Write-ArtifactFile -Path (Join-Path $OutputPath 'RTR-approval-history.json') -Data $approvalHistory
     $dashboardArtifact = Write-ArtifactFile -Path (Join-Path $OutputPath 'RTR-rollout-health-dashboard.json') -Data $rolloutHealthDashboard
 
-    $controls = Get-ControlStatuses -Tier $ConfigurationTier
+    $controls = Get-ControlStatus -Tier $ConfigurationTier
     $findings = @($controls | Where-Object { $_.status -ne 'implemented' }).Count
     $overallStatus = if ($findings -gt 0) { 'partial' } else { 'implemented' }
 

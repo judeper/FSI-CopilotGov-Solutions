@@ -18,7 +18,7 @@ BeforeAll {
         Get-Content -Path $Path -Raw | ConvertFrom-Json
     }
 
-    function Get-ScriptParameterNames {
+    function Get-ScriptParameterName {
         param([string]$Path)
         $tokens = $null
         $errors = $null
@@ -97,12 +97,12 @@ Describe 'CSLT - Script Validation' {
     It 'Monitor-Compliance.ps1 has comment-based help' { Test-CommentBasedHelp -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1') | Should -BeTrue }
     It 'Export-Evidence.ps1 has comment-based help' { Test-CommentBasedHelp -Path (Join-Path $scriptsPath 'Export-Evidence.ps1') | Should -BeTrue }
     It 'Deploy-Solution.ps1 declares ConfigurationTier parameter' {
-        Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1') | Should -Contain 'ConfigurationTier'
+        Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1') | Should -Contain 'ConfigurationTier'
     }
     It 'Monitor-Compliance.ps1 declares OutputPath parameter' {
-        Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1') | Should -Contain 'OutputPath'
+        Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1') | Should -Contain 'OutputPath'
     }
     It 'Export-Evidence.ps1 declares PeriodStart parameter' {
-        Get-ScriptParameterNames -Path (Join-Path $scriptsPath 'Export-Evidence.ps1') | Should -Contain 'PeriodStart'
+        Get-ScriptParameterName -Path (Join-Path $scriptsPath 'Export-Evidence.ps1') | Should -Contain 'PeriodStart'
     }
 }

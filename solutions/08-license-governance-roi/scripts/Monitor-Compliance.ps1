@@ -64,7 +64,7 @@ function Get-CopilotUsageReport {
     )
 }
 
-function Get-InactiveSeats {
+function Get-InactiveSeat {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -139,7 +139,7 @@ try {
     }
 
     $usageReport = @(Get-CopilotUsageReport -Configuration $configuration)
-    $inactiveSeats = @(Get-InactiveSeats -UsageReport $usageReport -ThresholdDays $effectiveThreshold)
+    $inactiveSeats = @(Get-InactiveSeat -UsageReport $usageReport -ThresholdDays $effectiveThreshold)
     $metrics = Measure-LicenseUtilization -UsageReport $usageReport -InactiveSeats $inactiveSeats -ThresholdPct ([int]$configuration.reallocationTriggerUtilizationPct) -AnnualizedCostPerSeatUsd ([int]$configuration.defaults.annualizedCostPerSeatUsd)
 
     $flaggedSeats = foreach ($seat in $inactiveSeats) {

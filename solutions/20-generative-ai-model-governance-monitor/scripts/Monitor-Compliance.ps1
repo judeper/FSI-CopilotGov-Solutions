@@ -62,7 +62,7 @@ function Get-GmgMapValue {
     return $Default
 }
 
-function New-SampleInventoryRecords {
+function New-SampleInventoryRecord {
     param(
         [Parameter()] [object[]]$TrackedModelSources = @(),
         [Parameter()] [string[]]$TrackedModels = @(),
@@ -238,7 +238,7 @@ $trackedModelSources = if ($defaults.Contains('trackedModelSources')) { @($defau
 $trackedModels = if ($defaults.Contains('trackedModels')) { [string[]]@($defaults.trackedModels) } else { @() }
 $contentSafetyDefaults = if ($defaults.Contains('contentSafetyDefaults')) { [System.Collections.IDictionary]$defaults.contentSafetyDefaults } else { [ordered]@{} }
 
-$inventoryRecords = New-SampleInventoryRecords -TrackedModelSources $trackedModelSources -TrackedModels $trackedModels -Provider $configuration.defaults.modelProvider
+$inventoryRecords = New-SampleInventoryRecord -TrackedModelSources $trackedModelSources -TrackedModels $trackedModels -Provider $configuration.defaults.modelProvider
 $validationRecords = @(
     foreach ($entry in $inventoryRecords) {
         New-SampleValidationRecord -ModelId $entry.modelId -ValidationApproach $configuration.validation_assessment_required -IndependentChallenge $configuration.independentChallenge

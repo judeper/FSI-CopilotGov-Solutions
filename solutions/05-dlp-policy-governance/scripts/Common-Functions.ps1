@@ -3,7 +3,7 @@
 .SYNOPSIS
 Common utility functions shared across DLP Policy Governance scripts.
 .DESCRIPTION
-Provides Read-JsonFile, Read-JsonData, Get-PolicyModeValue, Get-CopilotCapabilityIds,
+Provides Read-JsonFile, Read-JsonData, Get-PolicyModeValue, Get-CopilotCapabilityId,
 New-DlpPolicyTemplate, and ConvertTo-Array. Dot-source this file from Deploy-Solution.ps1,
 Monitor-Compliance.ps1, and Export-Evidence.ps1.
 #>
@@ -66,7 +66,7 @@ function Get-PolicyModeValue {
     return $Fallback
 }
 
-function Get-CopilotCapabilityIds {
+function Get-CopilotCapabilityId {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -121,7 +121,7 @@ function New-DlpPolicyTemplate {
                 includedGroups = @($DefaultConfig.defaults.policyScope.includedGroups)
                 excludedGroups = @($DefaultConfig.defaults.policyScope.excludedGroups)
             }
-            monitoredCapabilities = Get-CopilotCapabilityIds -DefaultConfig $DefaultConfig
+            monitoredCapabilities = Get-CopilotCapabilityId -DefaultConfig $DefaultConfig
             exceptionHandling = [ordered]@{
                 approvalRequired = [bool]$TierConfig.exceptionApprovalRequired
                 attestationRequired = [bool]$TierConfig.exceptionAttestationRequired

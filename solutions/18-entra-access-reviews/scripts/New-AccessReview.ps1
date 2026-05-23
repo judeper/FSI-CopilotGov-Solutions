@@ -127,7 +127,7 @@ function Get-ConfiguredMaxSitesPerRun {
     return $maxSites
 }
 
-function Get-RiskScoredSites {
+function Get-RiskScoredSite {
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -267,7 +267,7 @@ function New-ReviewDefinition {
 }
 
 $schedule = Get-ReviewSchedule -Path $ConfigPath
-$sites = Get-RiskScoredSites -InputPath $RiskScoreInputPath
+$sites = Get-RiskScoredSite -InputPath $RiskScoreInputPath
 $configuredMaxSitesPerRun = Get-ConfiguredMaxSitesPerRun -ConfigurationTier $ConfigurationTier
 $effectiveMaxSitesPerRun = if ($PSBoundParameters.ContainsKey('MaxSitesPerRun')) { $MaxSitesPerRun } else { $configuredMaxSitesPerRun }
 

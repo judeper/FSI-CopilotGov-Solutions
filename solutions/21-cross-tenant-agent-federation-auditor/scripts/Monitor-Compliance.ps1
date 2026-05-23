@@ -95,7 +95,7 @@ function Get-SampleCrossTenantTrust {
     )
 }
 
-function Get-SampleMcpAttestations {
+function Get-SampleMcpAttestation {
     param([int]$MaxConnectionReviewAgeDays)
     return @(
         [pscustomobject]@{
@@ -123,7 +123,7 @@ function Get-SampleMcpAttestations {
     )
 }
 
-function Get-SampleAgentIdAttestations {
+function Get-SampleAgentIdAttestation {
     param([int]$ReviewCadenceDays)
     return @(
         [pscustomobject]@{
@@ -169,8 +169,8 @@ $snapshot = [pscustomobject]@{
     Warning = $script:SampleWarning
     FederationInventory = Get-SampleFederationInventory
     CrossTenantTrust = Get-SampleCrossTenantTrust -ReviewCadenceDays $configuration.federationReviewCadenceDays
-    McpAttestations = Get-SampleMcpAttestations -MaxConnectionReviewAgeDays $maxConnectionReviewAgeDays
-    AgentIdAttestations = Get-SampleAgentIdAttestations -ReviewCadenceDays $configuration.federationReviewCadenceDays
+    McpAttestations = Get-SampleMcpAttestation -MaxConnectionReviewAgeDays $maxConnectionReviewAgeDays
+    AgentIdAttestations = Get-SampleAgentIdAttestation -ReviewCadenceDays $configuration.federationReviewCadenceDays
 }
 
 $resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName

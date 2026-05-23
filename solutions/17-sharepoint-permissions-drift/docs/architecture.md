@@ -48,7 +48,7 @@
 
 1. **Baseline capture** — `New-PermissionsBaseline.ps1` writes representative baseline snapshots for site-level sharing settings, unique permission entries, sharing links, and external user scenarios. The PnP block is illustrative; production tenant binding must add complete role-assignment, sharing-link, and external-user enumeration. The snapshot is saved as a timestamped JSON file with a `latest-baseline.json` pointer.
 
-2. **Drift detection** — `Invoke-DriftScan.ps1` loads the latest baseline and returns representative sample drift scoped to baseline sites until tenant-bound current-state capture is added. `Compare-PermissionSets` documents a permission-entry comparison helper, but the scaffold main path does not perform live tenant comparison.
+2. **Drift detection** — `Invoke-DriftScan.ps1` loads the latest baseline and returns representative sample drift scoped to baseline sites until tenant-bound current-state capture is added. `Compare-PermissionSet` documents a permission-entry comparison helper, but the scaffold main path does not perform live tenant comparison.
 
 3. **Risk classification** — Each drift item receives a scaffold risk score based on drift type, permission level, and principal type. Classifier matches, multiple concurrent drift, and Solution 02 risk elevation are design factors for future tenant-bound scoring.
 

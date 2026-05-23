@@ -266,10 +266,10 @@ Describe 'Microsoft Purview Communication Compliance Configurator' {
             { Get-SolutionConfiguration -ConfigRoot 'C:\nonexistent\path' -Tier 'baseline' } | Should -Throw
         }
 
-        It 'Get-PolicyCatalogDefinitions returns expected template keys' {
+        It 'Get-PolicyCatalogDefinition returns expected template keys' {
             $configRoot = Join-Path $solutionRoot 'config'
             $config = Get-SolutionConfiguration -ConfigRoot $configRoot -Tier 'regulated'
-            $catalog = Get-PolicyCatalogDefinitions -Config $config
+            $catalog = Get-PolicyCatalogDefinition -Config $config
             $catalog | Should -BeOfType [hashtable]
             $catalog.ContainsKey('CopilotAIDisclosure') | Should -BeTrue
             $catalog.ContainsKey('FinancialAdviceReview') | Should -BeTrue

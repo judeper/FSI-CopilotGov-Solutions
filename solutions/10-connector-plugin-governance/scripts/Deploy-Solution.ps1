@@ -112,7 +112,7 @@ function Get-ConnectorGovernanceConfiguration {
     }
 }
 
-function Get-ApprovalSlaHours {
+function Get-ApprovalSlaHour {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -334,7 +334,7 @@ function Set-ConnectorRiskClassification {
     }
 
     $requiresDataFlowAttestation = (@($Connector.dataFlowBoundaries | Where-Object { $_ -ne 'internal-m365' }).Count -gt 0) -or $Connector.supportsFinancialData
-    $approvalSlaHours = Get-ApprovalSlaHours -DefaultConfig $DefaultConfig -TierConfig $TierConfig -RiskLevel $riskLevel
+    $approvalSlaHours = Get-ApprovalSlaHour -DefaultConfig $DefaultConfig -TierConfig $TierConfig -RiskLevel $riskLevel
 
     return [pscustomobject]@{
         connectorId = $Connector.connectorId

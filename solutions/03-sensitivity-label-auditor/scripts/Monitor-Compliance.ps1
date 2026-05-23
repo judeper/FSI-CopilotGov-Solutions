@@ -177,7 +177,7 @@ function Get-SuggestedLabel {
     return [string]$match.name
 }
 
-function Get-ContainerTemplates {
+function Get-ContainerTemplate {
     param(
         [Parameter(Mandatory)]
         [string]$Workload
@@ -211,7 +211,7 @@ function Get-ContainerTemplates {
     }
 }
 
-function New-GapCandidates {
+function New-GapCandidate {
     param(
         [Parameter(Mandatory)]
         [string]$Workload,
@@ -226,7 +226,7 @@ function New-GapCandidates {
         [object[]]$Taxonomy
     )
 
-    $templates = Get-ContainerTemplates -Workload $Workload
+    $templates = Get-ContainerTemplate -Workload $Workload
     $weightTotal = ($templates | Measure-Object -Property riskScore -Sum).Sum
     $itemsPerTemplate = [int][math]::Max(1, [math]::Round($TotalItems / $templates.Count, 0))
     $remainingItems = $TotalItems
@@ -315,7 +315,7 @@ function New-WorkloadCoverageResult {
     $labeledCount = [int][math]::Round($totalItems * ($coveragePercent / 100), 0)
     $unlabeledCount = [int][math]::Max(0, $totalItems - $labeledCount)
     $distribution = New-LabelTierDistribution -LabeledCount $labeledCount -Taxonomy $Configuration.labelTaxonomy
-    $gapCandidates = New-GapCandidates -Workload $Workload -TotalItems $totalItems -UnlabeledCount $unlabeledCount -Taxonomy $Configuration.labelTaxonomy
+    $gapCandidates = New-GapCandidate -Workload $Workload -TotalItems $totalItems -UnlabeledCount $unlabeledCount -Taxonomy $Configuration.labelTaxonomy
 
     return [pscustomobject]@{
         workload = $Workload
@@ -481,7 +481,7 @@ function Get-OversharingRiskContext {
     }
 }
 
-function New-GapFindings {
+function New-GapFinding {
     param(
         [Parameter(Mandatory)]
         [object[]]$WorkloadCoverage,
@@ -612,7 +612,7 @@ foreach ($workload in $configuration.workloadsToAudit) {
 }
 
 $overallCoverage = Measure-LabelCoverage -WorkloadCoverage $workloadResults
-$gapFindings = New-GapFindings -WorkloadCoverage $workloadResults -PrioritySites @($configuration.prioritySites) -OversharingContext $oversharingContext
+$gapFindings = New-GapFinding -WorkloadCoverage $workloadResults -PrioritySites @($configuration.prioritySites) -OversharingContext $oversharingContext
 $remediationManifest = if ([bool]$configuration.tierSettings.generateRemediationManifest) {
     New-RemediationManifest -GapFindings $gapFindings -Configuration $configuration
 }

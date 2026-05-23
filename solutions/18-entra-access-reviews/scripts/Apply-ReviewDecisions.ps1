@@ -69,7 +69,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
-function Get-SampleApplyResults {
+function Get-SampleApplyResult {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -156,7 +156,7 @@ function Get-ReviewDefinitionSiteUrl {
     return $null
 }
 
-function Invoke-ApplyDecisions {
+function Invoke-ApplyDecision {
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
         [Parameter(Mandatory)]
@@ -248,7 +248,7 @@ function Invoke-ApplyDecisions {
     }
 
     Write-Warning 'Using representative sample data. Connect to Graph API for production use.'
-    return Get-SampleApplyResults -DefinitionId $DefinitionId -SiteUrl $SiteUrl
+    return Get-SampleApplyResult -DefinitionId $DefinitionId -SiteUrl $SiteUrl
 }
 
 $graphContext = $null
@@ -274,7 +274,7 @@ else {
     $graphContext = New-CopilotGovGraphContext -TenantId $TenantId
 }
 
-$appliedActions = Invoke-ApplyDecisions -DefinitionId $ReviewDefinitionId -GraphContext $graphContext -SiteUrl $SiteUrl
+$appliedActions = Invoke-ApplyDecision -DefinitionId $ReviewDefinitionId -GraphContext $graphContext -SiteUrl $SiteUrl
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -Path $outputRoot -ItemType Directory -Force

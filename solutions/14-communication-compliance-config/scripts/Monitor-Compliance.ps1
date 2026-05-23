@@ -72,7 +72,7 @@ $deploymentRoot = Join-Path $solutionRoot 'artifacts\deployment'
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'CCC-Common.psm1') -Force
 
-function Get-ReviewerQueueMetrics {
+function Get-ReviewerQueueMetric {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -231,7 +231,7 @@ function Get-LexiconStatus {
 $configRoot = Join-Path $solutionRoot 'config'
 $config = Get-SolutionConfiguration -ConfigRoot $configRoot -Tier $ConfigurationTier
 $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
-$queueMetrics = Get-ReviewerQueueMetrics -Config $config -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+$queueMetrics = Get-ReviewerQueueMetric -Config $config -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
 $policyCoverage = Test-PolicyCoverage -Config $config -DeploymentRoot $deploymentRoot
 $lexiconStatus = Get-LexiconStatus -Config $config -DeploymentRoot $deploymentRoot
 

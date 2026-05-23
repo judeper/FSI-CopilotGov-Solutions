@@ -18,7 +18,7 @@ BeforeAll {
         Get-Content -Path $Path -Raw | ConvertFrom-Json
     }
 
-    function Test-ScriptParses {
+    function Test-ScriptParse {
         param([string]$Path)
         $tokens = $null
         $errors = $null
@@ -85,16 +85,16 @@ Describe 'CTAF - Configuration Validation' {
 
 Describe 'CTAF - Script Parse Validation' {
     It 'Deploy-Solution.ps1 parses without errors' {
-        Test-ScriptParses -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1') | Should -BeTrue
+        Test-ScriptParse -Path (Join-Path $scriptsPath 'Deploy-Solution.ps1') | Should -BeTrue
     }
     It 'Monitor-Compliance.ps1 parses without errors' {
-        Test-ScriptParses -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1') | Should -BeTrue
+        Test-ScriptParse -Path (Join-Path $scriptsPath 'Monitor-Compliance.ps1') | Should -BeTrue
     }
     It 'Export-Evidence.ps1 parses without errors' {
-        Test-ScriptParses -Path (Join-Path $scriptsPath 'Export-Evidence.ps1') | Should -BeTrue
+        Test-ScriptParse -Path (Join-Path $scriptsPath 'Export-Evidence.ps1') | Should -BeTrue
     }
     It 'CtafConfig.psm1 parses without errors' {
-        Test-ScriptParses -Path (Join-Path $scriptsPath 'CtafConfig.psm1') | Should -BeTrue
+        Test-ScriptParse -Path (Join-Path $scriptsPath 'CtafConfig.psm1') | Should -BeTrue
     }
 }
 
