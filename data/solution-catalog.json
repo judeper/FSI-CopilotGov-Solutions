@@ -754,7 +754,7 @@
     "domain": "operations-analytics",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "solution_type": [
       "Power BI",
       "Dataverse",
