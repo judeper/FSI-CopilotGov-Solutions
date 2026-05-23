@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## v0.2.2 — 2026-05-23 — Council review remediation
+
+### VERIFIED-BUG
+- Added Pester coverage for deployment, monitoring, evidence output schemas, and tier progression invariants.
+- Documented lexicon evidence fields as `wordAdded` and `wordRemoved` string arrays to match script output.
+- Tightened credential-supplied detection for empty SecureString inputs in monitoring output.
+- Corrected the evidence export operational note grammar.
+
+### VERIFIED-DEAD-CONFIG
+- Wired queue health thresholds into monitoring output and threshold evaluation.
+- Surfaced regulated all-Copilot-content monitoring metadata in deployment manifest and output.
+
 ## v0.2.1 - 2026-05-04
 
 - Corrected Communication Compliance licensing and role-group terminology to align with current Microsoft Learn guidance.

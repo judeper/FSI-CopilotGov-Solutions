@@ -905,7 +905,7 @@
     "domain": "regulatory-resilience",
     "priority": "P1",
     "phase": 3,
-    "version": "v0.2.1",
+    "version": "v0.2.2",
     "solution_type": [
       "PowerShell",
       "Power Automate"

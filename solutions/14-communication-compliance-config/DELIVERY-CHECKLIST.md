@@ -4,7 +4,7 @@
 
 - Solution: Microsoft Purview Communication Compliance Configurator (`14-communication-compliance-config`)
 - Code: `CCC`
-- Version: `v0.2.1`
+- Version: `v0.2.2`
 - Track / Priority / Phase: `D / P1 / 3`
 - Dependency: `04-finra-supervision-workflow`
 - Evidence outputs: `policy-template-export`, `reviewer-queue-metrics`, `lexicon-update-log`
