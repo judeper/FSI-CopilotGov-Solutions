@@ -23,7 +23,7 @@ Inspect the JSON files under `config\`:
 
 - `default-config.json` for common defaults, controls, and evidence output settings
 - `review-schedule.json` for risk-tier review frequency and duration
-- `reviewer-mapping.json` for reviewer assignment rules and escalation chain
+- `reviewer-mapping.json` as a reference reviewer and escalation template until tenant role resolution is added
 - `baseline.json` for minimal rollout posture
 - `recommended.json` for multi-tier reviews with escalation
 - `regulated.json` for extended evidence retention and required attestation

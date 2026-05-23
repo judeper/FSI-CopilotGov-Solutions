@@ -1,6 +1,6 @@
 # Entra Access Reviews Automation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -75,7 +75,7 @@ Deploy this solution after upstream oversharing risk assessment has completed an
 | `scripts\Export-Evidence.ps1` | Packages review definitions, decisions, and applied actions with checksums |
 | `config\default-config.json` | Shared defaults for controls, review cadence, and evidence output |
 | `config\review-schedule.json` | Risk-tier review frequency and duration settings |
-| `config\reviewer-mapping.json` | Reviewer assignment rules by site sensitivity |
+| `config\reviewer-mapping.json` | Reference reviewer and escalation template; runtime selection uses risk-input owner or `review-schedule.json` fallback until tenant role resolution is added |
 | `config\baseline.json` | Minimum viable rollout focused on resources mapped to HIGH-risk sites |
 | `config\recommended.json` | Production posture with multi-tier reviews and escalation |
 | `config\regulated.json` | Examination-ready posture with extended retention and attestation |

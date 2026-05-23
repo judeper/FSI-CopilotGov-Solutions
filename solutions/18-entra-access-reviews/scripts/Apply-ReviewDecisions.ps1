@@ -24,6 +24,9 @@ When set, uses Connect-MgGraph for delegated authentication instead of client cr
 .PARAMETER ReviewDefinitionId
 The access review definition ID whose decisions should be applied.
 
+.PARAMETER SiteUrl
+Optional SharePoint site URL carried from the access review definition output for evidence records.
+
 .PARAMETER OutputPath
 Directory where applied actions output will be written.
 
@@ -33,7 +36,7 @@ Directory where applied actions output will be written.
 .EXAMPLE
 .\Apply-ReviewDecisions.ps1 -TenantId 00000000-0000-0000-0000-000000000000 -UseMgGraph -ReviewDefinitionId ear-site-001-review
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
@@ -53,6 +56,9 @@ param(
     [string]$ReviewDefinitionId,
 
     [Parameter()]
+    [string]$SiteUrl,
+
+    [Parameter()]
     [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\reviews')
 )
 
@@ -67,9 +73,13 @@ function Get-SampleApplyResults {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [string]$DefinitionId
+        [string]$DefinitionId,
+
+        [Parameter()]
+        [string]$SiteUrl
     )
 
+    $sampleSiteUrl = if ([string]::IsNullOrWhiteSpace($SiteUrl)) { 'https://contoso.sharepoint.com/sites/TradingDesk' } else { $SiteUrl }
     $now = Get-Date
     return @(
         [pscustomobject]@{
@@ -80,7 +90,7 @@ function Get-SampleApplyResults {
             userPrincipalName = 'contractor@external.com'
             decision = 'Deny'
             action = 'remove-access'
-            siteUrl = 'https://contoso.sharepoint.com/sites/TradingDesk'
+            siteUrl = $sampleSiteUrl
             appliedAt = $now.ToString('o')
             appliedBy = 'system-automation'
             status = 'sample-data'
@@ -94,7 +104,7 @@ function Get-SampleApplyResults {
             userPrincipalName = 'jane.doe@contoso.com'
             decision = 'Approve'
             action = 'maintain-access'
-            siteUrl = 'https://contoso.sharepoint.com/sites/TradingDesk'
+            siteUrl = $sampleSiteUrl
             appliedAt = $now.ToString('o')
             appliedBy = 'system-automation'
             status = 'sample-data'
@@ -103,18 +113,77 @@ function Get-SampleApplyResults {
     )
 }
 
-function Invoke-ApplyDecisions {
+function Resolve-ReviewDecisionAction {
     [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]$Decision
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Decision)) {
+        return 'unsupported-decision'
+    }
+
+    switch ($Decision) {
+        'Deny' { return 'remove-access' }
+        'Approve' { return 'maintain-access' }
+        'DontKnow' { return 'no-action' }
+        'NotReviewed' { return 'no-action' }
+        'Recommendation' { return 'no-action' }
+        default { return 'unsupported-decision' }
+    }
+}
+
+function Get-ReviewDefinitionSiteUrl {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [object]$Definition
+    )
+
+    if ($null -eq $Definition) {
+        return $null
+    }
+
+    if (($Definition.PSObject.Properties.Name -contains 'siteUrl') -and -not [string]::IsNullOrWhiteSpace([string]$Definition.siteUrl)) {
+        return [string]$Definition.siteUrl
+    }
+
+    if (($Definition.PSObject.Properties.Name -contains 'displayName') -and $Definition.displayName -match '^Access Review - (?<siteUrl>https?://.+?) \[[^\]]+\]$') {
+        return $Matches['siteUrl']
+    }
+
+    return $null
+}
+
+function Invoke-ApplyDecisions {
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
         [Parameter(Mandatory)]
         [string]$DefinitionId,
 
         [Parameter()]
-        [object]$GraphContext
+        [object]$GraphContext,
+
+        [Parameter()]
+        [string]$SiteUrl
     )
 
     if ($null -ne $GraphContext -and $GraphContext.Mode -ne 'placeholder') {
         try {
+            $resolvedSiteUrl = $SiteUrl
+            if ([string]::IsNullOrWhiteSpace($resolvedSiteUrl)) {
+                try {
+                    $reviewDefinition = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+                        -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId" `
+                        -Method 'GET'
+                    $resolvedSiteUrl = Get-ReviewDefinitionSiteUrl -Definition $reviewDefinition
+                }
+                catch {
+                    Write-Warning "Failed to resolve site URL for definition '$DefinitionId': $($_.Exception.Message)"
+                }
+            }
+
             $instances = Invoke-CopilotGovGraphRequest -Context $GraphContext `
                 -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances" `
                 -Method 'GET' `
@@ -123,6 +192,11 @@ function Invoke-ApplyDecisions {
             $appliedActions = @()
             foreach ($instance in $instances) {
                 try {
+                    $target = "review definition '$DefinitionId' instance '$($instance.id)'"
+                    if (-not $PSCmdlet.ShouldProcess($target, 'Apply access review decisions')) {
+                        continue
+                    }
+
                     Invoke-CopilotGovGraphRequest -Context $GraphContext `
                         -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances/$($instance.id)/applyDecisions" `
                         -Method 'POST' | Out-Null
@@ -133,7 +207,17 @@ function Invoke-ApplyDecisions {
                         -AllPages
 
                     foreach ($decision in $decisions) {
-                        $action = if ($decision.decision -eq 'Deny') { 'remove-access' } else { 'maintain-access' }
+                        $action = Resolve-ReviewDecisionAction -Decision $decision.decision
+                        $notes = switch ($action) {
+                            'no-action' { "Decision '$($decision.decision)' recorded for review instance $($instance.id); no access change applied." }
+                            'unsupported-decision' { "Unsupported decision '$($decision.decision)' recorded for review instance $($instance.id); review manually." }
+                            default { "Decision applied for review instance $($instance.id)." }
+                        }
+                        $status = switch ($action) {
+                            'no-action' { 'recorded' }
+                            'unsupported-decision' { 'requires-review' }
+                            default { 'applied' }
+                        }
 
                         $appliedActions += [pscustomobject]@{
                             reviewDefinitionId = $DefinitionId
@@ -143,10 +227,11 @@ function Invoke-ApplyDecisions {
                             userPrincipalName = $decision.principal.userPrincipalName
                             decision = $decision.decision
                             action = $action
+                            siteUrl = $resolvedSiteUrl
                             appliedAt = (Get-Date).ToString('o')
                             appliedBy = 'system-automation'
-                            status = 'applied'
-                            notes = "Decision applied for review instance $($instance.id)."
+                            status = $status
+                            notes = $notes
                         }
                     }
                 }
@@ -163,7 +248,7 @@ function Invoke-ApplyDecisions {
     }
 
     Write-Warning 'Using representative sample data. Connect to Graph API for production use.'
-    return Get-SampleApplyResults -DefinitionId $DefinitionId
+    return Get-SampleApplyResults -DefinitionId $DefinitionId -SiteUrl $SiteUrl
 }
 
 $graphContext = $null
@@ -189,7 +274,7 @@ else {
     $graphContext = New-CopilotGovGraphContext -TenantId $TenantId
 }
 
-$appliedActions = Invoke-ApplyDecisions -DefinitionId $ReviewDefinitionId -GraphContext $graphContext
+$appliedActions = Invoke-ApplyDecisions -DefinitionId $ReviewDefinitionId -GraphContext $graphContext -SiteUrl $SiteUrl
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -Path $outputRoot -ItemType Directory -Force

@@ -29,15 +29,16 @@ The following application permissions are required for the registered app:
 
 ## Required PowerShell Modules
 
-Install and approve the following modules on the execution host:
+Install and approve the following module on the execution host:
 
 - `Microsoft.Graph`
-- `PnP.PowerShell`
+
+`PnP.PowerShell` is optional for future SharePoint owner-resolution work; the current scaffold does not import or call PnP cmdlets.
 
 Example installation command:
 
 ```powershell
-Install-Module Microsoft.Graph, PnP.PowerShell -Scope CurrentUser
+Install-Module Microsoft.Graph -Scope CurrentUser
 ```
 
 ## Upstream Dependency

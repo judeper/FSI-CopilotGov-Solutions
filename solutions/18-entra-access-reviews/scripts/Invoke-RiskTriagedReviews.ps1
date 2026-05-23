@@ -4,7 +4,7 @@ Orchestrates the full access review lifecycle: risk read, create, collect, apply
 
 .DESCRIPTION
 Coordinates the end-to-end risk-triaged access review workflow by reading risk scores
-from solution 02 output, creating access reviews for resources mapped to HIGH-risk sites first, collecting
+from solution 02 output, creating access reviews for resources mapped to sites in HIGH, MEDIUM, then LOW risk order, collecting
 review results, applying completed decisions, and exporting evidence packages.
 Scripts use representative sample data and do not connect to live Microsoft 365 services.
 
@@ -25,6 +25,10 @@ Path to the risk-scored site output from solution 02-oversharing-risk-assessment
 
 .PARAMETER ConfigPath
 Path to the review schedule configuration file. Defaults to config\review-schedule.json.
+
+.PARAMETER ConfigurationTier
+Selects the governance tier to apply when setting run limits and exporting evidence. Supported values are baseline,
+recommended, and regulated.
 
 .PARAMETER OutputPath
 Directory where all output artifacts will be written.
@@ -57,6 +61,10 @@ param(
     [string]$ConfigPath = (Join-Path $PSScriptRoot '..\config\review-schedule.json'),
 
     [Parameter()]
+    [ValidateSet('baseline', 'recommended', 'regulated')]
+    [string]$ConfigurationTier = 'baseline',
+
+    [Parameter()]
     [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\reviews')
 )
 
@@ -85,6 +93,7 @@ Write-Verbose '--- Step 1: Creating access reviews from risk scores ---'
 $newReviewParams = @{
     TenantId = $TenantId
     ConfigPath = $ConfigPath
+    ConfigurationTier = $ConfigurationTier
     OutputPath = $outputRoot
 }
 if (-not [string]::IsNullOrWhiteSpace($RiskScoreInputPath)) {
@@ -114,13 +123,22 @@ $appliedResults = @()
 if (Test-Path -Path $definitionsFile) {
     try {
         $definitions = Get-Content -Path $definitionsFile -Raw | ConvertFrom-Json
-        $uniqueDefinitions = @($definitions | Select-Object -ExpandProperty reviewDefinitionId -Unique)
+        $definitionEntries = @(
+            $definitions |
+                Where-Object { $null -ne $_.reviewDefinitionId -and -not [string]::IsNullOrWhiteSpace([string]$_.reviewDefinitionId) } |
+                Group-Object -Property reviewDefinitionId |
+                ForEach-Object { $_.Group | Select-Object -First 1 }
+        )
 
-        foreach ($defId in $uniqueDefinitions) {
+        foreach ($definition in $definitionEntries) {
+            $defId = [string]$definition.reviewDefinitionId
             $applyParams = @{
                 TenantId = $TenantId
                 ReviewDefinitionId = $defId
                 OutputPath = $outputRoot
+            }
+            if (($definition.PSObject.Properties.Name -contains 'siteUrl') -and -not [string]::IsNullOrWhiteSpace([string]$definition.siteUrl)) {
+                $applyParams['SiteUrl'] = [string]$definition.siteUrl
             }
             foreach ($key in $authParams.Keys) {
                 $applyParams[$key] = $authParams[$key]
@@ -142,7 +160,7 @@ if (Test-Path -Path $definitionsFile) {
 
 Write-Verbose '--- Step 4: Exporting evidence ---'
 $exportParams = @{
-    ConfigurationTier = 'baseline'
+    ConfigurationTier = $ConfigurationTier
     TenantId = $TenantId
     OutputPath = (Join-Path $outputRoot 'evidence')
 }
@@ -158,6 +176,7 @@ catch {
 $summary = [ordered]@{
     orchestratorRun = (Get-Date).ToString('o')
     tenantId = $TenantId
+    configurationTier = $ConfigurationTier
     steps = [ordered]@{
         createReviews = [ordered]@{
             reviewsCreated = $createResult.ReviewsCreated

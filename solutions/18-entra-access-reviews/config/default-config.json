@@ -1,7 +1,7 @@
 {
   "solution": "18-entra-access-reviews",
   "displayName": "Entra Access Reviews Automation",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "solutionCode": "EAR",
   "track": "A",
   "priority": "P1",
@@ -29,6 +29,10 @@
     "evidenceOutputPath": ".\\artifacts\\18-entra-access-reviews",
     "notificationChannel": "EAR-governance-alerts",
     "dashboardFeedEnabled": true
+  },
+  "configurationNotes": {
+    "reviewerMapping": "config/reviewer-mapping.json is a reference template until tenant-specific role-to-user resolution is added.",
+    "regulatedEvidenceFlags": "requireOwnerAttestation and requireExaminerReadyEvidence are reported in deployment manifests; tenant workflow checks are pending production binding."
   },
   "reviewScope": "group-transitive-members",
   "autoApplyDecisions": false,

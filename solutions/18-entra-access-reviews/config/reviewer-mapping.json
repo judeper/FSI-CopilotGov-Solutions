@@ -1,4 +1,5 @@
 {
+  "_comment": "Reference template only. Runtime reviewer selection uses the risk-input owner or config/review-schedule.json fallbackReviewer until tenant-specific role-to-user resolution is added.",
   "siteTypeReviewers": {
     "HIGH_sensitivity": ["site-owner", "compliance-officer"],
     "MEDIUM_sensitivity": ["site-owner"],

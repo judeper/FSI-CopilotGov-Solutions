@@ -89,4 +89,4 @@ Run the first execution with a small number of resources mapped to HIGH-risk sit
 
 ## Tip: Monitor review expiry proactively
 
-Use `Get-ReviewResults.ps1` regularly to identify reviews approaching their expiry window. The default reminder threshold is 48 hours, which can be adjusted in `config/review-schedule.json` via the `reminderDays` setting.
+Use `Get-ReviewResults.ps1` regularly to identify reviews approaching their expiry window. The current scaffold uses a 48-hour threshold in the script; `config/review-schedule.json` `reminderDays` remains reference metadata until tenant-specific scheduling is wired in.

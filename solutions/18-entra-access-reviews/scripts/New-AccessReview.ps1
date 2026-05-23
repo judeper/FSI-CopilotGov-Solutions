@@ -30,6 +30,13 @@ Path to the risk-scored site output from solution 02-oversharing-risk-assessment
 .PARAMETER ConfigPath
 Path to the review schedule configuration file. Defaults to config\review-schedule.json.
 
+.PARAMETER ConfigurationTier
+Selects the governance tier whose maxSitesPerRun setting limits review creation. Supported values are baseline,
+recommended, and regulated.
+
+.PARAMETER MaxSitesPerRun
+Optional override for the selected tier's maxSitesPerRun setting. Use -1 for no run limit.
+
 .PARAMETER OutputPath
 Directory where access review definition output will be written.
 
@@ -61,6 +68,14 @@ param(
     [string]$ConfigPath = (Join-Path $PSScriptRoot '..\config\review-schedule.json'),
 
     [Parameter()]
+    [ValidateSet('baseline', 'recommended', 'regulated')]
+    [string]$ConfigurationTier = 'baseline',
+
+    [Parameter()]
+    [ValidateRange(-1, 2147483647)]
+    [int]$MaxSitesPerRun = -1,
+
+    [Parameter()]
     [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\reviews')
 )
 
@@ -84,6 +99,32 @@ function Get-ReviewSchedule {
     }
 
     return (Get-Content -Path $fullPath -Raw | ConvertFrom-Json)
+}
+
+function Get-ConfiguredMaxSitesPerRun {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('baseline', 'recommended', 'regulated')]
+        [string]$ConfigurationTier
+    )
+
+    $configRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\config'))
+    $maxSites = -1
+
+    foreach ($configFile in @('default-config.json', ("{0}.json" -f $ConfigurationTier))) {
+        $configPath = Join-Path $configRoot $configFile
+        if (-not (Test-Path -Path $configPath)) {
+            continue
+        }
+
+        $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json
+        if ($config.PSObject.Properties.Name -contains 'maxSitesPerRun') {
+            $maxSites = [int]$config.maxSitesPerRun
+        }
+    }
+
+    return $maxSites
 }
 
 function Get-RiskScoredSites {
@@ -227,6 +268,8 @@ function New-ReviewDefinition {
 
 $schedule = Get-ReviewSchedule -Path $ConfigPath
 $sites = Get-RiskScoredSites -InputPath $RiskScoreInputPath
+$configuredMaxSitesPerRun = Get-ConfiguredMaxSitesPerRun -ConfigurationTier $ConfigurationTier
+$effectiveMaxSitesPerRun = if ($PSBoundParameters.ContainsKey('MaxSitesPerRun')) { $MaxSitesPerRun } else { $configuredMaxSitesPerRun }
 
 $graphContext = $null
 if ($UseMgGraph.IsPresent) {
@@ -253,12 +296,23 @@ else {
 
 $tierOrder = @('HIGH', 'MEDIUM', 'LOW')
 $results = @()
+$remainingSites = if ($effectiveMaxSitesPerRun -gt -1) { $effectiveMaxSitesPerRun } else { [int]::MaxValue }
 
 foreach ($tier in $tierOrder) {
+    if ($remainingSites -le 0) {
+        Write-Verbose "MaxSitesPerRun limit of $effectiveMaxSitesPerRun reached."
+        break
+    }
+
     $tierSites = @($sites | Where-Object { $_.riskTier -eq $tier })
     if ($tierSites.Count -eq 0) {
         Write-Verbose "No sites found for risk tier: $tier"
         continue
+    }
+
+    if ($remainingSites -ne [int]::MaxValue -and $tierSites.Count -gt $remainingSites) {
+        Write-Verbose "Limiting $tier-risk review creation to $remainingSites of $($tierSites.Count) resources due to MaxSitesPerRun."
+        $tierSites = @($tierSites | Select-Object -First $remainingSites)
     }
 
     Write-Verbose "Creating access reviews for $($tierSites.Count) resources mapped to $tier-risk sites."
@@ -269,6 +323,10 @@ foreach ($tier in $tierOrder) {
             $results += $definition
         }
     }
+
+    if ($remainingSites -ne [int]::MaxValue) {
+        $remainingSites -= $tierSites.Count
+    }
 }
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
@@ -278,6 +336,8 @@ $results | ConvertTo-Json -Depth 10 | Set-Content -Path $outputFile -Encoding ut
 
 [pscustomobject]@{
     TenantId = $TenantId
+    ConfigurationTier = $ConfigurationTier
+    MaxSitesPerRun = $effectiveMaxSitesPerRun
     ReviewsCreated = @($results).Count
     HighRisk = @($results | Where-Object { $_.riskTier -eq 'HIGH' }).Count
     MediumRisk = @($results | Where-Object { $_.riskTier -eq 'MEDIUM' }).Count

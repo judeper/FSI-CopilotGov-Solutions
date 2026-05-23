@@ -18,5 +18,6 @@
   "enableEscalation": true,
   "escalationThresholdHours": 24,
   "requireOwnerAttestation": true,
-  "requireExaminerReadyEvidence": true
+  "requireExaminerReadyEvidence": true,
+  "_comment_requirements": "Deployment manifests report these regulated-tier flags as manual-check-required; they do not add tenant workflow checks until production binding is added."
 }
