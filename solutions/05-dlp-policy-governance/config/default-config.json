@@ -2,6 +2,7 @@
   "solution": "05-dlp-policy-governance",
   "solutionCode": "DPG",
   "displayName": "DLP Policy Governance for Copilot",
+  "version": "v0.2.2",
   "track": "B",
   "priority": "P1",
   "status": "documentation-first",
@@ -78,7 +79,8 @@
       "OneDrive",
       "Exchange"
     ],
-    "baselineStoragePath": ".\\artifacts\\dlp-policy-baseline.json",
+    "baselineStoragePath": "artifacts/dlp-policy-baseline.json",
+    "baselineStoragePathComment": "Illustrative metadata only; scripts compute artifact paths from runtime output parameters and do not consume this field.",
     "driftThreshold": 10,
     "exceptionApprovalRequired": true,
     "policyModes": {
