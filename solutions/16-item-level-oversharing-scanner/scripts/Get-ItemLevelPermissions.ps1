@@ -20,7 +20,10 @@ Array of SharePoint site URLs to scan for item-level permissions.
 Directory where the item permissions CSV will be written.
 
 .PARAMETER TenantUrl
-SharePoint tenant admin URL used for PnP connection.
+Optional SharePoint tenant admin URL reserved for tenant-specific PnP connection scaffolding.
+
+.PARAMETER MaxItemsPerLibrary
+Maximum sample items to emit per library. Use -1 for unlimited.
 
 .EXAMPLE
 .\Get-ItemLevelPermissions.ps1 -SiteUrls @("https://tenant.sharepoint.com/sites/finance") -TenantUrl "https://tenant-admin.sharepoint.com" -OutputPath .\artifacts\scan
@@ -39,9 +42,13 @@ param(
     [Parameter()]
     [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\scan'),
 
-    [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty()]
-    [string]$TenantUrl
+    [Parameter()]
+    [AllowEmptyString()]
+    [string]$TenantUrl = '',
+
+    [Parameter()]
+    [ValidateRange(-1, 2147483647)]
+    [int]$MaxItemsPerLibrary = -1
 )
 
 Set-StrictMode -Version Latest
@@ -143,7 +150,7 @@ function Get-SampleItemPermissions {
         [pscustomobject]@{
             SiteUrl = $SiteUrl
             LibraryName = 'Shared Documents'
-            ItemPath = "/sites/$siteName/Shared Documents/Trading-Positions-2025.csv"
+            ItemPath = "/sites/$siteName/Shared Documents/Trading-Positions.csv"
             ItemType = 'File'
             SharedWith = 'Organization (Edit)'
             ShareType = 'OrgLink'
@@ -163,7 +170,7 @@ function Get-SampleItemPermissions {
         [pscustomobject]@{
             SiteUrl = $SiteUrl
             LibraryName = 'Legal Hold'
-            ItemPath = "/sites/$siteName/Legal Hold/Litigation-Response-2025.pdf"
+            ItemPath = "/sites/$siteName/Legal Hold/Litigation-Response.pdf"
             ItemType = 'File'
             SharedWith = 'Anonymous'
             ShareType = 'AnyoneLink'
@@ -182,7 +189,25 @@ foreach ($siteUrl in $SiteUrls) {
     Write-Verbose "Scanning site: $siteUrl"
 
     try {
-        $allFindings += Get-SampleItemPermissions -SiteUrl $siteUrl
+        $siteFindings = @(Get-SampleItemPermissions -SiteUrl $siteUrl)
+        if ($MaxItemsPerLibrary -ge 0) {
+            $libraryCounts = @{}
+            $siteFindings = @(
+                foreach ($finding in $siteFindings) {
+                    $libraryName = [string]$finding.LibraryName
+                    if (-not $libraryCounts.ContainsKey($libraryName)) {
+                        $libraryCounts[$libraryName] = 0
+                    }
+
+                    if ($libraryCounts[$libraryName] -lt $MaxItemsPerLibrary) {
+                        $libraryCounts[$libraryName]++
+                        $finding
+                    }
+                }
+            )
+        }
+
+        $allFindings += $siteFindings
     }
     catch {
         Write-Warning "Failed to scan site $siteUrl : $_"

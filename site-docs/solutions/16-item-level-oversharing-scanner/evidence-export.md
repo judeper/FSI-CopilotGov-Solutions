@@ -4,6 +4,8 @@
 
 `Export-Evidence.ps1` writes a JSON package aligned to `..\..\data\evidence-schema.json`. The package includes metadata, summary details, control statuses, and references to the underlying evidence artifacts.
 
+By default, the exporter packages existing scan, scored, and remediation artifacts. It only runs a fresh monitor pass when `-RunFreshMonitor` is explicitly supplied, and that pass writes to a run-specific directory under the selected output path.
+
 Every JSON evidence file receives a companion `.sha256` file so reviewers can verify integrity during internal review, audit preparation, or regulator response.
 
 ## Evidence Types

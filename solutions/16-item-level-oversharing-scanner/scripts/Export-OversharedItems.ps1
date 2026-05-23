@@ -49,6 +49,73 @@ Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
 $sensitiveLabels = @('PII', 'Trading', 'Legal', 'Confidential')
 
+function Get-ConfigValue {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [object]$InputObject,
+
+        [Parameter(Mandatory)]
+        [string]$Name,
+
+        [Parameter()]
+        [AllowNull()]
+        [object]$DefaultValue = $null
+    )
+
+    if ($null -eq $InputObject) {
+        return $DefaultValue
+    }
+
+    if ($InputObject -is [hashtable]) {
+        if ($InputObject.ContainsKey($Name)) {
+            return $InputObject[$Name]
+        }
+        return $DefaultValue
+    }
+
+    $property = $InputObject.PSObject.Properties[$Name]
+    if ($null -ne $property) {
+        return $property.Value
+    }
+
+    return $DefaultValue
+}
+
+function Get-RiskThresholds {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [object]$RiskConfig
+    )
+
+    $thresholds = Get-ConfigValue -InputObject $RiskConfig -Name 'riskThresholds' -DefaultValue $null
+    if ($null -eq $thresholds) {
+        $defaultConfigPath = Join-Path $PSScriptRoot '..\config\default-config.json'
+        if (Test-Path -Path $defaultConfigPath) {
+            try {
+                $defaultConfig = (Get-Content -Path $defaultConfigPath -Raw) | ConvertFrom-Json
+                $thresholds = Get-ConfigValue -InputObject $defaultConfig -Name 'riskThresholds' -DefaultValue $null
+            }
+            catch {
+                Write-Warning "Failed to load riskThresholds from default configuration: $_"
+            }
+        }
+    }
+
+    if ($null -eq $thresholds) {
+        return [pscustomobject]@{
+            high = 70
+            medium = 40
+            low = 0
+        }
+    }
+
+    return $thresholds
+}
+
 function Get-RiskTier {
     [CmdletBinding()]
     param(
@@ -56,8 +123,31 @@ function Get-RiskTier {
         [string]$ShareType,
 
         [Parameter()]
-        [string]$SensitivityLabel = ''
+        [string]$SensitivityLabel = '',
+
+        [Parameter(Mandatory)]
+        [double]$WeightedScore,
+
+        [Parameter(Mandatory)]
+        [object]$RiskThresholds
     )
+
+    $highThreshold = [double](Get-ConfigValue -InputObject $RiskThresholds -Name 'high' -DefaultValue 70)
+    $mediumThreshold = [double](Get-ConfigValue -InputObject $RiskThresholds -Name 'medium' -DefaultValue 40)
+    $lowThreshold = [double](Get-ConfigValue -InputObject $RiskThresholds -Name 'low' -DefaultValue 0)
+
+    $scoreTier = if ($WeightedScore -ge $highThreshold) {
+        'HIGH'
+    }
+    elseif ($WeightedScore -ge $mediumThreshold) {
+        'MEDIUM'
+    }
+    elseif ($WeightedScore -ge $lowThreshold) {
+        'LOW'
+    }
+    else {
+        'LOW'
+    }
 
     $hasSensitiveLabel = $false
     foreach ($label in $sensitiveLabels) {
@@ -75,23 +165,11 @@ function Get-RiskTier {
         return 'HIGH'
     }
 
-    if ($ShareType -eq 'OrgLink') {
+    if ($ShareType -eq 'BroadGroup' -and $hasSensitiveLabel -and $scoreTier -eq 'LOW') {
         return 'MEDIUM'
     }
 
-    if ($ShareType -eq 'ExternalUser' -and -not $hasSensitiveLabel) {
-        return 'MEDIUM'
-    }
-
-    if ($ShareType -eq 'BroadGroup' -and -not $hasSensitiveLabel) {
-        return 'LOW'
-    }
-
-    if ($ShareType -eq 'BroadGroup' -and $hasSensitiveLabel) {
-        return 'MEDIUM'
-    }
-
-    return 'LOW'
+    return $scoreTier
 }
 
 function Get-ContentCategory {
@@ -104,7 +182,17 @@ function Get-ContentCategory {
         [object]$ContentTypeWeights
     )
 
-    $itemText = '{0} {1} {2}' -f $Item.ItemPath, $Item.SensitivityLabel, $Item.LibraryName
+    $itemPathForMatching = [string]$Item.ItemPath
+    $libraryNameForMatching = [string]$Item.LibraryName
+    if (-not [string]::IsNullOrWhiteSpace($itemPathForMatching) -and -not [string]::IsNullOrWhiteSpace($libraryNameForMatching)) {
+        $libraryPattern = '(?i)[/\\]{0}[/\\]?(.*)$' -f [regex]::Escape($libraryNameForMatching)
+        $libraryMatch = [regex]::Match($itemPathForMatching, $libraryPattern)
+        if ($libraryMatch.Success -and $libraryMatch.Groups.Count -gt 1) {
+            $itemPathForMatching = $libraryMatch.Groups[1].Value
+        }
+    }
+
+    $itemText = '{0} {1} {2}' -f $itemPathForMatching, $Item.SensitivityLabel, $libraryNameForMatching
     $bestMatch = $null
     $bestWeight = 1.0
 
@@ -151,8 +239,15 @@ catch {
             OrgLinkEdit = 50
             BroadGroup = 30
         }
+        riskThresholds = [pscustomobject]@{
+            high = 70
+            medium = 40
+            low = 0
+        }
     }
 }
+
+$riskThresholds = Get-RiskThresholds -RiskConfig $riskConfig
 
 try {
     $items = Import-Csv -Path $InputPath -Encoding UTF8
@@ -165,8 +260,6 @@ $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -Path $outputRoot -ItemType Directory -Force
 
 $scoredItems = foreach ($item in $items) {
-    $riskTier = Get-RiskTier -ShareType $item.ShareType -SensitivityLabel $item.SensitivityLabel
-
     $baseScoreProperty = $item.ShareType
     if ($baseScoreProperty -eq 'OrgLink') { $baseScoreProperty = 'OrgLinkEdit' }
 
@@ -177,6 +270,7 @@ $scoredItems = foreach ($item in $items) {
 
     $contentInfo = Get-ContentCategory -Item $item -ContentTypeWeights $riskConfig.contentTypeWeights
     $weightedScore = [math]::Round($baseScore * $contentInfo.Weight, 1)
+    $riskTier = Get-RiskTier -ShareType $item.ShareType -SensitivityLabel $item.SensitivityLabel -WeightedScore $weightedScore -RiskThresholds $riskThresholds
 
     [pscustomobject]@{
         SiteUrl = $item.SiteUrl

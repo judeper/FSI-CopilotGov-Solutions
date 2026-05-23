@@ -20,15 +20,16 @@ Use task-specific access rather than treating Microsoft 365 admin roles as inter
 
 ## Required PowerShell Modules
 
-Install and approve the following modules on the execution host:
+Install and approve the following module on the execution host for the current scaffold:
 
-- `PnP.PowerShell` — Required for item-level permission enumeration via `Connect-PnPOnline`
-- `Microsoft.Graph` — Required for Graph-based authentication and supplementary queries
+- `PnP.PowerShell` — Required for tenant-specific item-level permission enumeration via `Connect-PnPOnline`
+
+`Microsoft.Graph` is optional and implementation-dependent until tenant binding adds direct Graph cmdlet usage for supplementary queries.
 
 Example installation command:
 
 ```powershell
-Install-Module PnP.PowerShell, Microsoft.Graph -Scope CurrentUser
+Install-Module PnP.PowerShell -Scope CurrentUser
 ```
 
 > **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
@@ -46,7 +47,7 @@ When using delegated authentication, the operator must have site collection admi
 The execution environment must be able to reach:
 
 - SharePoint REST API endpoints
-- Microsoft Graph API endpoints
+- Microsoft Graph API endpoints, if optional Graph enrichment is enabled
 - SharePoint admin center endpoints
 
 If the environment uses proxy inspection or outbound restrictions, test PnP connectivity before the initial scan window.

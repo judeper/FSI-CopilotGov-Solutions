@@ -76,9 +76,9 @@ Run the scoring script against the scan output:
 
 Review the risk-scored report for:
 
-- HIGH-risk items with anyone links or external sharing of sensitive content
-- MEDIUM-risk items with organization-wide edit access
-- LOW-risk items with broad group access
+- HIGH-risk items whose weighted score crosses the configured threshold, including anyone links and sensitive external sharing
+- MEDIUM-risk items that cross the configured medium threshold or broad-group sensitive-label floor
+- LOW-risk items such as broad group access without sensitive labels
 
 ## 7. Review Remediation Actions
 
@@ -106,7 +106,7 @@ Document the owner, due date, approval path, and rollback expectation for each w
 
 ## 9. Export Evidence
 
-Run the evidence export after each scan or remediation cycle:
+Run the evidence export after each scan or remediation cycle. The exporter packages the existing artifacts unless `-RunFreshMonitor` is explicitly supplied:
 
 ```powershell
 .\scripts\Export-Evidence.ps1 `

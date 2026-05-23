@@ -26,7 +26,7 @@ Directory where remediation logs and pending approvals will be written.
 Path to the remediation-policy.json configuration file.
 
 .PARAMETER TenantUrl
-SharePoint tenant admin URL used for PnP connection during remediation.
+Optional SharePoint tenant admin URL reserved for tenant-specific PnP remediation scaffolding.
 
 .EXAMPLE
 .\Invoke-BulkRemediation.ps1 -InputPath .\artifacts\scored\risk-scored-report.csv -OutputPath .\artifacts\remediation -TenantUrl "https://tenant-admin.sharepoint.com"
@@ -48,9 +48,9 @@ param(
     [Parameter()]
     [string]$ConfigPath = (Join-Path $PSScriptRoot '..\config\remediation-policy.json'),
 
-    [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty()]
-    [string]$TenantUrl
+    [Parameter()]
+    [AllowEmptyString()]
+    [string]$TenantUrl = ''
 )
 
 Set-StrictMode -Version Latest
@@ -183,6 +183,23 @@ foreach ($item in $scoredItems) {
                 executedAt = $null
                 notes = "Remediation failed: $_"
             }
+        }
+    }
+    else {
+        Write-Warning "Unsupported remediation mode '$mode' for $($item.ItemPath). Item logged as skipped."
+
+        $remediationLog += [pscustomobject]@{
+            actionId = $actionId
+            siteUrl = $item.SiteUrl
+            itemPath = $item.ItemPath
+            shareType = $item.ShareType
+            riskTier = $riskTier
+            action = $action
+            status = 'skipped-unsupported-mode'
+            approvalRequired = $false
+            approvedBy = $null
+            executedAt = $null
+            notes = "Unsupported remediation mode '$mode'. No action taken."
         }
     }
 
