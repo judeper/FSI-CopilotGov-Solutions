@@ -42,12 +42,14 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          $results = Invoke-ScriptAnalyzer `
-            -Path scripts,solutions `
-            -Recurse `
-            -Severity @('Error','Warning') `
-            -Settings ./PSScriptAnalyzerSettings.psd1 `
-            -ReportSummary
+          $paths = @('scripts','solutions')
+          $results = foreach ($p in $paths) {
+            Invoke-ScriptAnalyzer -Path $p `
+              -Recurse `
+              -Severity @('Error','Warning') `
+              -Settings ./PSScriptAnalyzerSettings.psd1 `
+              -ReportSummary
+          }
 
           if ($null -ne $results) {
             $results | Format-Table -AutoSize | Out-String | Write-Host
