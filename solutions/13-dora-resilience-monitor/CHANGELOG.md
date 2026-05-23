@@ -2,6 +2,29 @@
 
 ## [Unreleased]
 
+## v0.1.2 — 2026-05-23 — Council review remediation
+
+### Fixed
+
+- F-07: Corrected regulatory notification threshold logic to use severity-rank comparison so major incidents are flagged when the configured threshold is significant.
+
+### Documentation tightened
+
+- F-01: Separated DORA Art. 17 incident-management alignment from Art. 24-26 resilience-testing readiness in the architecture notes.
+- F-02: Updated README regulatory alignment to distinguish Art. 17 incident management, Art. 18 classification, and Art. 19 reporting-package preparation.
+- F-03: Aligned evidence-export wording with the Art. 17, Art. 18, and Art. 19 mapping used across the README and architecture guidance.
+- F-11: Added an Art. 18 severity-classification coverage note that identifies modeled criteria and manual assessment gaps.
+- F-12: Clarified regulated-tier reporting scope by adding intermediate and final report timeline fields while preserving documentation-first, non-submission behavior.
+
+### Dead config
+
+- F-08: Wired regulated notification-window and RCA-window settings into incident-register evidence metadata and due-date fields.
+- F-09: Aligned the default polling interval key with the tier configuration key and added default fallback handling.
+
+### Version drift
+
+- None in the verified brief; aligned remediation release version strings to v0.1.2.
+
 ## [v0.1.1] - 2026-05-04
 
 - Corrected roadmap awareness wording to match Microsoft Learn release-plan terminology for 2026 Release Wave 1 governance capabilities.

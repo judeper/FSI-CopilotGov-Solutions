@@ -31,7 +31,7 @@
 
 .NOTES
     Solution: DORA Operational Resilience Monitor (DRM)
-    Version: v0.1.1
+    Version: v0.1.2
 #>
 [CmdletBinding()]
 param(
@@ -78,6 +78,51 @@ function New-DrmArtifactFile {
         Path = $Path
         Hash = $hashInfo.Hash
     }
+}
+
+function ConvertTo-DrmNullableDateTime {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [object]$Value
+    )
+
+    if ($null -eq $Value) {
+        return $null
+    }
+
+    $timestampText = [string]$Value
+    if ([string]::IsNullOrWhiteSpace($timestampText)) {
+        return $null
+    }
+
+    return [datetime]$timestampText
+}
+
+function Test-DrmSeverityAtOrAbove {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Severity,
+
+        [Parameter(Mandatory)]
+        [string]$Threshold
+    )
+
+    $severityKey = $Severity.Trim().ToLowerInvariant()
+    $thresholdKey = $Threshold.Trim().ToLowerInvariant()
+    $severityRank = @{
+        minor = 1
+        significant = 2
+        major = 3
+    }
+
+    if (-not $severityRank.ContainsKey($severityKey) -or -not $severityRank.ContainsKey($thresholdKey)) {
+        return ($severityKey -eq $thresholdKey)
+    }
+
+    return ($severityRank[$severityKey] -ge $severityRank[$thresholdKey])
 }
 
 if ($PeriodEnd -lt $PeriodStart) {
@@ -130,8 +175,19 @@ $regulatoryNotificationThreshold = if ($configuration.incidentClassification.Con
 } else {
     'major'
 }
+$notificationWindowHours = if ($configuration.incidentClassification.Contains('notificationWindowHours')) { [int]$configuration.incidentClassification.notificationWindowHours } else { $null }
+$intermediateReportWindowHours = if ($configuration.incidentClassification.Contains('intermediateReportWindowHours')) { [int]$configuration.incidentClassification.intermediateReportWindowHours } else { $null }
+$finalReportWindowDays = if ($configuration.incidentClassification.Contains('finalReportWindowDays')) { [int]$configuration.incidentClassification.finalReportWindowDays } else { $null }
+$requiresRootCauseAnalysis = if ($configuration.incidentClassification.Contains('requireRootCauseAnalysis')) { [bool]$configuration.incidentClassification.requireRootCauseAnalysis } else { $false }
+$rcaWindowDays = if ($configuration.incidentClassification.Contains('rcaWindowDays')) { [int]$configuration.incidentClassification.rcaWindowDays } else { $null }
 $incidentRecords = @(
     foreach ($incident in @($complianceStatus.IncidentFindings)) {
+        $detectedAt = ConvertTo-DrmNullableDateTime -Value $incident.detectedAt
+        $initialNotificationDueAt = if ($null -ne $detectedAt -and $null -ne $notificationWindowHours) { $detectedAt.AddHours($notificationWindowHours).ToString('o') } else { $null }
+        $intermediateReportDueAt = if ($null -ne $detectedAt -and $null -ne $intermediateReportWindowHours) { $detectedAt.AddHours($intermediateReportWindowHours).ToString('o') } else { $null }
+        $finalReportDueAt = if ($null -ne $detectedAt -and $null -ne $finalReportWindowDays) { $detectedAt.AddDays($finalReportWindowDays).ToString('o') } else { $null }
+        $rootCauseAnalysisDueAt = if ($null -ne $detectedAt -and $null -ne $rcaWindowDays) { $detectedAt.AddDays($rcaWindowDays).ToString('o') } else { $null }
+
         [pscustomobject]@{
             incidentId = $incident.incidentId
             severity = $incident.severity
@@ -143,8 +199,17 @@ $incidentRecords = @(
             rpoActual = $null
             affectedUserPct = $incident.affectedUserPct
             impactDescription = $incident.impactDescription
-            rootCauseAnalysisStatus = if ($ConfigurationTier -eq 'regulated') { 'pending' } else { 'not-required' }
-            regulatoryNotificationRequired = ($incident.severity -eq $regulatoryNotificationThreshold)
+            regulatoryNotificationThreshold = $regulatoryNotificationThreshold
+            regulatoryNotificationRequired = Test-DrmSeverityAtOrAbove -Severity ([string]$incident.severity) -Threshold $regulatoryNotificationThreshold
+            notificationWindowHours = $notificationWindowHours
+            initialNotificationDueAt = $initialNotificationDueAt
+            intermediateReportWindowHours = $intermediateReportWindowHours
+            intermediateReportDueAt = $intermediateReportDueAt
+            finalReportWindowDays = $finalReportWindowDays
+            finalReportDueAt = $finalReportDueAt
+            rootCauseAnalysisStatus = if ($requiresRootCauseAnalysis) { 'pending' } else { 'not-required' }
+            rcaWindowDays = $rcaWindowDays
+            rootCauseAnalysisDueAt = $rootCauseAnalysisDueAt
             notes = $incident.classificationNote
         }
     }
@@ -157,6 +222,13 @@ $incidentRegisterArtifact = [ordered]@{
     generatedAt = (Get-Date).ToString('o')
     runtimeMode = $complianceStatus.RuntimeMode
     warning = $complianceStatus.StatusWarning
+    reportingTimeline = [ordered]@{
+        initialNotificationWindowHours = $notificationWindowHours
+        intermediateReportWindowHours = $intermediateReportWindowHours
+        finalReportWindowDays = $finalReportWindowDays
+        rootCauseAnalysisWindowDays = $rcaWindowDays
+        automationScope = 'Reference due-date metadata only; this scaffold does not submit regulatory notices automatically.'
+    }
     records = $incidentRecords
 }
 $incidentRegisterFile = New-DrmArtifactFile -Path (Join-Path $resolvedOutputPath ("incident-register-{0}.json" -f $ConfigurationTier)) -Content $incidentRegisterArtifact

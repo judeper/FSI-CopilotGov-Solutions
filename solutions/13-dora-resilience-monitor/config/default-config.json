@@ -2,7 +2,7 @@
   "solution": "13-dora-resilience-monitor",
   "displayName": "DORA Operational Resilience Monitor",
   "solutionCode": "DRM",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "controls": [
     "2.7",
     "4.9",
@@ -44,7 +44,7 @@
       "Microsoft 365 Apps",
       "Microsoft Copilot"
     ],
-    "healthPollingIntervalMinutes": 15,
+    "serviceHealthPollingIntervalMinutes": 15,
     "incidentRetentionDays": 365
   }
 }
