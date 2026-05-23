@@ -545,7 +545,7 @@
     "domain": "operations-analytics",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "solution_type": [
       "PowerShell",
       "Power Automate"
