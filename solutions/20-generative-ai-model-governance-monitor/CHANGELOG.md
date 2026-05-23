@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.2 — 2026-05-23 — Council review remediation
+
+### Fixed
+- F-10: Aligned GMG regulatory metadata and framework IDs with the documented SR 26-2 / OCC 2026-13, SR 11-7 / OCC 2011-12, NIST AI RMF 1.0, and ISO/IEC 42001 mapping.
+- F-06: Regulated-tier sample validation records now mark independent challenge as `required-pending` when tier configuration enables annual independent challenge.
+
 ## v0.1.1 — 2026-05-04
 
 ### Changed

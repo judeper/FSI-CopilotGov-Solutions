@@ -25,7 +25,7 @@
 
 .NOTES
     Solution: Generative AI Model Governance Monitor (GMG)
-    Version: v0.1.1
+    Version: v0.1.2
     Documentation-first: scripts use representative sample data.
 #>
 [CmdletBinding()]
@@ -129,7 +129,29 @@ function New-SampleInventoryRecords {
 }
 
 function New-SampleValidationRecord {
-    param([Parameter(Mandatory)] [string]$ModelId, [Parameter(Mandatory)] [string]$ValidationApproach)
+    param(
+        [Parameter(Mandatory)] [string]$ModelId,
+        [Parameter(Mandatory)] [string]$ValidationApproach,
+        [Parameter()] [System.Collections.IDictionary]$IndependentChallenge
+    )
+
+    $challengeEnabled = $false
+    $annualChallengeRequired = $false
+    if ($null -ne $IndependentChallenge) {
+        if ($IndependentChallenge.Contains('enabled')) {
+            $challengeEnabled = [bool]$IndependentChallenge.enabled
+        }
+        if ($IndependentChallenge.Contains('annualChallengeRequired')) {
+            $annualChallengeRequired = [bool]$IndependentChallenge.annualChallengeRequired
+        }
+    }
+    $challengeStatus = if ($challengeEnabled) {
+        if ($annualChallengeRequired) { 'required-pending' } else { 'required' }
+    }
+    else {
+        'not-required'
+    }
+
     return [pscustomobject]@{
         modelId                    = $ModelId
         validationApproach         = $ValidationApproach
@@ -137,7 +159,7 @@ function New-SampleValidationRecord {
         outputTestingScope         = 'Representative use cases reviewed against firm acceptable use and content safety policies (sample scope).'
         limitationsLog             = @('Limited transparency into underlying foundation model parameters', 'Outputs may vary across releases', 'Provider and model availability may vary by region or cloud')
         findings                   = @()
-        independentChallengeStatus = 'not-required'
+        independentChallengeStatus = $challengeStatus
         nextValidationDue          = (Get-Date).AddYears(1).ToString('o')
     }
 }
@@ -217,7 +239,11 @@ $trackedModels = if ($defaults.Contains('trackedModels')) { [string[]]@($default
 $contentSafetyDefaults = if ($defaults.Contains('contentSafetyDefaults')) { [System.Collections.IDictionary]$defaults.contentSafetyDefaults } else { [ordered]@{} }
 
 $inventoryRecords = New-SampleInventoryRecords -TrackedModelSources $trackedModelSources -TrackedModels $trackedModels -Provider $configuration.defaults.modelProvider
-$validationRecords = @( foreach ($entry in $inventoryRecords) { New-SampleValidationRecord -ModelId $entry.modelId -ValidationApproach $configuration.validation_assessment_required } )
+$validationRecords = @(
+    foreach ($entry in $inventoryRecords) {
+        New-SampleValidationRecord -ModelId $entry.modelId -ValidationApproach $configuration.validation_assessment_required -IndependentChallenge $configuration.independentChallenge
+    }
+)
 $monitoringObservations = @( New-SampleMonitoringObservation -OngoingMonitoring $configuration.ongoingMonitoring )
 $contentSafetyAndGuardrails = @( New-SampleContentSafetyRecord -ContentSafetyDefaults $contentSafetyDefaults )
 $thirdPartyReview = New-SampleThirdPartyReview -InventoryRecords $inventoryRecords -ReviewCadenceDays $configuration.third_party_review_cadence_days

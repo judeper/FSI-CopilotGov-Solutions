@@ -1310,7 +1310,7 @@
     "domain": "regulatory-resilience",
     "priority": "P1",
     "phase": 3,
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "solution_type": [
       "PowerShell"
     ],
@@ -1324,14 +1324,20 @@
       "3.12"
     ],
     "regulations": [
+      "Federal Reserve SR 26-2",
+      "OCC Bulletin 2026-13",
       "Federal Reserve SR 11-7",
       "OCC Bulletin 2011-12 (Supervisory Guidance on Model Risk Management)",
-      "Interagency AI Guidance (2023)"
+      "NIST AI Risk Management Framework 1.0",
+      "ISO/IEC 42001"
     ],
     "framework_ids": [
+      "sr-26-2",
+      "occ-2026-13",
       "occ-2011-12",
       "sr-11-7",
-      "interagency-ai-guidance"
+      "nist-ai-rmf",
+      "iso-iec-42001"
     ],
     "summary": "Provides a documentation-first model risk management monitoring pattern for Copilot, applying SR 11-7 / OCC Bulletin 2011-12 principles to fill the generative AI exclusion in SR 26-2 / OCC Bulletin 2026-13 and align with NIST AI RMF 1.0 and ISO/IEC 42001.",
     "evidence_outputs": [
