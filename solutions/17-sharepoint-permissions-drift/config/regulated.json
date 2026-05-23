@@ -12,7 +12,5 @@
     "MEDIUM": true,
     "LOW": true
   },
-  "baselineRetentionDays": 180,
-  "enableSiteOwnerNotifications": true,
-  "requireApprovalForHighRisk": true
+  "baselineRetentionDays": 180
 }

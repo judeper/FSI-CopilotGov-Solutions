@@ -46,7 +46,7 @@ This validates configuration, checks prerequisites, and generates a deployment m
 
 ### Step 5 — Capture Initial Baseline
 
-Schedule the initial baseline capture during a period when permissions are in a known-good state (e.g., after a permissions review cycle).
+For tenant-bound production use, schedule the initial baseline capture during a period when permissions are in a known-good state (e.g., after a permissions review cycle). In this scaffold, the script writes representative baseline data.
 
 ```powershell
 .\scripts\New-PermissionsBaseline.ps1 `
@@ -57,7 +57,7 @@ Schedule the initial baseline capture during a period when permissions are in a 
 
 ### Step 6 — Run First Drift Scan
 
-After the baseline is established, run an initial drift scan to verify the workflow:
+After the baseline is established, run an initial scaffold drift scan to verify the workflow:
 
 ```powershell
 .\scripts\Invoke-DriftScan.ps1 `
@@ -65,20 +65,21 @@ After the baseline is established, run an initial drift scan to verify the workf
     -BaselinePath "./baselines/latest-baseline.json" `
     -OutputPath "./reports" `
     -ConfigPath "./config/baseline-config.json" `
-    -AlertRecipient "compliance-officer@contoso.com"
+    -AlertRecipient "compliance-officer@contoso.com" `
+    -AlertSender "compliance-automation@contoso.com"
 ```
 
 ### Step 7 — Review Drift Report
 
-Examine the drift report output for accuracy. For the initial scan immediately after baseline capture, minimal or no drift should be detected.
+Examine the representative drift report output and confirm it matches the scaffold expectations. Tenant-bound accuracy and no-drift expectations require live current-state comparison to be added.
 
 ### Step 8 — Configure Reversion Policy
 
 Based on your institution's risk appetite, update `config/auto-revert-policy.json`:
 
-- **Conservative** — Keep `autoRevertEnabled: false` (approval-gate for all drift)
-- **Moderate** — Enable auto-revert for LOW-risk drift only
-- **Aggressive** — Enable auto-revert for LOW and MEDIUM risk; approval-gate for HIGH
+- **Conservative** — Keep `autoRevertEnabled: false` (approval-gate records for all drift)
+- **Moderate** — Enable reversion-intent logging for LOW-risk drift only
+- **Aggressive** — Enable reversion-intent logging for LOW and MEDIUM risk; approval-gate records for HIGH
 
 ### Step 9 — Schedule Ongoing Scans
 
@@ -99,7 +100,7 @@ Generate the evidence package for compliance review:
 
 ```powershell
 .\scripts\Export-DriftEvidence.ps1 `
-    -DriftReportPath "./reports/drift-report-latest.json" `
+    -DriftReportPath "./reports/drift-report-20250101T120000.json" `
     -BaselinePath "./baselines/latest-baseline.json" `
     -OutputPath "./evidence"
 ```

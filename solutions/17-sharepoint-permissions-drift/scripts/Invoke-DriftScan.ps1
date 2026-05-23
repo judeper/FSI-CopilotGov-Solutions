@@ -3,15 +3,16 @@
     Detects permissions drift by comparing current SharePoint permissions against an approved baseline.
 
 .DESCRIPTION
-    Loads the latest baseline snapshot and captures the current permissions state for each
-    site in scope. Compares current vs baseline to identify drift classified as ADDED
-    (new permission entries), REMOVED (entries no longer present), or CHANGED (permission
-    level modified). Each drift item receives a risk score and tier classification.
+    Loads the latest baseline snapshot and returns representative sample drift scoped
+    to baseline sites until tenant-bound current-state capture is added. Sample drift
+    is classified as ADDED (new permission entries), REMOVED (entries no longer present),
+    or CHANGED (permission level modified). Each drift item receives a risk score and
+    tier classification.
 
-    HIGH-risk drift triggers an alert summary email via Microsoft Graph API.
+    HIGH-risk drift can trigger an alert summary email via Microsoft Graph API when
+    Graph context and a sender mailbox are configured.
 
-    When no live connection is available, the script returns representative sample drift
-    data for documentation and testing purposes.
+    This documentation-first scaffold does not perform live tenant comparison.
 
 .PARAMETER TenantUrl
     The SharePoint Online tenant URL (e.g., https://contoso.sharepoint.com).
@@ -28,8 +29,11 @@
 .PARAMETER AlertRecipient
     Email address to receive HIGH-risk drift alert notifications.
 
+.PARAMETER AlertSender
+    Optional sender mailbox or user ID for Graph sendMail. If omitted, delegated /me/sendMail is used.
+
 .EXAMPLE
-    .\Invoke-DriftScan.ps1 -TenantUrl "https://contoso.sharepoint.com" -AlertRecipient "compliance@contoso.com"
+    .\Invoke-DriftScan.ps1 -TenantUrl "https://contoso.sharepoint.com" -AlertRecipient "compliance@contoso.com" -AlertSender "compliance-automation@contoso.com"
 
 .EXAMPLE
     .\Invoke-DriftScan.ps1 -TenantUrl "https://contoso.sharepoint.com" -BaselinePath "./baselines/baseline-20250101T120000.json"
@@ -50,7 +54,10 @@ param(
     [string]$ConfigPath = './config/baseline-config.json',
 
     [Parameter()]
-    [string]$AlertRecipient
+    [string]$AlertRecipient,
+
+    [Parameter()]
+    [string]$AlertSender
 )
 
 Set-StrictMode -Version Latest
@@ -214,8 +221,8 @@ function Get-SampleDriftData {
                 principalType   = 'ExternalUser'
                 permissionLevel = 'Contribute'
             }
-            RiskScore  = 75
-            RiskTier   = 'HIGH'
+            RiskScore  = 45
+            RiskTier   = 'MEDIUM'
             DetectedAt = (Get-Date).ToString('o')
         }
         [pscustomobject]@{
@@ -274,6 +281,7 @@ function Send-DriftAlert {
     #>
     param(
         [string]$Recipient,
+        [string]$Sender,
         [array]$HighRiskItems
     )
 
@@ -307,8 +315,16 @@ function Send-DriftAlert {
             }
         }
 
-        Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/v1.0/users/$Recipient/sendMail" -Body $message
-        Write-Host "Alert email sent to $Recipient."
+        $sendMailUri = if ([string]::IsNullOrWhiteSpace($Sender)) {
+            'https://graph.microsoft.com/v1.0/me/sendMail'
+        }
+        else {
+            "https://graph.microsoft.com/v1.0/users/$Sender/sendMail"
+        }
+
+        Invoke-MgGraphRequest -Method POST -Uri $sendMailUri -Body $message
+        $senderDescription = if ([string]::IsNullOrWhiteSpace($Sender)) { 'delegated /me mailbox' } else { $Sender }
+        Write-Host "Alert email sent to $Recipient from $senderDescription."
     }
     catch {
         Write-Warning "Failed to send alert email: $($_.Exception.Message)"
@@ -340,7 +356,7 @@ if (Test-Path $BaselinePath) {
     }
 }
 
-# If no baseline found, use sample data
+# If no baseline is found, use representative sample drift data.
 $useSampleData = $null -eq $baselineData
 if ($useSampleData) {
     Write-Warning "No baseline file found at $BaselinePath — using representative sample drift data."
@@ -353,8 +369,7 @@ if ($useSampleData) {
 }
 else {
     foreach ($baselineSite in $baselineData.sites) {
-        # Capture current state for comparison
-        # In documentation-first mode, generate sample drift
+        # Tenant-bound current-state capture is pending; scope representative sample drift to baseline sites.
         $sampleDrift = Get-SampleDriftData -TenantUrl $TenantUrl
         $siteDrift = $sampleDrift | Where-Object { $_.SiteUrl -eq $baselineSite.siteUrl }
         if ($siteDrift) {
@@ -395,7 +410,7 @@ Write-Host "Drift report saved: $reportFilePath"
 # Send alert for HIGH-risk items
 $highRiskItems = $driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }
 if ($highRiskItems.Count -gt 0) {
-    Send-DriftAlert -Recipient $AlertRecipient -HighRiskItems $highRiskItems
+    Send-DriftAlert -Recipient $AlertRecipient -Sender $AlertSender -HighRiskItems $highRiskItems
 }
 
 #endregion

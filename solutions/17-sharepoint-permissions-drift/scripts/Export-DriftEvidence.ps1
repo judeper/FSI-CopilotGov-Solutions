@@ -23,7 +23,7 @@
     Configuration tier for evidence retention settings. Valid values: baseline, recommended, regulated.
 
 .EXAMPLE
-    .\Export-DriftEvidence.ps1 -DriftReportPath "./reports/drift-report-latest.json" -BaselinePath "./baselines/latest-baseline.json"
+    .\Export-DriftEvidence.ps1 -DriftReportPath "./reports/drift-report-20250101T120000.json" -BaselinePath "./baselines/latest-baseline.json"
 
 .EXAMPLE
     .\Export-DriftEvidence.ps1 -DriftReportPath "./reports/drift-report-20250101T120000.json" -OutputPath "./evidence" -ConfigurationTier regulated
@@ -131,8 +131,8 @@ else {
             added   = 2
             removed = 1
             changed = 1
-            high    = 1
-            medium  = 2
+            high    = 0
+            medium  = 3
             low     = 1
         }
         items = @(
@@ -142,8 +142,8 @@ else {
                 DriftType  = 'ADDED'
                 Before     = $null
                 After      = [pscustomobject]@{ principalName = 'External Consultant'; principalType = 'ExternalUser'; permissionLevel = 'Contribute' }
-                RiskScore  = 75
-                RiskTier   = 'HIGH'
+                RiskScore  = 45
+                RiskTier   = 'MEDIUM'
                 DetectedAt = (Get-Date).ToString('o')
             }
             [pscustomobject]@{
@@ -197,6 +197,7 @@ $findingsResult = Write-JsonWithHash -FilePath (Join-Path $OutputPath 'drift-fin
 $csvRows = ConvertTo-DriftCsv -DriftItems $driftItems
 $csvPath = Join-Path $OutputPath 'drift-findings.csv'
 $csvRows | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
+$csvHashInfo = Write-CopilotGovSha256File -Path $csvPath
 Write-Host "Drift findings CSV exported: $csvPath"
 
 # 3. Export baseline snapshot (copy or reference)
@@ -268,6 +269,7 @@ $evidenceSummary = [pscustomobject]@{
     )
     artifacts  = @(
         [pscustomobject]@{ name = 'drift-report'; type = 'drift-report'; path = $findingsResult.FilePath; hash = $findingsResult.Hash }
+        [pscustomobject]@{ name = 'drift-findings-csv'; type = 'drift-report-csv'; path = $csvPath; hash = $csvHashInfo.Hash }
         [pscustomobject]@{ name = 'baseline-snapshot'; type = 'baseline-snapshot'; path = $baselineResult.FilePath; hash = $baselineResult.Hash }
         [pscustomobject]@{ name = 'reversion-log'; type = 'reversion-log'; path = $reversionResult.FilePath; hash = $reversionResult.Hash }
     )

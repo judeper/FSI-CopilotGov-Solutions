@@ -2,6 +2,35 @@
 
 All notable changes to this solution are documented in this file.
 
+## [v0.1.2] — 2026-05-23 — Council review remediation
+
+### Fixed
+
+- Finding 3: Updated Graph `sendMail` usage so sender mailbox/user ID is separate from alert and approval recipients.
+- Finding 8: Aligned the External Consultant sample drift score and tier with scaffold scoring logic.
+- Finding 10: Merged `pending-approvals.json` records across runs instead of overwriting existing pending approvals.
+- Finding 14: Added minimum-version comparisons for PnP.PowerShell and Microsoft.Graph prerequisite checks.
+- Finding 20: Added SHA-256 companion hash generation and artifact metadata for CSV evidence output.
+
+### Documentation tightened
+
+- Finding 1: Clarified that drift scan output is representative sample drift until tenant-bound current-state comparison is added.
+- Finding 5: Marked the PnP permissions enumeration block as illustrative and documented the tenant-binding limitation.
+- Finding 7: Reduced documented drift coverage to scaffold permission-entry samples and tenant-binding design targets.
+- Finding 11: Clarified that approval responses and timeout escalation require an external workflow.
+- Finding 15: Marked classifier, concurrent-drift, and Solution 02 risk scoring as future integration factors.
+- Finding 19: Softened baseline feature language for sharing links and external users to representative sample scenarios.
+- Finding 22: Replaced stale latest-report examples with timestamped report paths.
+
+### Dead config
+
+- Finding 2: Marked `driftTypeWeights` as illustrative design weights pending tenant-bound scoring.
+- Finding 24: Removed unused tier-level notification and high-risk approval flags; approval behavior remains in `auto-revert-policy.json`.
+
+### Version drift
+
+- Finding 23: Removed stale extra-control coverage text and aligned version metadata to v0.1.2.
+
 ## [v0.1.1] — 2026-05-04
 
 ### Fixed

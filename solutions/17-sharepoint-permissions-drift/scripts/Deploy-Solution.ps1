@@ -90,24 +90,36 @@ function Get-Configuration {
     return $default
 }
 
-function Test-PnPModuleAvailable {
-    $module = Get-Module -ListAvailable -Name 'PnP.PowerShell' -ErrorAction SilentlyContinue
+function Test-RequiredModuleAvailable {
+    param(
+        [string]$ModuleName,
+        [string]$MinimumVersion
+    )
+
+    $modules = Get-Module -ListAvailable -Name $ModuleName -ErrorAction SilentlyContinue
+    $highestModule = $modules | Sort-Object -Property Version -Descending | Select-Object -First 1
+    $installedVersion = if ($highestModule) { $highestModule.Version } else { $null }
+    $minimumVersionObject = [version]$MinimumVersion
+    $isAvailable = $false
+
+    if ($null -ne $installedVersion) {
+        $isAvailable = ([version]$installedVersion -ge $minimumVersionObject)
+    }
+
     return [pscustomobject]@{
-        Available      = ($null -ne $module)
-        ModuleName     = 'PnP.PowerShell'
-        InstalledVersion = if ($module) { $module.Version.ToString() } else { 'Not installed' }
-        MinimumVersion = '2.3.0'
+        Available        = $isAvailable
+        ModuleName       = $ModuleName
+        InstalledVersion = if ($installedVersion) { $installedVersion.ToString() } else { 'Not installed' }
+        MinimumVersion   = $MinimumVersion
     }
 }
 
+function Test-PnPModuleAvailable {
+    return Test-RequiredModuleAvailable -ModuleName 'PnP.PowerShell' -MinimumVersion '2.3.0'
+}
+
 function Test-GraphModuleAvailable {
-    $module = Get-Module -ListAvailable -Name 'Microsoft.Graph' -ErrorAction SilentlyContinue
-    return [pscustomobject]@{
-        Available      = ($null -ne $module)
-        ModuleName     = 'Microsoft.Graph'
-        InstalledVersion = if ($module) { $module.Version.ToString() } else { 'Not installed' }
-        MinimumVersion = '2.0.0'
-    }
+    return Test-RequiredModuleAvailable -ModuleName 'Microsoft.Graph' -MinimumVersion '2.0.0'
 }
 
 function Test-UpstreamReadinessOutput {
@@ -139,6 +151,14 @@ Write-Host "  PnP.PowerShell: $($pnpCheck.InstalledVersion) (required: $($pnpChe
 Write-Host "  Microsoft.Graph: $($graphCheck.InstalledVersion) (required: $($graphCheck.MinimumVersion))"
 Write-Host "  Upstream (Solution 02): $($upstreamCheck.Status)"
 
+$failedModuleChecks = @($pnpCheck, $graphCheck) | Where-Object { -not $_.Available }
+if ($failedModuleChecks.Count -gt 0) {
+    foreach ($check in $failedModuleChecks) {
+        Write-Warning "$($check.ModuleName) version check failed. Installed: $($check.InstalledVersion); required: $($check.MinimumVersion)."
+    }
+    throw 'Prerequisite module version check failed.'
+}
+
 if ($PSCmdlet.ShouldProcess("$OutputPath", "Generate deployment manifest")) {
     # Ensure output directory
     if (-not (Test-Path $OutputPath)) {
@@ -149,7 +169,7 @@ if ($PSCmdlet.ShouldProcess("$OutputPath", "Generate deployment manifest")) {
         solution          = '17-sharepoint-permissions-drift'
         solutionCode      = 'SPD'
         displayName       = 'SharePoint Permissions Drift Detection'
-        version           = 'v0.1.1'
+        version           = 'v0.1.2'
         deployedAt        = (Get-Date).ToString('o')
         configurationTier = $ConfigurationTier
         tenantId          = $TenantId
