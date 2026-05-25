@@ -95,7 +95,7 @@ Resolution steps:
 
 1. Confirm the selected regulation is enabled in the chosen configuration file.
 2. Validate the package output location and flow permissions.
-3. Ensure upstream evidence packages include both JSON and `.sha256` files.
+3. Confirm upstream evidence packages include both JSON and `.sha256` files.
 4. Re-run the package flow with a smaller scope to isolate the missing artifact.
 
 ## Missing solutions in the coverage matrix

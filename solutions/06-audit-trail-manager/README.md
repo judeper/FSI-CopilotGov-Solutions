@@ -91,7 +91,7 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
 
 - Confirm that at least one Microsoft Purview eDiscovery case template exists for the selected tier.
 - Validate preservation status, hold counts, and custodian coverage before evidence export.
-- Ensure legal hold owners, escalation contacts, and export responsibilities are documented.
+- Confirm legal hold owners, escalation contacts, and export responsibilities are documented.
 - Use `scripts\Monitor-Compliance.ps1` to record readiness status before examination support exports.
 - Use `scripts\Export-Evidence.ps1` to package the readiness snapshot.
 

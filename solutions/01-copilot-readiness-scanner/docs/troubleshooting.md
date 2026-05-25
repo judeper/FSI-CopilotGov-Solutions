@@ -119,7 +119,7 @@
    Get-Content '.\config\regulated.json' -Raw | ConvertFrom-Json
    ```
 
-4. Compare the tier file against `default-config.json` to ensure required fields are present.
+4. Compare the tier file against `default-config.json` to confirm required fields are present.
 
 ### Resolution
 

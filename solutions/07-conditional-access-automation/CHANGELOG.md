@@ -25,7 +25,7 @@ The format is based on Keep a Changelog, and this repository uses semantic versi
 - Modeled legacy-authentication and unknown-device-state safeguards as separate block-policy templates.
 - Updated Copilot licensing and Conditional Access portal guidance to align with current Microsoft Learn references.
 
-## [0.2.0] - 2026-03-07
+## [v0.2.0] - 2026-03-07
 
 ### Added
 
@@ -40,7 +40,7 @@ The format is based on Keep a Changelog, and this repository uses semantic versi
 - Updated evidence outputs to `ca-policy-state`, `drift-alert-summary`, and `access-exception-register`.
 - Documented Copilot application IDs, Graph permissions, risk-tier policy patterns, and exception handling requirements.
 
-## [0.1.0] - Initial scaffold
+## [v0.1.0] - Initial scaffold
 
 ### Added
 

@@ -8,7 +8,7 @@
 1. Verify the service account has SharePoint Administrator role or equivalent
 2. Confirm the Microsoft Entra ID application registration has `Sites.Read.All` permission
 3. Check that Conditional Access policies do not block the service account
-4. Ensure `PnP.PowerShell` module is version 2.3.0 or later
+4. Confirm `PnP.PowerShell` module is version 2.3.0 or later
 5. Test connectivity manually: `Connect-PnPOnline -Url "https://contoso.sharepoint.com" -Interactive`
 
 ## SharePoint API Throttling

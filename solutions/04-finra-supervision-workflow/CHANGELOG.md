@@ -22,7 +22,7 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Reframed ingestion guidance around customer-validated alert, export, or audit-log handoffs instead of unsupported scheduled polling.
 - Updated live Dataverse export guidance to use configured EntitySet names for Web API collection paths.
 
-## [0.2.0] - 2026-03-07
+## [v0.2.0] - 2026-03-07
 
 ### Added
 - Replaced scaffold documentation with FINRA supervision workflow guidance for Dataverse tables, Power Automate flows, deployment, evidence export, prerequisites, and troubleshooting.
@@ -37,7 +37,7 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ### Fixed
 - Removed placeholder scaffold text from the solution folder.
 
-## [0.1.0] - 2025-12-01
+## [v0.1.0] - 2025-12-01
 
 ### Added
 - Initial scaffold for FINRA Supervision Workflow for Copilot.

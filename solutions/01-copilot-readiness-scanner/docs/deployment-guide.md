@@ -20,7 +20,7 @@ Before deployment, confirm the following:
 Set-Location 'C:\Dev\FSI-CopilotGov-Solutions\solutions\01-copilot-readiness-scanner'
 ```
 
-If the repository is already cloned, ensure you are working from the solution folder so relative configuration and artifact paths resolve correctly.
+If the repository is already cloned, confirm you are working from the solution folder so relative configuration and artifact paths resolve correctly.
 
 ## Step 2: Select the Governance Tier
 
@@ -44,7 +44,7 @@ Review and update the configuration files before deployment:
    - `maxSitesScanned`
    - `includeGuestAccounts`
    - `notificationMode`
-3. Ensure the configuration reflects the customer risk posture and operational capacity.
+3. Confirm the configuration reflects the customer risk posture and operational capacity.
 
 ## Step 4: Run `Deploy-Solution.ps1`
 
