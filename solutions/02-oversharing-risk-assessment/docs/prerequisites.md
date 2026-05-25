@@ -48,7 +48,7 @@ The `Export-Evidence.ps1` and `Monitor-Compliance.ps1` scripts optionally import
 - `IntegrationConfig.psm1` — provides cross-solution integration configuration helpers
 - `GraphAuth.psm1` — provides `Connect-CopilotGovGraph` and `Invoke-CopilotGovGraphRequest`
 
-When these modules are not present (e.g., standalone or documentation-first usage), the scripts fall back to local implementations or sample data. For production deployments with live Graph API access and evidence packaging, ensure the parent repository's `scripts/common/` directory is available at the expected relative path (`../../scripts/common/` from the `scripts/` directory).
+When these modules are not present (e.g., standalone or documentation-first usage), the scripts fall back to local implementations or sample data. For production deployments with live Graph API access and evidence packaging, confirm the parent repository's `scripts/common/` directory is available at the expected relative path (`../../scripts/common/` from the `scripts/` directory).
 
 ## Network and Service Access
 

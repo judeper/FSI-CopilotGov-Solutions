@@ -16,7 +16,7 @@ The format is based on Keep a Changelog, and this project follows semantic versi
 - Updated audit event naming to use `CopilotInteraction` and `FileAccessed`, with `ConnectedAIAppInteraction` or `AIAppInteraction` noted only for custom or third-party AI app scopes.
 - Updated Microsoft Purview Audit tier, licensing, audit role, Graph Audit Search permission, retention policy cmdlet, Copilot retention location, and audit latency terminology based on Microsoft Learn references.
 
-## [0.2.0] - 2026-03-07
+## [v0.2.0] - 2026-03-07
 
 ### Added
 - Detailed README with regulatory context, deployment workflow, monitoring guidance, and limitations.
@@ -29,7 +29,7 @@ The format is based on Keep a Changelog, and this project follows semantic versi
 - Replaced the initial scaffold content with solution-specific material for Copilot interaction audit retention and evidence packaging.
 - Expanded evidence handling to include audit-log-completeness, retention-policy-state, and ediscovery-readiness-package outputs.
 
-## [0.1.0] - 2025-11-15
+## [v0.1.0] - 2025-11-15
 
 ### Added
 - Initial repository scaffold for Solution 06 with placeholder documentation, scripts, configuration, and tests.

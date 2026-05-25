@@ -65,7 +65,7 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 
 - Confirm that `06-audit-trail-manager` is deployed and that the current retention baseline has been reviewed.
 - Review [docs/prerequisites.md](./docs/prerequisites.md) for the required Microsoft 365 licenses, compliance roles, and stakeholder approvals.
-- Ensure compliance and legal owners are available to review preservation exceptions and compensating controls before the first regulated export.
+- Confirm compliance and legal owners are available to review preservation exceptions and compensating controls before the first regulated export.
 
 ## Quick Start
 
