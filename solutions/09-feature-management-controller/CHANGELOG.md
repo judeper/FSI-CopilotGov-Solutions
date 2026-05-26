@@ -1,5 +1,20 @@
 # Changelog
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All PowerShell scripts pass syntax validation.
+- Cloud Policy service `Allow web search in Copilot` policy confirmed as current admin surface.
+- Regulatory citations (SEC Reg FD, FINRA 3110) are accurate.
+- Microsoft Graph `featureRolloutPolicies` correctly documented as out of scope for Copilot feature management.
+- Ring definitions (Preview Ring, Early Adopters, General Availability, Restricted) align with documented admin patterns.
+- Added `last_verified` to `config/default-config.json`.
+
+### Fixed
+
+- Corrected admin role name from "Copilot Administrator" to "AI Administrator" in README.md, `docs/deployment-guide.md`, and `docs/prerequisites.md`.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed

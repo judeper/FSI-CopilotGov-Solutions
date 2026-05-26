@@ -6,6 +6,24 @@ The format is based on Keep a Changelog, and this repository uses semantic versi
 
 ## [v0.2.2] - 2026-05-23
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All PowerShell scripts pass syntax validation.
+- Microsoft Graph Conditional Access endpoint (`/v1.0/identity/conditionalAccess/policies`) confirmed current.
+- Graph permissions `Policy.Read.All` and `Policy.ReadWrite.ConditionalAccess` confirmed current.
+- `Office365` Conditional Access app-suite value confirmed to include Enterprise Copilot Platform.
+- Entra ID P1/P2 licensing requirements confirmed current.
+- Regulatory citations (OCC 2011-12, FINRA 3110, DORA Article 9) are accurate.
+- Added `last_verified` to `config/default-config.json`.
+
+### Fixed
+
+- Corrected Entra admin center navigation path from "Entra ID > Conditional Access > Policies" to "Protection > Conditional Access > Policies" in `docs/deployment-guide.md`.
+
+## [v0.2.2] - 2026-05-23
+
 ### VERIFIED-BUG
 
 - Sourced `ca-policy-state` control IDs from `config\default-config.json` instead of hardcoding them in the evidence export artifact.

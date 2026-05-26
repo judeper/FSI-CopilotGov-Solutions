@@ -3,6 +3,7 @@
   "solutionCode": "FMC",
   "displayName": "Copilot Feature Management Controller",
   "version": "v0.1.2",
+  "last_verified": "2026-05-25",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P1",
