@@ -1,5 +1,18 @@
 # Changelog
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All Microsoft Learn URLs resolve and content matches documented claims (Foundry, Content Safety, Purview, Entra roles).
+- All PowerShell scripts pass syntax validation.
+- SR 26-2 / OCC Bulletin 2026-13 generative AI exclusion correctly documented.
+- SR 11-7 / OCC Bulletin 2011-12 interim genAI applicability accurately described.
+- NIST AI RMF 1.0 and ISO/IEC 42001 references are current.
+- Admin role names (AI Administrator, AI Reader) match current Entra built-in roles.
+- Microsoft Foundry branding is current (not Azure AI Foundry / Azure AI Studio).
+- Added `last_verified` to `config/default-config.json`.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed

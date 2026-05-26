@@ -3,6 +3,7 @@
   "displayName": "Generative AI Model Governance Monitor",
   "solutionCode": "GMG",
   "version": "v0.1.2",
+  "last_verified": "2026-05-25",
   "track": "D",
   "priority": "P1",
   "phase": 4,

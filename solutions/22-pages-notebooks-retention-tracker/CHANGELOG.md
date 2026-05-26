@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All PowerShell scripts pass syntax validation.
+- Copilot Pages and Copilot Notebooks terminology confirmed current per Microsoft Learn.
+- SharePoint Embedded storage model for Pages/Notebooks confirmed accurate.
+- Retention label caveats (cannot view/apply from Copilot Page) confirmed per Microsoft Learn.
+- Regulatory citations (SEC Rule 17a-4, FINRA Rule 4511(a), SOX §§302/404) are accurate with proper qualifiers.
+- Added `last_verified` to `config/default-config.json`.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed

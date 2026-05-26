@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All Microsoft Learn URLs (Copilot Studio publishing) resolve and content matches claims.
+- All PowerShell scripts pass syntax validation.
+- Microsoft Agent 365 registry context confirmed accurate (GA May 1, 2026).
+- Microsoft.PowerApps.Administration.PowerShell Windows PowerShell 5.x limitation confirmed current.
+- Power Platform API delegated permission guidance confirmed accurate.
+- Regulatory citations (FFIEC IT Handbook, FINRA 3110, OCC 2023-17, SOX §§302/404) are accurate.
+- Added `last_verified` to `config/default-config.json`.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed
