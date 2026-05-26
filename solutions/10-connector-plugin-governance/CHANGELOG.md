@@ -1,5 +1,18 @@
 # Changelog
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All PowerShell scripts pass syntax validation.
+- AI Administrator role confirmed as preferred admin role for M365 admin center agent and plugin governance.
+- Power Platform Admin API connector enumeration pattern confirmed current.
+- Microsoft Graph Agent Registry APIs correctly noted as preview.
+- Risk classification categories (low, medium, high, blocked) align with documented connector governance patterns.
+- Regulatory citations (FINRA 3110, OCC 2011-12, DORA) are accurate.
+- Facebook connector Learn URL (`https://learn.microsoft.com/connectors/facebook/`) resolves; connector correctly categorized as deprecated/blocked.
+- Added `last_verified` to `config/default-config.json`.
+
 ## [v0.2.1] — 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG

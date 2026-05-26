@@ -1,5 +1,17 @@
 # Changelog
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All PowerShell scripts pass syntax validation.
+- Graph permission `LicenseAssignment.ReadWrite.All` confirmed current for license assignment operations.
+- Entra roles (Directory Writers, License Administrator, User Administrator, Groups Administrator) confirmed current for delegated license operations.
+- Usage location requirement for license-assignment groups confirmed current.
+- Wave-based rollout pattern and gate criteria documented accurately.
+- Regulatory citations (OCC 2011-12, FINRA 3110, DORA) are accurate.
+- Added `last_verified` to `config/default-config.json`.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed

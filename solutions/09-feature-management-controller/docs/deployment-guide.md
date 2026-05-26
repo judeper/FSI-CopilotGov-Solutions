@@ -23,7 +23,7 @@ Review:
 
 Before running the deployment script, verify:
 
-- Microsoft 365 Global Administrator, Copilot Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
+- Microsoft 365 Global Administrator, AI Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
 - Teams Administrator access for documented Teams meeting/event and calling policy exports
 - Power Platform Administrator access for Copilot settings and administrative exports
 - Cloud Policy service access for the `Allow web search in Copilot` policy

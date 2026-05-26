@@ -3,6 +3,7 @@
   "solutionCode": "RCD",
   "displayName": "Regulatory Compliance Dashboard",
   "version": "v0.1.2",
+  "last_verified": "2026-05-25",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P0",
