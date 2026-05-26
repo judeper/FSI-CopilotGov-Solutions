@@ -3,6 +3,7 @@
   "displayName": "Cross-Tenant Agent Federation Auditor",
   "solutionCode": "CTAF",
   "version": "v0.1.2",
+  "last_verified": "2026-05-25",
   "track": "B",
   "priority": "P1",
   "primaryControls": [

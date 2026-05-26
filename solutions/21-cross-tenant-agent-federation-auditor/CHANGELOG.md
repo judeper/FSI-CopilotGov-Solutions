@@ -1,5 +1,17 @@
 # Changelog
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All Microsoft Learn URLs (Entra built-in roles) resolve and content matches claims.
+- All PowerShell scripts pass syntax validation.
+- MCP Streamable transport naming confirmed current (SSE deprecated August 2025).
+- Microsoft Entra Agent ID roles (Agent ID Administrator, Agent ID Developer) confirmed in Entra roles reference.
+- Microsoft 365 E7 and Microsoft Agent 365 licensing references confirmed accurate.
+- Regulatory citations (GLBA §501(b), FFIEC IT Handbook, SEC Reg S-P, OCC 2023-17, FINRA 3110) are accurate.
+- Added `last_verified` to `config/default-config.json`.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG

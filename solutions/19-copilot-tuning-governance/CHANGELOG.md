@@ -4,6 +4,17 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All Microsoft Learn URLs resolve and content matches documented claims.
+- All PowerShell scripts pass syntax validation.
+- Admin role names (AI Administrator, Global Administrator) match current Entra built-in roles.
+- Copilot Tuning eligibility language aligns with current Microsoft 365 admin center UX.
+- Regulatory citations (GLBA 501(b), OCC 2011-12, SR 11-7, Interagency AI Guidance, EU AI Act) are accurate.
+- Added `last_verified` to `config/default-config.json`.
+
 ## [v0.1.2] — 2026-05-23 — Council review remediation
 
 ### Fixed

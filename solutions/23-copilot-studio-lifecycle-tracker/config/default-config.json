@@ -3,6 +3,7 @@
   "displayName": "Copilot Studio Agent Lifecycle Tracker",
   "solutionCode": "CSLT",
   "version": "v0.1.2",
+  "last_verified": "2026-05-25",
   "track": "C",
   "priority": "P1",
   "primaryControls": [
