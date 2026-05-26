@@ -4,6 +4,19 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [Unreleased]
+
+### Validation sweep — 2026-05-25
+
+- Verified Microsoft Graph Access Reviews API (`/identityGovernance/accessReviews/definitions`) is current in v1.0.
+- Verified `AccessReview.ReadWrite.All` permission is current for access review creation and management.
+- Verified `applyDecisions` endpoint path and monthly recurrence pattern structure are current per API reference.
+- Verified licensing requirements: Microsoft Entra ID Governance, Microsoft Entra Suite, or Microsoft Entra ID P2 for supported scenarios.
+- Verified admin roles (Identity Governance Administrator, User Administrator) are current per Microsoft Learn.
+- Verified cross-solution reference to 02-oversharing-risk-assessment is valid.
+- Verified script parameter names and shared module imports match implementation.
+- No corrections required; all content verified accurate as of 2026-05-25.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed

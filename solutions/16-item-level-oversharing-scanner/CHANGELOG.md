@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Validation sweep — 2026-05-25
+
+- Verified PnP PowerShell cmdlets (`Connect-PnPOnline`, `Get-PnPSite`, `Get-PnPList`, `Get-PnPListItem`) are current and not deprecated.
+- Verified PnP.PowerShell v3.x prerequisite note (PS 7.4+, .NET 8.0, own app registration since Sept 2024) is accurate.
+- Verified Microsoft Graph API permissions (`Files.Read.All`, `Sites.Read.All`) are current for the documented endpoints.
+- Verified SharePoint Advanced Management and DSPM terminology is current.
+- Verified cross-solution reference to 02-oversharing-risk-assessment is valid.
+- Verified script parameter names and shared module imports match implementation.
+- No corrections required; all content verified accurate as of 2026-05-25.
+
 ## [v0.1.2] — 2026-05-23 — Council review remediation
 
 ### Fixed
