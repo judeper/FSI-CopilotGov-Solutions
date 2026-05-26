@@ -2,6 +2,24 @@
 
 ## [v0.1.1] - 2026-05-04
 
+## Validation Sweep — 2026-05-25
+
+### Verified
+
+- All PowerShell scripts pass syntax validation.
+- Microsoft Graph endpoints (`/v1.0/subscribedSkus`, `/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail`, `/v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary`) confirmed current.
+- Graph permission `LicenseAssignment.Read.All` confirmed current and non-deprecated.
+- Power BI Pro/Premium Per User licensing requirements confirmed current.
+- Regulatory citations (OCC 2011-12, SOX 404, GLBA 501(b)) are accurate.
+- PAYG consumption pricing of $0.01 per message and prepaid message packs confirmed current.
+- Added `last_verified` to `config/default-config.json`.
+
+### Fixed
+
+- Corrected Copilot PAYG introduction date from "April 2026" to "January 2025" in README.md and `docs/architecture.md`.
+
+## [v0.1.1] - 2026-05-04
+
 - Corrected Microsoft Graph Copilot report endpoint references to the current `/v1.0/copilot/reports` paths.
 - Updated license inventory permission guidance to prefer least-privileged `LicenseAssignment.Read.All` for `subscribedSkus`.
 - Clarified Copilot Dashboard/Viva impact availability, PAYG budget alerts, and sample-only utilization metrics.

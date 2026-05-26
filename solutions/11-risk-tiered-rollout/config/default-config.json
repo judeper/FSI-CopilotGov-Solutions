@@ -3,6 +3,7 @@
   "solutionCode": "RTR",
   "displayName": "Risk-Tiered Rollout Automation",
   "version": "v0.1.2",
+  "last_verified": "2026-05-25",
   "track": "C",
   "priority": "P0",
   "controls": [
