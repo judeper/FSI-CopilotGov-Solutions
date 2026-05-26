@@ -101,6 +101,9 @@ The Power Automate flow is documentation-first. It routes review reminders, exce
 - Purview eDiscovery supports search/collection, review, and export for Pages, Notebooks, and Loop, but full-text search within `.page` and `.loop` files in review sets is not available.
 - Legal hold is supported, but the SharePoint Embedded container must be added per user; users placed on Litigation Hold do not automatically include Copilot Pages, Copilot Notebooks, or Loop My workspace containers.
 - Retention labels have limited manual support, and Information Barriers are not supported for content stored in SharePoint Embedded containers.
+- Sensitivity labels are available for Copilot Pages only; Copilot Notebooks do not support container sensitivity labels because they share a container with all Copilot Pages.
+- Data Loss Prevention (DLP) rules are enforced with end-user policy tip support for Copilot Pages.
+- There is no end-user recycle bin for Copilot Notebooks; neither administrators nor end users can recover individually deleted Copilot Notebooks.
 
 ## Dataverse and Configuration Artifacts
 

@@ -2,6 +2,18 @@
 
 All notable changes to this solution are documented in this file.
 
+## [Unreleased]
+
+### Validation sweep — 2026-05-25
+
+- Verified PnP PowerShell cmdlets and minimum version (2.3.0) are current.
+- Verified PnP.PowerShell v3.x prerequisite note (PS 7.4+, .NET 8.0, own app registration since Sept 2024) is accurate.
+- Verified Microsoft Graph API permissions (`Files.Read.All`, `Sites.Read.All`, `Sites.FullControl.All`, `Mail.Send`, `User.Read.All`, `GroupMember.Read.All`) are current.
+- Verified Microsoft.Graph minimum version (2.0.0) is reasonable for the documented endpoints.
+- Verified cross-solution reference to 02-oversharing-risk-assessment is valid.
+- Verified script parameter names and shared module imports match implementation.
+- No corrections required; all content verified accurate as of 2026-05-25.
+
 ## [v0.1.2] — 2026-05-23 — Council review remediation
 
 ### Fixed

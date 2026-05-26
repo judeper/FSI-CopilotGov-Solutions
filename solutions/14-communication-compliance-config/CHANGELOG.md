@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Validation sweep — 2026-05-25
+
+- Verified Communication Compliance role groups (`Communication Compliance Admins`, `Analysts`, `Investigators`, `Viewers`) are current per Microsoft Learn.
+- Verified licensing terminology: Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) and Office 365 E3 with Advanced Compliance add-on are current.
+- Verified Purview Insider Risk Management risky AI usage policy template capabilities are current.
+- Verified Teams Intelligent Recap and Audio Recap compliance descriptions are current.
+- Verified regulatory citations (FINRA 2210, FINRA 3110, SEC Reg BI, FCA SYSC 10, GLBA 501(b), SOX 302/404) are correct.
+- Verified cross-solution reference to 04-finra-supervision-workflow is valid.
+- Verified script parameter names and shared module imports match implementation.
+- No corrections required; all content verified accurate as of 2026-05-25.
+
 ## v0.2.2 — 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG
