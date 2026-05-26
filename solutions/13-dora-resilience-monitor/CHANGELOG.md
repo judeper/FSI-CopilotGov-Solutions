@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Validation sweep — 2026-05-25
+
+- Verified Microsoft Graph `/admin/serviceAnnouncement/healthOverviews` v1.0 endpoint and `ServiceHealth.Read.All` permission are current.
+- Verified optional security API permissions (`SecurityAlert.Read.All`, `SecurityIncident.Read.All`) remain current for their respective endpoints.
+- Verified PowerShell module references (`Microsoft.Graph.Authentication`, `ExchangeOnlineManagement`) are current and not deprecated.
+- Verified Entra ID role names (Global Reader, Service Support Admin, Compliance Admin) are current.
+- Verified DORA regulation citation (Regulation (EU) 2022/2554) and article references (Art. 17, 18, 19, 24-26) are correct.
+- Verified cross-solution reference to 12-regulatory-compliance-dashboard is valid.
+- Verified script parameter names and shared module imports match implementation.
+- No corrections required; all content verified accurate as of 2026-05-25.
+
 ## v0.1.2 — 2026-05-23 — Council review remediation
 
 ### Fixed

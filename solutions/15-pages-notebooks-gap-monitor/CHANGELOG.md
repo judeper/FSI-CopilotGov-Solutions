@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Validation sweep — 2026-05-25
+
+- Verified Copilot Pages file extension (`.page`) and Copilot Notebooks file extension (`.pod`) against Microsoft Learn compliance summary.
+- Verified SharePoint Embedded container storage model and shared container with Loop My workspace is current.
+- Verified Purview retention policies via "All SharePoint Sites" enforcement is current.
+- Verified eDiscovery support and full-text search limitation for `.page` files in review sets is current.
+- Verified legal hold manual container addition per user is current.
+- Verified retention labels limited manual support status is current.
+- Verified Information Barriers not supported for SharePoint Embedded is current.
+- Verified regulatory citations (SEC 17a-4, FINRA 4511, SOX 404) are correct.
+- Verified cross-solution reference to 06-audit-trail-manager is valid.
+- Added no end-user recycle bin for Copilot Notebooks to architecture platform limitations per current Microsoft Learn guidance.
+- Added sensitivity labels available for Copilot Pages only (not Copilot Notebooks) to architecture platform limitations per current Microsoft Learn guidance.
+- Added DLP support with end-user policy tips to architecture platform limitations per current Microsoft Learn guidance.
+
 ## [v0.1.2] - 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG
