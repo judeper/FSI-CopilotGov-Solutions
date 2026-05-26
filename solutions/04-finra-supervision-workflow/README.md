@@ -1,6 +1,6 @@
 # FINRA Supervision Workflow for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-05-25
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 

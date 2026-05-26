@@ -91,7 +91,7 @@ Use the manifest to separate immediate corrective action from longer-term policy
 
 Plan remediation in waves with data owners and service administrators.
 
-- Respect the Purview auto-labeling cap of 100,000 files per day per tenant.
+- Respect the Purview auto-labeling cap of 100,000 files per day per policy.
 - Use bulk labeling only after owner review and change approval.
 - Sequence regulated repositories and mailboxes ahead of general collaboration areas.
 
