@@ -117,7 +117,7 @@ Solution `11-risk-tiered-rollout` is a required dependency because license gover
 
 ## Consumption-Based Billing Governance
 
-Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot features. This section documents the governance patterns for organizations that adopt pay-as-you-go (PAYG) messaging or prepaid message packs alongside, or instead of, traditional per-seat licensing.
+Beginning January 2025, Microsoft introduced consumption-based pricing for Copilot features. This section documents the governance patterns for organizations that adopt pay-as-you-go (PAYG) messaging or prepaid message packs alongside, or instead of, traditional per-seat licensing.
 
 ### Billing Policy Assignment by Entra ID Security Group
 

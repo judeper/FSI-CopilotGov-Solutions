@@ -91,7 +91,7 @@ Expired exceptions should be treated as findings until they are closed or renewe
 
 - Confirm that `05-dlp-policy-governance` is complete and that the latest protection baseline has been reviewed.
 - Confirm Microsoft Entra ID P1 or P2 licensing and the required Entra administrator roles for Conditional Access management.
-- Ensure Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
+- Confirm Microsoft Graph access, change-control approvals, and exception review ownership are in place before policy rollout.
 
 ## Deployment
 

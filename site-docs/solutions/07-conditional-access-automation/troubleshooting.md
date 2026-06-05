@@ -8,7 +8,7 @@
 | Drift alert appears to be a false positive | A system process or approved service account updated the policy outside the baseline window | Review sign-in and audit logs, document the change, and exclude approved service accounts from drift review rules where appropriate |
 | Exception register write fails | The output path is missing, read-only, or not approved for the automation account | Validate the output path, permissions, and file-locking state before rerunning the script |
 | Graph API returns 403 | The operator is missing `Policy.Read.All`, `Policy.ReadWrite.ConditionalAccess`, or the required administrator role | Reconnect with the correct scopes and verify role assignment in Entra ID |
-| MFA is not enforced | Grant controls are incomplete, policy precedence is wrong, or report-only mode is still enabled | Confirm the policy state, review grant controls order, and ensure the production policy is enabled |
+| MFA is not enforced | Grant controls are incomplete, policy precedence is wrong, or report-only mode is still enabled | Confirm the policy state, review grant controls order, and confirm the production policy is enabled |
 | Baseline does not match on the first run | The baseline was captured before policy review was complete | Re-export or recapture the baseline after the approved policy state is finalized |
 
 ## Additional guidance

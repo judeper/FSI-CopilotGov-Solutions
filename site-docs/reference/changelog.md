@@ -23,6 +23,35 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `AGENTS.md` validation-commands block updated to list all 8 validators.
 - `.gitignore` adds `.gitleaks-report.json` and `.tools/`.
 
+### Fixed — CI workflow stability (PRs #244, #245)
+- **`lint-powershell.yml`** (PR #244): replaced `Invoke-ScriptAnalyzer -Path scripts,solutions` (which failed with `Cannot convert 'System.Object[]' to 'System.String'` under PSScriptAnalyzer 1.24+) with a per-path `foreach` loop that concatenates results. Lint PowerShell now runs green on `main`.
+- **`dependency-review.yml`** (PR #245): removed the `actions/checkout@v4` step (the action uses the Dependency Graph compare API and does not need a working tree for the default/inline configuration; checkout was failing deterministically with `fatal: could not read Username for 'https://github.com'` when fetching `refs/pull/N/merge`). Also enabled repository vulnerability alerts so the Dependency Graph API responds for this repo. A YAML comment in the workflow documents the rationale to prevent regression.
+
+### Fixed — PSScriptAnalyzer Warnings driven to zero (PR #254)
+- **All 212 PSScriptAnalyzer Warnings cleared** across `scripts/` and `solutions/` via in-source fixes (no new global suppressions added to `PSScriptAnalyzerSettings.psd1`). Local `Invoke-ScriptAnalyzer` now reports `0 Errors, 0 Warnings`.
+  - **A1** — Real bug-shaped findings (9): added `[CmdletBinding(SupportsShouldProcess)]` to functions calling `$PSCmdlet.ShouldProcess` (sol 03), replaced positional `Write-Output @()` with `-InputObject` form (sol 05 `Common-Functions.ps1`), renamed `$Sender` automatic-var collision to `$SenderAddress` (sol 17), added empty-catch comment + Verbose log (sol 17 `New-PermissionsBaseline.ps1`).
+  - **A2** — UTF-8 BOM (17): re-encoded 17 PowerShell files with UTF-8-BOM to satisfy `PSUseBOMForUnicodeEncodedFile`; content otherwise unchanged.
+  - **A3** — Singular nouns (55): renamed 51 plural-noun functions to singular form via word-boundary regex sweep across `.ps1`/`.psm1`/`.psd1`/`.md`/`.json`/`.yml`/`.yaml` (133 replacement sites). `Export-ModuleMember` entries updated alongside. `python scripts/validate-documentation.py` passed.
+  - **A4** — Pester scope hygiene (115): prefixed variables declared in `BeforeAll` with `$script:` at both assignment and reference sites across 22 `*.Tests.ps1` files (561 replacements); resolves `PSUseDeclaredVarsMoreThanAssignments` false positives caused by Pester 5's separate `BeforeAll`/`It` scopes.
+  - **A5** — Reserved scaffold parameters (16): documented 16 unused parameters across 14 files using `$null = $ParamName` no-op plus an explanatory comment, keeping the parameter on the documented public surface while signaling intent to PSSA and human readers.
+
+### Fixed — Dependency hygiene (PR #246) and follow-up Dependabot bumps (PRs #247–#253)
+- **`.github/dependabot.yml`** (PR #246): added weekly version-update schedules for `pip` (root `pyproject.toml`) and `github-actions` (`.github/workflows/`), with a 5-PR open limit per ecosystem and `dependencies` + `github-actions`/`python` labels. Enabled Dependabot security updates via the `automated-security-fixes` API; vulnerability alerts now exercise the Dependency Review check end-to-end.
+- **GitHub Actions bumps** (PRs #247, #248, #249, #251, #253): `actions/upload-artifact` 4→7, `actions/attest-build-provenance` 2→4, `github/codeql-action` 3→4, `actions/setup-python` 5→6, `actions/checkout` 4→6. Compatibility verified: workflows use single-name uploads (safe with `upload-artifact@v5+` immutability), all use Python 3.11+ (safe with `setup-python@v6` removal of 3.7), and runner git versions exceed `checkout@v6` minimums.
+- **Python dependency bumps** (PRs #250, #252): `mkdocs-material >=9.5` → `>=9.7.6`, `pyyaml >=6.0` → `>=6.0.3`. Patch-range tightening only; no API changes.
+
+### Fixed — Tech-debt sweep
+- **Python lint cleanup**: cleared 4 ruff violations across `scripts/`:
+  - `UP017` (×2): `scripts/build_solutions_graph.py` and `scripts/build_solutions_json.py` migrated from deprecated `timezone.utc` to `datetime.UTC` alias.
+  - `I001` (×1): `scripts/hooks/boundary-check.py` import order normalised (stdlib `import` before `from … import`).
+  - `F841` (×1): removed dead `AGENTS = REPO / "AGENTS.md"` load from `scripts/verify_readme_counts.py` (the script only verifies sister-README counts; AGENTS verification was never implemented). Docstring and output strings tightened accordingly.
+- **`solutions.json` and `solutions-graph.json` version drift repaired**: rebuilt both catalogs against current README/CHANGELOG truth — picks up version bumps from PRs that did not regenerate the artifacts (#228, #229, #241, council-review series). Thirteen solutions advanced their cached `version` field (e.g. `01-copilot-readiness-scanner` `0.2.1`→`0.2.2`). The `solutions-graph.json` drift was caught by the existing CI drift-check during this PR's CI run.
+- **`validate-solutions-json.yml` drift-check coverage**: workflow now drift-checks `solutions.json` in addition to `solutions-graph.json`, and triggers on edits to `scripts/build_solutions_json.py`. Prevents future drift between README/CHANGELOG version bumps and the cached JSON catalog.
+- **`sbom-pr.yml` long-standing flag bug repaired**: the workflow invoked `cyclonedx-py requirements -i requirements-docs.txt ...`, but `-i` is `--index-url` (the Pip index URL), not the requirements-file flag — the requirements file is a positional argument in every release ≥4.0. The misuse silently fell back to the non-existent default `requirements.txt` and broke the workflow on every push. Replaced with positional invocation (`cyclonedx-py requirements requirements-docs.txt ...`) and renamed `--output-format JSON` to the v6+ short flag `--of JSON`. Also bumped pin from `>=4,<6` to `>=6,<8` for security and validator-format updates.
+
+### Notes — Tech-debt sweep
+- Final state on this branch: `ruff check scripts/` → 0 errors; `Invoke-ScriptAnalyzer` (per prior PR #254) → 0 Errors, 0 Warnings; all `validate_*` scripts pass; SBOM generation verified locally (4.6 KB CycloneDX 1.6 JSON produced); no stale branches, worktrees, stashes, or untracked files outside `.gitignore`.
+
 ### Notes
 - All changes are documentation-first — scripts continue to use representative sample data; no runtime tenant binding.
 - Working tree is staged for operator review; release tagging is deferred.

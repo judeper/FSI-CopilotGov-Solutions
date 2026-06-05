@@ -4,7 +4,7 @@
 
 The deployment team should have access to the following roles or equivalent delegated permissions:
 
-- Microsoft 365 Global Administrator, Copilot Administrator, or equivalent delegated model for Microsoft 365 admin center Copilot settings
+- Microsoft 365 Global Administrator, AI Administrator, or equivalent delegated model for Microsoft 365 admin center Copilot settings
 - Teams Administrator for documented Teams meeting/event and calling policy review
 - Power Platform Administrator for Power Apps Copilot settings and Power Automate tenant-level Copilot settings
 - Dataverse environment administration or maker rights in the target environment used for evidence storage
