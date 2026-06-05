@@ -90,7 +90,7 @@ function Get-ReviewerQueueMetric {
         [System.Security.SecureString]$ClientSecret
     )
 
-    # Requires Purview compliance portal API or Graph Beta support.
+    # Requires Microsoft Purview portal API or Graph Beta support.
     $reviewerSlaHours = [int]$Config['reviewerSlaHours']
     $thresholdConfig = if ($Config.ContainsKey('queueHealthThresholds')) { $Config['queueHealthThresholds'] } else { @{} }
     $queueHealthThresholds = [pscustomobject]@{
@@ -133,7 +133,7 @@ function Get-ReviewerQueueMetric {
         tenantId = if ($tenantSupplied) { $TenantId } else { 'not-provided' }
         clientId = if ($clientSupplied) { $ClientId } else { 'not-provided' }
         credentialSupplied = ($tenantSupplied -or $clientSupplied -or $secretSupplied)
-        notes = 'Queue metrics require Purview compliance portal API or Graph Beta support; threshold evaluation uses the configured manual-export placeholders until customer queue data is supplied.'
+        notes = 'Queue metrics require Microsoft Purview portal API or Graph Beta support; threshold evaluation uses the configured manual-export placeholders until customer queue data is supplied.'
     }
 }
 

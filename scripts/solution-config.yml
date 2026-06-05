@@ -284,7 +284,7 @@
       "track": "D",
       "domain": "regulatory-resilience",
       "priority": "P1",
-      "version": "v0.2.2",
+      "version": "v0.2.3",
       "controls": [
         "2.10",
         "3.4",
