@@ -1,7 +1,7 @@
 {
   "solution": "08-license-governance-roi",
   "displayName": "License Governance and ROI Tracker",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "last_verified": "2026-05-25",
   "controls": [
     "1.9",
@@ -40,10 +40,10 @@
   },
   "consumptionBilling": {
     "payAsYouGoEnabled": false,
-    "messagePacksEnabled": false,
+    "capacityPacksEnabled": false,
     "costTrackingTag": "m365copilotchat",
-    "billingPolicyScopeType": "security-group",
-    "highUsageThresholdMessagesPerDay": 100,
+    "billingPolicyScopeType": "security-group-or-distribution-group-or-tenant",
+    "highUsageThresholdCreditsPerDay": 100,
     "costAlertThresholdUSD": 500
   }
 }
