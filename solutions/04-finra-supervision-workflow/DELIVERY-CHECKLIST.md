@@ -4,7 +4,7 @@
 
 - Solution: FINRA Supervision Workflow for Copilot
 - Solution Code: FSW
-- Version: v0.2.2
+- Version: v0.2.3
 - Track: B
 - Priority: P0
 - Evidence Outputs: supervision-queue-snapshot, review-disposition-log, sampling-summary

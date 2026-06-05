@@ -80,7 +80,7 @@
       "track": "B",
       "domain": "security-compliance",
       "priority": "P0",
-      "version": "v0.2.2",
+      "version": "v0.2.3",
       "controls": [
         "3.4",
         "3.5",

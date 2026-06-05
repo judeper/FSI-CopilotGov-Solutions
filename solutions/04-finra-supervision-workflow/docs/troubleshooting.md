@@ -106,7 +106,7 @@ Symptoms:
 
 Checks:
 - Confirm the Dataverse environment is not under heavy concurrent load from other integrations.
-- Verify the service account is not exceeding the per-user API request limits (default 6,000 requests per 5-minute window).
+- Verify the service account is not exceeding the Dataverse API request limits (default 6,000 requests per user, per web server within a 5-minute sliding window).
 - Check the `Retry-After` header value in the error response for guidance on when to retry.
 
 Resolution:
