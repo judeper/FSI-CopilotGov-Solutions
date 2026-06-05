@@ -36,7 +36,7 @@
 
 .NOTES
     Solution: DORA Operational Resilience Monitor (DRM)
-    Version: v0.1.2
+    Version:     v0.1.3
 #>
 [CmdletBinding()]
 param(

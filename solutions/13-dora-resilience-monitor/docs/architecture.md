@@ -88,7 +88,7 @@ The Evidence Packager creates `service-health-log`, `incident-register`, and `re
 
 ### Power Automate Flow
 
-The Power Automate Flow is documentation-first in v0.1.2. The solution describes a scheduled flow that can read monitoring output, route service alerts, create follow-up tasks, and notify resilience stakeholders, but the flow is not deployed automatically by the scripts in this repository.
+The Power Automate Flow is documentation-first in v0.1.3. The solution describes a scheduled flow that can read monitoring output, route service alerts, create follow-up tasks, and notify resilience stakeholders, but the flow is not deployed automatically by the scripts in this repository.
 
 ## Integration Points
 
