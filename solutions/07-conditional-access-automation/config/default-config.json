@@ -2,7 +2,7 @@
   "solution": "07-conditional-access-automation",
   "displayName": "Conditional Access Policy Automation for Copilot",
   "solutionCode": "CAA",
-  "version": "v0.2.2",
+  "version": "v0.2.3",
   "last_verified": "2026-05-25",
   "track": "B",
   "priority": "P1",
