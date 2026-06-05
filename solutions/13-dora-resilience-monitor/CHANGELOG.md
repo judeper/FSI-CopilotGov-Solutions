@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## v0.1.3 — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Fixed
+
+- Corrected Entra role name "Service Support Admin" → "Service Support Administrator" (canonical display name per Microsoft Learn).
+- Corrected monitored workload label "Microsoft Copilot" → "Microsoft 365 Copilot" (enterprise brand per Microsoft Learn).
+
 ### Validation sweep — 2026-05-25
 
 - Verified Microsoft Graph `/admin/serviceAnnouncement/healthOverviews` v1.0 endpoint and `ServiceHealth.Read.All` permission are current.

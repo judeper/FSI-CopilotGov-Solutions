@@ -75,7 +75,7 @@ $monitoredServices = @(
     'Microsoft Teams',
     'Microsoft Graph',
     'Microsoft 365 Apps',
-    'Microsoft Copilot'
+    'Microsoft 365 Copilot'
 )
 
 $connectionReferences = @(

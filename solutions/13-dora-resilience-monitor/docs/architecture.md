@@ -62,7 +62,7 @@ The DORA Operational Resilience Monitor (DRM) provides a repeatable monitoring a
 
 ### Service Health Poller
 
-The Service Health Poller queries the Microsoft Graph service communications surface for workload status across Exchange Online, SharePoint Online, Microsoft Teams, Microsoft Graph, Microsoft 365 Apps, and Microsoft Copilot. The current repository implementation is a documentation-first stub with a clear insertion point for the authenticated Graph call so the script remains testable in offline delivery environments.
+The Service Health Poller queries the Microsoft Graph service communications surface for workload status across Exchange Online, SharePoint Online, Microsoft Teams, Microsoft Graph, Microsoft 365 Apps, and Microsoft 365 Copilot. The current repository implementation is a documentation-first stub with a clear insertion point for the authenticated Graph call so the script remains testable in offline delivery environments.
 
 > **Note:** The Service Health Poller described here provides the framework for Microsoft Graph service communications integration. The current repository version uses a local stub with representative sample data. Customer must configure Graph API authentication and endpoint binding for live service health polling.
 

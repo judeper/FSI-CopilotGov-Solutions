@@ -45,7 +45,7 @@ If Microsoft Sentinel enrichment is enabled, allow outbound access to the worksp
 
 ## Role Requirements
 
-- Global Reader or Service Support Admin for Microsoft 365 service-health access
+- Global Reader or Service Support Administrator for Microsoft 365 service-health access
 - Compliance Admin for evidence review and retention oversight
 - Additional Sentinel or storage roles if regulated-tier monitoring and immutable retention are enabled
 
