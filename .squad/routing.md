@@ -6,13 +6,13 @@ How to decide who handles what.
 
 | Work Type | Route To | Examples |
 |-----------|----------|----------|
-| {domain 1} | {Name} | {example tasks} |
-| {domain 2} | {Name} | {example tasks} |
-| {domain 3} | {Name} | {example tasks} |
-| Code review | {Name} | Review PRs, check quality, suggest improvements |
-| Testing | {Name} | Write tests, find edge cases, verify fixes |
-| Scope & priorities | {Name} | What to build next, trade-offs, decisions |
+| MS Learn verification | Freamon | Check feature names, capabilities, licensing, API/cmdlet/Graph refs vs Microsoft Learn |
+| Doc/content fixes | Pearlman | Apply verified corrections under FSI language rules; keep README/data/docs in sync |
+| QA / validators | Bunk | Run validate-*.py + build-docs.py, review fixes, reviewer gate |
+| Scope & sequencing | Daniels | Per-solution pipeline, branch/PR gate, issue triage |
+| Code review | Bunk / Daniels | Review diffs, check quality, enforce lockout |
 | Session logging | Scribe | Automatic — never needs routing |
+| Work queue / keep-alive | Ralph | Scan backlog, drive the pipeline |
 
 ## Issue Routing
 
