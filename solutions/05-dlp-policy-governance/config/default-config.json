@@ -2,7 +2,7 @@
   "solution": "05-dlp-policy-governance",
   "solutionCode": "DPG",
   "displayName": "DLP Policy Governance for Copilot",
-  "version": "v0.2.2",
+  "version": "v0.2.3",
   "track": "B",
   "priority": "P1",
   "status": "documentation-first",
@@ -54,14 +54,14 @@
       {
         "id": "sensitiveInformationTypesInPrompts",
         "displayName": "Sensitive information types in prompt text",
-        "availability": "generallyAvailable",
+        "availability": "preview",
         "condition": "Content contains > Sensitive information types",
         "action": "Prevent Copilot from processing content > Processing prompts"
       },
       {
         "id": "externalWebSearchGroundingRestriction",
         "displayName": "Restrict external web search when prompt text contains sensitive information types",
-        "availability": "generallyAvailable",
+        "availability": "preview",
         "condition": "Content contains > Sensitive information types",
         "action": "Prevent Copilot from processing content > Performing Web Searches"
       },

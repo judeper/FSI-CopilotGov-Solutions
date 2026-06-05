@@ -135,7 +135,8 @@ $graphConnectionStub = @"
 .SYNOPSIS
 Connects to Microsoft Graph for DLP Policy Governance data collection.
 .DESCRIPTION
-Template connection stub for collecting policy metadata that supports Copilot DLP baseline and drift reviews.
+Template connection stub for collecting sensitivity-label and Entra ID policy metadata that supports Copilot DLP baseline and drift reviews.
+Note: DLP policy metadata is retrieved via Security and Compliance PowerShell, not Microsoft Graph.
 #>
 [CmdletBinding()]
 param()

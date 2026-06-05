@@ -1,5 +1,7 @@
 # Delivery Checklist
 
+- Version: v0.2.3
+
 Use this checklist before declaring DLP Policy Governance for Copilot ready for production operations.
 
 ## Dependency readiness
