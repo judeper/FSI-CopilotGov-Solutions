@@ -21,7 +21,7 @@
 
 1. Confirm the `-Environment` parameter value and rerun `Deploy-Solution.ps1`.
 2. Validate Power Platform Admin API permissions for the target admin account.
-3. Review environment specific custom connectors and ensure they were published.
+3. Review environment specific custom connectors and confirm they were published.
 4. Compare agent, plugin, and tool metadata to Microsoft 365 admin center Agents > All agents > Registry and agent details output; if Microsoft Graph Agent Registry APIs are used, document the preview and AI Admin role caveats.
 5. Compare custom connector or API authentication dependencies to Entra app registration and admin-consent inventory.
 

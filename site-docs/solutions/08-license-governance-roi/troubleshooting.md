@@ -32,7 +32,7 @@
 **Remediation**
 
 - Reconfirm the app registration or service principal permissions.
-- Ensure tenant admin consent has been granted after permission changes.
+- Confirm tenant admin consent has been granted after permission changes.
 - Validate that the correct tenant identifier and automation identity are being used.
 
 ## Viva Insights data not available

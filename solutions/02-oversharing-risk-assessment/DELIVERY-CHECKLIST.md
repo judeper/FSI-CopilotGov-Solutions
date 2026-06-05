@@ -11,7 +11,7 @@ Use this checklist to move solution 02 from documentation review into controlled
 
 ## 2. Licensing and Platform Prerequisites
 
-- [ ] Validate SharePoint Advanced Management feature entitlement by confirming the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license, or document the approved alternative control path.
+- [ ] Validate SharePoint Advanced Management feature entitlement by confirming the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license, or document the approved alternative control path.
 - [ ] Validate Microsoft Purview Data Security Posture Management (DSPM) prerequisites for the target scenarios, including permissions, audit, Microsoft 365 Copilot user licensing, and any Edge, device, browser extension, or pay-as-you-go billing requirements that apply.
 - [ ] Confirm SharePoint REST API and Microsoft Graph access from the execution environment.
 - [ ] Confirm the required PowerShell modules are installed and approved for use in the administration workstation or automation host.

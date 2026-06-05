@@ -75,7 +75,7 @@ Recommended local tools:
 
 ## Network and Connectivity Requirements
 
-Ensure the operator workstation or automation runner can reach:
+Confirm the operator workstation or automation runner can reach:
 
 - `https://graph.microsoft.com`
 - Microsoft Purview and compliance endpoints used by the tenant

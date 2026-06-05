@@ -134,7 +134,7 @@ Use `-BaselineOnly` during first deployment if the tenant has not yet approved a
 
 ## Prerequisites
 
-- Microsoft 365 Global Administrator, Copilot Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
+- Microsoft 365 Global Administrator, AI Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
 - Teams Administrator role for documented Teams meeting, event, and calling policy review
 - Power Platform Administrator for Power Apps Copilot settings and Power Automate tenant-level Copilot settings
 - Cloud Policy service permissions for the `Allow web search in Copilot` policy

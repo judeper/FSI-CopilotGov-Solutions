@@ -2,7 +2,7 @@
 
 ## Platform and Licensing
 
-- SharePoint Advanced Management feature entitlement for the intended production posture requires an eligible base license plus either a Microsoft 365 Copilot license assigned to at least one user in the organization or a standalone Microsoft SharePoint Advanced Management license. If neither entitlement path is available, document the limitation before enabling this solution.
+- SharePoint Advanced Management feature entitlement for the intended production posture requires an eligible base license plus either a Microsoft 365 Copilot license assigned to at least one user in the organization or a standalone SharePoint Advanced Management Plan 1 license. If neither entitlement path is available, document the limitation before enabling this solution.
 - Microsoft Purview Data Security Posture Management (DSPM) prerequisites should be validated for the selected scenarios, including appropriate permissions, Microsoft Purview auditing, Microsoft 365 Copilot user licensing for Copilot and agents, and any Edge, device onboarding, browser extension, or pay-as-you-go billing requirements that apply.
 - The target tenant should already have a defined Copilot pilot or rollout scope so findings can be prioritized against real exposure risk.
 
@@ -30,7 +30,7 @@ Example installation command:
 Install-Module PnP.PowerShell, Microsoft.Graph, ExchangeOnlineManagement -Scope CurrentUser
 ```
 
-> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
+> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4.0 or later. Organizations running PowerShell 7.4 or later will use .NET 8.0 automatically. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments using the older PowerShell 7.2 runtime are limited to PnP.PowerShell 2.12.0; the PowerShell 7.4 runtime (GA) supports current PnP.PowerShell versions.
 
 ## Power Automate Environment
 
@@ -48,7 +48,7 @@ The `Export-Evidence.ps1` and `Monitor-Compliance.ps1` scripts optionally import
 - `IntegrationConfig.psm1` — provides cross-solution integration configuration helpers
 - `GraphAuth.psm1` — provides `Connect-CopilotGovGraph` and `Invoke-CopilotGovGraphRequest`
 
-When these modules are not present (e.g., standalone or documentation-first usage), the scripts fall back to local implementations or sample data. For production deployments with live Graph API access and evidence packaging, ensure the parent repository's `scripts/common/` directory is available at the expected relative path (`../../scripts/common/` from the `scripts/` directory).
+When these modules are not present (e.g., standalone or documentation-first usage), the scripts fall back to local implementations or sample data. For production deployments with live Graph API access and evidence packaging, confirm the parent repository's `scripts/common/` directory is available at the expected relative path (`../../scripts/common/` from the `scripts/` directory).
 
 ## Network and Service Access
 

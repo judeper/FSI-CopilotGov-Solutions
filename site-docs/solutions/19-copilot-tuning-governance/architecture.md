@@ -75,7 +75,7 @@ Tuning requests are submitted by business units and must include:
 
 ### Approval Phase
 
-Multi-level approval gates help ensure appropriate oversight:
+Multi-level approval gates help verify appropriate oversight:
 
 - **Data Owner**: Confirms source data is appropriate for tuning and properly classified
 - **Model Risk Officer**: Assesses tuning risk against institutional model risk management policy

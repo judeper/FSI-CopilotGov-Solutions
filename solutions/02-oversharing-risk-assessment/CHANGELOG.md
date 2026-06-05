@@ -4,6 +4,14 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [v0.2.2] - 2026-06-05
+
+### Fixed
+
+- Corrected PnP.PowerShell minimum version from "PowerShell 7.2 or later" to "PowerShell 7.4.0 or later" per current PnP install docs.
+- Updated Azure Automation note to reflect availability of PowerShell 7.4 runtime (GA) instead of implying PS 7.2 is the only option.
+- Tightened SAM add-on name to "SharePoint Advanced Management Plan 1" (dropped incorrect "Microsoft" prefix) across README, prerequisites, deployment guide, delivery checklist, and Deploy-Solution.ps1.
+
 ## [v0.2.1] - 2026-05-04
 
 ### Changed

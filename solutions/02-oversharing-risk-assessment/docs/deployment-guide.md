@@ -12,7 +12,7 @@ Before deploying, confirm that solution 01-copilot-readiness-scanner has already
 
 Review [prerequisites.md](prerequisites.md) and confirm:
 
-- SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license, or the gap is formally documented
+- SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license, or the gap is formally documented
 - Microsoft Purview Data Security Posture Management (DSPM) prerequisites are understood for the target scenarios
 - Required admin roles are assigned
 - Network access to SharePoint REST API and Graph API is available
