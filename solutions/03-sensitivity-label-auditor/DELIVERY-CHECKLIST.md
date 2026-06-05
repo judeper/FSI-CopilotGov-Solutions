@@ -3,7 +3,7 @@
 ## Delivery Summary
 
 - Solution: Sensitivity Label Coverage Auditor
-- Version: v0.2.2
+- Version: v0.2.3
 - Solution code: SLA
 - Track: A
 - Priority: P1

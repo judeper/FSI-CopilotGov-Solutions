@@ -60,7 +60,7 @@
       "track": "A",
       "domain": "readiness-data",
       "priority": "P1",
-      "version": "v0.2.2",
+      "version": "v0.2.3",
       "controls": [
         "1.5",
         "2.2",
