@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [v0.1.3] — 2026-05-23 — Power Platform API terminology alignment
+## [v0.1.3] — 2026-06-05 — Power Platform API terminology alignment
 
 ### Fixed
 - Aligned "Power Platform admin API" → "Power Platform API" in README.md, Monitor-Compliance.ps1 to match official Microsoft Learn naming (`api.powerplatform.com`) and the solution's own prerequisites/network sections.
