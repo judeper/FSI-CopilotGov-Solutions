@@ -3,7 +3,7 @@
 ## Platform and Licensing
 
 - Microsoft Entra ID Governance or Microsoft Entra Suite subscriptions are required for many access review capabilities. If licensing is not available, document the limitation before enabling this solution.
-- For application or group access review scenarios where Microsoft Learn lists additional options, validate Microsoft Entra ID P2 or Enterprise Mobility + Security (EMS) E5 coverage as applicable.
+- For application or group access review scenarios where Microsoft Learn lists additional options, validate Microsoft Entra ID Governance, Microsoft Entra Suite, or Microsoft Entra ID P2 coverage as applicable.
 - The target tenant should already have a defined Copilot pilot or rollout scope so access reviews can be prioritized against real exposure risk.
 
 ## Required Administrative Roles

@@ -4,7 +4,7 @@
 
 - Solution: Copilot Connector and Plugin Governance
 - Solution Code: CPG
-- Version: v0.2.2
+- Version: v0.2.3
 - Track: C
 - Domain: operations-analytics
 - Priority: P1

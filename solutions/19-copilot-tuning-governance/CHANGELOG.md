@@ -4,7 +4,14 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
-## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
+## [v0.1.4] — 2026-06-05 — MS Learn accuracy pass-2 correction
+
+### Fixed
+
+- Corrected product name "Microsoft 365 Copilot Agent Builder" → "Agent Builder in Microsoft 365 Copilot" per MS Learn canonical naming (README.md scope boundaries and known limitations sections).
+- Corrected product name "Agent 365" → "Microsoft Agent 365" in the same two locations per MS Learn.
+
+
 
 ### Fixed
 

@@ -1,11 +1,18 @@
 # Changelog
 
-## [v0.1.2] - 2026-06-05
+## [v0.1.3] - 2026-06-05
+
+### Fixed
+
+- Corrected Copilot Studio billing unit from "message meter / $0.01 per message" to "pay-as-you-go meter / $0.01 per Copilot Credit" in README.md and docs/architecture.md per MS Learn effective September 1, 2025. Rate ($0.01) unchanged; unit name updated. Added per-interaction credit costs (1 credit for classic answer, 2 credits for generative answer) to architecture.md billing section.
+- Updated pass-1 CHANGELOG entry that described the old "$0.01-per-message" unit to reflect the corrected terminology.
+
+
 
 ### Fixed
 
 - Corrected consumption-billing terminology: standardized on "Copilot Credits" and "Copilot Studio capacity packs" (25,000 credits/month/pack) per current Microsoft Learn documentation; removed outdated "message packs" / "25,000-message packs" phrasing.
-- Clarified that $0.01-per-message is the Copilot Studio message meter rate, not the Copilot Chat consumption unit.
+- Corrected consumption-billing unit: "$0.01 per message" (Copilot Studio message meter) is now "$0.01 per Copilot Credit" (Copilot Studio pay-as-you-go meter) per Microsoft Learn effective September 1, 2025.
 - Broadened billing policy scope language from "security groups" only to "security groups, distribution groups, or the entire tenant" per Microsoft Learn.
 - Renamed config keys: `messagePacksEnabled` → `capacityPacksEnabled`, `highUsageThresholdMessagesPerDay` → `highUsageThresholdCreditsPerDay`, `billingPolicyScopeType` value updated to reflect broader scope options.
 - Resolved internal README inconsistency between "credits" (scope boundaries) and "messages" (overview) — standardized on "Copilot Credits."

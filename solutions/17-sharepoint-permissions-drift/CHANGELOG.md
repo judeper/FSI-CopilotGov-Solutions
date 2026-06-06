@@ -2,7 +2,13 @@
 
 All notable changes to this solution are documented in this file.
 
-## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
+## [v0.1.4] — 2026-06-05 — MS Learn accuracy pass-2 correction
+
+### Fixed
+
+- Corrected SharePoint Advanced Management Data Access Governance report name in docs/architecture.md: "Permission state reports" → "Site permissions" report per current MS Learn documentation. "Sharing links report" and "EEEU" references were already correct.
+
+
 
 ### Fixed
 

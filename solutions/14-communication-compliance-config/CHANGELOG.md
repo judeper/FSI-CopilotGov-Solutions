@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.2.3 — 2026-06-05 — Microsoft Learn accuracy fixes
+## v0.2.4 — 2026-06-05 — MS Learn accuracy pass-2 correction
+
+### Fixed
+
+- Removed "or risky intent" from the IRM Risky AI usage detection clause in docs/architecture.md. MS Learn documentation specifies "sensitive information" as the detection criterion for Copilot-specific prompts and responses; "risky intent" is not listed as a named detection criterion for that context.
+
+
 
 ### Changed
 - Replaced all references to the retired "Microsoft Purview compliance portal" with the unified "Microsoft Purview portal" (purview.microsoft.com) across README, deployment guide, architecture, DELIVERY-CHECKLIST, and both scripts (11 occurrences).

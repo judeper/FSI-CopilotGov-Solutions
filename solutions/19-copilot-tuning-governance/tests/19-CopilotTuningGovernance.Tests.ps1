@@ -126,7 +126,7 @@ Describe 'README content' {
     }
 
     It 'contains the standardized status line' {
-        $script:readmeContent | Should -Match 'Status:.*Documentation-first scaffold.*Version:.*v0\.1\.3.*Priority:.*P1.*Track:.*A'
+        $script:readmeContent | Should -Match 'Status:.*Documentation-first scaffold.*Version:.*v0\.1\.4.*Priority:.*P1.*Track:.*A'
     }
 
     It 'contains the disclaimer banner' {

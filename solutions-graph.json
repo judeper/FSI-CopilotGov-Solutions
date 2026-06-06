@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-06-06T01:26:44Z",
+  "generatedAt": "2026-06-06T01:51:41Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -61,7 +61,7 @@
       "id": "03-sensitivity-label-auditor",
       "name": "Sensitivity Label Coverage Auditor",
       "tier": 2,
-      "version": "0.2.3",
+      "version": "0.2.4",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.5",
@@ -169,7 +169,7 @@
       "id": "08-license-governance-roi",
       "name": "License Governance and ROI Tracker",
       "tier": 2,
-      "version": "0.1.2",
+      "version": "0.1.3",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.9",
@@ -216,7 +216,7 @@
       "id": "10-connector-plugin-governance",
       "name": "Copilot Connector and Plugin Governance",
       "tier": 3,
-      "version": "0.2.2",
+      "version": "0.2.3",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.13",
@@ -307,7 +307,7 @@
       "id": "14-communication-compliance-config",
       "name": "Communication Compliance Configurator",
       "tier": 3,
-      "version": "0.2.3",
+      "version": "0.2.4",
       "domain": "regulatory-resilience",
       "controlCoverage": [
         "2.10",
@@ -375,7 +375,7 @@
       "id": "17-sharepoint-permissions-drift",
       "name": "SharePoint Permissions Drift Detection",
       "tier": 2,
-      "version": "0.1.3",
+      "version": "0.1.4",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
@@ -397,7 +397,7 @@
       "id": "18-entra-access-reviews",
       "name": "Entra Access Reviews Automation",
       "tier": 2,
-      "version": "0.1.3",
+      "version": "0.1.4",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
@@ -419,7 +419,7 @@
       "id": "19-copilot-tuning-governance",
       "name": "Copilot Tuning Governance",
       "tier": 2,
-      "version": "0.1.3",
+      "version": "0.1.4",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.16",

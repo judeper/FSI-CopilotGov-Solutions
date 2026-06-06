@@ -1,6 +1,6 @@
 # License Governance and ROI Tracker
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ License Governance and ROI Tracker helps financial-services teams monitor Copilo
 
 The implementation is intentionally documentation-first for Power BI assets. The PowerShell scripts define the deployment, monitoring, and evidence packaging flow, while the architecture and deployment guides document how a customer-owned Power BI dataset should be configured.
 
-Beginning January 2025, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go Copilot Credits (metered per credit) and prepaid Copilot Studio capacity packs (25,000 Copilot Credits per month per pack). The Copilot Studio message meter is billed at $0.01 per message. This solution documents governance patterns for billing policy assignment by security group, distribution group, or entire tenant, Azure Cost Management budget alert thresholds, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements. Budget alerts notify reviewers as spend approaches configured thresholds; they do not enforce a hard budget limit or stop usage.
+Beginning January 2025, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go Copilot Credits (metered per credit) and prepaid Copilot Studio capacity packs (25,000 Copilot Credits per month per pack). The Copilot Studio pay-as-you-go meter is billed at $0.01 per Copilot Credit. This solution documents governance patterns for billing policy assignment by security group, distribution group, or entire tenant, Azure Cost Management budget alert thresholds, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements. Budget alerts notify reviewers as spend approaches configured thresholds; they do not enforce a hard budget limit or stop usage.
 
 ## Detailed Features
 

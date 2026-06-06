@@ -139,7 +139,7 @@ Microsoft Purview Insider Risk Management supports Risky AI usage policy templat
 
 Key capabilities documented by this solution:
 
-- **Risky AI usage indicators** — IRM Risky AI usage policy templates can detect user browsing activities to generative AI websites and user prompts or AI responses containing sensitive information or risky intent in Microsoft 365 Copilot, Microsoft Copilot, and agents.
+- **Risky AI usage indicators** — IRM Risky AI usage policy templates can detect user browsing activities to generative AI websites and user prompts and AI responses containing sensitive information in Microsoft 365 Copilot, Microsoft Copilot, and agents.
 - **Adaptive Protection correlation** — Insider Risk Management assigns dynamic risk scores to users based on detected activity. The solution documents how Adaptive Protection risk levels can inform communication compliance reviewer prioritization and escalation decisions.
 - **Policy template guidance** — The solution provides documentation-first policy templates for configuring IRM indicators targeting Copilot interactions. Policy creation and indicator activation require manual configuration in the Microsoft Purview portal.
 - **Cross-control integration** — IRM AI usage detection supports compliance with control 2.10 and complements the communication compliance policies documented under controls 3.4 and 3.6 by correlating insider risk signals with supervisory review workflows.
