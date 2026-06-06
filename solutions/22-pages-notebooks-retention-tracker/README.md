@@ -1,26 +1,26 @@
 # Pages and Notebooks Retention Tracker
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-The Pages and Notebooks Retention Tracker (PNRT) is a documentation-first solution that helps organizations inventory Microsoft Copilot Pages, OneNote sections grouped by Notebook metadata, and embedded Loop components; track retention-policy coverage; and document Purview audit-log and version-history evidence. The repository implementation generates representative sample inventories and internal sample lineage logs so delivery teams can validate the evidence shape before wiring documented SharePoint Embedded, Microsoft Graph DriveItem/export, and Purview data sources. PNRT helps meet retention and supervisory recordkeeping expectations under SEC Rule 17a-4 (where applicable to broker-dealer required records), FINRA Rule 4511(a), and Sarbanes-Oxley §§302/404 (where applicable to ICFR).
+The Pages and Notebooks Retention Tracker (PNRT) is a documentation-first solution that helps organizations inventory Microsoft Copilot Pages, Copilot Notebooks stored in SharePoint Embedded containers, and embedded Loop components; track retention-policy coverage; and document Purview audit-log and version-history evidence. The repository implementation generates representative sample inventories and internal sample lineage logs so delivery teams can validate the evidence shape before wiring documented SharePoint Embedded, Microsoft Graph DriveItem/export, and Purview data sources. PNRT helps meet retention and supervisory recordkeeping expectations under SEC Rule 17a-4 (where applicable to broker-dealer required records), FINRA Rule 4511(a), and Sarbanes-Oxley §§302/404 (where applicable to ICFR).
 
 ## What This Solution Monitors
 
 - Copilot Pages retention-policy and limited retention-label evidence, Purview audit logs, and version history
-- OneNote section and folder retention-policy coverage, grouped by Notebook metadata, from SharePoint or OneDrive locations
+- Copilot Notebook retention-policy coverage from the shared SharePoint Embedded container, with notebook metadata used for grouping and reporting
 - Loop component provenance — origin workspace, container, and parent Page or Notebook reference
-- Coverage gaps where Pages, OneNote sections, or Loop components fall outside any retention label or policy
+- Coverage gaps where Pages, Copilot Notebooks, or Loop components fall outside any retention label or policy
 
 ## Features
 
 | Capability | Description |
 |------------|-------------|
 | Pages inventory pattern | Documents the structure for cataloging Copilot Pages with retention-policy coverage, limited retention-label evidence, source container references, and version-history context; current version uses sample data |
-| Notebook retention check | Records OneNote section and folder retention coverage with Notebook metadata used only for grouping and reporting |
+| Notebook retention check | Records Copilot Notebook retention-policy coverage from the SharePoint Embedded container, with notebook metadata used for grouping and reporting |
 | Loop component lineage | Documents parent container, originating workspace, and creation context for Loop components embedded in Pages or chats |
 | Internal sample lineage log | Keeps the `branching-event-log` artifact name for compatibility, but rows use repository-only sample lineage taxonomy alongside documented Purview audit/version-history context |
 | Tier-aware deployment | Applies baseline, recommended, or regulated retention and audit settings |
@@ -60,7 +60,7 @@ The solution combines PowerShell scripts for deployment, monitoring, and evidenc
 
 ## Configuration Tiers
 
-| Tier | Pages Retention (days) | OneNote Section Retention (days) | Audit / Internal Lineage Sample | Loop Provenance |
+| Tier | Pages Retention (days) | Notebook Retention (days) | Audit / Internal Lineage Sample | Loop Provenance |
 |------|------------------------|----------------------------------|--------------------------------|-----------------|
 | baseline | 365 | 365 | Purview audit summary plus sample-only lineage | optional |
 | recommended | 2555 (7 years) | 2555 (7 years) | Purview audit and version-history evidence plus sample-only lineage | required |
@@ -73,7 +73,7 @@ Retention values are recommended starting points and should be adjusted to match
 The solution exports the following evidence artifacts:
 
 - `pages-retention-inventory`: Copilot Pages catalog with retention-policy coverage, limited retention-label evidence, and version-history context
-- `notebook-retention-log`: OneNote section and folder retention-policy coverage grouped by Notebook metadata
+- `notebook-retention-log`: Copilot Notebook retention-policy coverage from the SharePoint Embedded container, grouped by notebook metadata
 - `loop-component-lineage`: Loop component provenance and parent-container references
 - `branching-event-log`: Repository-only internal sample lineage rows plus documented Purview audit/version-history context; not Microsoft 365 branch or fork events
 
@@ -83,7 +83,7 @@ Each JSON artifact is paired with a `.sha256` companion file.
 
 | Control | Role | Notes |
 |---------|------|-------|
-| 3.14 | Primary | Records retention for Copilot artifacts; PNRT inventories Pages and OneNote sections against retention policies and supported labels |
+| 3.14 | Primary | Records retention for Copilot artifacts; PNRT inventories Pages and Copilot Notebooks against retention policies and supported labels |
 | 3.2 | Primary | Sensitivity and lifecycle governance for collaborative artifacts produced by Copilot |
 | 3.3 | Supporting | Microsoft Purview retention policy alignment for Copilot-generated content |
 | 3.11 | Supporting | eDiscovery and legal-hold readiness for Pages, Notebooks, and Loop components |
@@ -93,7 +93,7 @@ Each JSON artifact is paired with a `.sha256` companion file.
 
 ## Regulatory Alignment
 
-PNRT helps meet SEC Rule 17a-4 (where applicable to broker-dealer required records) by documenting retention-policy coverage, limited retention-label evidence, Purview audit-log availability, version-history context, and OneNote section/folder coverage for Copilot Pages and Notebook content that may contain communications or records subject to the rule. It supports compliance with FINRA Rule 4511(a) by documenting books-and-records retention coverage for collaborative Copilot artifacts and surfacing coverage gaps for supervisory review. It also aids in Sarbanes-Oxley §§302/404 (where applicable to ICFR) artifact preservation when Pages, Notebooks, or Loop components participate in financial reporting workflows. Use of this solution does not on its own satisfy any of these regulations; organizations should verify retention configuration with legal, compliance, and records-management teams.
+PNRT helps meet SEC Rule 17a-4 (where applicable to broker-dealer required records) by documenting retention-policy coverage, limited retention-label evidence, Purview audit-log availability, version-history context, and Copilot Notebook coverage for Copilot Pages and Notebook content that may contain communications or records subject to the rule. It supports compliance with FINRA Rule 4511(a) by documenting books-and-records retention coverage for collaborative Copilot artifacts and surfacing coverage gaps for supervisory review. It also aids in Sarbanes-Oxley §§302/404 (where applicable to ICFR) artifact preservation when Pages, Notebooks, or Loop components participate in financial reporting workflows. Use of this solution does not on its own satisfy any of these regulations; organizations should verify retention configuration with legal, compliance, and records-management teams.
 
 ## Roadmap
 
