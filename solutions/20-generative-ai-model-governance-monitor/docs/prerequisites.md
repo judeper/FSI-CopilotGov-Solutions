@@ -19,7 +19,7 @@
 - PowerShell 7.2 or later
 - Pester 5.x for running the included smoke tests
 
-The repository scripts are documentation-first and do not require Microsoft Graph SDK, Azure PowerShell, or Azure CLI modules in v0.1.2.
+The repository scripts are documentation-first and do not require Microsoft Graph SDK, Azure PowerShell, or Azure CLI modules in v0.1.3.
 
 ## Operating Model Requirements
 
@@ -38,7 +38,7 @@ Use least-privilege role assignments appropriate to the live integration scope w
 - AI Reader — read-only review of Microsoft 365 Copilot and AI-related enterprise service configuration where available
 - AI Administrator — Microsoft 365 Copilot and AI-related enterprise service administration when configuration changes are explicitly approved
 - Azure Reader or resource-specific read roles — read-only inventory evidence for Microsoft Foundry, Azure OpenAI, and Azure AI Content Safety resources
-- Cognitive Services Users or resource-specific Azure AI Content Safety roles — content safety evidence review where the implementation requires resource access
+- Cognitive Services User or resource-specific Azure AI Content Safety roles — content safety evidence review where the implementation requires resource access
 - Third-Party Risk Manager — owner of Microsoft and approved provider governance review
 - Global Administrator — reserved for tenant-wide consent or configuration tasks that explicitly require it; not recommended for routine evidence review
 
