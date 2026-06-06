@@ -1,6 +1,6 @@
 # Copilot Interaction Audit Trail Manager
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-05-25
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-06-05
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -33,7 +33,7 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
 - ❌ Does not connect to Microsoft 365 Unified Audit Log APIs (scripts validate configuration expectations against tier requirements)
-- ❌ Does not verify actual audit event capture (UAL event validation requires manual verification through the compliance portal)
+- ❌ Does not verify actual audit event capture (UAL event validation requires manual verification through the Microsoft Purview portal)
 - ❌ Does not deploy Power Automate flows (alert workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
@@ -67,7 +67,7 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
 ## Audit configuration steps
 
 1. Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
-2. Manually verify that `CopilotInteraction` events appear in the Unified Audit Log through the Microsoft Purview compliance portal or PowerShell; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
+2. Manually verify that `CopilotInteraction` events appear in the Unified Audit Log through the Microsoft Purview portal or PowerShell; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
 3. Confirm the expected Microsoft Purview Audit tier for the selected tier:
    - baseline: Audit (Standard)
    - recommended: Audit (Premium)
