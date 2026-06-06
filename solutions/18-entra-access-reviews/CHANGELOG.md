@@ -6,6 +6,12 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 
 ## [Unreleased]
 
+## v0.1.3 — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Changed
+
+- Corrected feature branding: "Microsoft Entra ID Access Reviews" → "access reviews in Microsoft Entra ID Governance" per Microsoft Learn canonical naming (README, architecture, scripts).
+
 ### Validation sweep — 2026-05-25
 
 - Verified Microsoft Graph Access Reviews API (`/identityGovernance/accessReviews/definitions`) is current in v1.0.

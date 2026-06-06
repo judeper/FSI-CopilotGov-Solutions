@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | Copilot Studio Agent Lifecycle Tracker |
 | Solution Code | CSLT |
-| Version | v0.1.2 |
+| Version | v0.1.3 |
 | Track | C |
 | Priority | P1 |
 | Primary Controls | 4.14, 4.13 |

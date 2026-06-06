@@ -1,6 +1,6 @@
 # Copilot Connector and Plugin Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ Copilot Connector and Plugin Governance extends Copilot supervision into the con
 
 This solution inventories connectors and plugins, applies risk classification, routes approval requests, and records data-flow boundary decisions for approved use cases. It supports compliance with internal control programs by documenting which external systems Copilot can reach, who approved that reach, and whether ongoing monitoring is catching new or unapproved extensibility paths.
 
-The **Copilot Control System** in the Microsoft 365 admin center serves as the centralized admin surface for managing Copilot connectors, plugins, and **declarative agents** — a newer extensibility path that allows organizations to define custom Copilot behaviors through configuration rather than code. This solution documents governance patterns that help meet oversight expectations for all three extensibility categories.
+The **Copilot Control System** is a framework whose controls span the Microsoft 365 admin center, Power Platform admin center, and Copilot Studio for managing Copilot connectors, plugins, and **declarative agents** — a newer extensibility path that allows organizations to define custom Copilot behaviors through configuration rather than code. This solution documents governance patterns that help meet oversight expectations for all three extensibility categories.
 
 ## Features
 
@@ -28,6 +28,7 @@ The **Copilot Control System** in the Microsoft 365 admin center serves as the c
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
 - ❌ Does not enumerate connectors from live Power Platform environments (inventory uses configuration-defined connector lists)
+- ❌ Does not model the Microsoft Graph connectors API (`/external/connections`) path for Copilot connector enumeration (only the Power Platform Admin API surface is documented)
 - ❌ Does not block or approve connectors automatically (approval workflows are documented, not deployed)
 - ❌ Does not deploy Power Automate flows (governance workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)

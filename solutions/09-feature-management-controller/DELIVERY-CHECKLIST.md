@@ -4,7 +4,7 @@
 
 - Solution: Copilot Feature Management Controller
 - Solution Code: FMC
-- Version: v0.1.2
+- Version: v0.1.3
 - Track: C
 - Domain: operations-analytics
 - Priority: P1

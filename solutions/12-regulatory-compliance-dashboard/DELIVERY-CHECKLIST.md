@@ -3,7 +3,7 @@
 ## Delivery Summary
 
 - Solution: Regulatory Compliance Dashboard
-- Version: v0.1.2
+- Version: v0.1.3
 - Track: C
 - Priority: P0
 

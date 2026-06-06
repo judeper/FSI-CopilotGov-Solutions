@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Fixed
+- **MAJOR:** Corrected licensing reference from "Microsoft 365 E7" to "Microsoft 365 E5" (or component Entra ID P1/P2 + Global Secure Access) per Microsoft Learn agent security feature requirements. Fixed in `docs/prerequisites.md` and prior changelog entry.
+- **MINOR:** Updated product brand from "Microsoft Entra External Identities" to current "Microsoft Entra External ID" in README, architecture, and default configuration.
+- **MINOR:** Replaced shorthand `authenticationType = 'Microsoft Entra ID'` with verbatim Copilot Studio UI options ("Authenticate with Microsoft" / "Authenticate manually (Microsoft Entra ID)") in sample data.
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified
@@ -8,7 +15,7 @@
 - All PowerShell scripts pass syntax validation.
 - MCP Streamable transport naming confirmed current (SSE deprecated August 2025).
 - Microsoft Entra Agent ID roles (Agent ID Administrator, Agent ID Developer) confirmed in Entra roles reference.
-- Microsoft 365 E7 and Microsoft Agent 365 licensing references confirmed accurate.
+- Microsoft 365 E5 and Microsoft Agent 365 licensing references confirmed accurate (corrected from E7 — Microsoft Learn specifies E5 for agent security features).
 - Regulatory citations (GLBA §501(b), FFIEC IT Handbook, SEC Reg S-P, OCC 2023-17, FINRA 3110) are accurate.
 - Added `last_verified` to `config/default-config.json`.
 

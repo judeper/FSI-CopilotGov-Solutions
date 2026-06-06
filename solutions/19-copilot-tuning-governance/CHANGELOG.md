@@ -4,6 +4,16 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Fixed
+
+- Replaced bare "Agent Builder" with the full brand name "Microsoft 365 Copilot Agent Builder" (README, troubleshooting).
+
+### Added
+
+- Noted the open-source / external base-model admin control as a real governance lever not yet covered (Known Limitations).
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified

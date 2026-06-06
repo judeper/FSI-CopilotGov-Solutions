@@ -31,7 +31,7 @@
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
-    Version: v0.1.2
+    Version: v0.1.3
 #>
 [CmdletBinding()]
 param(
@@ -132,7 +132,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '3.14'
         status = 'partial'
-        notes = 'Pages and OneNote section retention coverage is documented through sample inventory; live SharePoint Embedded, documented Graph DriveItem/export, and Purview integration is required to confirm production retention coverage.'
+        notes = 'Pages and Copilot Notebook retention coverage is documented through sample inventory; live SharePoint Embedded, documented Graph DriveItem/export, and Purview integration is required to confirm production retention coverage.'
     },
     [pscustomobject]@{
         controlId = '3.2'

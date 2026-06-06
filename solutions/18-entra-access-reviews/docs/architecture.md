@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Solution 18 provides a documentation-first pattern for coordinating Microsoft Entra ID Access Reviews for Microsoft 365 groups, security groups, or access packages associated with SharePoint sites whose content Microsoft 365 Copilot can surface during grounded responses. Direct SharePoint site permissions require a separate inventory and remediation pattern. This solution uses risk scores from solution 02 to prioritize review creation and set review cadence proportional to each site-associated resource's oversharing risk tier.
+Solution 18 provides a documentation-first pattern for coordinating access reviews in Microsoft Entra ID Governance for Microsoft 365 groups, security groups, or access packages associated with SharePoint sites whose content Microsoft 365 Copilot can surface during grounded responses. Direct SharePoint site permissions require a separate inventory and remediation pattern. This solution uses risk scores from solution 02 to prioritize review creation and set review cadence proportional to each site-associated resource's oversharing risk tier.
 
 ## Text-Based Component Diagram
 

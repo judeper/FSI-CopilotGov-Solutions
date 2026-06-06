@@ -70,11 +70,11 @@ Records the cadence and content of vendor governance review for Microsoft and ot
 
 ## Integration Points (Future)
 
-These integrations are documented but not implemented in v0.1.2:
+These integrations are documented but not implemented in v0.1.3:
 
 - **Microsoft Foundry / Azure Resource Manager inventory metadata** — project, deployment, model family, deployment type, region or cloud, lifecycle, and owner attributes for Foundry and Azure OpenAI resources
 - **Azure AI Content Safety** — resource status, Prompt Shields, groundedness, protected-material, and filter-threshold configuration evidence for model deployments where applicable
-- **Microsoft Purview Audit / unified audit log** — Copilot and AI interaction audit events to support sampling and investigation; future implementations may use Microsoft Purview Audit search and the Audit Search Graph API where available
+- **Microsoft Purview Audit / unified audit log** — Copilot and AI interaction audit events to support sampling and investigation; future implementations may use Microsoft Purview Audit search and the Microsoft Graph `auditLogQuery` API where available
 - **Microsoft Purview** — AI interaction auditing, data classification for prompts/responses, sensitivity-label context for source or cited content, eDiscovery, and DLP review
 - **Microsoft Sentinel** — alert correlation for AI incident response (control 3.12)
 - **Dataverse model inventory tables** — structured persistence for inventory and validation records

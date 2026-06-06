@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | DORA Operational Resilience Monitor |
 | Solution Code | DRM |
-| Version | v0.1.2 |
+| Version | v0.1.3 |
 | Track | D |
 | Priority | P1 |
 | Controls | 2.7, 4.9, 4.10, 4.11 |

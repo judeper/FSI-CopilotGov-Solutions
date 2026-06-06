@@ -2,7 +2,7 @@
   "solution": "14-communication-compliance-config",
   "solutionCode": "CCC",
   "displayName": "Microsoft Purview Communication Compliance Configurator",
-  "version": "v0.2.2",
+  "version": "v0.2.3",
   "status": "documentation-first",
   "track": "D",
   "priority": "P1",
@@ -46,7 +46,7 @@
     "Copilot-generated response"
   ],
   "reviewerWorkflowDefaults": {
-    "defaultReviewerGroup": "Microsoft Purview Communication Compliance Reviewers",
+    "defaultReviewerGroup": "Communication Compliance Analysts",
     "escalationReviewerGroup": "Market Supervision Escalations",
     "legalReviewGroup": "Legal and Compliance Counsel",
     "dispositions": [

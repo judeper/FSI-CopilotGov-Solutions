@@ -30,7 +30,7 @@ The monitoring approach assumes future access to supporting inventory and policy
 ## Microsoft Purview eDiscovery Assessment Access
 
 - Microsoft Purview eDiscovery Admin access is required to assess discovery coverage for Pages, Loop, and notebook content.
-- Investigation teams should validate correct SharePoint Embedded container URLs, site scopes, and the documented full-text search limitations for `.page` and `.loop` files in review sets.
+- Investigation teams should validate correct SharePoint Embedded container URLs, site scopes, and the documented full-text search limitations for `.page` files in review sets.
 - Where case scope, legal hold, or review-set limitations require manual procedures, the team must document the export or collection process used instead.
 
 ## Dependencies

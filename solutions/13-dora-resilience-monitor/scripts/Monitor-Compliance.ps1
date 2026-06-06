@@ -36,7 +36,7 @@
 
 .NOTES
     Solution: DORA Operational Resilience Monitor (DRM)
-    Version: v0.1.2
+    Version:     v0.1.3
 #>
 [CmdletBinding()]
 param(
@@ -160,7 +160,7 @@ function Get-ServiceHealthStatus {
         [System.Security.SecureString]$ClientSecret
     )
 
-    $criticalServices = @('Exchange Online', 'SharePoint Online', 'Microsoft Teams', 'Microsoft Graph', 'Microsoft Copilot')
+    $criticalServices = @('Exchange Online', 'SharePoint Online', 'Microsoft Teams', 'Microsoft Graph', 'Microsoft 365 Copilot')
     $samplePayload = $env:DRM_SERVICE_HEALTH_SAMPLE_JSON
 
     if (-not [string]::IsNullOrWhiteSpace($samplePayload)) {

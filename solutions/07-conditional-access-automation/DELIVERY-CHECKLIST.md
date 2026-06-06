@@ -7,7 +7,7 @@ Use this checklist before promoting the solution into an operational tenant.
 - [ ] `05-dlp-policy-governance` is complete and validated for the target tenant.
 - [ ] Microsoft Entra ID P1 or P2 licensing is confirmed for all scoped Copilot users.
 - [ ] Required administrator roles are assigned and time-bounded.
-- [ ] Copilot app IDs are verified for Microsoft 365 Copilot and Copilot Studio.
+- [ ] Copilot app targeting is verified for Microsoft 365 Copilot (via the Office 365 app suite). Note: Copilot Studio agent-identity CA applies only in the Teams context.
 
 ## Policy deployment
 

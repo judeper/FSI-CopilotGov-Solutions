@@ -1,6 +1,6 @@
 # Generative AI Model Governance Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -26,7 +26,7 @@ The Generative AI Model Governance Monitor (GMG) provides a documentation-first 
 | Content safety and guardrails | Records Azure AI Content Safety, Prompt Shields, groundedness, protected-material, filter-threshold, exception, and review-cadence evidence where applicable |
 | Third-party due diligence | Records vendor governance evidence reviewed from Microsoft and other approved providers (SOC reports, Responsible AI documentation, transparency notes, and provider attestations) on a periodic cadence |
 | Tier-aware deployment | Applies baseline, recommended, or regulated cadence and rigor for inventory review, validation, guardrail review, and monitoring |
-| Documentation-first automation | Describes manual workflow patterns for model risk committee review without requiring tenant-side automation in v0.1.2 |
+| Documentation-first automation | Describes manual workflow patterns for model risk committee review without requiring tenant-side automation in v0.1.3 |
 
 ## Scope Boundaries
 

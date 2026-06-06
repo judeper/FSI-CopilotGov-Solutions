@@ -44,7 +44,7 @@ Confirm the items in [prerequisites.md](prerequisites.md) before deploying.
 
 ## Live Integration (Future)
 
-Live tenant integration is intentionally out of scope for v0.1.2. Future versions will add:
+Live tenant integration is intentionally out of scope for v0.1.3. Future versions will add:
 
 - Microsoft Graph v1.0 integration for cross-tenant access policy partner enumeration.
 - Copilot Studio channel, authentication, and organization sharing telemetry hooks.
