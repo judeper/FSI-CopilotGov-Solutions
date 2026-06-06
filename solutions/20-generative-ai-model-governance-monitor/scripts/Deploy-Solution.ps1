@@ -32,7 +32,7 @@
     Primary Controls: 3.8a, 3.8
     Supporting Controls: 3.1, 3.11, 3.12
     Regulations: SR 26-2 / OCC Bulletin 2026-13, SR 11-7 / OCC Bulletin 2011-12 (interim genAI principles), NIST AI RMF 1.0, ISO/IEC 42001
-    Version: v0.1.2
+    Version: v0.1.3
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
