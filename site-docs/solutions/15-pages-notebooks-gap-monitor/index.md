@@ -65,7 +65,7 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 
 - Confirm that `06-audit-trail-manager` is deployed and that the current retention baseline has been reviewed.
 - Review [docs/prerequisites.md](prerequisites.md) for the required Microsoft 365 licenses, compliance roles, and stakeholder approvals.
-- Ensure compliance and legal owners are available to review preservation exceptions and compensating controls before the first regulated export.
+- Confirm compliance and legal owners are available to review preservation exceptions and compensating controls before the first regulated export.
 
 ## Quick Start
 
@@ -138,3 +138,4 @@ Evidence is exported through the shared `Export-SolutionEvidencePackage` functio
 - Human review is required for all gap registrations, compensating control approvals, and preservation exception entries.
 - Platform behavior for Copilot Pages, Copilot Notebooks, Loop, SharePoint Embedded retention, and Microsoft Purview eDiscovery can change over time and must be revalidated against current Microsoft guidance.
 - Current Microsoft Learn guidance states that Purview retention policies configured for all SharePoint sites and Purview eDiscovery are supported for Copilot Pages and Notebooks. The remaining documented limitations include no full-text search in Purview review sets for `.page` files, manual legal-hold container addition per user, limited manual retention-label support, no Information Barriers for SharePoint Embedded content, and departed-user handling differences.
+- There is no end-user recycle bin for Copilot Notebooks; neither administrators nor end users can recover individually deleted Copilot Notebooks. Organizations should document this limitation in their records management and preservation exception processes.

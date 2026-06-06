@@ -1,3 +1,11 @@
 {
-  "version": 1
+  "version": 1,
+  "agentModelOverrides": {
+    "daniels": "claude-opus-4.6",
+    "freamon": "claude-opus-4.8",
+    "pearlman": "claude-opus-4.6",
+    "bunk": "claude-opus-4.7-high",
+    "scribe": "claude-haiku-4.5"
+  },
+  "notes": "Accuracy-over-cost policy set by Jude on 2026-06-05. Freamon (MS Learn verification) and Bunk (reviewer gate) carry the highest-reasoning models because accuracy is the priority. Scribe stays on Haiku (mechanical file ops)."
 }

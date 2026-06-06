@@ -1,0 +1,16 @@
+{
+  "universe_usage": [
+    { "universe": "oceans-eleven", "assignment_id": "asn-2026-05-23-aborted", "status": "retired" },
+    { "universe": "the-wire", "assignment_id": "asn-2026-06-05-mslearn-review", "selected_at": "2026-06-05" }
+  ],
+  "assignments": [
+    {
+      "assignment_id": "asn-2026-06-05-mslearn-review",
+      "universe": "the-wire",
+      "created_at": "2026-06-05",
+      "shape": "lead + research/verify + editor + reviewer",
+      "members": ["Daniels", "Freamon", "Pearlman", "Bunk"],
+      "purpose": "Microsoft Learn product/feature accuracy review of 23 governance solutions."
+    }
+  ]
+}

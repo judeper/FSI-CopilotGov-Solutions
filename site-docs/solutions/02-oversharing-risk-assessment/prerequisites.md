@@ -30,7 +30,7 @@ Example installation command:
 Install-Module PnP.PowerShell, Microsoft.Graph, ExchangeOnlineManagement -Scope CurrentUser
 ```
 
-> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
+> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.2 or later. Organizations running PowerShell 7.4 or later will use .NET 8.0 automatically. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
 
 ## Power Automate Environment
 
@@ -48,7 +48,7 @@ The `Export-Evidence.ps1` and `Monitor-Compliance.ps1` scripts optionally import
 - `IntegrationConfig.psm1` — provides cross-solution integration configuration helpers
 - `GraphAuth.psm1` — provides `Connect-CopilotGovGraph` and `Invoke-CopilotGovGraphRequest`
 
-When these modules are not present (e.g., standalone or documentation-first usage), the scripts fall back to local implementations or sample data. For production deployments with live Graph API access and evidence packaging, ensure the parent repository's `scripts/common/` directory is available at the expected relative path (`../../scripts/common/` from the `scripts/` directory).
+When these modules are not present (e.g., standalone or documentation-first usage), the scripts fall back to local implementations or sample data. For production deployments with live Graph API access and evidence packaging, confirm the parent repository's `scripts/common/` directory is available at the expected relative path (`../../scripts/common/` from the `scripts/` directory).
 
 ## Network and Service Access
 

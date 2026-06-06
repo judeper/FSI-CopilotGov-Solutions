@@ -42,7 +42,7 @@ Grant admin consent where required before automation runs in production.
 
 ## External module dependency
 
-`Export-Evidence.ps1` imports `scripts\common\EvidenceExport.psm1` from the parent repository root (two levels above the solution directory). This shared module provides the `Export-SolutionEvidencePackage` and `Get-CopilotGovSha256` functions used to assemble and hash evidence packages. Ensure the parent repository structure is intact when running `Export-Evidence.ps1` outside the standard solution layout.
+`Export-Evidence.ps1` imports `scripts\common\EvidenceExport.psm1` from the parent repository root (two levels above the solution directory). This shared module provides the `Export-SolutionEvidencePackage` and `Get-CopilotGovSha256` functions used to assemble and hash evidence packages. Confirm the parent repository structure is intact when running `Export-Evidence.ps1` outside the standard solution layout.
 
 ## Environment preparation
 

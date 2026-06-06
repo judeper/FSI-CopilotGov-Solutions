@@ -2,6 +2,14 @@
 
 All notable changes to this solution are documented in this file.
 
+## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy corrections
+
+### Fixed
+
+- README.md:9 — Softened unverifiable "Microsoft 365 Copilot Optimization Assessment" named offering to generic "Microsoft 365 Copilot readiness and optimization guidance" (no MS Learn page documents that exact product name).
+- README.md:107 — Corrected "Microsoft Copilot Retrieval API" to "Microsoft 365 Copilot Retrieval API" (official name per MS Learn).
+- docs/prerequisites.md:30 — Corrected Entra role name "Directory Reader" to "Directory Readers" (plural, per MS Learn permissions reference).
+
 ## [v0.2.2] — 2026-05-23 — Council review remediation
 
 ### Fixed

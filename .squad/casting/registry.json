@@ -1,0 +1,15 @@
+{
+  "universe": "the-wire",
+  "agents": [
+    { "persistent_name": "Daniels", "role": "Lead", "universe": "the-wire", "created_at": "2026-06-05", "legacy_named": false, "status": "active" },
+    { "persistent_name": "Freamon", "role": "Research / Verification", "universe": "the-wire", "created_at": "2026-06-05", "legacy_named": false, "status": "active" },
+    { "persistent_name": "Pearlman", "role": "Editor / Technical Writer", "universe": "the-wire", "created_at": "2026-06-05", "legacy_named": false, "status": "active" },
+    { "persistent_name": "Bunk", "role": "Reviewer / QA", "universe": "the-wire", "created_at": "2026-06-05", "legacy_named": false, "status": "active" }
+  ],
+  "retired": [
+    { "persistent_name": "Danny", "universe": "oceans-eleven", "status": "retired", "note": "Aborted earlier cast, never rostered. Archived to _alumni 2026-06-05." },
+    { "persistent_name": "Rusty", "universe": "oceans-eleven", "status": "retired", "note": "Aborted earlier cast, never rostered. Archived to _alumni 2026-06-05." },
+    { "persistent_name": "Linus", "universe": "oceans-eleven", "status": "retired", "note": "Aborted earlier cast, never rostered. Archived to _alumni 2026-06-05." },
+    { "persistent_name": "Saul", "universe": "oceans-eleven", "status": "retired", "note": "Aborted earlier cast, never rostered. Archived to _alumni 2026-06-05." }
+  ]
+}

@@ -51,7 +51,7 @@ Create or update policies manually in the Entra admin center or by using the gen
 Manual path:
 
 1. Go to the Microsoft Entra admin center.
-2. Browse to **Entra ID** > **Conditional Access** > **Policies**.
+2. Browse to **Protection** > **Conditional Access** > **Policies**.
 3. Create or update policies that target the `Office365` app suite or tenant-verified app IDs.
 4. Enable MFA, compliant-device, and named-location controls based on the selected tier.
 
