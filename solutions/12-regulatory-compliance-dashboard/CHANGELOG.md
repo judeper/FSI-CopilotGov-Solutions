@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.3 — 2026-06-05 — Accuracy fix (semantic model terminology)
+
+### Changed
+
+- Added clarifying comment in `Deploy-Solution.ps1` noting that the `powerBI.datasetTables` config key retains legacy naming for backward compatibility; Power BI renamed "datasets" to "semantic models" (Nov 2023). Key not renamed because script code depends on it.
+- Renamed output property in deployment manifest from `datasetTables` to `semanticModelTables` (human-readable output only; config key unchanged).
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified

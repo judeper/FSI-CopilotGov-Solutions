@@ -314,10 +314,12 @@ try {
         tierConfig = $tierConfig
         evidenceInventory = $evidenceInventory
         dataverse = $dataverseInitialization
+        # Note: powerBI.datasetTables retains legacy key name for backward compatibility;
+        # Power BI renamed "datasets" to "semantic models" (Nov 2023).
         powerBI = [ordered]@{
             documentationLed = $true
             templateName = $defaultConfig.powerBI.templateName
-            datasetTables = $defaultConfig.powerBI.datasetTables
+            semanticModelTables = $defaultConfig.powerBI.datasetTables
             rowLevelSecurityRoles = $defaultConfig.powerBI.rowLevelSecurityRoles
         }
         outputs = [ordered]@{
