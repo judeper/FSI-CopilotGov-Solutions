@@ -2,8 +2,8 @@
   "solution": "10-connector-plugin-governance",
   "solutionCode": "CPG",
   "displayName": "Copilot Connector and Plugin Governance",
-  "version": "v0.2.1",
-  "last_verified": "2026-05-25",
+  "version": "v0.2.2",
+  "last_verified": "2026-06-05",
   "track": "C",
   "domain": "operations-analytics",
   "priority": "P1",
@@ -58,7 +58,7 @@
       "description": "Connectors prohibited in regulated Copilot contexts.",
       "examples": [
         "shared_dropbox",
-        "shared_twitter"
+        "shared_x"
       ]
     }
   },
@@ -92,7 +92,7 @@
   ],
   "blockedConnectorIds": [
     "shared_dropbox",
-    "shared_twitter",
+    "shared_x",
     "shared_boxpersonal"
   ],
   "legacyDeprecatedConnectorIds": [

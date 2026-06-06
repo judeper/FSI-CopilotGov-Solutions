@@ -10,7 +10,7 @@
 The repository scaffold runs without tenant connectivity. The following are required only when live integration is wired in a future release:
 
 - Microsoft Entra ID tenant with Copilot Studio enabled.
-- For Microsoft Entra Agent ID governance review, users assigned a Microsoft Agent 365 or Microsoft 365 E7 license; additional Entra licenses may be required for Conditional Access, ID Protection, ID Governance, or Global Secure Access features used by live integration.
+- For Microsoft Entra Agent ID governance review, users assigned a Microsoft Agent 365 or Microsoft 365 E5 license (or component Entra ID P1/P2 + Global Secure Access); additional Entra licenses may be required for Conditional Access, ID Protection, ID Governance, or network-control features used by live integration.
 - Microsoft Entra Agent ID feature enabled in the tenant.
 - Entra app registration with Microsoft Graph `Policy.Read.All` as the least-privileged read permission for `/policies/crossTenantAccessPolicy/partners`; use `Policy.ReadWrite.CrossTenantAccess` only for write scenarios.
 - Admin consent and a compatible delegated role for cross-tenant access policy reads, such as Security Reader, Global Reader, Global Secure Access Administrator, Teams Administrator, or Security Administrator.

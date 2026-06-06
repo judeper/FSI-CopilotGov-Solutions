@@ -89,6 +89,8 @@ Evidence packages should document the following additional compliance artifact c
 
 ### Intelligent Recap and Audio Recap Retention Policy Coverage
 
+> **Note:** Teams audio recap is currently in **Public preview**. Fields below document governance planning for when the feature reaches general availability.
+
 | Field | Type | Description |
 |-------|------|-------------|
 | `intelligentRecapPolicyCoverage` | string | Name of the policy or operating procedure covering Intelligent recap outputs such as AI meeting notes, recommended tasks, chapters, and topics |

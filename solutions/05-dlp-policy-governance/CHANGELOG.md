@@ -4,6 +4,15 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this solution uses semantic versioning.
 
+## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy corrections
+
+### Fixed
+
+- Corrected `sensitiveInformationTypesInPrompts` availability from `generallyAvailable` to `preview` in default-config.json per Microsoft Learn.
+- Corrected `externalWebSearchGroundingRestriction` availability from `generallyAvailable` to `preview` in default-config.json per Microsoft Learn.
+- Added preview qualifiers to README capability descriptions and Known limitations section.
+- Corrected Microsoft Graph scope description: Graph supplies sensitivity-label and Entra ID policy metadata only; DLP policy metadata comes from Security & Compliance PowerShell (`Get-DlpCompliancePolicy`).
+
 ## [v0.2.2] — 2026-05-23 — Council review remediation
 
 ### Dead config

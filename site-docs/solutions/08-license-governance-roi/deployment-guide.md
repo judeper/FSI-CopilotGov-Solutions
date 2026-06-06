@@ -92,7 +92,7 @@ Recommended cadence:
 - Recommended: every three to seven days
 - Regulated: daily or every business day
 
-The script output should feed both management review and the reallocation workflow. If solution `11-risk-tiered-rollout` identifies protected users, ensure that the monitoring output marks those users for manual review before any seat is reclaimed.
+The script output should feed both management review and the reallocation workflow. If solution `11-risk-tiered-rollout` identifies protected users, confirm that the monitoring output marks those users for manual review before any seat is reclaimed.
 
 ## Step 5: Validate Evidence Export
 

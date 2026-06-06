@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [v0.1.3] - 2026-06-05 — Copilot Notebooks accuracy correction
+
+### Fixed
+- Corrected product model: replaced OneNote section-file storage references with the correct Copilot Notebooks SharePoint Embedded container model per Microsoft Learn.
+- Updated Graph permission scope from `Notes.Read.All` to `Sites.Read.All` (SharePoint Embedded container scope) for Copilot Notebook inventory.
+- Fixed terminology in config, README, architecture, evidence-export schema, monitor sample data, and prerequisites to consistently use "Copilot Notebooks" instead of legacy OneNote notebook terminology where the solution tracks Copilot Notebook content.
+- Resolved prerequisites.md self-contradiction (required OneNote while tracking Copilot Notebooks).
+- Softened "Microsoft Purview compliance endpoints" to "Microsoft Purview service endpoints" to avoid evoking the retired compliance portal brand.
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified

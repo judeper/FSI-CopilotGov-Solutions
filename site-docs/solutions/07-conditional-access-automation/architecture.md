@@ -8,7 +8,7 @@ Conditional Access Policy Automation for Copilot provides a documented control p
 
 | Layer | Components | Responsibility |
 |-------|------------|----------------|
-| Policy layer | Microsoft Entra Conditional Access, named locations, MFA, compliant-device grant controls | Enforces access patterns for Microsoft 365 Copilot and Copilot Studio |
+| Policy layer | Microsoft Entra Conditional Access, named locations, MFA, compliant-device grant controls | Enforces access patterns for Microsoft 365 Copilot (via the Office 365 app suite). Copilot Studio agent-identity CA applies only when the agent runs in Microsoft Teams. |
 | Automation layer | `scripts\Deploy-Solution.ps1`, `scripts\Monitor-Compliance.ps1`, `scripts\Export-Evidence.ps1` | Generates templates, validates tier alignment, and packages evidence |
 | Monitoring layer | Scheduled drift detection, Power Automate exception approval, audit review workflow | Highlights unauthorized or unapproved policy changes and routes exception decisions for approval |
 | Evidence layer | `ca-policy-state`, `drift-alert-summary`, `access-exception-register` | Produces evidence artifacts aligned to the shared schema |
@@ -83,6 +83,6 @@ Evidence exports are intentionally simple and machine-readable:
 
 ## Integration notes
 
-- Copilot app targeting uses the Microsoft 365 Copilot and Copilot Studio application IDs.
+- Copilot app targeting uses the `Office365` app suite, which includes Enterprise Copilot Platform (Microsoft 365 Copilot). Copilot Studio is not part of the Office 365 app suite; its Conditional Access coverage applies only to agent identities running in the Microsoft Teams context.
 - Drift monitoring should run weekly for baseline, daily for recommended, and near real time for regulated deployments.
 - Exception workflows should include supervisory approval, expiry tracking, and compensating-control documentation.

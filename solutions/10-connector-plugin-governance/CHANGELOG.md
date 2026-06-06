@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.2.2] — 2026-06-05 — Accuracy review (MS Learn verification)
+
+### Fixed
+
+- Corrected Copilot Control System description: CCS is a framework spanning the M365 admin center, Power Platform admin center, and Copilot Studio — not a single centralized admin surface.
+- Added scope boundary clarifying that Microsoft Graph connectors API path is not modeled (only Power Platform Admin API surface is documented).
+- Replaced retired `shared_twitter` connector ID with current `shared_x` in blocked examples and blocked list.
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified

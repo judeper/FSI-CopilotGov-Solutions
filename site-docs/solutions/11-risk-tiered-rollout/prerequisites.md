@@ -8,7 +8,7 @@
 
 ## Licensing
 
-- Microsoft 365 E3 or E5 licensing for the targeted users
+- A qualifying Microsoft 365 base license (E3/E5, Business Standard/Premium, or Office 365 E3/E5) for the targeted users
 - Microsoft 365 Copilot licenses sized for the intended wave plus rollback reserve
 - The Microsoft Entra **Usage location** property is populated for targeted users before they are added to wave-based license-assignment groups
 - Power Automate Premium licenses for approvers or service accounts that run approval workflows

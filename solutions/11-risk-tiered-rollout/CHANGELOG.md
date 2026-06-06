@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.3 — 2026-06-05 — Documentation/branding corrections
+
+### Fixed
+
+- Corrected non-Microsoft "Copilot Chat Basic vs Premium" phrasing to "Microsoft 365 Copilot Chat (free) vs Microsoft 365 Copilot (paid)" per current Microsoft branding.
+- Broadened narrow "E3 or E5" base-license statement to include all qualifying bases (E3/E5, Business Standard/Premium, Office 365 E3/E5) per Microsoft 365 Copilot feature-availability documentation.
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified

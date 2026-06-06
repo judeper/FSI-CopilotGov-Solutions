@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.3 — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Changed
+- Replaced all references to the retired "Microsoft Purview compliance portal" with the unified "Microsoft Purview portal" (purview.microsoft.com) across README, deployment guide, architecture, DELIVERY-CHECKLIST, and both scripts (11 occurrences).
+- Renamed "Lexicon Manager" section to "Custom Keyword Dictionary Manager" to align with Microsoft's feature naming.
+- Updated deployment-guide Step 6 to reference "custom keyword dictionary settings" instead of "Purview lexicon or keyword settings".
+- Changed `defaultReviewerGroup` sample value from a non-existent role group to the built-in "Communication Compliance Analysts" role group.
+- Added Public preview status caveat for Teams audio recap in architecture and evidence-export documentation.
+
 ## [Unreleased]
 
 ### Validation sweep — 2026-05-25

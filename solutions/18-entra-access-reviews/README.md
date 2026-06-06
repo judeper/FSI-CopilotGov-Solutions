@@ -1,14 +1,14 @@
 # Entra Access Reviews Automation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
 ## Overview
 
-This solution provides a framework for coordinating Microsoft Entra ID Access Reviews for Microsoft 365 groups, security groups, or access packages that grant access to SharePoint sites whose content Microsoft 365 Copilot can surface during grounded responses. Direct SharePoint site permissions require a separate inventory and remediation pattern. The framework addresses the operational challenge that manual review scheduling does not scale when an institution has hundreds or thousands of site-associated resources with varying sensitivity levels.
+This solution provides a framework for coordinating access reviews in Microsoft Entra ID Governance for Microsoft 365 groups, security groups, or access packages that grant access to SharePoint sites whose content Microsoft 365 Copilot can surface during grounded responses. Direct SharePoint site permissions require a separate inventory and remediation pattern. The framework addresses the operational challenge that manual review scheduling does not scale when an institution has hundreds or thousands of site-associated resources with varying sensitivity levels.
 
-Microsoft Entra ID Access Reviews allow organizations to periodically verify that users still require access to specific resources. By automating the creation and management of these reviews, institutions can help meet regulatory expectations for periodic access recertification at a cadence proportional to each site's risk profile.
+Access reviews in Microsoft Entra ID Governance allow organizations to periodically verify that users still require access to specific resources. By automating the creation and management of these reviews, institutions can help meet regulatory expectations for periodic access recertification at a cadence proportional to each site's risk profile.
 
 The solution reads risk scores from solution 02-oversharing-risk-assessment to prioritize which site-associated Microsoft Entra resources receive access reviews first, setting review cadence based on the mapped site risk tier: HIGH-risk resources are reviewed every 30 days, MEDIUM-risk every 90 days, and LOW-risk every 180 days. This risk-triage approach helps compliance teams focus attention on sites that pose the greatest exposure to regulated data.
 

@@ -1,6 +1,6 @@
 # DLP Policy Governance for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-06-05
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ DLP Policy Governance for Copilot deploys a read-only governance pattern for Mic
 
 This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Article 9 ICT security expectations, GDPR, FINRA Rule 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
-> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location. The location supports sensitive-information-type prompt blocking (preview), external web-search grounding restrictions for sensitive prompts (preview), and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available). Selecting this location disables all other locations for that policy.
+> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location. The location supports sensitive-information-type prompt blocking **(preview)**, external web-search grounding restrictions for sensitive prompts **(preview)**, and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available). Selecting this location disables all other locations for that policy.
 
 ## Related Controls
 
@@ -26,7 +26,7 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 - Compares baseline records for the Microsoft 365 Copilot and Copilot Chat policy location and its supported conditions and actions
 - Tracks separate complementary workload DLP baseline records when tenant policy design requires Exchange, SharePoint, OneDrive, Teams, devices, or endpoint locations
 - Checks policy modes such as Audit and Block for expected sensitivity label handling on supported files and emails
-- Documents prompt-text controls for sensitive information types, including preview status for prompt blocking and external web-search grounding restrictions
+- Documents prompt-text controls for sensitive information types, including prompt blocking and external web-search grounding restrictions
 - Documents a Power Automate approval flow for policy exceptions and attestation evidence
 - Exports evidence artifacts that align to `data\evidence-schema.json`
 
@@ -66,8 +66,8 @@ This solution separates two DLP governance layers:
 
 The Copilot policy-location baseline tracks:
 
-- Sensitive information types in prompt text, including preview prompt-blocking behavior
-- Sensitive information types in prompt text that restrict external web search as a grounding source during preview
+- Sensitive information types in prompt text, including prompt-blocking behavior **(preview)** and external web-search grounding restrictions **(preview)**
+- Sensitive information types in prompt text that restrict external web search as a grounding source **(preview)**
 - Sensitivity labels on supported files and emails used in Copilot response summarization
 - Scope definitions for included and excluded user groups
 - Exception handling requirements by governance tier
@@ -145,3 +145,4 @@ See [docs/evidence-export.md](evidence-export.md) for package details.
 - Sensitivity-label protection for files and emails is limited to supported files in SharePoint Online or OneDrive for Business and emails sent on or after January 1, 2025; calendar invites are not supported.
 - The Power Automate approval flow is documentation-led in this repository and still requires tenant-specific connection setup.
 - Drift results are only as current as the latest baseline and policy snapshot available to the monitoring process.
+- The prompt-text SIT blocking and external web-search grounding restriction capabilities are currently in **preview**; only sensitivity-label file/email blocking is generally available. Check tenant rollout status before relying on preview capabilities in production governance baselines.

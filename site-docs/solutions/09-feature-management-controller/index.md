@@ -1,6 +1,6 @@
 # Copilot Feature Management Controller
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ Copilot Feature Management Controller (FMC) centralizes Copilot feature inventor
 
 For regulated firms, Copilot feature activation can change how material non-public information, research notes, customer interactions, and plugin outputs are surfaced. FMC supports compliance with SEC Reg FD by documenting where high-impact Copilot features are enabled and supports compliance with FINRA 3110 by giving supervisors a repeatable baseline, monitoring cadence, and evidence trail for feature policy decisions.
 
-Microsoft now provides the **Copilot Control System** in the Microsoft 365 admin center Adoption Hub as a centralized governance surface for Copilot features, agents, and connectors. This solution complements the Copilot Control System by adding tier-aware configuration management, drift detection, and evidence packaging for regulated environments.
+Microsoft now provides the **Copilot Control System** in the Microsoft 365 admin center (under **Copilot**) as a centralized governance surface for Copilot features, agents, and connectors. This solution complements the Copilot Control System by adding tier-aware configuration management, drift detection, and evidence packaging for regulated environments.
 
 The solution uses PowerShell for baseline capture, ring planning, monitoring, and evidence packaging, while Power Automate assets remain documentation-first until approved for tenant deployment.
 
@@ -36,7 +36,7 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not cover Agent 365 platform governance or Entra Agent ID controls
 - ❌ Does not configure tenant-wide Copilot web domain exclusion lists or authoritative source controls as Microsoft admin settings; those remain customer-defined planning metadata until Microsoft documents the control surface
-- ❌ Does not manage Baseline Security Mode (BSM) simulation or enforcement
+- ❌ Does not manage baseline security posture simulation or enforcement outside documented Copilot Control System settings
 - ❌ Does not govern third-party model providers (Anthropic Claude, xAI)
 
 > **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
@@ -134,7 +134,7 @@ Use `-BaselineOnly` during first deployment if the tenant has not yet approved a
 
 ## Prerequisites
 
-- Microsoft 365 Global Administrator, Copilot Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
+- Microsoft 365 Global Administrator, AI Administrator, or equivalent delegated access for Microsoft 365 admin center Copilot settings
 - Teams Administrator role for documented Teams meeting, event, and calling policy review
 - Power Platform Administrator for Power Apps Copilot settings and Power Automate tenant-level Copilot settings
 - Cloud Policy service permissions for the `Allow web search in Copilot` policy

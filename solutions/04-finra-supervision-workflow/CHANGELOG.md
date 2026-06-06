@@ -4,6 +4,11 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this project follows Semantic Versioning.
 
+## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy fix
+
+### Fixed
+- Clarified Dataverse API rate limit in `docs/troubleshooting.md`: the 6,000-request/5-min limit is enforced per user, per web server (not a flat per-user cap), per MS Learn documentation.
+
 ## [v0.2.2] — 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG

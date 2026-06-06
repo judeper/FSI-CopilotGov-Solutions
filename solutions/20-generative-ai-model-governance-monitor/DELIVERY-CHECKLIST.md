@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | Generative AI Model Governance Monitor |
 | Solution Code | GMG |
-| Version | v0.1.2 |
+| Version | v0.1.3 |
 | Track | D |
 | Priority | P1 |
 | Phase | 4 |
@@ -18,7 +18,7 @@
 ## Documentation
 
 - [x] README.md present with status banner and doc-first warning
-- [x] CHANGELOG.md present with v0.1.2 entry
+- [x] CHANGELOG.md present with v0.1.3 entry
 - [x] docs/architecture.md
 - [x] docs/deployment-guide.md
 - [x] docs/evidence-export.md
@@ -40,12 +40,12 @@
 - [x] scripts/Export-Evidence.ps1
 - [x] scripts/GmgConfig.psm1
 - [x] All scripts include comment-based help noting documentation-first scope and use of representative sample data
-- [ ] Live Microsoft Graph or Purview integration (deferred — not in v0.1.2 scope)
+- [ ] Live Microsoft Graph or Purview integration (deferred — not in v0.1.3 scope)
 
 ## Tests
 
 - [x] tests/20-generative-ai-model-governance-monitor.Tests.ps1 with file presence, config validation, and parse checks
-- [ ] End-to-end live tests (deferred — requires tenant integration outside v0.1.2)
+- [ ] End-to-end live tests (deferred — requires tenant integration outside v0.1.3)
 
 ## Evidence Format
 
@@ -66,4 +66,4 @@
 - [ ] README reviewed with customer model risk officer and compliance stakeholders
 - [ ] Tier selection confirmed (baseline, recommended, or regulated)
 - [ ] Evidence storage path and retention requirements confirmed
-- [ ] Customer acknowledges documentation-first scope of v0.1.2
+- [ ] Customer acknowledges documentation-first scope of v0.1.3

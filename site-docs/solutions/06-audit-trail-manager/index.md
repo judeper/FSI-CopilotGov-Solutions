@@ -1,6 +1,6 @@
 # Copilot Interaction Audit Trail Manager
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-05-25
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -91,7 +91,7 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
 
 - Confirm that at least one Microsoft Purview eDiscovery case template exists for the selected tier.
 - Validate preservation status, hold counts, and custodian coverage before evidence export.
-- Ensure legal hold owners, escalation contacts, and export responsibilities are documented.
+- Confirm legal hold owners, escalation contacts, and export responsibilities are documented.
 - Use `scripts\Monitor-Compliance.ps1` to record readiness status before examination support exports.
 - Use `scripts\Export-Evidence.ps1` to package the readiness snapshot.
 

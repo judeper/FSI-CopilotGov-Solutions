@@ -10,7 +10,7 @@ License Governance and ROI Tracker helps financial-services teams monitor Copilo
 
 The implementation is intentionally documentation-first for Power BI assets. The PowerShell scripts define the deployment, monitoring, and evidence packaging flow, while the architecture and deployment guides document how a customer-owned Power BI dataset should be configured.
 
-Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go messaging at $0.01 per message and prepaid message packs. This solution documents governance patterns for billing policy assignment by security group, Azure Cost Management budget alert thresholds, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements. Budget alerts notify reviewers as spend approaches configured thresholds; they do not enforce a hard budget limit or stop usage.
+Beginning January 2025, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go messaging at $0.01 per message and prepaid message packs. This solution documents governance patterns for billing policy assignment by security group, Azure Cost Management budget alert thresholds, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements. Budget alerts notify reviewers as spend approaches configured thresholds; they do not enforce a hard budget limit or stop usage.
 
 ## Detailed Features
 

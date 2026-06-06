@@ -1,6 +1,6 @@
 # Risk-Tiered Rollout Automation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P0 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P0 | **Track:** C
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -31,7 +31,7 @@ The solution depends on `01-copilot-readiness-scanner` to provide current readin
 - ❌ Does not deploy Power Automate flows (approval workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
-- ❌ Does not distinguish Copilot Chat Basic vs Premium tiers in wave planning (v1.3+ framework feature pending solution update)
+- ❌ Does not distinguish Microsoft 365 Copilot Chat (free) vs Microsoft 365 Copilot (paid) tiers in wave planning (v1.3+ framework feature pending solution update)
 - ❌ Does not include organizational branded footer configuration as a trust mechanism
 
 > **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
@@ -101,7 +101,7 @@ Detailed deployment steps, sample commands, and rollback actions are documented 
 ## Prerequisites
 
 - `01-copilot-readiness-scanner` is deployed and has produced a recent readiness evidence package.
-- Microsoft 365 E3 or E5 licensing plus Microsoft 365 Copilot licenses are available for the intended wave size.
+- A qualifying Microsoft 365 base license (E3/E5, Business Standard/Premium, or Office 365 E3/E5) plus Microsoft 365 Copilot licenses are available for the intended wave size.
 - The Microsoft Entra **Usage location** property is populated for targeted users before they are added to wave-based license-assignment groups.
 - Required Microsoft Graph license-assignment permission is approved: `LicenseAssignment.ReadWrite.All` for group assignment (`POST /groups/{id}/assignLicense`) or direct user assignment (`POST /users/{id | userPrincipalName}/assignLicense`).
 - Delegated license-assignment operators hold a supported Microsoft Entra role, such as Directory Writers, License Administrator, or User Administrator; group-based assignment also supports Groups Administrator.

@@ -72,4 +72,9 @@ Describe 'DLP Policy Governance for Copilot solution' {
         $content = Get-Content (Join-Path $scriptsRoot 'Monitor-Compliance.ps1') -Raw
         $content | Should -Match '2\.1'
     }
+
+    It 'CHANGELOG has v0.2.3 entry' {
+        $changelog = Get-Content (Join-Path $solutionRoot 'CHANGELOG.md') -Raw
+        $changelog | Should -Match 'v0\.2\.3'
+    }
 }

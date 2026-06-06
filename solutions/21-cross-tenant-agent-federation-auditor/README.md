@@ -1,6 +1,6 @@
 # Cross-Tenant Agent Federation Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365, Entra, or Copilot Studio services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -15,7 +15,7 @@ CTAF helps meet third-party and information-security governance expectations und
 - Cross-tenant Copilot agent invocation patterns influenced by Copilot Studio channels, authentication settings, and organization sharing controls.
 - Microsoft Entra Agent ID agent identity records, blueprints, owners, sponsors, Conditional Access posture, and sign-in/audit log references for each agent identity.
 - MCP server connection review records, including server URL, Streamable transport type, authentication type, scopes, allowed tools, approval requirements, and review date.
-- Cross-tenant access settings in Microsoft Entra External Identities that authorize or restrict agent invocation across organizational boundaries.
+- Cross-tenant access settings in Microsoft Entra External ID that authorize or restrict agent invocation across organizational boundaries.
 
 ## Features
 

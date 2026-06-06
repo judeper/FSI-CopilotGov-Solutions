@@ -103,5 +103,5 @@ Add the live export output directory to `.gitignore` if it falls within the repo
 artifacts/evidence-live/
 ```
 
-Alternatively, always specify `-OutputPath` pointing to a directory outside the repository to ensure live supervisory records are never committed to source control.
+Alternatively, always specify `-OutputPath` pointing to a directory outside the repository so that live supervisory records are never committed to source control.
 
