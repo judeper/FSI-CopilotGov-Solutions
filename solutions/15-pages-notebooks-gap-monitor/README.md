@@ -1,6 +1,6 @@
 # Copilot Pages and Notebooks Compliance Gap Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P2 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P2 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 

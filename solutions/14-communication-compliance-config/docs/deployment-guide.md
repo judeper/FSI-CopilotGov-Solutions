@@ -42,7 +42,7 @@ Expected outputs:
 
 Microsoft Purview Communication Compliance publication is manual in this version. Use the generated policy templates and perform the following portal steps:
 
-1. Open the Microsoft Purview compliance portal.
+1. Open the Microsoft Purview portal (purview.microsoft.com).
 2. Navigate to **Microsoft Purview Communication Compliance** and create or update a policy.
 3. Copy the policy name, scope, keywords, conditions, and reviewer guidance from the matching JSON template.
 4. Assign the correct reviewers and escalation contacts from the deployment manifest.
@@ -58,7 +58,7 @@ Microsoft Purview Communication Compliance publication is manual in this version
 
 ## Step 6: Set lexicon keywords per regulated words list
 
-1. Open the Purview lexicon or keyword settings used by the selected policy.
+1. Open the custom keyword dictionary settings in the Microsoft Purview portal for the selected policy.
 2. Add approved AI disclosure, promotional language, best-interest, and conflict-of-interest terms from the selected tier file.
 3. Record the publication date and approver names for evidence collection.
 4. If the customer uses a separate regulated words list, reconcile differences before publication.

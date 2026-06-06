@@ -20,16 +20,15 @@ Inventory of Copilot Pages with storage/container, retention-policy, limited ret
 
 ### notebook-retention-log
 
-OneNote section and folder retention-policy coverage, grouped by Notebook metadata. Microsoft Learn states that OneNote pages inherit retention settings from their parent section file.
+Copilot Notebook retention-policy coverage from the shared SharePoint Embedded container. Copilot Notebooks are stored together with Copilot Pages and Loop content in a user-owned SharePoint Embedded container; retention is configured via Purview retention policies targeting that container or "All SharePoint Sites."
 
 **Schema fields**
 
-- `sectionId`: OneNote section file identifier
-- `sectionDisplayName`: OneNote section display name
-- `notebookId` / `displayName`: Notebook grouping metadata
-- `parentContainer`: SharePoint site, OneDrive library, or folder that stores the section file
+- `notebookId`: Copilot Notebook identifier within the SharePoint Embedded container
+- `displayName`: Copilot Notebook display name
+- `containerUrl`: SharePoint Embedded container URL where the notebook resides
 - `retentionLabel`
-- `retentionPolicySource`: `section-label`, `folder-inherited`, `policy-inherited`, or `none`
+- `retentionPolicySource`: `container-policy`, `site-inherited`, `policy-inherited`, or `none`
 - `retentionDays`
 - `lastReviewedAt`
 
@@ -78,7 +77,7 @@ The package contract contains:
 
 | Control | Primary Evidence | How PNRT Helps Meet the Control |
 |---------|------------------|---------------------------------|
-| 3.14 | `pages-retention-inventory`, `notebook-retention-log` | Records retention-policy coverage, limited retention-label evidence, and section-level OneNote coverage for Copilot Pages and Notebook content |
+| 3.14 | `pages-retention-inventory`, `notebook-retention-log` | Records retention-policy coverage, limited retention-label evidence, and Copilot Notebook container-level coverage for Copilot Pages and Notebook content |
 | 3.2 | `pages-retention-inventory`, `loop-component-lineage` | Documents lifecycle, version-history context, and provenance for collaborative Copilot artifacts |
 | 3.3 | `notebook-retention-log` | Surfaces section/folder retention-policy coverage and gaps for Microsoft Purview alignment |
 | 3.11 | `branching-event-log`, `loop-component-lineage` | Provides Purview audit/version-history context and internal sample lineage for eDiscovery and legal-hold readiness |

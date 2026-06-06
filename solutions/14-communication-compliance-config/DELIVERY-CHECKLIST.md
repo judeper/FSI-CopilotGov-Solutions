@@ -4,7 +4,7 @@
 
 - Solution: Microsoft Purview Communication Compliance Configurator (`14-communication-compliance-config`)
 - Code: `CCC`
-- Version: `v0.2.2`
+- Version: `v0.2.3`
 - Track / Priority / Phase: `D / P1 / 3`
 - Dependency: `04-finra-supervision-workflow`
 - Evidence outputs: `policy-template-export`, `reviewer-queue-metrics`, `lexicon-update-log`
@@ -30,7 +30,7 @@
 
 1. Run `scripts\Deploy-Solution.ps1 -ConfigurationTier <baseline|recommended|regulated> -TenantId <tenant-guid> -WhatIf` to preview deployment artifacts.
 2. Run `scripts\Deploy-Solution.ps1 -ConfigurationTier <baseline|recommended|regulated> -TenantId <tenant-guid>` to generate the final deployment manifest and policy templates.
-3. Use the generated files under `artifacts\deployment\policy-templates\` to create or update policies in the Microsoft Purview compliance portal.
+3. Use the generated files under `artifacts\deployment\policy-templates\` to create or update policies in the Microsoft Purview portal.
 4. Configure reviewer assignments and escalation rules by using the workflow section in `artifacts\deployment\communication-compliance-config-deployment-manifest.json`.
 5. Publish supervised lexicon keywords in Purview after Legal and Compliance approval.
 6. Run `scripts\Monitor-Compliance.ps1 -ConfigurationTier <tier>` to capture baseline queue metrics and identify policy coverage gaps.

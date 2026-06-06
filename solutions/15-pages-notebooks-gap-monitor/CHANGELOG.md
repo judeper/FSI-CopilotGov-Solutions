@@ -17,6 +17,12 @@
 - Added sensitivity labels available for Copilot Pages only (not Copilot Notebooks) to architecture platform limitations per current Microsoft Learn guidance.
 - Added DLP support with end-user policy tips to architecture platform limitations per current Microsoft Learn guidance.
 
+## [v0.1.3] - 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Fixed
+- Removed uncited `.loop` extension from Purview eDiscovery review-set full-text search limitation; Learn scopes this only to `.page` files.
+- Removed uncited `.loop` extension from "All SharePoint Sites" retention policy scope statement; Learn scopes this only to Copilot Pages and Copilot Notebooks.
+
 ## [v0.1.2] - 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG

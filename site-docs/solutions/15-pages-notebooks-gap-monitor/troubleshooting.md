@@ -30,14 +30,14 @@
 
 **Possible causes**
 - The case scope does not include the correct SharePoint Embedded container, site, or workspace location.
-- Full-text search within `.page` or `.loop` files in Purview review sets is not available.
+- Full-text search within `.page` files in Purview review sets is not available.
 - Review/export licensing or Premium case setup is not in place for the workflow being used.
 - Legal hold procedures were designed around Exchange or Teams content and did not account for per-user SharePoint Embedded container inclusion.
 
 **Recommended actions**
 - Confirm the case scope, collection, review, and export settings with the Microsoft Purview eDiscovery team.
 - Add the required SharePoint Embedded container URL manually for legal hold or case scope where applicable.
-- Use supported export options and document the review-set full-text limitation if the investigation requires text search inside `.page` or `.loop` files.
+- Use supported export options and document the review-set full-text limitation if the investigation requires text search inside `.page` files.
 - Update the gap status only after the tenant has been retested against the documented platform behavior.
 
 ## Compensating Control Not Accepted by Examiner

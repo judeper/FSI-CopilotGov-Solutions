@@ -6,7 +6,7 @@
     Loads CSLT configuration for the selected tier and produces a lifecycle compliance
     snapshot covering agent inventory, publishing approval evidence, version/change records,
     and deprecation records. The repository implementation uses a local stub data source;
-    Power Platform admin API integration is required for live tenant collection. The
+    Power Platform API integration is required for live tenant collection. The
     script remains testable without external connectivity.
 
 .PARAMETER ConfigurationTier
@@ -23,7 +23,7 @@
 
 .NOTES
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
-    Version: v0.1.2
+    Version: v0.1.3
 #>
 [CmdletBinding()]
 param(
@@ -43,7 +43,7 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module (Join-Path $PSScriptRoot 'CsltConfig.psm1') -Force
 
-$script:StubWarning = 'Lifecycle output came from the local CSLT stub and does not confirm live Power Platform admin API collection.'
+$script:StubWarning = 'Lifecycle output came from the local CSLT stub and does not confirm live Power Platform API collection.'
 
 function Get-AgentInventoryStub {
     [CmdletBinding()]

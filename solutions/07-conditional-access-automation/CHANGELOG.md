@@ -4,6 +4,13 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog, and this repository uses semantic versioning for solution content.
 
+## [v0.2.3] - 2026-06-05
+
+### Fixed
+
+- Corrected CA policy propagation timing: replaced unsupported "about 5 minutes" figure with Microsoft Learn-documented "up to two hours (up to one day)" per continuous access evaluation documentation.
+- Corrected Copilot Studio conflation: Office 365 app suite covers Microsoft 365 Copilot (Enterprise Copilot Platform) but not Copilot Studio, whose agent-identity CA applies only in the Teams context.
+
 ## [v0.2.2] - 2026-05-23
 
 ## Validation Sweep — 2026-05-25

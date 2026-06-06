@@ -9,7 +9,7 @@ If `Monitor-Compliance.ps1` cannot authenticate to Microsoft Graph:
 1. Confirm that the tenant ID and client ID are correct.
 2. Re-enter the client secret or validate the certificate binding.
 3. Verify that admin consent has been granted for `ServiceHealth.Read.All`.
-4. Confirm that the executing identity has Global Reader or Service Support Admin visibility where required.
+4. Confirm that the executing identity has Global Reader or Service Support Administrator visibility where required.
 
 ### Throttling
 

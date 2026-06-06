@@ -169,7 +169,7 @@ if ($PSCmdlet.ShouldProcess("$OutputPath", "Generate deployment manifest")) {
         solution          = '17-sharepoint-permissions-drift'
         solutionCode      = 'SPD'
         displayName       = 'SharePoint Permissions Drift Detection'
-        version           = 'v0.1.2'
+        version           = 'v0.1.3'
         deployedAt        = (Get-Date).ToString('o')
         configurationTier = $ConfigurationTier
         tenantId          = $TenantId

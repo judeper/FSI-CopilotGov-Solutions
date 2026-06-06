@@ -28,10 +28,10 @@ If expected Copilot Pages are not in the inventory:
 
 ## Notebook Retention Issues
 
-### OneNote section or folder shows `none` for retention-policy source
+### Copilot Notebook shows `none` for retention-policy source
 
-- Check the OneNote section file, parent folder, SharePoint site, or OneDrive library for an applied retention label or policy.
-- Confirm Microsoft Purview policies have been published for the location that stores the section file.
+- Check the SharePoint Embedded container URL for an applied retention policy or confirm "All SharePoint Sites" retention policy coverage.
+- Confirm Microsoft Purview policies have been published for the container that stores the Copilot Notebook content.
 - Add manual annotation if a record-level label is intentionally not assigned or if only policy coverage applies.
 
 ### Inheritance lookup is incomplete

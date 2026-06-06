@@ -95,7 +95,7 @@ Each artifact is written as a JSON file with a SHA-256 companion file (`.sha256`
 - `solution`
 - `tier`
 - `generatedAt`
-- `runtimeMode` — always `local-stub` in v0.1.2
+- `runtimeMode` — always `local-stub` in v0.1.3
 - `warning` — note that the artifact contains representative sample data
 - `records` — list of artifact-specific records
 

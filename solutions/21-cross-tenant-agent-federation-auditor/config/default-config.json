@@ -2,7 +2,7 @@
   "solution": "21-cross-tenant-agent-federation-auditor",
   "displayName": "Cross-Tenant Agent Federation Auditor",
   "solutionCode": "CTAF",
-  "version": "v0.1.2",
+  "version": "v0.1.3",
   "last_verified": "2026-05-25",
   "track": "B",
   "priority": "P1",
@@ -41,7 +41,7 @@
       "Copilot Studio agents (channels, authentication, and sharing)",
       "Microsoft Entra Agent ID",
       "MCP server connections",
-      "Entra External Identities cross-tenant access settings"
+      "Entra External ID cross-tenant access settings"
     ]
   }
 }

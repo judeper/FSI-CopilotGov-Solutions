@@ -2,6 +2,17 @@
 
 All notable changes to this solution are documented in this file.
 
+## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Fixed
+
+- Corrected synthetic sharing-link label `OrganizationView` to use real Microsoft Graph sharing-link properties (`linkScope = 'organization'`, `linkType = 'view'`).
+- Corrected `HasUniqueRoleAssignments` usage from `-Fields` column reference to securable-object property access pattern (it is a property, not a field-selectable column).
+
+### Added
+
+- Enhancement note in architecture.md grounding future tenant binding in SharePoint Advanced Management (SAM) Data Access Governance reports (Permission state, Sharing links, EEEU insights).
+
 ## [Unreleased]
 
 ### Validation sweep — 2026-05-25

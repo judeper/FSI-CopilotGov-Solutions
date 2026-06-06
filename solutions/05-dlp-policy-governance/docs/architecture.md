@@ -13,7 +13,7 @@ DLP Policy Governance for Copilot provides a read-only architecture for baseline
 | `Export-Evidence.ps1` | PowerShell | Packages evidence artifacts, writes SHA-256 companions, and creates the evidence manifest |
 | Exception Approval Flow | Power Automate | Routes policy exception requests, records approvals, and feeds attestation data into evidence exports |
 | Microsoft Purview DLP and Security and Compliance PowerShell | Service interface | Supplies DLP policy metadata for the Microsoft 365 Copilot and Copilot Chat policy location and for separate complementary workload DLP policies |
-| Microsoft Graph | Service interface | Supplies policy and label metadata used to validate Copilot-related DLP expectations |
+| Microsoft Graph | Service interface | Supplies sensitivity-label and Entra ID policy metadata used to validate label expectations; does not supply DLP policy metadata (use Security & Compliance PowerShell for that) |
 
 ## Data flow
 

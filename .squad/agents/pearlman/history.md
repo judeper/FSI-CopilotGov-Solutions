@@ -16,3 +16,11 @@
 - Config keys renamed: messagePacksEnabled → capacityPacksEnabled, highUsageThresholdMessagesPerDay → highUsageThresholdCreditsPerDay, billingPolicyScopeType value broadened.
 - Lesson: grep ALL solution files for config keys before renaming — this time zero refs in scripts/tests made it safe.
 - Version: v0.1.1 → v0.1.2. Pester 8/8 pass. Commit ecf48cf.
+## 2026-06-05 — Solution 06 accuracy edit
+
+- **Findings applied:** 2 minor (deprecated portal naming). 0 blockers, 0 major.
+- **Pattern:** "Microsoft Purview compliance portal" → "Microsoft Purview portal" (compliance.microsoft.com retired into purview.microsoft.com).
+- **Citation:** https://learn.microsoft.com/purview/audit-get-started
+- **Version:** v0.2.2 → v0.2.3 (PATCH).
+- **Propagation:** README status line, CHANGELOG, default-config.json, data/solution-catalog.json, scripts/solution-config.yml. DELIVERY-CHECKLIST and tests had no version line to update.
+- **Lesson:** Solution 06 was high-accuracy overall (9 verified claims). Only 2 minor cosmetic portal-name nits. Freamon's review method (MS Learn fetch per claim) is effective at catching branding drift without false positives.

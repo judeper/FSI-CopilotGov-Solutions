@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
+
+### Fixed
+- Corrected Azure built-in role name from "Cognitive Services Users" to "Cognitive Services User" (singular) in prerequisites.
+- Replaced informal "Audit Search Graph API" with the correct Microsoft Graph `auditLogQuery` API name in architecture documentation.
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified

@@ -1,6 +1,6 @@
 # Oversharing Risk Assessment and Remediation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.1 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-05-25
+> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-05-25
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -41,7 +41,7 @@ See [docs/architecture.md](architecture.md) for the component diagram, workload 
 
 - Review [docs/prerequisites.md](prerequisites.md) and confirm the required admin roles, PowerShell modules, and API access are in place.
 - Verify that solution [01-copilot-readiness-scanner](../01-copilot-readiness-scanner/index.md) has already produced baseline output that can be used to prioritize high-risk workloads.
-- Confirm SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license, and confirm Microsoft Purview Data Security Posture Management (DSPM) prerequisites for the target scenarios.
+- Confirm SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license, and confirm Microsoft Purview Data Security Posture Management (DSPM) prerequisites for the target scenarios.
 
 ## Quick Start
 

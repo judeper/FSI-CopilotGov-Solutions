@@ -110,8 +110,8 @@ Describe 'Script syntax validation' {
 }
 
 Describe 'CHANGELOG format' {
-    It 'CHANGELOG has v0.2.2 entry' {
-        (Get-Content -Path $script:changelogPath -Raw) | Should -Match '## \[v0\.2\.2\]'
+    It 'CHANGELOG has v0.2.3 entry' {
+        (Get-Content -Path $script:changelogPath -Raw) | Should -Match '## \[v0\.2\.3\]'
     }
 }
 

@@ -4,6 +4,11 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog, and this project follows semantic versioning.
 
+## [v0.2.3] — 2026-06-05 — MS Learn accuracy fix
+
+### Fixed
+- Renamed deprecated "Microsoft Purview compliance portal" / "the compliance portal" to "Microsoft Purview portal" per current Microsoft Learn branding (https://learn.microsoft.com/purview/audit-get-started).
+
 ## [v0.2.2] — 2026-05-23 — Council review remediation
 
 ### Fixed

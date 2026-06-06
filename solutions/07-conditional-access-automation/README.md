@@ -1,6 +1,6 @@
 # Conditional Access Policy Automation for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -143,6 +143,6 @@ This solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article
 
 - Conditional Access policy creation requires Microsoft Entra ID P1 or P2 licensing, and risk-based policies require Microsoft Entra ID P2.
 - Microsoft 365 Copilot requires an eligible prerequisite subscription plan plus the Microsoft 365 Copilot add-on or entitlement; Microsoft 365 E3 and E5 are examples, not the complete prerequisite list.
-- Conditional Access policy evaluation can take about 5 minutes after a change before the new state is consistently enforced.
+- Conditional Access policy changes can take up to two hours to be effective (up to one day in some cases). Enforcement applies at the next token issuance after the policy update propagates.
 - Named-location strategies still require tenant-specific design for branch offices, vendors, and break-glass accounts.
 - This solution documents Graph API deployment commands, but production execution still requires administrator review and tenant connectivity.

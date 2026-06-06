@@ -27,7 +27,7 @@ The preferred deployment model uses least-privilege Microsoft Entra and Microsof
 | Tenant-wide setup | Global Administrator or Privileged Role Administrator plus Global Reader | Initial validation, broad tenant read access, role confirmation |
 | Licensing | License Administrator or Global Reader | Read Copilot and Microsoft 365 SKU assignments |
 | Copilot configuration | AI Administrator for changes; Global Reader for read-only review | Review Microsoft 365 Copilot settings, Copilot Control System scenarios, and agent governance visibility |
-| Entra identity | Security Reader and Directory Reader | Review role assignments, guests, and identity posture |
+| Entra identity | Security Reader and Directory Readers | Review role assignments, guests, and identity posture |
 | Defender security | Security Reader | Read Defender posture and exposure signals |
 | Purview compliance | Compliance Administrator or Compliance Data Administrator | Review labels, retention, and compliance configuration |
 | SharePoint and OneDrive | SharePoint Administrator | Review site inventory, sharing posture, and management readiness |

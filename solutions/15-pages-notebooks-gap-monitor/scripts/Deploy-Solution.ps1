@@ -39,7 +39,7 @@
     Solution: Copilot Pages and Notebooks Compliance Gap Monitor (PNGM)
     Controls: 2.11, 3.2, 3.3, 3.11
     Regulations: SEC 17a-4, FINRA 4511, SOX 404
-    Version: v0.1.2
+    Version: v0.1.3
 
     NOTE: This solution documents compliance gaps. It does NOT automatically
     remediate retention or Microsoft Purview eDiscovery configurations. All gap remediations
@@ -89,7 +89,7 @@ function Get-KnownGapBaseline {
         }
         [pscustomobject]@{
             gapId = 'PNGM-GAP-002'
-            description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page and .loop files in review sets is not available.'
+            description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page files in review sets is not available.'
             affectedCapability = 'Purview eDiscovery review-set full-text search'
             affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
             severity = 'high'

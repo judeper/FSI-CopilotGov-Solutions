@@ -1,6 +1,6 @@
 # DORA Operational Resilience Monitor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -12,7 +12,7 @@ The DORA Operational Resilience Monitor (DRM) provides an operational-resilience
 
 ## What This Solution Monitors
 
-- Microsoft 365 service health for Exchange Online, SharePoint Online, Microsoft Teams, Microsoft Graph, Microsoft 365 Apps, and Microsoft Copilot
+- Microsoft 365 service health for Exchange Online, SharePoint Online, Microsoft Teams, Microsoft Graph, Microsoft 365 Apps, and Microsoft 365 Copilot
 - Incident classification using a DORA ICT incident severity model with major, significant, and minor outcomes
 - Resilience test schedules, RTO and RPO targets, and recorded outcomes for annual operational-resilience exercises
 - Operational-risk dashboard feeds used by 12-regulatory-compliance-dashboard for control rollup and evidence freshness reporting

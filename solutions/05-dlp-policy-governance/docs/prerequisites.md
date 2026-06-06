@@ -39,17 +39,19 @@ Install-Module Microsoft.Graph -Scope CurrentUser
 
 ## Graph API permissions
 
-Connect to Microsoft Graph with delegated permissions that allow policy review:
+Connect to Microsoft Graph with delegated permissions that allow sensitivity-label metadata review:
 
-- `InformationProtectionPolicy.Read`
-- `Policy.Read.All`
+- `InformationProtectionPolicy.Read` — returns sensitivity-label policy metadata
+- `Policy.Read.All` — returns Entra ID policy metadata
+
+> **Note:** Microsoft Graph does not expose Purview DLP policy metadata. DLP policies for the Copilot location are read via Security & Compliance PowerShell (`Get-DlpCompliancePolicy` / `Get-DlpComplianceRule`).
 
 ## Service connections
 
 The solution expects read-only access to:
 
-- Exchange Online and Security and Compliance PowerShell for Purview DLP policy metadata
-- Microsoft Graph for policy and label metadata
+- Exchange Online and Security and Compliance PowerShell for Purview DLP policy metadata (`Get-DlpCompliancePolicy`, `Get-DlpComplianceRule`)
+- Microsoft Graph for sensitivity-label and Entra ID policy metadata
 - Power Automate connections for the exception approval workflow when deployed
 
 ## Operational prerequisites

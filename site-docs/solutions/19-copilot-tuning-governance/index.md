@@ -1,6 +1,6 @@
 # Copilot Tuning Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.3 | **Priority:** P1 | **Track:** A
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -26,7 +26,7 @@ Configuration tiers document governance postures for eligible preview tenants: b
 > **Important:** This solution provides governance scaffolds, templates, and documentation-first
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
-- ❌ Does not connect to the Microsoft 365 admin center Copilot control system, Agent Builder, Agent 365, or undocumented service endpoints (scripts use representative sample data)
+- ❌ Does not connect to the Microsoft 365 admin center Copilot control system, Microsoft 365 Copilot Agent Builder, Agent 365, or undocumented service endpoints (scripts use representative sample data)
 - ❌ Does not perform live tuning, create tuned models, or submit tuning jobs to any tenant
 - ❌ Does not validate tuning outputs, evaluate model accuracy, or measure drift from baseline behavior
 - ❌ Does not deploy Power Automate flows (approval workflow designs are documented, not exported)
@@ -98,7 +98,8 @@ Each JSON artifact is written with a companion `.sha256` file so control evidenc
 
 ## Known Limitations
 
-- The scripts use implementation stubs and sample data until tenant-specific integration with supported Microsoft 365 admin center, Agent Builder, or Agent 365 experiences is designed and implemented.
+- The scripts use implementation stubs and sample data until tenant-specific integration with supported Microsoft 365 admin center, Microsoft 365 Copilot Agent Builder, or Agent 365 experiences is designed and implemented.
 - Copilot Tuning is an early access preview capability; availability depends on Microsoft rollout, tenant eligibility, admin center visibility, and public-preview requirements that are subject to change.
 - Model risk assessment patterns are documented but do not replace institutional model validation programs required by SR 11-7.
 - Tuning approval workflow patterns are documented but require Power Automate or equivalent implementation for production use.
+- The open-source / external base-model admin control (allow or block non-Microsoft base models for tuning) is a real Copilot Tuning governance lever not yet covered by this solution's monitoring or approval patterns.
