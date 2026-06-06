@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.3 — 2026-06-05 — Microsoft accuracy fixes
+
+### Fixed
+
+- Corrected Copilot Control System location from non-existent "Adoption Hub" to Microsoft 365 admin center > Copilot (per MS Learn citation).
+- Removed unverifiable "Baseline Security Mode (BSM)" product name from scope-exclusion; rephrased as generic baseline security posture exclusion.
+
 ## Validation Sweep — 2026-05-25
 
 ### Verified
