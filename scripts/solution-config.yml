@@ -158,7 +158,7 @@
       "track": "C",
       "domain": "operations-analytics",
       "priority": "P1",
-      "version": "v0.1.1",
+      "version": "v0.1.2",
       "controls": [
         "1.9",
         "4.5",
