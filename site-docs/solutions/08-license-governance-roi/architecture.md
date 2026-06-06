@@ -11,7 +11,7 @@ License Governance and ROI Tracker provides a structured operating model for Cop
 | Microsoft Graph           |      | Dependency: 11-risk-tiered-rollout   |
 | - /v1.0/users             |      | - protected users                    |
 | - /v1.0/subscribedSkus    |      | - rollout wave and risk tier         |
-| - /v1.0/copilot/reports   |      +-------------------+------------------+
+| - /beta/copilot/reports   |      +-------------------+------------------+
 +-------------+-------------+                          |
               |                                        |
               v                                        v
@@ -61,8 +61,10 @@ Additional ROI input: Viva Insights exports or curated analyst-provided extracts
 |----------|----------------|-------|
 | `GET https://graph.microsoft.com/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled` | Identify licensed user population, departments, and active accounts for governance review. | Used to align seat holders to business units and reviewer routing. |
 | `GET https://graph.microsoft.com/v1.0/subscribedSkus` | Inventory Microsoft 365 Copilot SKU availability and consumed units. | Supports seat planning, chargeback, and license optimization controls. |
-| `GET https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')` | Retrieve most recent activity data for enabled Microsoft 365 Copilot users for inactivity and utilization analysis. | Response is a report stream; tracking per-user Copilot prompt counts across tenants is not supported. |
-| `GET https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')` | Retrieve the aggregated number of active and enabled Microsoft 365 Copilot users for management trend reporting. | Useful for Power BI trend cards and consistency checks. |
+| `GET https://graph.microsoft.com/beta/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')` | Retrieve most recent activity data for enabled Microsoft 365 Copilot users for inactivity and utilization analysis. | Response is a report stream; tracking per-user Copilot prompt counts across tenants is not supported. Beta/preview API (see note below). |
+| `GET https://graph.microsoft.com/beta/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')` | Retrieve the aggregated number of active and enabled Microsoft 365 Copilot users for management trend reporting. | Useful for Power BI trend cards and consistency checks. Beta/preview API (see note below). |
+
+> **Note:** As of the last verification, the Microsoft 365 Copilot usage report functions (`getMicrosoft365CopilotUsageUserDetail` and `getMicrosoft365CopilotUserCountSummary`) are available only under the Microsoft Graph `beta` (preview) endpoint — both the `/beta/copilot/reports/` path and the legacy `/beta/reports/` path. They are not yet generally available under `v1.0`. Confirm general availability on Microsoft Learn before depending on these endpoints in production. The `/copilot/reports/` path segment is Microsoft's recommended going-forward location for these APIs.
 
 ## Viva Insights ROI Signal Handling
 

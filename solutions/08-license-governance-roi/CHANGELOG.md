@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.1.4] - 2026-06-06
+
+### Fixed
+
+- Corrected the Microsoft 365 Copilot usage report endpoint references from `https://graph.microsoft.com/v1.0/copilot/reports/...` to `https://graph.microsoft.com/beta/copilot/reports/...` in `docs/architecture.md`, `scripts/Deploy-Solution.ps1`, and `scripts/Monitor-Compliance.ps1`. Live verification on Microsoft Learn confirms that `getMicrosoft365CopilotUsageUserDetail` and `getMicrosoft365CopilotUserCountSummary` are currently available only under the Microsoft Graph `beta` (preview) endpoint and are not yet generally available under `v1.0`. This supersedes the 2026-05-04 / 2026-05-25 entries that recorded the `/v1.0/copilot/reports` paths as "current." Added a note to `docs/architecture.md` clarifying the beta/preview status and the recommended `/copilot/reports/` going-forward path.
+
 ## [v0.1.3] - 2026-06-05
 
 ### Fixed

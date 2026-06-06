@@ -480,7 +480,7 @@
     "domain": "operations-analytics",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.1.3",
+    "version": "v0.1.4",
     "solution_type": [
       "PowerShell",
       "Power BI"

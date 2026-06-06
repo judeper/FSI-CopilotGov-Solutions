@@ -183,7 +183,7 @@ try {
         graphEndpoints = @(
             '/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled'
             '/v1.0/subscribedSkus'
-            "/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
+            "/beta/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
         )
         metrics = $metrics
         inactiveSeats = $flaggedSeats
