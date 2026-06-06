@@ -48,6 +48,9 @@
 ### Lessons
 - Sol 03 architecture.md had NO occurrence of "(previously only emails)" — Freamon's finding referenced architecture.md line 162 but grep confirmed only README.md:150 contained the text. Trust grep over line references when in doubt.
 - Sol 08 pass-1 CHANGELOG entry itself was outdated ("$0.01-per-message"); fixed inline alongside the primary corrections.
+
+## Pass-2 Consolidation (2026-06-05)
+- **Outcome:** All 7 corrections applied (solutions 03, 08, 10, 14, 17, 18, 19); full version propagation completed; all 9 validators green; 93 Pester tests pass; PR #290 approved and merged to main.
 - All 7 validators passed GREEN. All touched Pester suites passed (9+8+10+21+18+10+17 tests).
 
 
