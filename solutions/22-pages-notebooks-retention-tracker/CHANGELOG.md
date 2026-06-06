@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [v0.1.3] - 2026-05-23 — Copilot Notebooks accuracy correction
+## [v0.1.3] - 2026-06-05 — Copilot Notebooks accuracy correction
 
 ### Fixed
 - Corrected product model: replaced OneNote section-file storage references with the correct Copilot Notebooks SharePoint Embedded container model per Microsoft Learn.
