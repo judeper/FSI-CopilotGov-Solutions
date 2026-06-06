@@ -15,7 +15,7 @@ Microsoft Entra ID tenant GUID.
 Application (client) ID for app-only authentication.
 
 .PARAMETER ClientSecret
-Client secret for app-only authentication.
+Client secret for app-only authentication, provided as a SecureString. Migrate to managed identity (Stage 2, tenant-bound) when available.
 
 .PARAMETER UseMgGraph
 When set, uses Connect-MgGraph for delegated authentication instead of client credentials.
@@ -39,7 +39,8 @@ param(
     [string]$ClientId,
 
     [Parameter()]
-    [string]$ClientSecret,
+    # IDENTITY-STANDARD: legacy-client-secret — accepts SecureString; migrate to managed identity (Stage 2, tenant-bound)
+    [System.Security.SecureString]$ClientSecret,
 
     [Parameter()]
     [switch]$UseMgGraph,
@@ -246,7 +247,7 @@ if ($UseMgGraph.IsPresent) {
         $graphContext = New-CopilotGovGraphContext -TenantId $TenantId
     }
 }
-elseif (-not [string]::IsNullOrWhiteSpace($ClientId) -and -not [string]::IsNullOrWhiteSpace($ClientSecret)) {
+elseif (-not [string]::IsNullOrWhiteSpace($ClientId) -and ($null -ne $ClientSecret)) {
     try {
         $graphContext = Connect-CopilotGovGraph -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
     }

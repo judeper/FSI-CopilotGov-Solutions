@@ -1,6 +1,6 @@
 # Oversharing Risk Assessment and Remediation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-05-25
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-06-06
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 

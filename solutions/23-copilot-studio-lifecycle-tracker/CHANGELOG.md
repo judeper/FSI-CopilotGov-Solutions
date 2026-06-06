@@ -2,7 +2,14 @@
 
 ## [Unreleased]
 
-## [v0.1.3] — 2026-06-05 — Power Platform API terminology alignment
+## [v0.1.4] — 2026-06-06 — Agent 365 prerequisites and architecture enhancements
+
+### Changed
+
+- Added Microsoft Agent 365 GA date (2026-05-01), per-user licensing note, and plans link to `docs/prerequisites.md` (Issues #73/#75 optional enhancement). Citation: https://learn.microsoft.com/en-us/microsoft-agent-365/overview
+- Added M365 admin center navigation path (Agents > All Agents > Registry) to the Microsoft Agent 365 registry Integration Point in `docs/architecture.md`. Citation: https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-registry
+
+
 
 ### Fixed
 - Aligned "Power Platform admin API" → "Power Platform API" in README.md, Monitor-Compliance.ps1 to match official Microsoft Learn naming (`api.powerplatform.com`) and the solution's own prerequisites/network sections.

@@ -15,7 +15,7 @@ Microsoft Entra ID tenant GUID.
 Application (client) ID for app-only authentication.
 
 .PARAMETER ClientSecret
-Client secret for app-only authentication.
+Client secret for app-only authentication, provided as a SecureString. Migrate to managed identity (Stage 2, tenant-bound) when available.
 
 .PARAMETER UseMgGraph
 When set, uses Connect-MgGraph for delegated authentication instead of client credentials.
@@ -49,7 +49,8 @@ param(
     [string]$ClientId,
 
     [Parameter()]
-    [string]$ClientSecret,
+    # IDENTITY-STANDARD: legacy-client-secret — accepts SecureString; migrate to managed identity (Stage 2, tenant-bound)
+    [System.Security.SecureString]$ClientSecret,
 
     [Parameter()]
     [switch]$UseMgGraph,
@@ -84,7 +85,7 @@ if ($UseMgGraph.IsPresent) {
 }
 elseif (-not [string]::IsNullOrWhiteSpace($ClientId)) {
     $authParams['ClientId'] = $ClientId
-    if (-not [string]::IsNullOrWhiteSpace($ClientSecret)) {
+    if ($null -ne $ClientSecret) {
         $authParams['ClientSecret'] = $ClientSecret
     }
 }

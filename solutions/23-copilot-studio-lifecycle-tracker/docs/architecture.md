@@ -78,6 +78,7 @@ The Evidence Packager creates `agent-lifecycle-inventory`, `publishing-approval-
 ### Microsoft Agent 365 registry
 
 - Purpose: Use Microsoft control-plane context for centralized agent registry, lifecycle management, access control, and compliance where licensed
+- Admin center navigation: Microsoft 365 admin center **> Agents > All Agents > Registry**
 - Status: Documented integration target; current repository version uses a local stub
 
 ### Power Platform REST API/SDK metadata
@@ -88,7 +89,7 @@ The Evidence Packager creates `agent-lifecycle-inventory`, `publishing-approval-
 ### Microsoft Purview Audit (optional)
 
 - Purpose: Optional enrichment with Copilot Studio audit-log signals where Purview is licensed and configured
-- Status: Documented; not implemented in v0.1.3
+- Status: Documented; not implemented in v0.1.4
 
 ## Dataverse Tables
 

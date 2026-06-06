@@ -4,7 +4,19 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
-## [v0.2.2] - 2026-06-05
+## [v0.2.3] - 2026-06-06
+
+### Security
+
+- Converted `[string]$ClientSecret` parameter in `scripts/Monitor-Compliance.ps1` to `[System.Security.SecureString]$ClientSecret` with IDENTITY-STANDARD marker comment (Issue #221, Stage 1). The SecureString flows through to `scripts/common/GraphAuth.psm1` (shared module) which converts to plaintext only at the token request body — no logging.
+- Updated `.PARAMETER ClientSecret` help text and `.EXAMPLE` to reflect SecureString usage.
+- Stage 3 audit workflow tracked as follow-up (CI workflow not added in this commit).
+
+### Changed
+
+- Tightened SAM licensing prerequisite in `docs/prerequisites.md` to enumerate the supported base subscriptions (Microsoft 365 E1/E3/E5/A5; Office 365 E3/E5/A5; GCC/GCC High/DoD), the SharePoint K/P1/P2 sub-dependency for the SAM Plan 1 add-on path, and the restricted-site-creation note per MS Learn (Issue #101). Citation: https://learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites
+
+
 
 ### Fixed
 

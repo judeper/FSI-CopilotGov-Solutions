@@ -1,5 +1,14 @@
 # Prerequisites
 
+## Microsoft Agent 365 Requirements
+
+Microsoft Agent 365 (generally available as of May 1, 2026) is the centralized agent
+registry and governance control plane. A qualifying Microsoft Agent 365 per-user license
+is required to enable Agent 365 capabilities; Microsoft E5 is recommended as a base
+subscription. Review Microsoft Agent 365 plans and pricing at
+https://www.microsoft.com/microsoft-agent-365#plans-and-pricing before configuring live
+registry integration.
+
 ## Microsoft 365 and Power Platform Requirements
 
 - Microsoft 365 tenant with Microsoft Copilot Studio licensing assigned to authoring users
