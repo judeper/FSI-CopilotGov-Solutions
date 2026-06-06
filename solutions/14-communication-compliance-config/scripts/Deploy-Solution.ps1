@@ -38,10 +38,10 @@
     Solution: Microsoft Purview Communication Compliance Configurator (CCC)
     Controls:  2.10, 3.4, 3.5, 3.6, 3.9
     Regulations: FINRA 2210, FINRA 3110, SEC Reg BI, FCA SYSC 10
-    Version: v0.2.2
+    Version: v0.2.3
 
     IMPORTANT: Microsoft Purview Communication Compliance policy deployment requires manual steps
-    in the Microsoft Purview compliance portal. This script generates the policy
+    in the Microsoft Purview portal (purview.microsoft.com). This script generates the policy
     configuration templates and validates prerequisites only.
 #>
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
@@ -167,7 +167,7 @@ $deploymentManifest = [ordered]@{
     deploymentMode = 'documentation-first'
     manualSteps = @(
         'Generate templates and deployment manifest by using this script.',
-        'Create or update each policy in the Microsoft Purview compliance portal.',
+        'Create or update each policy in the Microsoft Purview portal (purview.microsoft.com).',
         'Assign reviewers and escalation contacts by using the reviewer workflow section.',
         'Publish approved lexicon words after Legal and Compliance review.',
         'Record publication details for evidence export and future examination support.'
