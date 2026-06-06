@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.2.3] — 2026-06-05 — Microsoft product accuracy corrections
+
+### Fixed
+
+- Corrected auto-labeling throughput cap from "per policy" to "per tenant" in 4 locations (README.md, docs/architecture.md, docs/deployment-guide.md) per MS Learn source of truth.
+- Added metered/billable API note for `assignSensitivityLabel` in README.md and docs/troubleshooting.md; bulk remediation cost planning requires metered API enablement.
+
 ## [v0.2.2] — 2026-05-23 — Council review remediation
 
 ### VERIFIED-BUG
