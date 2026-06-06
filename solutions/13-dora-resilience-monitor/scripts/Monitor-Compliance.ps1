@@ -160,7 +160,7 @@ function Get-ServiceHealthStatus {
         [System.Security.SecureString]$ClientSecret
     )
 
-    $criticalServices = @('Exchange Online', 'SharePoint Online', 'Microsoft Teams', 'Microsoft Graph', 'Microsoft Copilot')
+    $criticalServices = @('Exchange Online', 'SharePoint Online', 'Microsoft Teams', 'Microsoft Graph', 'Microsoft 365 Copilot')
     $samplePayload = $env:DRM_SERVICE_HEALTH_SAMPLE_JSON
 
     if (-not [string]::IsNullOrWhiteSpace($samplePayload)) {
