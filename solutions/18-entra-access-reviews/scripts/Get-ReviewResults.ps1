@@ -3,7 +3,7 @@
 Queries active access review decisions and flags reviews approaching expiry.
 
 .DESCRIPTION
-Queries Microsoft Entra ID Access Reviews for pending and completed decisions using
+Queries access reviews in Microsoft Entra ID Governance for pending and completed decisions using
 GET /identityGovernance/accessReviews/definitions/{id}/instances/{id}/decisions.
 Flags reviews approaching expiry (within 48 hours by default) for escalation.
 Scripts use representative sample data and do not connect to live Microsoft 365 services.

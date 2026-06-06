@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Creates Microsoft Entra ID Access Reviews for group memberships associated with SharePoint access via Microsoft Graph.
+Creates access reviews in Microsoft Entra ID Governance for group memberships associated with SharePoint access via Microsoft Graph.
 
 .DESCRIPTION
 Reads site risk scores from solution 02-oversharing-risk-assessment output (or accepts a
