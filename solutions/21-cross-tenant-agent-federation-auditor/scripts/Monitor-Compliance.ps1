@@ -21,7 +21,7 @@
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
-    Version:  v0.1.2
+    Version:  v0.1.3
     Status:   Documentation-first scaffold (sample data only)
 #>
 [CmdletBinding()]
@@ -51,7 +51,7 @@ function Get-SampleFederationInventory {
             displayName = 'FSI Research Copilot'
             sourceTenantId = 'contoso-financial.onmicrosoft.com'
             channel = 'Microsoft Teams'
-            authenticationType = 'Microsoft Entra ID'
+            authenticationType = 'Authenticate with Microsoft'
             requireUsersToSignIn = $true
             sharingScope = 'Specific users and groups'
             allowedUsersOrGroups = @('partner-bank-agent-reviewers')
@@ -63,7 +63,7 @@ function Get-SampleFederationInventory {
             displayName = 'Third-Party Pricing Assistant'
             sourceTenantId = 'contoso-financial.onmicrosoft.com'
             channel = 'Custom channel'
-            authenticationType = 'Microsoft Entra ID'
+            authenticationType = 'Authenticate manually (Microsoft Entra ID)'
             requireUsersToSignIn = $true
             sharingScope = 'Approved partner tenants'
             allowedUsersOrGroups = @('vendor-marketdata-agent-reviewers', 'partner-bank-agent-reviewers')
