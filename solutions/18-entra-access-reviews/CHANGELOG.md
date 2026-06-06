@@ -6,7 +6,13 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 
 ## [Unreleased]
 
-## v0.1.3 — 2026-06-05 — Microsoft Learn accuracy fixes
+## v0.1.4 — 2026-06-05 — MS Learn accuracy pass-2 correction
+
+### Fixed
+
+- Replaced outdated "Enterprise Mobility + Security (EMS) E5" licensing reference in docs/prerequisites.md with current MS Learn licensing statement: "Microsoft Entra ID Governance, Microsoft Entra Suite, or Microsoft Entra ID P2". EMS E5 is not listed as a current named licensing option in the access reviews documentation.
+
+
 
 ### Changed
 

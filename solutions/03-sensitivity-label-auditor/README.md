@@ -1,6 +1,6 @@
 # Sensitivity Label Coverage Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-06-05
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -147,4 +147,4 @@ Power Automate is documentation-first in this version. The solution documents tw
 - Exchange coverage can lag if required message-level label metadata is not consistently exposed through the chosen collection method.
 - This version focuses on monitoring, evidence production, and remediation planning; it does not claim automatic enforcement across every workload.
 - Microsoft is replacing parent labels with label groups. Migration is irreversible; automatic migration applies only in documented cases, and other tenants should migrate when the Microsoft Purview portal banner is available. The solution's taxonomy snapshot should be updated to record label group membership after migration.
-- Service-side auto-labeling can now override existing lower-priority labels on files (previously only emails). Remediation manifests should account for this capability.
+- Service-side auto-labeling policies can be configured to override existing lower-priority manually applied labels on files. Remediation manifests should account for this capability.

@@ -1,6 +1,12 @@
 # Changelog
 
-## [v0.2.3] — 2026-06-05 — Microsoft product accuracy corrections
+## [v0.2.4] — 2026-06-05 — MS Learn accuracy pass-2 correction
+
+### Fixed
+
+- Removed unverifiable historical parenthetical "(previously only emails)" from the auto-labeling label-override statement in README.md. Current MS Learn documentation shows no email-only restriction for service-side auto-labeling policy label overrides; the operative guidance is preserved.
+
+
 
 ### Fixed
 

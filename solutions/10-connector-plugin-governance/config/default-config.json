@@ -2,7 +2,7 @@
   "solution": "10-connector-plugin-governance",
   "solutionCode": "CPG",
   "displayName": "Copilot Connector and Plugin Governance",
-  "version": "v0.2.2",
+  "version": "v0.2.3",
   "last_verified": "2026-06-05",
   "track": "C",
   "domain": "operations-analytics",

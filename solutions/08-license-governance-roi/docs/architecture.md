@@ -125,7 +125,7 @@ Billing policies in the Microsoft 365 admin center control which users may consu
 
 ### Capacity Pack vs PAYG Cost Tracking
 
-Organizations may choose between individual pay-as-you-go billing (metered per Copilot Credit) or prepaid Copilot Studio capacity packs (25,000 Copilot Credits per month per pack at a fixed monthly rate). The Copilot Studio message meter is billed at $0.01 per message for classic bot interactions. This solution documents the pattern for tracking consumption across both models, including credit volume by user and department, capacity pack utilization percentage, and overage forecasting. These patterns support compliance with SOX 404 cost allocation expectations by providing traceable spend data at the business-unit level.
+Organizations may choose between individual pay-as-you-go billing (metered per Copilot Credit) or prepaid Copilot Studio capacity packs (25,000 Copilot Credits per month per pack at a fixed monthly rate). The Copilot Studio pay-as-you-go meter is billed at $0.01 per Copilot Credit. A classic answer costs 1 Copilot Credit; a generative answer costs 2 Copilot Credits. This solution documents the pattern for tracking consumption across both models, including credit volume by user and department, capacity pack utilization percentage, and overage forecasting. These patterns support compliance with SOX 404 cost allocation expectations by providing traceable spend data at the business-unit level.
 
 ### Azure Cost Management Integration Pattern
 

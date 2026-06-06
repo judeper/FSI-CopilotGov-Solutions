@@ -1,6 +1,6 @@
 # Copilot Connector and Plugin Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ Copilot Connector and Plugin Governance extends Copilot supervision into the con
 
 This solution inventories connectors and plugins, applies risk classification, routes approval requests, and records data-flow boundary decisions for approved use cases. It supports compliance with internal control programs by documenting which external systems Copilot can reach, who approved that reach, and whether ongoing monitoring is catching new or unapproved extensibility paths.
 
-The **Copilot Control System** is a framework whose controls span the Microsoft 365 admin center, Power Platform admin center, and Copilot Studio for managing Copilot connectors, plugins, and **declarative agents** — a newer extensibility path that allows organizations to define custom Copilot behaviors through configuration rather than code. This solution documents governance patterns that help meet oversight expectations for all three extensibility categories.
+The **Copilot Control System** is a framework whose controls span the Microsoft 365 admin center, Power Platform admin center, and Copilot Studio for managing Copilot connectors, plugins, and **declarative agents** — a newer extensibility path that allows organizations to define custom Copilot behaviors using Copilot's own orchestrator and models, buildable with low-code or pro-code tooling. This solution documents governance patterns that help meet oversight expectations for all three extensibility categories.
 
 ## Features
 

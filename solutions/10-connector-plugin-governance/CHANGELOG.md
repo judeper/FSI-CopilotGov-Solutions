@@ -1,6 +1,12 @@
 # Changelog
 
-## [v0.2.2] — 2026-06-05 — Accuracy review (MS Learn verification)
+## [v0.2.3] — 2026-06-05 — MS Learn accuracy pass-2 correction
+
+### Fixed
+
+- Corrected declarative agent description: replaced "through configuration rather than code" with "using Copilot's own orchestrator and models, buildable with low-code or pro-code tooling" per MS Learn. Declarative agents support both low-code (M365 Copilot) and pro-code (VS Code, Visual Studio, M365 Agents Toolkit) authoring paths.
+
+
 
 ### Fixed
 

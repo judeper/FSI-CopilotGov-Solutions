@@ -3,7 +3,7 @@
 ## Delivery Summary
 
 - Solution: License Governance and ROI Tracker
-- Version: v0.1.2
+- Version: v0.1.3
 - Track: C
 - Priority: P1
 - Dependency: 11-risk-tiered-rollout
