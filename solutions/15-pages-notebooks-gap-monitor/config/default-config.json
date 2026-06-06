@@ -2,7 +2,7 @@
   "solution": "15-pages-notebooks-gap-monitor",
   "displayName": "Copilot Pages and Notebooks Compliance Gap Monitor",
   "solutionCode": "PNGM",
-  "version": "v0.1.2",
+  "version": "v0.1.3",
   "controls": [
     "2.11",
     "3.2",
