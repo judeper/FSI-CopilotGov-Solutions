@@ -128,7 +128,8 @@ function Get-SitePermissionsSnapshot {
             sharingLinks = @(
                 [pscustomobject]@{
                     itemPath  = 'Shared Documents/Q4-Report.xlsx'
-                    linkType  = 'OrganizationView'
+                    linkScope = 'organization'
+                    linkType  = 'view'
                     createdBy = 'analyst@contoso.com'
                     createdAt = (Get-Date).AddDays(-14).ToString('o')
                     expiresAt = $null
@@ -159,7 +160,9 @@ function Get-SitePermissionsSnapshot {
             if (-not $Config.scope.includeLibraries -and $list.BaseTemplate -eq 101) { continue }
 
             try {
-                $roleAssignments = Get-PnPListItem -List $list -Fields 'HasUniqueRoleAssignments' -ErrorAction Stop
+                # HasUniqueRoleAssignments is a securable-object property, not a field column.
+                # Production binding should check $item.HasUniqueRoleAssignments after retrieving the item.
+                $roleAssignments = Get-PnPListItem -List $list -ErrorAction Stop
                 foreach ($item in $roleAssignments) {
                     $permissions += [pscustomobject]@{
                         itemPath        = "$($list.Title)/$($item.FieldValues.FileLeafRef)"
