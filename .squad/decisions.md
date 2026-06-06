@@ -36,7 +36,55 @@ Pearlman applied 7 corrections per Freamon findings; all version propagation com
 
 ## Active Decisions
 
-No decisions recorded yet.
+### Issues Batch Consolidation (2026-06-06)
+
+**Status:** COMPLETED | **PR:** #292 | **Commit:** bc72a69 (squash merge) | **Prior work:** Freamon verified (commit b6fd15e) → Pearlman implemented → Bunk APPROVED
+
+#### Decision: Consolidate Issue #221, #101, #73, #75 Batch
+
+**Scope:** Four issues merged via PR #292 (squash to bc72a69)
+- **#221:** SecureString hardening — 7 sites converted to `[System.Security.SecureString]` with IDENTITY-STANDARD markers
+- **#101:** Sol 02 SAM licensing wording — applied Freamon's verified F1 improved wording (base subscriptions, K/P1/P2 sub-dependency, site-creation note); F2 (DSPM) confirmed already fixed, no change
+- **#73 + #75:** Sol 23 Agent 365 enhancements — Both README.md and architecture.md confirmed already correct by Freamon; applied two optional enhancements: (a) sol 23 docs/prerequisites.md Agent 365 GA date (2026-05-01), per-user licensing, E5 recommendation, plans link; (b) docs/architecture.md M365 admin center nav path (Agents > All Agents > Registry)
+
+**Versions Bumped:**
+- Sol 02: v0.2.2 → v0.2.3
+- Sol 18: v0.1.4 → v0.1.5
+- Sol 23: v0.1.3 → v0.1.4
+
+**Validation:** All 9 validators green (build-docs.py, validate-contracts.py, validate-solutions.py, validate-documentation.py, validate_solutions_json.py, validate_solutions_graph.py, verify_readme_counts.py, PS1 syntax parse, Pester 93 tests)
+
+**What Was NOT Done:** Stage 3 CI workflow for managed identity audit (Issue #221 acceptance: file follow-up, not add workflow in this batch; coordinator to file follow-up issue)
+
+**Team:** Freamon (research/verification), Pearlman (implementation/edits), Bunk (approval)
+
+---
+
+### Key Verified Facts — Agent 365 + SAM + DSPM (2026-06-06)
+
+**Agent 365 Control Plane:**
+- Generally available as of May 1, 2026 — Commercial segment, per-user licensing
+- Centralized agent registry in Microsoft 365 admin center (navigate: Agents > All Agents > Registry)
+- Control plane for: centralized registry, lifecycle management, access control (Entra), compliance (Purview)
+- Microsoft E5 recommended as base subscription; at least one user must be licensed with Agent 365 per-user license
+- **Source:** https://learn.microsoft.com/en-us/microsoft-agent-365/overview; https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-registry
+
+**SharePoint Advanced Management (SAM) Entitlement:**
+- Base subscription required (one of): Office 365 E3/E5/A5; Microsoft 365 E1/E3/E5/A5; Microsoft 365 GCC/GCC-High/DoD
+- PLUS one of: (a) At least one user assigned Microsoft 365 Copilot license → SAM capabilities granted automatically; (b) Subscription includes SharePoint K/P1/P2 → purchase SharePoint Advanced Management Plan 1 add-on
+- Some features (e.g., restricted site creation) require SAM Plan 1 even when Copilot licenses present
+- **Source:** https://learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites
+
+**DSPM Naming + Prerequisites:**
+- Product formerly called "DSPM for AI" is now "DSPM for AI (classic)" in portal; new version is simply "Data Security Posture Management"
+- Prerequisites include: permissions (Compliance Admin, Global Admin, Purview Compliance Admin role group), Purview auditing, M365 Copilot user licenses, Edge/device/browser setup, pay-as-you-go billing for non-Copilot AI apps
+- **Source:** https://learn.microsoft.com/en-us/purview/ai-microsoft-purview-considerations; https://learn.microsoft.com/en-us/purview/data-security-posture-management-learn-about
+
+---
+
+## Active Decisions
+
+No new active decisions pending.
 
 ## Governance
 

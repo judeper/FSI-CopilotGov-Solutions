@@ -69,3 +69,37 @@
 - **Version:** v0.2.2 → v0.2.3 (PATCH).
 - **Propagation:** README status line, CHANGELOG, default-config.json, data/solution-catalog.json, scripts/solution-config.yml. DELIVERY-CHECKLIST and tests had no version line to update.
 - **Lesson:** Solution 06 was high-accuracy overall (9 verified claims). Only 2 minor cosmetic portal-name nits. Freamon's review method (MS Learn fetch per claim) is effective at catching branding drift without false positives.
+
+## 2026-06-06 — Issues #221, #101, #73/#75 batch (squad/issues-batch)
+
+### SecureString conversion pattern (Issue #221, Stage 1)
+
+Pattern used at every call site:
+- Parameter declaration: [System.Security.SecureString]\
+- Marker comment directly above param (not inline):
+  # IDENTITY-STANDARD: legacy-client-secret — accepts SecureString; migrate to managed identity (Stage 2, tenant-bound)
+- GraphAuth.psm1 only — plaintext conversion at token body assignment only:
+  \ = [System.Net.NetworkCredential]::new('', \).Password
+  \['client_secret'] = \
+- Null-check replacement: [string]::IsNullOrWhiteSpace(\) → \ -ne \
+- Call sites that pass SecureString through (sol 02 line ~801, sol 18 scripts) needed no conversion of the value itself — only the type annotation at the forwarding assignment
+
+### Files converted (7 sites)
+1. scripts/common/GraphAuth.psm1 — param + body assignment (2 sites counted)
+2. solutions/02-oversharing-risk-assessment/scripts/Monitor-Compliance.ps1
+3. solutions/18-entra-access-reviews/scripts/Apply-ReviewDecisions.ps1
+4. solutions/18-entra-access-reviews/scripts/Get-ReviewResults.ps1
+5. solutions/18-entra-access-reviews/scripts/Invoke-RiskTriagedReviews.ps1
+6. solutions/18-entra-access-reviews/scripts/New-AccessReview.ps1
+
+### Lesson: old_str context in edit tool
+The dit tool is context-sensitive — when old_str spans multiple items (e.g., a param block), anything within old_str that isn't in new_str gets deleted. Keep old_str to the minimum unique anchor; restore dropped lines with a follow-up edit rather than trying to include all downstream content in one replacement.
+
+### Version bumps
+| Sol | Old | New |
+|-----|-----|-----|
+| 02  | v0.2.2 | v0.2.3 |
+| 18  | v0.1.4 | v0.1.5 |
+| 23  | v0.1.3 | v0.1.4 |
+
+### Commit SHA: b6fd15e
