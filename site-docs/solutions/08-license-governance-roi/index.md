@@ -1,6 +1,6 @@
 # License Governance and ROI Tracker
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.1 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.1.2 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ License Governance and ROI Tracker helps financial-services teams monitor Copilo
 
 The implementation is intentionally documentation-first for Power BI assets. The PowerShell scripts define the deployment, monitoring, and evidence packaging flow, while the architecture and deployment guides document how a customer-owned Power BI dataset should be configured.
 
-Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go messaging at $0.01 per message and prepaid message packs. This solution documents governance patterns for billing policy assignment by security group, Azure Cost Management budget alert thresholds, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements. Budget alerts notify reviewers as spend approaches configured thresholds; they do not enforce a hard budget limit or stop usage.
+Beginning January 2025, Microsoft introduced consumption-based pricing for Copilot features including pay-as-you-go Copilot Credits (metered per credit) and prepaid Copilot Studio capacity packs (25,000 Copilot Credits per month per pack). The Copilot Studio message meter is billed at $0.01 per message. This solution documents governance patterns for billing policy assignment by security group, distribution group, or entire tenant, Azure Cost Management budget alert thresholds, high-usage user identification, and departmental chargeback models that support compliance with SOX 404 cost allocation and OCC 2011-12 technology expense oversight requirements. Budget alerts notify reviewers as spend approaches configured thresholds; they do not enforce a hard budget limit or stop usage.
 
 ## Detailed Features
 
@@ -21,7 +21,7 @@ Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot
 | ROI signal collection | Documents how Viva Insights and Microsoft 365 usage signals feed a management scorecard for adoption and value conversations. | Viva Insights export plus M365 usage reports | 4.5, 4.6 |
 | Reallocation workflow | Produces manager-review recommendations that can exclude protected users from solution `11-risk-tiered-rollout` before a seat is reclaimed. | Dataverse findings plus governance review process | 1.9, 4.8 |
 | Evidence packaging | Exports JSON evidence, companion SHA-256 hashes, and artifact references for periodic control reviews. | `Export-Evidence.ps1` and `EvidenceExport.psm1` | 4.5, 4.8 |
-| Consumption-based billing governance | Documents the governance pattern for Copilot PAYG (pay-as-you-go) billing policies, message pack metering, high-usage user visibility, and budget alert monitoring through the Microsoft 365 admin center and Azure Cost Management. Budget alerts are notifications only, not hard budget limits. | Billing > Cost Management in M365 admin center, Azure Cost Management tags | 4.5, 4.6, 4.8 |
+| Consumption-based billing governance | Documents the governance pattern for Copilot PAYG (pay-as-you-go) billing policies, capacity pack metering, high-usage user visibility, and budget alert monitoring through the Microsoft 365 admin center and Azure Cost Management. Budget alerts are notifications only, not hard budget limits. | Billing > Cost Management in M365 admin center, Azure Cost Management tags | 4.5, 4.6, 4.8 |
 
 ## Scope Boundaries
 
@@ -36,9 +36,9 @@ Beginning April 2026, Microsoft introduced consumption-based pricing for Copilot
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not configure PAYG billing policies, enforce hard budget limits, or stop usage after a budget threshold (billing policy creation and budget alerts are documented for manual configuration in the M365 admin center)
 - ❌ Does not track Copilot Chat (free tier) usage separately from paid Microsoft 365 Copilot seats
-- ❌ Does not meter Copilot agent credit consumption (agent credits use a separate consumption-based billing model)
+- ❌ Does not meter Copilot agent credit consumption (Copilot agent credits use a separate consumption-based billing model)
 - ❌ Does not distinguish Copilot Chat Basic vs Premium tiers or Edit with Copilot (Agent Mode) usage (v1.3+ framework features pending solution update)
-- ❌ Does not track PAYG message pack consumption or high-usage user monitoring
+- ❌ Does not track PAYG capacity pack credit consumption or high-usage user monitoring
 - ❌ Does not capture Copilot Dashboard satisfaction or intent metrics
 
 > **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
