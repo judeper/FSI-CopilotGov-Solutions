@@ -40,3 +40,6 @@
   - "Copilot Control System" (M365 admin center), "AI Administrator" Entra role, "SharePoint Advanced Management" (SAM), "Microsoft Purview Suite", Copilot Chat free tier, SharePoint agents pay-as-you-go — all current/accurate.
   - Modules Microsoft.Graph / ExchangeOnlineManagement / PnP.PowerShell / MicrosoftTeams — all real.
 - **Tooling note:** `microsoft_docs_search` saves large output to temp files (single-line JSON). Use a Python/PowerShell `IndexOf`+`Substring` snippet to extract context windows rather than Select-String (which matches the whole line).
+
+## Pass-2 Re-Verification (2026-06-05)
+- **Outcome:** 16 CLEAN / 7 minor findings across all 23 solutions; all findings cited to MS Learn and addressed by Pearlman; PR #290 approved and merged to main.
