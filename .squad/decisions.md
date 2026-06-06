@@ -82,6 +82,33 @@ Pearlman applied 7 corrections per Freamon findings; all version propagation com
 
 ---
 
+---
+
+## Pass-1 MS Learn Accuracy Review — Archived Inbox Consolidation (2026-06-06)
+
+**Status:** CONSOLIDATED | **Source:** Five pass-1 decision-inbox files (bunk-01/02, freamon-01/02/03) | **Track:** Hygiene archive
+
+### Durable Verified Facts & Blocking Issues
+
+Freamon's pass-1 accuracy review identified three corrections per solution (01, 02, 03) that became actionable for Pearlman. The corresponding Bunk verdicts flagged version-sync gaps as blocking issues. All findings are now reflected in main via PR #290 and related PRs.
+
+**Solution 01 (Copilot Readiness Assessment Scanner) — v0.2.2 → v0.2.3**
+- **Blocking issue (Bunk):** Version bump applied only to README.md and CHANGELOG.md; convention requires 10 files to be updated (catalog, solution-config.yml, DELIVERY-CHECKLIST.md, default-config.json, Pester test). All 10 sync gaps were remediated in amend/re-review pass.
+- **Verified accuracy findings (Freamon):** (1) API name "Microsoft Copilot Retrieval API" → "Microsoft 365 Copilot Retrieval API" (2) Entra role "Directory Reader" → "Directory Readers" (plural) (3) Unverifiable named offering "Microsoft 365 Copilot Optimization Assessment" softened to generic "Copilot readiness and optimization guidance."
+
+**Solution 02 (Oversharing Risk Assessment) — v0.2.2 (approved re-review)**
+- **Blocking issue (Bunk/resolved):** Catalog entry lagged README version (v0.2.1 vs v0.2.2); resolved in version-propagation amend.
+- **Verified accuracy findings (Freamon):** (1) PnP.PowerShell minimum "PowerShell 7.2 or later" → "PowerShell 7.4.0 or later" (major; current PnP docs require 7.4.0) (2) Azure Automation note partially outdated (now offers PS 7.4 runtime; "limited to PS 7.2" no longer universally true) (3) SAM add-on name "SharePoint Advanced Management" → "SharePoint Advanced Management Plan 1" (minor naming precision, 6 sites affected).
+
+**Solution 03 (Sensitivity Label Coverage Auditor) — v0.2.2**
+- **Major accuracy gaps (Freamon):** (1) Auto-labeling throughput cap stated 4× as "100,000 files per policy per day" — incorrect scoping; correct: "100,000 files per **tenant** per day" (README.md:16, README.md:145, architecture.md:162, deployment-guide.md:94). Overstates remediation-wave capacity. (2) `assignSensitivityLabel` API is metered/billable (charges may apply); solution omits this material fact for bulk-remediation cost planning (README.md:146, troubleshooting.md).
+
+### Version-Sync Convention
+
+Established in commit e1099b2 (ref: solution-01 v0.2.1 → v0.2.2 bump): a solution version bump touches **10 surfaces** (README status line, CHANGELOG, default-config.json, catalog, solution-config.yml, DELIVERY-CHECKLIST.md, Pester test version assertion, site-docs auto-regenerated from README). Validators do not enforce cross-file version parity (out-of-scope for this review but flagged for future hardening).
+
+---
+
 ## Active Decisions
 
 No new active decisions pending.
