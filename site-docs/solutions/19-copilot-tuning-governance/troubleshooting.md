@@ -5,7 +5,7 @@
 **Symptoms**
 
 - Copilot Tuning settings do not appear in the Microsoft 365 admin center Copilot control system
-- Eligible users cannot see tuning options in Agent Builder after creating an agent from a tunable template
+- Eligible users cannot see tuning options in Microsoft 365 Copilot Agent Builder after creating an agent from a tunable template
 - Users cannot submit tuning access requests for admin review
 
 **Actions**

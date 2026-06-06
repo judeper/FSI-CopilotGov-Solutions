@@ -75,7 +75,7 @@ function Test-SharePointAdvancedManagementEntitlement {
         'ORA_ASSUME_SAM_ENTITLEMENT=1 or ORA_ASSUME_SAM_LICENSE=1 was supplied for stub validation.'
     }
     else {
-        'Validate the required base license plus either a Microsoft 365 Copilot license assignment or a standalone Microsoft SharePoint Advanced Management license before production deployment.'
+        'Validate the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license before production deployment.'
     }
 
     return [pscustomobject]@{
@@ -85,7 +85,7 @@ function Test-SharePointAdvancedManagementEntitlement {
         BaseLicenseRequirement = 'Office 365 E3/E5/A5 or Microsoft 365 E1/E3/E5/A5'
         EntitlementPaths = @(
             'Microsoft 365 Copilot license assigned to at least one user'
-            'Standalone Microsoft SharePoint Advanced Management license'
+            'Standalone SharePoint Advanced Management Plan 1 license'
         )
         Notes = $notes
     }

@@ -159,6 +159,6 @@ Both flows are documentation-first in this version. The design is intentionally 
 
 ## Operational Notes
 
-- Auto-labeling policies alone may not clear the backlog in large tenants because of the 100,000 file per day per policy processing limit.
+- Auto-labeling policies alone may not clear the backlog in large tenants because of the 100,000 file per tenant per day processing limit.
 - `assignSensitivityLabel` should be reserved for approved bulk remediation scenarios after business-owner review.
 - Regulated-tier deployments should store exported evidence in immutable or otherwise protected repositories aligned to the organization's recordkeeping model.

@@ -2,7 +2,7 @@
 
 ## Solution Overview
 
-The Pages and Notebooks Retention Tracker (PNRT) provides a repeatable inventory and evidence pattern for Microsoft Copilot Pages, OneNote sections grouped by Notebook metadata, and Loop components in financial-services environments. It focuses on retention-policy coverage, limited retention-label evidence, Purview audit logs, version-history context, and Loop component provenance. The repository version uses representative sample data so the schemas and evidence package shape can be validated before live tenant integration is wired.
+The Pages and Notebooks Retention Tracker (PNRT) provides a repeatable inventory and evidence pattern for Microsoft Copilot Pages, Copilot Notebooks stored in SharePoint Embedded containers, and Loop components in financial-services environments. It focuses on retention-policy coverage, limited retention-label evidence, Purview audit logs, version-history context, and Loop component provenance. The repository version uses representative sample data so the schemas and evidence package shape can be validated before live tenant integration is wired.
 
 ## Component Diagram
 
@@ -34,10 +34,10 @@ The Pages and Notebooks Retention Tracker (PNRT) provides a repeatable inventory
 
 ## Data Flow
 
-1. A live implementation should use documented surfaces: SharePoint Embedded container URLs, Microsoft Graph DriveItem/export capabilities where documented, OneNote section metadata, Microsoft Purview audit/retention, and Cloud Policy or SharePoint admin controls.
+1. A live implementation should use documented surfaces: SharePoint Embedded container URLs, Microsoft Graph DriveItem/export capabilities where documented, Copilot Notebook container metadata, Microsoft Purview audit/retention, and Cloud Policy or SharePoint admin controls.
 2. `scripts/Monitor-Compliance.ps1` currently emits representative sample inventories that mirror the target contract for each artifact type.
 3. The Pages Inventory Builder records retention-policy coverage, limited retention-label evidence, source container references, and version-history/audit context for each Page.
-4. The Notebook Retention Resolver records OneNote section and folder retention coverage and keeps Notebook identity only as grouping metadata.
+4. The Notebook Retention Resolver records Copilot Notebook retention-policy coverage from the SharePoint Embedded container, with notebook identity used for grouping and reporting.
 5. The Loop Provenance Builder records the originating workspace, container, and parent Page or chat for each component.
 6. The Audit and Version Evidence Mapper documents Purview audit-log and version-history context; repository sample lineage rows are internal taxonomy only and are not Microsoft 365 branch, fork, or mutability events.
 7. `scripts/Export-Evidence.ps1` packages each inventory and lineage artifact as a JSON file with a SHA-256 companion.
@@ -50,7 +50,7 @@ Catalogs Copilot Pages with title, owner, storage/container reference, retention
 
 ### Notebook Retention Resolver
 
-Records OneNote section and folder retention coverage from the parent SharePoint site or OneDrive library, with Notebook identifiers used for grouping and reporting. Helps surface sections or folders that fall outside any retention policy.
+Records Copilot Notebook retention-policy coverage from the shared SharePoint Embedded container, with notebook identifiers used for grouping and reporting. Helps surface notebooks that fall outside any retention policy.
 
 ### Loop Provenance Builder
 
@@ -68,8 +68,8 @@ Creates the four PNRT JSON artifacts and a SHA-256 file for each, then assembles
 
 ### Microsoft Graph and SharePoint Embedded
 
-- Endpoint pattern: documented DriveItem/export and file metadata capabilities where available, plus OneNote notebook/section metadata for OneNote evidence
-- Minimum permission focus: `Notes.Read.All` for OneNote, `Sites.Read.All` for SharePoint/OneDrive file metadata, and SharePoint Embedded administrator access for container URL discovery when required
+- Endpoint pattern: documented DriveItem/export and file metadata capabilities where available for SharePoint Embedded container content
+- Minimum permission focus: `Sites.Read.All` for SharePoint Embedded container and file metadata, and SharePoint Embedded administrator access for container URL discovery when required
 
 ### Loop and Copilot Pages admin surfaces
 
@@ -78,7 +78,7 @@ Creates the four PNRT JSON artifacts and a SHA-256 file for each, then assembles
 
 ### Microsoft Purview
 
-- Purpose: Resolve retention policies and limited retention-label evidence that apply to Copilot Pages, SharePoint Embedded containers, and OneNote section files/folders
+- Purpose: Resolve retention policies and limited retention-label evidence that apply to Copilot Pages, Copilot Notebooks, and Loop content within SharePoint Embedded containers
 - Caveat: Retention labels cannot be viewed or applied directly from a Copilot Page, and record/regulatory-record labels cannot be manually applied in Copilot Pages or Loop
 - Helps detect coverage gaps between the artifact inventory and active retention policies
 
@@ -91,4 +91,4 @@ Creates the four PNRT JSON artifacts and a SHA-256 file for each, then assembles
 
 ## Regulatory Alignment Notes
 
-PNRT helps meet SEC Rule 17a-4 (where applicable to broker-dealer required records) by documenting retention coverage, audit-log availability, version-history context, and OneNote section/folder coverage for Pages and Notebooks that may contain communications or required books and records. It supports compliance with FINRA Rule 4511(a) by surfacing books-and-records coverage gaps in collaborative Copilot artifacts. It aids in Sarbanes-Oxley §§302/404 (where applicable to ICFR) artifact preservation when Pages, Notebooks, or Loop components participate in financial-reporting workflows. PNRT does not on its own satisfy any of these regulations.
+PNRT helps meet SEC Rule 17a-4 (where applicable to broker-dealer required records) by documenting retention coverage, audit-log availability, version-history context, and Copilot Notebook container coverage for Pages and Notebooks that may contain communications or required books and records. It supports compliance with FINRA Rule 4511(a) by surfacing books-and-records coverage gaps in collaborative Copilot artifacts. It aids in Sarbanes-Oxley §§302/404 (where applicable to ICFR) artifact preservation when Pages, Notebooks, or Loop components participate in financial-reporting workflows. PNRT does not on its own satisfy any of these regulations.

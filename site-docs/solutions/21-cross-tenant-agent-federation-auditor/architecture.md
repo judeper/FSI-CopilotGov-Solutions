@@ -11,7 +11,7 @@ The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first audito
 | Sources reviewed by CTAF (live targets, sample data today)    |
 | - Copilot Studio channels, authentication, and sharing         |
 | - Microsoft Entra Agent ID identities and blueprints           |
-| - Entra External Identities cross-tenant access settings       |
+| - Entra External ID cross-tenant access settings               |
 | - MCP server connection and authentication settings            |
 +------------------------------+--------------------------------+
                                |

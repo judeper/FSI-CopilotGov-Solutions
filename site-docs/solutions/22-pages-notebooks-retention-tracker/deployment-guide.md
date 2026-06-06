@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Review [docs/prerequisites.md](prerequisites.md) before deployment. PNRT assumes Microsoft 365 Copilot licensing for in-scope users, OneNote, Loop, SharePoint Online, SharePoint Embedded admin access where required, an Entra ID application registration with read-only scopes, and PowerShell 7.2 or later.
+Review [docs/prerequisites.md](prerequisites.md) before deployment. PNRT assumes Microsoft 365 Copilot licensing for in-scope users, Loop, SharePoint Online, SharePoint Embedded admin access where required, an Entra ID application registration with read-only scopes, and PowerShell 7.2 or later.
 
 ## Step 1: Clone and Configure
 
@@ -48,7 +48,7 @@ If the preview is acceptable, rerun without `-WhatIf` to write the deployment ma
 Review the output for:
 
 - Pages inventory with retention-policy coverage, limited retention-label evidence, and version-history context
-- OneNote section/folder retention coverage grouped by Notebook metadata
+- Copilot Notebook retention-policy coverage from the SharePoint Embedded container
 - Loop component provenance records
 - Branching-event-log records that are clearly marked as repository-only internal sample lineage with Purview audit/version-history context
 

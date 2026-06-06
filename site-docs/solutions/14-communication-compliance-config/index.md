@@ -1,6 +1,6 @@
 # Microsoft Purview Communication Compliance Configurator
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.2 | **Priority:** P1 | **Track:** D
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** D
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -12,8 +12,8 @@ This solution depends on `04-finra-supervision-workflow` for downstream review r
 
 ## Features
 
-- Generates tier-aware policy templates for Copilot-assisted retail and institutional communications. Policy deployment to Microsoft Purview requires manual steps in the compliance portal.
-- Documents supervised lexicon design for AI disclosure, promotional language, best-interest phrasing, and conflict indicators. Lexicon implementation requires customer review and configuration in the Purview compliance portal.
+- Generates tier-aware policy templates for Copilot-assisted retail and institutional communications. Policy deployment to Microsoft Purview requires manual steps in the Microsoft Purview portal.
+- Documents supervised lexicon design for AI disclosure, promotional language, best-interest phrasing, and conflict indicators. Lexicon implementation requires customer review and configuration in the Microsoft Purview portal.
 - Documents reviewer assignment, SLA, escalation, and dual-review workflows.
 - Documents how reviewer queue metrics should be collected and monitored. Queue metrics collection requires implementation in the customer's Purview environment.
 - Supports insider risk correlation planning for Copilot usage patterns and supervisory escalation.
@@ -53,7 +53,7 @@ See [docs/architecture.md](architecture.md) for the detailed data flow and integ
 1. Review [Prerequisites](prerequisites.md) and confirm Microsoft Purview Suite or eligible Office 365 licensing plus Communication Compliance role-group assignments.
 2. Review and customize tier settings under `config\default-config.json` and the selected tier file.
 3. Generate a deployment manifest with `scripts\Deploy-Solution.ps1 -ConfigurationTier regulated -TenantId <tenant-guid> -WhatIf`.
-4. Publish the generated policy templates manually in the Microsoft Purview compliance portal.
+4. Publish the generated policy templates manually in the Microsoft Purview portal.
 5. Run `scripts\Monitor-Compliance.ps1` to capture baseline reviewer queue readiness.
 6. Run `scripts\Export-Evidence.ps1` to produce `policy-template-export`, `reviewer-queue-metrics`, and `lexicon-update-log`.
 
