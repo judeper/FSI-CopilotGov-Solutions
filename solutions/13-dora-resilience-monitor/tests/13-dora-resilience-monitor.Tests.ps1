@@ -98,7 +98,7 @@ Describe 'DORA Operational Resilience Monitor - Configuration Validation' {
             @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'SharePoint Online'
             @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Teams'
             @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Graph'
-            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft Copilot'
+            @($script:defaultConfig.defaults.monitoredServices) | Should -Contain 'Microsoft 365 Copilot'
         }
     }
 
