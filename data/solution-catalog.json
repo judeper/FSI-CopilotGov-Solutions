@@ -280,7 +280,7 @@
     "domain": "security-compliance",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.2.2",
+    "version": "v0.2.3",
     "solution_type": [
       "PowerShell",
       "Power Automate"
