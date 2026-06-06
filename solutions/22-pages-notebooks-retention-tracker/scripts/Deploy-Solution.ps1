@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Tier-aware deployment script that builds a PNRT deployment manifest covering Copilot
-    Pages retention settings, OneNote section/folder retention coverage, internal sample
+    Pages retention settings, Copilot Notebook retention coverage, internal sample
     lineage mode, and Loop component provenance expectations. Helps meet records retention and supervisory
     expectations under SEC Rule 17a-4 (where applicable to broker-dealer required records),
     FINRA Rule 4511(a), and Sarbanes-Oxley §§302/404 (where applicable to ICFR).
@@ -33,7 +33,7 @@
     Solution: Pages and Notebooks Retention Tracker (PNRT)
     Primary Controls: 3.14, 3.2
     Supporting Controls: 3.3, 3.11, 2.11
-    Version: v0.1.2
+    Version: v0.1.3
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -125,7 +125,7 @@ else {
 }
 
 Write-Host (
-    "Deployment summary: PNRT tier [{0}] - Pages retention {1} days, OneNote section retention {2} days, internal sample lineage mode [{3}], branching audit required: {4}, Loop provenance required: {5}." -f
+    "Deployment summary: PNRT tier [{0}] - Pages retention {1} days, Notebook retention {2} days, internal sample lineage mode [{3}], branching audit required: {4}, Loop provenance required: {5}." -f
     $ConfigurationTier,
     $configuration.pagesRetentionDays,
     $configuration.notebookRetentionDays,

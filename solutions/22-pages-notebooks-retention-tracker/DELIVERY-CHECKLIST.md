@@ -6,7 +6,7 @@
 |------|-------|
 | Solution | Pages and Notebooks Retention Tracker |
 | Solution Code | PNRT |
-| Version | v0.1.2 |
+| Version | v0.1.3 |
 | Track | D |
 | Priority | P1 |
 | Primary Controls | 3.14, 3.2 |
@@ -17,7 +17,7 @@
 
 ## Pre-Deployment
 
-- [ ] Customer confirms which Copilot Pages, OneNote Notebooks, and Loop workspaces are in scope.
+- [ ] Customer confirms which Copilot Pages, Copilot Notebooks, and Loop workspaces are in scope.
 - [ ] Records-management team confirms retention period requirements for collaborative Copilot artifacts.
 - [ ] Microsoft 365 and Purview prerequisites from `docs/prerequisites.md` are verified.
 - [ ] Governance tier is selected: baseline, recommended, or regulated.
@@ -43,7 +43,7 @@
 
 - [ ] Deployment manifest is present in `artifacts/` and reflects the selected tier.
 - [ ] Pages-retention-inventory artifact is present and lists representative Page records.
-- [ ] Notebook-retention-log artifact is present and lists representative OneNote section/folder coverage grouped by Notebook metadata.
+- [ ] Notebook-retention-log artifact is present and lists representative Copilot Notebook retention-policy coverage from the SharePoint Embedded container.
 - [ ] Loop-component-lineage artifact is present and links each component to a parent container.
 - [ ] Branching-event-log artifact is present, clearly labels repository-only internal sample lineage, and documents Purview audit/version-history context.
 - [ ] Each JSON evidence file has a matching `.sha256` companion file.

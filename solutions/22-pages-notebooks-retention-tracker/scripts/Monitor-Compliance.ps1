@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-    Generates a sample inventory, OneNote section coverage snapshot, Loop provenance,
+    Generates a sample inventory, Copilot Notebook coverage snapshot, Loop provenance,
     and internal sample lineage rows for the Pages and Notebooks Retention Tracker (PNRT).
 
 .DESCRIPTION
     Produces representative sample inventories that mirror the target shape of live data
     from SharePoint Embedded, documented Microsoft Graph DriveItem/export surfaces,
-    OneNote section metadata, and Microsoft Purview. The repository version does not
+    Copilot Notebook container metadata, and Microsoft Purview. The repository version does not
     connect to live services; insertion points are documented in docs/architecture.md.
     The script is testable without external connectivity and
     helps meet records retention expectations under SEC Rule 17a-4 (where applicable
@@ -35,7 +35,7 @@
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
-    Version: v0.1.2
+    Version: v0.1.3
 #>
 [CmdletBinding()]
 param(
@@ -110,7 +110,7 @@ function New-PnrtSampleNotebook {
     )
 
     $now = Get-Date
-    $sources = @('section-label', 'folder-inherited', 'policy-inherited', 'none')
+    $sources = @('container-policy', 'site-inherited', 'policy-inherited', 'none')
 
     return @(
         for ($i = 1; $i -le $Count; $i++) {
@@ -118,14 +118,12 @@ function New-PnrtSampleNotebook {
             $label = if ($source -eq 'none') { $null } else { 'Records-7yr' }
 
             [pscustomobject]@{
-                sectionId = "section-{0:0000}" -f $i
-                sectionDisplayName = "Sample Section {0}" -f $i
                 notebookId = "notebook-{0:0000}" -f $i
                 displayName = "Sample Notebook {0}" -f $i
-                parentContainer = "https://contoso.sharepoint.com/sites/team{0}/Shared Documents/Notebook {0}" -f $i
+                containerUrl = "https://contoso.sharepoint.com/contentstorage/CSP_{0:0000}" -f $i
                 retentionLabel = $label
                 retentionPolicySource = $source
-                retentionEvidenceGranularity = 'OneNote section file'
+                retentionEvidenceGranularity = 'SharePoint Embedded container'
                 retentionDays = $RetentionDays
                 lastReviewedAt = $now.AddDays(-15).ToString('o')
             }
@@ -236,7 +234,7 @@ $status | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding u
 Write-Verbose ("Monitor snapshot written to {0}." -f $snapshotPath)
 
 Write-Host (
-    "Monitor summary: PNRT tier [{0}] inventoried {1} Pages, {2} OneNote sections, {3} Loop components, {4} internal sample lineage rows. Coverage gaps: {5}." -f
+    "Monitor summary: PNRT tier [{0}] inventoried {1} Pages, {2} Copilot Notebooks, {3} Loop components, {4} internal sample lineage rows. Coverage gaps: {5}." -f
     $ConfigurationTier,
     $pages.Count,
     $notebooks.Count,
