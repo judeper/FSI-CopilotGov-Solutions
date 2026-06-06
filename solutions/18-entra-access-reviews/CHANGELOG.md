@@ -6,7 +6,16 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 
 ## [Unreleased]
 
-## v0.1.4 — 2026-06-05 — MS Learn accuracy pass-2 correction
+## v0.1.5 — 2026-06-06 — SecureString hardening (Issue #221, Stage 1)
+
+### Security
+
+- Converted `[string]$ClientSecret` parameters to `[System.Security.SecureString]$ClientSecret` across all four sol-18 scripts: `Apply-ReviewDecisions.ps1`, `Get-ReviewResults.ps1`, `Invoke-RiskTriagedReviews.ps1`, `New-AccessReview.ps1`. Each site carries the IDENTITY-STANDARD marker comment. The SecureString flows through to `scripts/common/GraphAuth.psm1` (shared module) which converts to plaintext only at the token request body — no logging.
+- Updated `.PARAMETER ClientSecret` help text in all four scripts.
+- Replaced `[string]::IsNullOrWhiteSpace($ClientSecret)` checks with `$null -ne $ClientSecret` where applicable.
+- Stage 3 audit workflow tracked as follow-up (CI workflow not added in this commit).
+
+
 
 ### Fixed
 

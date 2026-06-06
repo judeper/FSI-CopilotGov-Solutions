@@ -2,7 +2,15 @@
 
 ## Platform and Licensing
 
-- SharePoint Advanced Management feature entitlement for the intended production posture requires an eligible base license plus either a Microsoft 365 Copilot license assigned to at least one user in the organization or a standalone SharePoint Advanced Management Plan 1 license. If neither entitlement path is available, document the limitation before enabling this solution.
+- SharePoint Advanced Management feature entitlement requires an eligible Microsoft 365
+  or Office 365 base subscription (such as Microsoft 365 E1, E3, E5, or A5; Office 365
+  E3, E5, or A5; or Microsoft 365 GCC, GCC High, or DoD) plus at least one of the
+  following: a Microsoft 365 Copilot license assigned to at least one user in the
+  organization, or the SharePoint Advanced Management Plan 1 add-on (requires a
+  SharePoint K, P1, or P2 subscription). Note that some features — such as restricted
+  site creation — require SharePoint Advanced Management Plan 1 even when Microsoft 365
+  Copilot licenses are present. If neither entitlement path is available, document the
+  limitation before enabling this solution.
 - Microsoft Purview Data Security Posture Management (DSPM) prerequisites should be validated for the selected scenarios, including appropriate permissions, Microsoft Purview auditing, Microsoft 365 Copilot user licensing for Copilot and agents, and any Edge, device onboarding, browser extension, or pay-as-you-go billing requirements that apply.
 - The target tenant should already have a defined Copilot pilot or rollout scope so findings can be prioritized against real exposure risk.
 

@@ -55,7 +55,7 @@ function Connect-CopilotGovGraph {
     Application (client) ID for app-only authentication.
 
     .PARAMETER ClientSecret
-    Client secret for app-only authentication. Mutually exclusive with CertificateThumbprint.
+    Client secret for app-only authentication, provided as a SecureString. Mutually exclusive with CertificateThumbprint. Migrate to managed identity (Stage 2, tenant-bound) when available.
 
     .PARAMETER CertificateThumbprint
     Certificate thumbprint for app-only authentication. Mutually exclusive with ClientSecret.
@@ -67,7 +67,7 @@ function Connect-CopilotGovGraph {
     When set, uses Connect-MgGraph for delegated authentication instead of client credentials.
 
     .EXAMPLE
-    $ctx = Connect-CopilotGovGraph -TenantId $tid -ClientId $cid -ClientSecret $secret
+    $ctx = Connect-CopilotGovGraph -TenantId $tid -ClientId $cid -ClientSecret (ConvertTo-SecureString $secret -AsPlainText -Force)
     #>
     [CmdletBinding()]
     param(
@@ -78,7 +78,8 @@ function Connect-CopilotGovGraph {
         [string]$ClientId,
 
         [Parameter()]
-        [string]$ClientSecret,
+        # IDENTITY-STANDARD: legacy-client-secret — accepts SecureString; migrate to managed identity (Stage 2, tenant-bound)
+        [System.Security.SecureString]$ClientSecret,
 
         [Parameter()]
         [string]$CertificateThumbprint,
@@ -130,8 +131,9 @@ function Connect-CopilotGovGraph {
         $body['client_assertion_type'] = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
         $body['client_assertion'] = $assertion
     }
-    elseif (-not [string]::IsNullOrWhiteSpace($ClientSecret)) {
-        $body['client_secret'] = $ClientSecret
+    elseif ($null -ne $ClientSecret) {
+        $plain = [System.Net.NetworkCredential]::new('', $ClientSecret).Password
+        $body['client_secret'] = $plain
     }
     else {
         throw 'Either ClientSecret or CertificateThumbprint is required for app-only authentication.'

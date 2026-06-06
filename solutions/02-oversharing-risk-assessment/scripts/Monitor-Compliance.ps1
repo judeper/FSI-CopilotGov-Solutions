@@ -31,7 +31,7 @@ Optional directory used to write `monitor-findings.json` and
 Application (client) ID for app-only Graph authentication.
 
 .PARAMETER ClientSecret
-Client secret for app-only Graph authentication.
+Client secret for app-only Graph authentication, provided as a SecureString. Migrate to managed identity (Stage 2, tenant-bound) when available.
 
 .PARAMETER CertificateThumbprint
 Certificate thumbprint for app-only Graph authentication.
@@ -43,7 +43,7 @@ Use the Microsoft.Graph SDK (Connect-MgGraph) for delegated authentication.
 .\Monitor-Compliance.ps1 -ConfigurationTier recommended -TenantId 00000000-0000-0000-0000-000000000000 -WorkloadsToScan sharePoint -MaxSites 100
 
 .EXAMPLE
-.\Monitor-Compliance.ps1 -ConfigurationTier regulated -TenantId 00000000-0000-0000-0000-000000000000 -ClientId $appId -ClientSecret $secret
+.\Monitor-Compliance.ps1 -ConfigurationTier regulated -TenantId 00000000-0000-0000-0000-000000000000 -ClientId $appId -ClientSecret (ConvertTo-SecureString $secret -AsPlainText -Force)
 
 .EXAMPLE
 .\Monitor-Compliance.ps1 -ConfigurationTier regulated -TenantId 00000000-0000-0000-0000-000000000000 -UseMgGraph -ExportPath .\artifacts\monitor
@@ -73,7 +73,8 @@ param(
     [string]$ClientId,
 
     [Parameter()]
-    [string]$ClientSecret,
+    # IDENTITY-STANDARD: legacy-client-secret — accepts SecureString; migrate to managed identity (Stage 2, tenant-bound)
+    [System.Security.SecureString]$ClientSecret,
 
     [Parameter()]
     [string]$CertificateThumbprint,
