@@ -4,6 +4,12 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [v0.2.4] - 2026-06-07
+
+### Fixed
+
+- `Invoke-GraphWithRetry` in `scripts/Monitor-Compliance.ps1` now retries on the transient HTTP `423 Locked` and `503 Service Unavailable` responses in addition to `429`. The scanner calls the `driveItem: extractSensitivityLabels` action, which Microsoft Learn documents can return `423 Locked` when the target file is in use by another process — a transient condition that should be retried rather than thrown. This also aligns the wrapper with the shared `Invoke-CopilotGovGraphRequest` helper, which already retries `429`/`503`. Citation: https://learn.microsoft.com/graph/api/driveitem-extractsensitivitylabels
+
 ## [v0.2.3] - 2026-06-06
 
 ### Security
