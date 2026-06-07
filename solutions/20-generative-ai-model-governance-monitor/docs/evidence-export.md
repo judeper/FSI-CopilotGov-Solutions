@@ -15,7 +15,7 @@ Records each in-scope generative AI model entry as carried in the firm's model i
 - `modelVersion` — version, model ID, or release wave reference
 - `modelProvider` — Microsoft, Microsoft / OpenAI, or approved provider name
 - `deploymentType` — Microsoft 365 service, Foundry direct model, Azure OpenAI deployment, partner/community model, or agent deployment type
-- `regionOrCloud` — tenant region, Azure region, Azure Government region, or provider cloud scope
+- `regionOrCloud` — tenant region, Azure region, or provider cloud scope
 - `lifecycleStatus` — generally available, preview, approved-for-evaluation, approved-for-production, deprecated, or retired
 - `contentSafetyProfile` — applicable content safety or guardrail profile reference
 - `responsibleAiReference` — Responsible AI, transparency, or provider attestation reference
