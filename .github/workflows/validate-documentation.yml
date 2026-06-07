@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'data/solution-catalog.json'
       - 'solutions/**'
       - 'mkdocs.yml'
       - 'scripts/build-docs.py'
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'data/solution-catalog.json'
       - 'solutions/**'
       - 'mkdocs.yml'
       - 'scripts/build-docs.py'
@@ -29,5 +31,12 @@ jobs:
           python-version: '3.11'
       - run: pip install -r requirements-docs.txt
       - run: python scripts/build-docs.py
+      - name: Check tier-applicability matrix is in lockstep with the catalog
+        run: |
+          if ! git diff --quiet -- docs/reference/tier-applicability.md; then
+            echo "::error::docs/reference/tier-applicability.md is stale. Run 'python scripts/build-docs.py' and commit the regenerated matrix."
+            git --no-pager diff -- docs/reference/tier-applicability.md
+            exit 1
+          fi
       - run: python scripts/validate-documentation.py
       - run: mkdocs build --strict
