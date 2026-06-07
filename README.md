@@ -4,6 +4,8 @@ Governance solution scaffolds and documentation patterns for the [FSI-CopilotGov
 
 This repository translates the framework's 58 controls and 243 playbooks into solution scaffolds, reusable modules, policy templates, and evidence-export patterns for Microsoft 365 Copilot governance in financial services.
 
+> **Cloud scope:** This content targets US commercial-cloud Microsoft 365 only. See [SCOPE.md](./SCOPE.md) for details.
+
 ## Quickstart
 
 Want to deploy one solution against a non-production tenant? Follow this minimum path:

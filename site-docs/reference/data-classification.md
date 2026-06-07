@@ -17,9 +17,9 @@ data taxonomy.
   outputs touch. Drawn from `{public, internal, confidential, restricted, regulated-pii,
   regulated-financial}`.
 - **Residency options** — Microsoft 365 cloud instances where the solution's documented
-  pattern can run. Drawn from `{commercial, gcc, gcc-high, dod, eu-data-boundary}`. Most
-  scaffolds list `commercial` only; sovereign and EU Data Boundary residency requires
-  additional tenant validation that is out of scope for the documentation-first scaffolds.
+  pattern can run. Drawn from `{commercial, eu-data-boundary}`. Most scaffolds list
+  `commercial` only; EU Data Boundary residency requires additional tenant validation
+  that is out of scope for the documentation-first scaffolds.
 - **Retention default (days)** — sample evidence retention for the default tier; cited from
   `config/regulated.json` where present.
 - **Retention max (days)** — longest tier's evidence retention; FINRA-aligned solutions use
@@ -65,7 +65,7 @@ by `python scripts/validate_data_classification.py`.
 Treat every entry above as a starting point. Before any production rollout:
 
 1. Map each evidence artifact to the firm's information classification scheme.
-2. Confirm tenant residency (commercial, GCC, GCC High, DoD, or EU Data Boundary) supports
+2. Confirm tenant residency (commercial or EU Data Boundary) supports
    the workloads referenced by the solution.
 3. Align retention with the firm's records retention schedule and the relevant regulator's
    expectations (for example, FINRA Rule 4511 and SEC Rule 17a-4 for broker-dealers).
