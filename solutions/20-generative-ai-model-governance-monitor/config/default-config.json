@@ -89,7 +89,7 @@
         "modelName": "Azure OpenAI deployment registered in Microsoft Foundry",
         "modelVersion": "deployment-version-or-model-id",
         "deploymentType": "foundry-direct-model",
-        "regionOrCloud": "Azure region or Azure Government region",
+        "regionOrCloud": "Azure region",
         "lifecycleStatus": "ga-or-preview-per-deployment",
         "owner": "gmg-foundry-owner@example.com (sample value)",
         "materialityTier": "high",

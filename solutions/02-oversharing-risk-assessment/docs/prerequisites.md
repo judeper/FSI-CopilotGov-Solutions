@@ -3,8 +3,8 @@
 ## Platform and Licensing
 
 - SharePoint Advanced Management feature entitlement requires an eligible Microsoft 365
-  or Office 365 base subscription (such as Microsoft 365 E1, E3, E5, or A5; Office 365
-  E3, E5, or A5; or Microsoft 365 GCC, GCC High, or DoD) plus at least one of the
+  or Office 365 base subscription (such as Microsoft 365 E1, E3, E5, or A5; or Office 365
+  E3 or E5) plus at least one of the
   following: a Microsoft 365 Copilot license assigned to at least one user in the
   organization, or the SharePoint Advanced Management Plan 1 add-on (requires a
   SharePoint K, P1, or P2 subscription). Note that some features — such as restricted
