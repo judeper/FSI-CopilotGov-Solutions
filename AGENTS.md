@@ -49,7 +49,7 @@ FSI-CopilotGov-Solutions/
 |-- docs/                     # Source documentation for the public site
 |-- data/                     # Machine-readable control, solution, and evidence metadata
 |-- scripts/                  # Build, validation, shared modules, and deployment utilities
-|-- solutions/                # 23 Copilot governance solution folders
+|-- solutions/                # Twenty-three Copilot governance solution folders
 |-- templates/                # Policy templates, dashboard feed schema, and regulatory mapping assets
 |-- site-docs/                # Generated MkDocs input built from docs/ and solution READMEs
 ```
