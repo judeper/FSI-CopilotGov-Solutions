@@ -8,7 +8,7 @@ Confirm licensing, roles, PowerShell modules, and Graph permissions described in
 
 - Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
 - Run the operational validation workflow aligned to `Check-AuditLogCompleteness`.
-- Confirm that `CopilotInteraction` and supporting workload events such as `FileAccessed` appear in scope; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
+- Confirm that `CopilotInteraction` (interactions with a Microsoft-developed Copilot application) and supporting workload events such as `FileAccessed` appear in scope; include `ConnectedAIAppInteraction` (a custom-built Copilot or third-party AI application deployed and registered within your organization) or `AIAppInteraction` (a third-party AI application that isn't deployed within your organization) only when those AI applications are in scope.
 - Allow for audit record availability to vary; Microsoft doesn't guarantee a specific return time, core services typically appear within 60-90 minutes, and other services can take longer.
 
 ## 3. Generate solution manifests
