@@ -1,0 +1,148 @@
+name: Health Check
+
+# Pings the published docs-site and raw artifacts every 30 minutes and on demand.
+# Opens a GitHub issue on failure so problems are visible without depending on
+# a developer being online.  Ported from FSI-AgentGov-Solutions health-check.yml
+# and re-fit to FSI-CopilotGov-Solutions (array solutions.json, copilot domain).
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve latest release tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Auto-derive LATEST_TAG from the GitHub Releases API so the probe
+          # always targets the most recently published release without a manual
+          # workflow edit after every tag.
+          tag=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name 2>/dev/null || echo "")
+          if [ -z "$tag" ] || [ "$tag" = "null" ]; then
+            echo "::error::No published release found for ${{ github.repository }}. Tag the first release before this workflow can run."
+            exit 1
+          fi
+          echo "Resolved LATEST_TAG=$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Probe published surfaces
+        id: probe
+        env:
+          LATEST_TAG: ${{ steps.tag.outputs.tag }}
+        shell: bash
+        run: |
+          set -u
+          fail=0
+          declare -a errors
+
+          check_url() {
+            local label="$1" url="$2" expect="$3"
+            local code
+            code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 "$url" || echo "000")
+            if [ "$code" != "$expect" ]; then
+              errors+=("$label expected $expect got $code -- $url")
+              fail=1
+            fi
+            echo "$label  $code  $url"
+          }
+
+          # Published docs-site surfaces
+          check_url "site-home"        "https://judeper.github.io/FSI-CopilotGov-Solutions/" 200
+          check_url "site-catalog"     "https://judeper.github.io/FSI-CopilotGov-Solutions/solutions/" 200
+          check_url "site-detail"      "https://judeper.github.io/FSI-CopilotGov-Solutions/solutions/01-copilot-readiness-scanner/" 200
+          check_url "site-reference"   "https://judeper.github.io/FSI-CopilotGov-Solutions/reference/control-coverage/" 200
+
+          # Raw artifact from the latest tagged release
+          check_url "raw-solutions"    "https://raw.githubusercontent.com/judeper/FSI-CopilotGov-Solutions/${LATEST_TAG}/solutions.json" 200
+
+          # Validate solutions.json shape from the release tag
+          if curl -sS --max-time 20 \
+              "https://raw.githubusercontent.com/judeper/FSI-CopilotGov-Solutions/${LATEST_TAG}/solutions.json" \
+              -o catalog.json; then
+
+            count=$(python3 -c "
+import json, sys
+d = json.load(open('catalog.json'))
+sols = d.get('solutions', [])
+if not isinstance(sols, list):
+    print('ERROR: solutions is not an array', file=sys.stderr)
+    sys.exit(1)
+print(len(sols))
+" 2>&1) || { errors+=("solutions.json: 'solutions' field is not an array"); fail=1; count=""; }
+
+            # Catalog is additive — fail only on regression below the floor.
+            # Bump MIN_SOLUTIONS only when a release intentionally removes solutions.
+            MIN_SOLUTIONS=23
+            if [ -n "$count" ] && echo "$count" | grep -qE '^[0-9]+$'; then
+              if [ "$count" -lt "$MIN_SOLUTIONS" ]; then
+                errors+=("solutions.json count below floor: got $count, expected >= $MIN_SOLUTIONS (catalog regression)")
+                fail=1
+              fi
+            fi
+
+            schema=$(python3 -c "import json; print(json.load(open('catalog.json')).get('schemaVersion',''))")
+            if [ -z "$schema" ]; then
+              errors+=("solutions.json missing schemaVersion")
+              fail=1
+            fi
+
+            # Verify every entry has the required fields (id, name, version).
+            missing=$(python3 -c "
+import json
+d = json.load(open('catalog.json'))
+bad = [s.get('id','<no-id>') for s in d.get('solutions', [])
+       if not (s.get('id') and s.get('name') and s.get('version'))]
+print(len(bad))
+if bad:
+    print('  missing fields:', bad)
+")
+            missing_count=$(echo "$missing" | head -1)
+            if [ "$missing_count" != "0" ]; then
+              errors+=("solutions.json: $missing_count entries missing required fields (id/name/version)")
+              fail=1
+            fi
+          else
+            errors+=("solutions.json fetch from release tag failed")
+            fail=1
+          fi
+
+          {
+            echo "fail=$fail"
+            echo "errors<<EOF"
+            for e in "${errors[@]:-}"; do echo "- $e"; done
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open or update issue on failure
+        if: steps.probe.outputs.fail == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ERRORS: ${{ steps.probe.outputs.errors }}
+        run: |
+          set -e
+          title="Health check failure: published artifacts not healthy"
+          body=$'Automated probe detected failures:\n\n'"$ERRORS"$'\n\nRun: '"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          existing=$(gh issue list -R "${{ github.repository }}" \
+            --search "$title in:title is:open" \
+            --json number --jq '.[0].number' || echo "")
+
+          if [ -n "$existing" ] && [ "$existing" != "null" ]; then
+            gh issue comment "$existing" -R "${{ github.repository }}" --body "$body"
+          else
+            gh issue create -R "${{ github.repository }}" \
+              --title "$title" \
+              --body "$body" \
+              --label bug
+          fi

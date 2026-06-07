@@ -10,11 +10,13 @@ on:
       - 'solutions/**'
       - 'README.md'
       - 'AGENTS.md'
+      - '.github/copilot-instructions.md'
       - 'scripts/validate_solutions_json.py'
       - 'scripts/build_solutions_json.py'
       - 'scripts/build_solutions_graph.py'
       - 'scripts/validate_solutions_graph.py'
       - 'scripts/verify_readme_counts.py'
+      - 'scripts/sync-agent-md-versions.py'
       - 'scripts/solutions-graph.schema.json'
       - '.github/workflows/validate-solutions-json.yml'
   push:
@@ -27,12 +29,14 @@ on:
       - 'solutions/**'
       - 'README.md'
       - 'AGENTS.md'
-      - 'scripts/validate_solutions_json.py'
-      - 'scripts/build_solutions_json.py'
-      - 'scripts/build_solutions_graph.py'
-      - 'scripts/validate_solutions_graph.py'
-      - 'scripts/verify_readme_counts.py'
-      - 'scripts/solutions-graph.schema.json'
+     - '.github/copilot-instructions.md'
+     - 'scripts/validate_solutions_json.py'
+     - 'scripts/build_solutions_json.py'
+     - 'scripts/build_solutions_graph.py'
+     - 'scripts/validate_solutions_graph.py'
+     - 'scripts/verify_readme_counts.py'
+     - 'scripts/sync-agent-md-versions.py'
+     - 'scripts/solutions-graph.schema.json'
 
 jobs:
   validate:
@@ -66,4 +70,6 @@ jobs:
         run: python scripts/validate_solutions_graph.py
       - name: Verify README/AGENTS counts
         run: python scripts/verify_readme_counts.py
+      - name: Inventory-drift gate (AGENTS.md catalog vs solutions.json)
+        run: python scripts/sync-agent-md-versions.py --check
 
