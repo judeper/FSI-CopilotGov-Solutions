@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-06-06T16:28:08Z",
+  "generatedAt": "2026-06-07T00:38:41Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -148,7 +148,7 @@
       "id": "07-conditional-access-automation",
       "name": "Conditional Access Policy Automation for Copilot",
       "tier": 2,
-      "version": "0.2.3",
+      "version": "0.2.4",
       "domain": "security-compliance",
       "controlCoverage": [
         "2.3",
