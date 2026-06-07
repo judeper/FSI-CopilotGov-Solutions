@@ -100,7 +100,13 @@ else {
 function Invoke-GraphWithRetry {
     <#
     .SYNOPSIS
-    Wraps Invoke-CopilotGovGraphRequest with retry and exponential backoff for throttled (429) responses.
+    Wraps Invoke-CopilotGovGraphRequest with retry and exponential backoff for transient
+    Microsoft Graph responses: 429 (throttling), 503 (service unavailable), and 423 (locked).
+
+    .DESCRIPTION
+    The driveItem extractSensitivityLabels action used by this scanner can return HTTP 423 Locked
+    when the target file is being used by another process; this is a transient condition that should
+    be retried. See https://learn.microsoft.com/graph/api/driveitem-extractsensitivitylabels.
     #>
     [CmdletBinding()]
     param(
@@ -123,13 +129,13 @@ function Invoke-GraphWithRetry {
         }
         catch {
             $attempt++
-            $is429 = $_.Exception.Message -match '429' -or
+            $statusCode = if ($null -ne $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 }
+            $isTransient = $_.Exception.Message -match '\b(423|429|503)\b' -or
                      $_.Exception.Message -match 'throttl' -or
-                     ($null -ne $_.Exception.Response -and
-                      [int]$_.Exception.Response.StatusCode -eq 429)
-            if (-not $is429 -or $attempt -gt $MaxRetries) { throw }
+                     $statusCode -in @(423, 429, 503)
+            if (-not $isTransient -or $attempt -gt $MaxRetries) { throw }
             $delay = if ($attempt -le $BackoffSeconds.Count) { $BackoffSeconds[$attempt - 1] } else { $BackoffSeconds[-1] }
-            Write-Warning "Graph API throttled (attempt $attempt/$MaxRetries). Retrying in ${delay}s..."
+            Write-Warning "Graph API transient error (HTTP $statusCode, attempt $attempt/$MaxRetries). Retrying in ${delay}s..."
             Start-Sleep -Seconds $delay
         }
     }
