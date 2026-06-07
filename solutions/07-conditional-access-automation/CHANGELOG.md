@@ -4,6 +4,12 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog, and this repository uses semantic versioning for solution content.
 
+## [v0.2.4] - 2026-06-06
+
+### Fixed
+
+- Replaced deprecated `MSAL.PS` module guidance in `docs/prerequisites.md` with the maintained `Az.Accounts` module and a note that `MSAL.PS` is archived/unmaintained. The Microsoft Graph PowerShell SDK (`Connect-MgGraph`, already used by the solution scripts) remains the recommended default for token-based access. Source: Microsoft Graph PowerShell SDK overview (https://learn.microsoft.com/powershell/microsoftgraph/overview) and the archived MSAL.PS repository (https://github.com/AzureAD/MSAL.PS).
+
 ## [v0.2.3] - 2026-06-05
 
 ### Fixed

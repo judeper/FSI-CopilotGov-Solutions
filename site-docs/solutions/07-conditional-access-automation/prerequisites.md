@@ -20,13 +20,13 @@ Complete `05-dlp-policy-governance` before deploying this solution. Conditional 
 
 - PowerShell 7.0 or later.
 - `Microsoft.Graph` for Graph authentication and Conditional Access operations.
-- `MSAL.PS` or `Az.Accounts` if your automation standard uses token-based access outside the Graph SDK.
+- `Az.Accounts` only if your automation standard requires token-based access outside the Graph SDK. The community `MSAL.PS` module is deprecated and archived (no longer maintained); use the Microsoft Graph PowerShell SDK or `Az.Accounts` instead.
 
 Example installation commands:
 
 ```powershell
 Install-Module Microsoft.Graph -Scope CurrentUser
-Install-Module MSAL.PS -Scope CurrentUser
+Install-Module Az.Accounts -Scope CurrentUser
 ```
 
 ## Graph API permissions
