@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-06-07T00:53:43Z",
+  "generatedAt": "2026-06-07T00:57:28Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -169,7 +169,7 @@
       "id": "08-license-governance-roi",
       "name": "License Governance and ROI Tracker",
       "tier": 2,
-      "version": "0.1.4",
+      "version": "0.1.3",
       "domain": "operations-analytics",
       "controlCoverage": [
         "1.9",
