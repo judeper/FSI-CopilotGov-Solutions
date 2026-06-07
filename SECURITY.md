@@ -26,7 +26,8 @@ If you believe you have discovered a security issue in the documentation,
 scripts, or configuration templates in this repository, please report it
 privately rather than opening a public issue.
 
-- Email: `security@example.com` <!-- TODO: replace with the operating org's security contact -->
+- Use [GitHub's private vulnerability reporting](https://github.com/judeper/FSI-CopilotGov-Solutions/security/advisories/new)
+  (Repository → **Security** tab → **Report a vulnerability**).
 - Please include: the file path, the commit SHA, a description of the issue,
   and (where applicable) a redacted reproduction.
 
