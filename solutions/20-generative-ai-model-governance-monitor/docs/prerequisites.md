@@ -57,6 +57,6 @@ Operators are recommended to gather the following before completing tier-specifi
 
 ## Microsoft Learn References
 
-- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/ai-foundry/what-is-azure-ai-foundry) — Microsoft Learn, last updated 2026-04-29; states that operators need an Azure account and then sign in to Microsoft Foundry.
+- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry) — Microsoft Learn, last updated 2026-04-29; states that operators need an Azure account and then sign in to Microsoft Foundry.
 - [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; lists Azure subscription and Content Safety resource prerequisites.
 - [Microsoft Entra built-in roles](https://learn.microsoft.com/entra/identity/role-based-access-control/permissions-reference) — Microsoft Learn, last updated 2026-04-29; documents AI Administrator and AI Reader roles for Microsoft 365 Copilot and AI-related enterprise services.

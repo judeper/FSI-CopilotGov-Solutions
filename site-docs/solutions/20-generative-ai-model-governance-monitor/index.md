@@ -101,7 +101,7 @@ GMG does not on its own satisfy any regulatory obligation. Use of this solution 
 
 ## Microsoft Learn References
 
-- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/ai-foundry/what-is-azure-ai-foundry) — Microsoft Learn, last updated 2026-04-29; notes that Foundry provides access to Microsoft, OpenAI, Anthropic, Mistral, xAI, Meta, DeepSeek, Hugging Face, and other models.
+- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry) — Microsoft Learn, last updated 2026-04-29; notes that Foundry provides access to Microsoft, OpenAI, Anthropic, Mistral, xAI, Meta, DeepSeek, Hugging Face, and other models.
 - [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; describes Azure AI Content Safety and its prompt protection capabilities.
 
 ## Roadmap
