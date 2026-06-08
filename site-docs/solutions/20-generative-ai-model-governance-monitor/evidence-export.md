@@ -111,7 +111,7 @@ Each artifact is written as a JSON file with a SHA-256 companion file (`.sha256`
 
 ## Microsoft Learn References
 
-- [Foundry Models sold directly by Azure](https://learn.microsoft.com/azure/ai-foundry/model-inference/concepts/models) — Microsoft Learn, last updated 2026-04-17; states that models sold directly by Azure include Azure OpenAI models and selected models from top providers.
+- [Foundry Models sold directly by Azure](https://learn.microsoft.com/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure) — Microsoft Learn, last updated 2026-04-17; states that models sold directly by Azure include Azure OpenAI models and selected models from top providers.
 - [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; documents Content Safety APIs for moderation, Prompt Shields, groundedness detection, and protected-material detection.
 
 ## Examiner Notes

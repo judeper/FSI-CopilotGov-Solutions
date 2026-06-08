@@ -98,6 +98,6 @@ GMG is designed to support compliance with SR 11-7 / OCC Bulletin 2011-12 model-
 
 ## Microsoft Learn References
 
-- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/ai-foundry/what-is-azure-ai-foundry) — Microsoft Learn, last updated 2026-04-29; describes Foundry as unifying agents, models, tools, tracing, monitoring, evaluations, RBAC, networking, and policies.
+- [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry) — Microsoft Learn, last updated 2026-04-29; describes Foundry as unifying agents, models, tools, tracing, monitoring, evaluations, RBAC, networking, and policies.
 - [Use Microsoft Purview to manage data security and compliance for Microsoft 365 Copilot and Microsoft 365 Copilot Chat](https://learn.microsoft.com/purview/ai-m365-copilot) — Microsoft Learn, last updated 2026-05-01; documents unified audit log capture and Purview data classification for prompts and responses.
 - [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; describes content safety, Prompt Shields, groundedness detection, and protected-material detection capabilities.
