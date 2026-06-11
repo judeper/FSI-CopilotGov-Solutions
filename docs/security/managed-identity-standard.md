@@ -103,17 +103,36 @@ scheduled. The marker is intentionally a single, greppable string:
 
 ## Audit posture
 
-A future CI check can enforce this standard with a single ripgrep pass:
+Stage 3 of the migration (Issue #294) ships an automated guard so the Stage 1 hardening cannot
+silently regress. The `Audit Managed Identity` workflow
+(`.github/workflows/audit-managed-identity.yml`) runs `scripts/audit-managed-identity.ps1` on
+every pull request and on push to `main`.
+
+The script parses each `.ps1` and `.psm1` file under `scripts/` and `solutions/` with the
+PowerShell AST and inspects parameter declarations whose name denotes a client or app secret. A
+parameter is treated as a plaintext client-secret **site** when its static type is anything other
+than `System.Security.SecureString` — for example `[string]`, `[object]`, or an untyped
+parameter. A site is permitted only when the `IDENTITY-STANDARD: legacy-client-secret` marker
+appears within a few lines above the declaration; any unmarked site fails the build (exit 1).
+SecureString-typed parameters are the approved pattern and are skipped, so the check is green on
+a clean tree.
+
+The audit is deliberately scoped to *parameter sites* rather than a raw text match. A quick
+manual grep is still useful for a one-off sweep:
 
 ```powershell
 rg -n "ConvertTo-SecureString.*AsPlainText|ClientSecretCredential|client_secret|\[string\]\$ClientSecret" scripts solutions |
     rg -v "IDENTITY-STANDARD: legacy-client-secret"
 ```
 
-Any line that surfaces is either:
+but that heuristic also surfaces the legitimate `client_secret` token-request body key inside
+`scripts/common/GraphAuth.psm1`, which is why the CI check uses AST-based parameter inspection
+instead. Any line the manual grep surfaces is either a new client-secret site that has not been
+marked (review-blocking) or an existing legacy site whose TODO has not been linked to an issue
+(tracking gap).
 
-- a new client-secret site that has not been marked (review-blocking), or
-- an existing legacy site whose TODO has not been linked to an issue (tracking gap).
-
-When the first managed-identity-based script lands, this document should be updated to reference
-the concrete helper module and the matching Pester test that verifies the preference order.
+**Stage 2 (tenant-bound, blocked).** Replacing the client-secret code paths in
+`scripts/common/GraphAuth.psm1` and the solution 02 / 18 scripts with managed identity requires a
+live tenant to validate, so it is tracked separately under tenant binding. When that work lands,
+this document should be updated to reference the concrete helper module and the matching Pester
+test that verifies the preference order.
