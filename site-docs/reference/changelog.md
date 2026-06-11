@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-06-11
+
 ### Added
 - **Tier metadata** across the catalog: `tiers_supported`, `tier_recommended`, `tier_maturity`, `maturity` per solution in `data/solution-catalog.json`; surfaced through `solutions.json` (schema 0.2.0) and `solutions-graph.json` (schema 1.1.0).
 - **Coverage-state envelope** in `data/control-coverage.json` (schemaVersion 1.1.0): each control gains `solution_coverage[]` with `coverageState` ∈ {`documentation-only`, `scripted-sample`, `evidence-export-ready`}. `evidence-export-ready` requires `Export-Evidence.ps1` to exist for the solution.

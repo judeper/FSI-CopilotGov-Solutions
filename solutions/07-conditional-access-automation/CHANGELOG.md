@@ -4,6 +4,18 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog, and this repository uses semantic versioning for solution content.
 
+## [v0.2.5] - 2026-06-11
+
+### Verified
+
+- Re-verified the Microsoft 365 Copilot Conditional Access targeting model against current Microsoft Learn (issue #218). The Microsoft Graph `Office365` Conditional Access app-suite value still lists **Enterprise Copilot Platform** (Microsoft 365 Copilot), confirming the solution's primary target is accurate and citable. Source: https://learn.microsoft.com/en-us/entra/identity/conditional-access/reference-office-365-application-contents.
+- Confirmed the unverifiable individual first-party application ID `fb8d773d-7ef8-4ec0-a117-179f88add510` remains absent from all solution configuration, documentation, scripts, and tests (replaced by the `Office365` app-suite target in v0.2.1). The application ID is still not published on Microsoft Learn; tenant Microsoft Graph service-principal verification stays deferred until a target tenant is available.
+
+### Added
+
+- `## Microsoft Learn References` section in `README.md` citing the live Microsoft Learn pages that support the Conditional Access targeting guidance.
+- Pester regression guard asserting the unverifiable first-party application ID does not reappear in any tier configuration `copilotAppIds`, and that the `Office365` app-suite target is retained.
+
 ## [v0.2.4] - 2026-06-06
 
 ### Fixed
