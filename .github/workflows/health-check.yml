@@ -71,15 +71,7 @@ jobs:
               "https://raw.githubusercontent.com/judeper/FSI-CopilotGov-Solutions/${LATEST_TAG}/solutions.json" \
               -o catalog.json; then
 
-            count=$(python3 -c "
-import json, sys
-d = json.load(open('catalog.json'))
-sols = d.get('solutions', [])
-if not isinstance(sols, list):
-    print('ERROR: solutions is not an array', file=sys.stderr)
-    sys.exit(1)
-print(len(sols))
-" 2>&1) || { errors+=("solutions.json: 'solutions' field is not an array"); fail=1; count=""; }
+            count=$(python3 -c "import json,sys; s=json.load(open('catalog.json')).get('solutions',[]); sys.exit(1) if not isinstance(s,list) else print(len(s))" 2>&1) || { errors+=("solutions.json: 'solutions' field is not an array"); fail=1; count=""; }
 
             # Catalog is additive — fail only on regression below the floor.
             # Bump MIN_SOLUTIONS only when a release intentionally removes solutions.
@@ -98,15 +90,7 @@ print(len(sols))
             fi
 
             # Verify every entry has the required fields (id, name, version).
-            missing=$(python3 -c "
-import json
-d = json.load(open('catalog.json'))
-bad = [s.get('id','<no-id>') for s in d.get('solutions', [])
-       if not (s.get('id') and s.get('name') and s.get('version'))]
-print(len(bad))
-if bad:
-    print('  missing fields:', bad)
-")
+            missing=$(python3 -c "import json; d=json.load(open('catalog.json')); print(len([s for s in d.get('solutions',[]) if not (s.get('id') and s.get('name') and s.get('version'))]))")
             missing_count=$(echo "$missing" | head -1)
             if [ "$missing_count" != "0" ]; then
               errors+=("solutions.json: $missing_count entries missing required fields (id/name/version)")
