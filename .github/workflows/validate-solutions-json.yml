@@ -29,14 +29,14 @@ on:
       - 'solutions/**'
       - 'README.md'
       - 'AGENTS.md'
-     - '.github/copilot-instructions.md'
-     - 'scripts/validate_solutions_json.py'
-     - 'scripts/build_solutions_json.py'
-     - 'scripts/build_solutions_graph.py'
-     - 'scripts/validate_solutions_graph.py'
-     - 'scripts/verify_readme_counts.py'
-     - 'scripts/sync-agent-md-versions.py'
-     - 'scripts/solutions-graph.schema.json'
+      - '.github/copilot-instructions.md'
+      - 'scripts/validate_solutions_json.py'
+      - 'scripts/build_solutions_json.py'
+      - 'scripts/build_solutions_graph.py'
+      - 'scripts/validate_solutions_graph.py'
+      - 'scripts/verify_readme_counts.py'
+      - 'scripts/sync-agent-md-versions.py'
+      - 'scripts/solutions-graph.schema.json'
 
 jobs:
   validate:
