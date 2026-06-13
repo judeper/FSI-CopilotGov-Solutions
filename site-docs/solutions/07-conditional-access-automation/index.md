@@ -1,6 +1,6 @@
 # Conditional Access Policy Automation for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** B
+> **Status:** Documentation-first scaffold | **Version:** v0.2.5 | **Priority:** P1 | **Track:** B
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -146,3 +146,10 @@ This solution supports compliance with OCC 2011-12, FINRA 3110, and DORA Article
 - Conditional Access policy changes can take up to two hours to be effective (up to one day in some cases). Enforcement applies at the next token issuance after the policy update propagates.
 - Named-location strategies still require tenant-specific design for branch offices, vendors, and break-glass accounts.
 - This solution documents Graph API deployment commands, but production execution still requires administrator review and tenant connectivity.
+
+## Microsoft Learn References
+
+- [Apps included in Conditional Access Office 365 app suite](https://learn.microsoft.com/en-us/entra/identity/conditional-access/reference-office-365-application-contents) — Microsoft Learn; lists **Enterprise Copilot Platform** (Microsoft 365 Copilot) among the applications covered by the Microsoft Graph `Office365` Conditional Access app-suite value. Verified 2026-06-11.
+- [Microsoft 365 Copilot architecture and how it works](https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-architecture) — Microsoft Learn; documents that Microsoft 365 Copilot honors Conditional Access policies and multifactor authentication. Verified 2026-06-11.
+
+> The individual first-party application ID historically associated with the Enterprise Copilot Platform is not published on Microsoft Learn. This solution targets the `Office365` app suite — which Microsoft Learn confirms includes Enterprise Copilot Platform — and reserves individual app IDs for tenant-verified use only. Confirm tenant-specific service-principal `appId` values with Microsoft Graph before adding them as Conditional Access targets.

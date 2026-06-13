@@ -415,7 +415,7 @@
     "domain": "security-compliance",
     "priority": "P1",
     "phase": 2,
-    "version": "v0.2.4",
+    "version": "v0.2.5",
     "solution_type": [
       "PowerShell",
       "Power Automate"

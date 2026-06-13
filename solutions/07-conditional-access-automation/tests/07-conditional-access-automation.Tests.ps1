@@ -54,6 +54,30 @@ Describe 'Conditional Access Policy Automation for Copilot' {
         @($config.defaults.copilotAppIds).Count | Should -Be 1
     }
 
+    It 'does not reintroduce the unverifiable Copilot first-party app ID (issue #218 regression guard)' {
+        $unverifiableAppId = 'fb8d773d-7ef8-4ec0-a117-179f88add510'
+        foreach ($configPath in @(
+            $script:defaultConfigPath,
+            $script:baselineConfigPath,
+            (Join-Path $solutionRoot 'config\recommended.json'),
+            $script:regulatedConfigPath
+        )) {
+            $raw = Get-Content -Path $configPath -Raw
+            $raw | Should -Not -Match $unverifiableAppId -Because 'the Enterprise Copilot Platform app ID is not published on Microsoft Learn; target the Office365 app suite instead (issue #218)'
+        }
+    }
+
+    It 'retains the Office365 app-suite target across baseline, recommended, and regulated tiers' {
+        foreach ($configPath in @(
+            $script:baselineConfigPath,
+            (Join-Path $solutionRoot 'config\recommended.json'),
+            $script:regulatedConfigPath
+        )) {
+            $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json -AsHashtable
+            @($config.copilotAppIds) | Should -Contain 'Office365'
+        }
+    }
+
     It 'default-config.json requires MFA for all risk tiers' {
         $config = Get-Content -Path $script:defaultConfigPath -Raw | ConvertFrom-Json -AsHashtable
         foreach ($tier in @('low', 'medium', 'high')) {
