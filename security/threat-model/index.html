@@ -1,0 +1,1742 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services">
+      
+      
+      
+        <link rel="canonical" href="https://judeper.github.io/FSI-CopilotGov-Solutions/security/threat-model/">
+      
+      
+        <link rel="prev" href="../managed-identity-standard/">
+      
+      
+        <link rel="next" href="../../reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Threat Model - FSI Copilot Governance Solutions</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#repository-threat-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-header__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FSI Copilot Governance Solutions
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Threat Model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operational-handbook/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../solutions/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Solutions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../managed-identity-standard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Disclaimer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-nav__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    FSI Copilot Governance Solutions
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../getting-started/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operational-handbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../solutions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solutions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../managed-identity-standard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed Identity Standard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Threat Model
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Threat Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-scope-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Scope Assets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-Scope Assets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Threats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spoofing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spoofing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tampering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tampering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repudiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repudiation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information Disclosure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#denial-of-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Denial of Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elevation-of-privilege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elevation of Privilege
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations-cross-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mitigations Cross-Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator-follow-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator Follow-Up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revision-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revision History
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disclaimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-scope-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Scope Assets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-Scope Assets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Threats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spoofing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spoofing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tampering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tampering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repudiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repudiation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information Disclosure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#denial-of-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Denial of Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elevation-of-privilege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elevation of Privilege
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations-cross-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mitigations Cross-Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator-follow-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator Follow-Up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revision-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revision History
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../managed-identity-standard/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Security
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="repository-threat-model">Repository Threat Model<a class="headerlink" href="#repository-threat-model" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Status:</strong> v1.0 | <strong>Scope:</strong> FSI-CopilotGov-Solutions repository (documentation-first scaffolds) | <strong>Audience:</strong> Adopters, security reviewers</p>
+</blockquote>
+<p>This threat model uses the STRIDE framework (Spoofing, Tampering, Repudiation,
+Information Disclosure, Denial of Service, Elevation of Privilege) at a
+lightweight, repository level. It is intentionally scoped to the artifacts and
+processes that this repository produces and ships. It is <strong>not</strong> a threat model
+for any adopter's Microsoft 365 tenant or for the live Microsoft Graph,
+Purview, or Power Platform services that downstream solutions integrate with.</p>
+<h2 id="system-overview">System Overview<a class="headerlink" href="#system-overview" title="Permanent link">&para;</a></h2>
+<p>FSI-CopilotGov-Solutions is a documentation-first repository: it publishes
+control mappings, regulatory traceability, deployment guidance, and PowerShell
+and Python sample scripts that operate on representative sample data. The
+repository feeds an MkDocs site built by GitHub Actions and is consumed by
+adopters who fork or copy it into their own environments and adapt the
+scaffolds to their tenants. The trust boundaries that matter for this model
+are:</p>
+<ul>
+<li><strong>Repository content boundary</strong> — markdown, JSON/YAML metadata, and sample
+  scripts in source control. Trust is established through pull request review,
+  CODEOWNERS, branch protection, and the validators in <code>scripts/</code>.</li>
+<li><strong>CI / build pipeline boundary</strong> — GitHub Actions runners that execute
+  validators, build the documentation site, and run security workflows
+  (<code>secret-scan.yml</code>, <code>codeql.yml</code>, <code>dependency-review.yml</code>). Runners pull
+  third-party dependencies declared in <code>requirements-docs.txt</code> and Pester
+  modules referenced by tests.</li>
+<li><strong>Downstream tenant boundary</strong> — adopter-controlled Microsoft 365 tenants
+  where forked copies of these scaffolds are eventually adapted to call live
+  Microsoft services. This repository never crosses that boundary; tenant
+  identity, secrets, and data live entirely on the adopter side.</li>
+</ul>
+<h2 id="in-scope-assets">In-Scope Assets<a class="headerlink" href="#in-scope-assets" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Documentation under <code>docs/</code>, <code>site-docs/</code>, and per-solution <code>README.md</code>,
+  <code>architecture.md</code>, <code>deployment-guide.md</code>, <code>evidence-export.md</code>, etc.</li>
+<li>Sample PowerShell and Python scripts under <code>scripts/</code> and per-solution
+  <code>scripts/</code> folders that emit representative sample data.</li>
+<li>Sample evidence-export packages and the schemas under <code>templates/</code> and
+  <code>data/evidence-schema*</code>.</li>
+<li>Control-coverage metadata and control-mapping data under <code>data/</code>
+  (<code>solution-catalog.json</code>, <code>control-coverage*.json</code>, regulatory mapping
+  assets).</li>
+<li>The build pipeline: GitHub Actions workflows, <code>mkdocs.yml</code>, the validators
+  in <code>scripts/validate-*.py</code> and <code>scripts/validate-evidence.ps1</code>, and
+  <code>FRAMEWORK-VERSION</code> plus <code>scripts/traceability.py</code>.</li>
+</ul>
+<h2 id="out-of-scope-assets">Out-of-Scope Assets<a class="headerlink" href="#out-of-scope-assets" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Live tenant data.</strong> This repository never touches Microsoft Graph,
+  Purview, Power Platform, or any other live tenant data. Any threats to
+  live data belong in the adopter's own tenant threat model.</li>
+<li><strong>Power Automate runtime artifacts.</strong> Exported flow ZIPs and solution
+  packages are intentionally not committed; the repository documents how to
+  build flows rather than shipping runnable cloud artifacts.</li>
+<li><strong>Adopter-side identity configuration.</strong> Conditional Access policies,
+  managed identities, app registrations, and secret stores are described in
+  guidance documents but are configured and protected by the adopter.</li>
+</ul>
+<h2 id="threats">Threats<a class="headerlink" href="#threats" title="Permanent link">&para;</a></h2>
+<p>For each threat: an ID, a one-line description, the affected asset(s), a
+likelihood and impact rating (low / med / high), and a mitigation summary
+covering both the controls already in this repository and the recommended
+follow-ups for adopters and maintainers.</p>
+<h3 id="spoofing">Spoofing<a class="headerlink" href="#spoofing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Affected asset</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation (current → recommended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-001</td>
+<td>A contributor or external actor opens a pull request that impersonates a maintainer or claims false review approvals to land malicious changes.</td>
+<td>Repository content, build pipeline</td>
+<td>Low</td>
+<td>High</td>
+<td>Current: branch protection, CODEOWNERS review, GitHub commit signature surface, <code>SECURITY.md</code> reporting channel. Recommended: require signed commits on protected branches and enforce two-maintainer review for changes to <code>scripts/</code> and <code>.github/workflows/</code>.</td>
+</tr>
+<tr>
+<td>T-002</td>
+<td>An adopter installs a typosquatted package with a name similar to a dependency in <code>requirements-docs.txt</code> or a Pester module, believing it to be the legitimate one.</td>
+<td>Sample scripts, downstream adopter environments</td>
+<td>Low</td>
+<td>Med</td>
+<td>Current: pinned dependency names in <code>requirements-docs.txt</code>, <code>dependency-review.yml</code>. Recommended: pin hashes (pip <code>--require-hashes</code>) and document the exact PowerShell Gallery module IDs, owners, and minimum versions in each solution's <code>prerequisites.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tampering">Tampering<a class="headerlink" href="#tampering" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Affected asset</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation (current → recommended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-003</td>
+<td>A malicious or compromised upstream dependency in <code>requirements-docs.txt</code> or a Pester module pulled at CI time injects code into the build or into a published sample script.</td>
+<td>Build pipeline, sample scripts</td>
+<td>Low</td>
+<td>High</td>
+<td>Current: <code>dependency-review.yml</code>, <code>codeql.yml</code>, pinned dependency versions, validators run on every PR. Recommended: enable Dependabot version updates, pin transitive hashes, and adopt the signed-release workflow tracked under <code>p2-sbom-and-signing</code> so adopters can verify what they downloaded.</td>
+</tr>
+<tr>
+<td>T-004</td>
+<td>An exported evidence-package sample is tampered with in transit between an adopter's CI and the auditor reviewing it (file substitution, modified rows, altered timestamps).</td>
+<td>Evidence-export sample data, downstream adopter pipelines</td>
+<td>Med</td>
+<td>High</td>
+<td>Current: <code>validate-evidence.ps1</code> checks schema and shape; evidence schemas in <code>data/</code> define expected fields. Recommended: adopters should hash-and-sign each evidence package on export, transport over an integrity-checked channel, and verify the signature before submission; the upcoming SBOM / signing work (<code>p2-sbom-and-signing</code>) provides a template.</td>
+</tr>
+<tr>
+<td>T-005</td>
+<td>The framework reference drifts: control mappings in this repo diverge from the upstream FSI-CopilotGov framework because the pin is updated in one place and not the other.</td>
+<td>Control-mapping data, documentation</td>
+<td>Med</td>
+<td>Med</td>
+<td>Current: <code>FRAMEWORK-VERSION</code> is mirrored in <code>scripts/traceability.py</code> (<code>FRAMEWORK_REPO_REF</code>), enforced by <code>validate-documentation.py</code> (rejects unpinned <code>main</code>/<code>master</code> framework links). Recommended: a release-time check that the pin matches a signed framework release tag, plus a scheduled CI job that diffs control IDs between repos and opens an issue on drift.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="repudiation">Repudiation<a class="headerlink" href="#repudiation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Affected asset</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation (current → recommended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-006</td>
+<td>Sample evidence packages are submitted to an auditor as if they were real, regulator-grade evidence, and the submitter later disputes that the data was synthetic.</td>
+<td>Evidence-export sample data</td>
+<td>Med</td>
+<td>High</td>
+<td>Current: every solution <code>README.md</code> carries the documentation-first disclaimer banner, <code>validate-documentation.py</code> enforces the standardized status line and disclaimer, and <code>validate-evidence.ps1</code> flags packages built from sample data. Recommended: stamp every generated sample evidence package with a clearly visible <code>SAMPLE — NOT FOR REGULATORY SUBMISSION</code> watermark and record an unalterable provenance line in the package manifest.</td>
+</tr>
+<tr>
+<td>T-007</td>
+<td>Control-coverage metadata in <code>data/</code> becomes inflated or aspirational relative to the actual behavior of the sample scripts, so the published coverage page misrepresents what the repository does.</td>
+<td>Control-coverage metadata, documentation</td>
+<td>Med</td>
+<td>High</td>
+<td>Current: the <code>p0-control-coverage-honesty</code> workstream and <code>docs/reference/control-coverage-honesty.md</code> document the de-inflation rules; <code>validate-contracts.py</code> cross-checks per-solution metadata; language rules in <code>validate-documentation.py</code> reject overstated claims. Recommended: tie any future coverage uplift to a passing scaffold test that exercises the claimed behavior, even on sample data.</td>
+</tr>
+<tr>
+<td>T-008</td>
+<td>An adopter believes the in-repo scripts already produce production-grade evidence and uses their unmodified output to attest to a control.</td>
+<td>Sample scripts, evidence-export sample data</td>
+<td>Med</td>
+<td>High</td>
+<td>Current: standardized status line "Documentation-first scaffold" enforced on every solution README, repo-wide disclaimer banner, <code>docs/documentation-vs-runnable-assets-guide.md</code> calls out the gap explicitly. Recommended: print a runtime banner from each sample script's entry point that names the synthetic data source and links to the documentation-vs-runnable-assets guide.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="information-disclosure">Information Disclosure<a class="headerlink" href="#information-disclosure" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Affected asset</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation (current → recommended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-009</td>
+<td>An adopter adapts a sample script to call live Microsoft Graph and accidentally commits a real client secret, certificate, or refresh token into a fork (or back into a PR).</td>
+<td>Repository content, downstream adopter environments</td>
+<td>Med</td>
+<td>High</td>
+<td>Current: <code>secret-scan.yml</code> runs on PRs, <code>SECURITY.md</code> documents responsible disclosure, sample scripts use placeholder credentials. Recommended: ship a <code>.gitignore</code>/<code>pre-commit</code> template alongside each solution and document <code>gh secret</code>/Key Vault patterns in <code>getting-started/identity-and-secrets-prep.md</code>; encourage GitHub push protection at the org level.</td>
+</tr>
+<tr>
+<td>T-010</td>
+<td>Sample evidence or sample configuration files inadvertently include realistic-looking PII, internal hostnames, or tenant IDs that could be mistaken for real data.</td>
+<td>Evidence-export sample data, control-mapping data</td>
+<td>Low</td>
+<td>Med</td>
+<td>Current: sample data uses fictional tenant identifiers and naming. Recommended: add a <code>validate-documentation.py</code> check (or a paired check in another validator owned by a different agent) that scans sample data for patterns matching real GUIDs, internal domains, or credit-card / SSN-like sequences.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="denial-of-service">Denial of Service<a class="headerlink" href="#denial-of-service" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Affected asset</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation (current → recommended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-011</td>
+<td>A pull request triggers expensive workflows (long-running CodeQL, repeated docs builds) and exhausts CI minutes for the repository.</td>
+<td>Build pipeline</td>
+<td>Low</td>
+<td>Med</td>
+<td>Current: workflows are scoped to relevant paths and run on pull_request; <code>dependency-review.yml</code> is incremental. Recommended: cap concurrency per branch (<code>concurrency:</code> group) on documentation and security workflows; require maintainer approval to run workflows for first-time external contributors.</td>
+</tr>
+<tr>
+<td>T-012</td>
+<td>A regression in one of the validators (<code>validate-documentation.py</code>, <code>validate-contracts.py</code>, <code>validate-evidence.ps1</code>) blocks every PR and stalls the contribution pipeline.</td>
+<td>Build pipeline</td>
+<td>Med</td>
+<td>Low</td>
+<td>Current: validators are simple and deterministic, with clear error messages; build failures are easy to triage. Recommended: add unit tests for each validator's rule set under <code>tests/</code>, and require validator changes to ship with a corresponding test case.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="elevation-of-privilege">Elevation of Privilege<a class="headerlink" href="#elevation-of-privilege" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Affected asset</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation (current → recommended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-013</td>
+<td>A workflow in <code>.github/workflows/</code> runs with broader <code>GITHUB_TOKEN</code> permissions than needed and a compromised step uses that token to write to the repository or publish releases.</td>
+<td>Build pipeline</td>
+<td>Low</td>
+<td>High</td>
+<td>Current: workflows are scoped to documentation and security checks; CodeQL and secret scanning run with read-only defaults. Recommended: explicitly declare least-privilege <code>permissions:</code> blocks at the top of every workflow, enable OIDC for any future deploy steps instead of long-lived secrets, and review this in the signed-release work tracked by <code>p2-sbom-and-signing</code>.</td>
+</tr>
+<tr>
+<td>T-014</td>
+<td>An adopter follows a deployment guide and grants the resulting service principal or managed identity broader Microsoft Graph or Purview permissions than the scaffold actually requires.</td>
+<td>Downstream adopter environments</td>
+<td>Med</td>
+<td>High</td>
+<td>Current: per-solution <code>prerequisites.md</code> lists required permissions; <code>getting-started/identity-and-secrets-prep.md</code> describes the identity story. Recommended: track a managed-identity standard (companion document <code>docs/security/managed-identity-standard.md</code>, owned by the parallel <code>managed-identity-standard</code> agent) and reference it from every solution's prerequisites page.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations-cross-reference">Mitigations Cross-Reference<a class="headerlink" href="#mitigations-cross-reference" title="Permanent link">&para;</a></h2>
+<p>The following existing repository controls back the mitigations listed above.
+Each entry names the artifact and the threat IDs it addresses.</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Path</th>
+<th>Mitigates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Documentation language and section validator</td>
+<td><code>scripts/validate-documentation.py</code></td>
+<td>T-006, T-007, T-008</td>
+</tr>
+<tr>
+<td>Catalog and contract validator</td>
+<td><code>scripts/validate-contracts.py</code></td>
+<td>T-005, T-007</td>
+</tr>
+<tr>
+<td>Evidence-package shape validator</td>
+<td><code>scripts/validate-evidence.ps1</code></td>
+<td>T-004, T-006</td>
+</tr>
+<tr>
+<td>Secret scanning workflow</td>
+<td><code>.github/workflows/secret-scan.yml</code></td>
+<td>T-009</td>
+</tr>
+<tr>
+<td>CodeQL workflow</td>
+<td><code>.github/workflows/codeql.yml</code></td>
+<td>T-003, T-013</td>
+</tr>
+<tr>
+<td>Dependency review workflow</td>
+<td><code>.github/workflows/dependency-review.yml</code></td>
+<td>T-002, T-003</td>
+</tr>
+<tr>
+<td>Pinned framework reference</td>
+<td><code>FRAMEWORK-VERSION</code> (mirrored in <code>scripts/traceability.py</code>)</td>
+<td>T-005</td>
+</tr>
+<tr>
+<td>Security policy</td>
+<td><code>SECURITY.md</code></td>
+<td>T-001, T-009</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operator-follow-up">Operator Follow-Up<a class="headerlink" href="#operator-follow-up" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Signed releases and SBOM.</strong> Tracked under <code>p2-sbom-and-signing</code>. Once
+  releases are signed and an SBOM is published per release, T-003 and T-004
+  can be downgraded for adopters who verify signatures and consume only
+  signed artifacts.</li>
+<li><strong>Managed identity standard.</strong> Tracked under the companion
+  <code>docs/security/managed-identity-standard.md</code>. Per-solution
+  <code>prerequisites.md</code> should link to it once it lands, supporting T-014.</li>
+<li><strong>Threat-model review cadence.</strong> Re-review this document at least once
+  per semver-minor release of the repository, and additionally whenever a
+  new validator is added, a workflow's <code>permissions:</code> block changes, or the
+  framework pin in <code>FRAMEWORK-VERSION</code> is bumped. Record the review date in
+  the next section's history line.</li>
+</ul>
+<h2 id="revision-history">Revision History<a class="headerlink" href="#revision-history" title="Permanent link">&para;</a></h2>
+<ul>
+<li>v1.0 — Initial repository-level threat model. STRIDE coverage: 14 threats
+  across 6 categories.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../managed-identity-standard/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Managed Identity Standard">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Managed Identity Standard
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Reference">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Reference
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 FSI Copilot Governance Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
