@@ -1,0 +1,36 @@
+name: Audit Managed Identity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**/*.ps1'
+      - 'scripts/**/*.psm1'
+      - 'solutions/**/*.ps1'
+      - 'solutions/**/*.psm1'
+      - 'scripts/audit-managed-identity.ps1'
+      - '.github/workflows/audit-managed-identity.yml'
+  pull_request:
+    paths:
+      - 'scripts/**/*.ps1'
+      - 'scripts/**/*.psm1'
+      - 'solutions/**/*.ps1'
+      - 'solutions/**/*.psm1'
+      - 'scripts/audit-managed-identity.ps1'
+      - '.github/workflows/audit-managed-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Client-secret marker audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run managed-identity audit
+        shell: pwsh
+        run: ./scripts/audit-managed-identity.ps1
