@@ -48,7 +48,7 @@ jobs:
         if: hashFiles('requirements-docs.txt') != ''
         run: |
           cyclonedx-py requirements \
-            -i requirements-docs.txt \
+            requirements-docs.txt \
             -o sbom-python-docs.cdx.json \
             --output-format JSON
 
