@@ -1,6 +1,6 @@
 {
   "schemaVersion": "0.2.0",
-  "generatedAt": "2026-06-07T07:28:50Z",
+  "generatedAt": "2026-06-13T15:28:43Z",
   "solutions": [
     {
       "id": "01-copilot-readiness-scanner",
@@ -158,7 +158,7 @@
       "slug": "07-conditional-access-automation",
       "tier": 2,
       "name": "Conditional Access Policy Automation for Copilot",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "domain": "security-compliance",
       "summary": "Documents Conditional Access patterns for Copilot users and provides a framework for policy drift detection across risk tiers and device states.",
       "repoPath": "solutions/07-conditional-access-automation",
