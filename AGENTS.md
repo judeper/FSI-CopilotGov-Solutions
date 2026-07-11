@@ -57,6 +57,7 @@ FSI-CopilotGov-Solutions/
 ## Validation Commands
 
 ```powershell
+python scripts/test_docs_protection.py
 python scripts/build-docs.py
 python scripts/validate-contracts.py
 python scripts/validate-solutions.py
@@ -67,3 +68,10 @@ python scripts/validate_data_classification.py
 python scripts/verify_readme_counts.py
 pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null) | Out-Null }"
 ```
+
+## Documentation Autonomy Protection
+
+- `.github/branch-protection.json` is the committed source of truth for the proposed `main` protection policy. Changing it does not apply live GitHub settings.
+- `Docs Autonomy Gate` must run on every pull request. It runs the deterministic documentation, contract, solution-index, evidence, and strict MkDocs validators when documentation-impacting paths change; otherwise it returns a successful shim result so non-documentation pull requests cannot deadlock.
+- Keep every context in `required_status_checks.contexts` backed by an unfiltered `pull_request` workflow job with the exact same display name.
+- External network link checks are intentionally non-required because network availability is not deterministic.

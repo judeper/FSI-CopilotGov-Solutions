@@ -11,6 +11,10 @@ This repository provides documentation-first governance solution scaffolds for t
 - Every solution README status line must use the format: `> **Status:** Documentation-first scaffold | **Version:** vX.Y.Z | **Priority:** PX | **Track:** X`
 - Every solution README must keep control mappings, regulatory alignment, and evidence-export details in sync with `data/` metadata files.
 - Run `python scripts/validate-documentation.py` to check for forbidden phrases, overstated claims, required sections, and status line format.
+- Run `python scripts/test_docs_protection.py` after changing `.github/branch-protection.json`, required workflow names/triggers, or the docs-autonomy gate.
+- Keep `Docs Autonomy Gate` unfiltered at the `pull_request` trigger. Heavy documentation validators may be conditional inside the always-present job, but the job itself must never be path-filtered.
+- Treat `.github/branch-protection.json` as a proposed source of truth only; do not apply live branch settings unless explicitly directed.
+- Keep external network link checks non-required.
 
 ## Site Design System
 

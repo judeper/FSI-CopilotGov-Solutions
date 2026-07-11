@@ -1,0 +1,104 @@
+name: Docs Autonomy
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs-autonomy:
+    name: Docs Autonomy Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Verify protection policy and workflow contract
+        run: python scripts/test_docs_protection.py
+
+      - name: Classify changed paths
+        id: changes
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > changed-files.txt
+          else
+            git ls-files > changed-files.txt
+          fi
+          python scripts/docs_autonomy.py \
+            --paths-file changed-files.txt \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Pass non-documentation changes
+        if: steps.changes.outputs.docs_changed != 'true'
+        run: echo "No documentation-impacting paths changed; the required gate passes without running docs validators."
+
+      - name: Install documentation validation dependencies
+        if: steps.changes.outputs.docs_changed == 'true'
+        run: pip install -r requirements-docs.txt jsonschema
+
+      - name: Build documentation
+        if: steps.changes.outputs.docs_changed == 'true'
+        run: python scripts/build-docs.py
+
+      - name: Check generated documentation drift
+        if: steps.changes.outputs.docs_changed == 'true'
+        shell: bash
+        run: |
+          if ! git diff --quiet -- docs/reference/tier-applicability.md site-docs; then
+            echo "::error::Generated documentation is stale. Run 'python scripts/build-docs.py' and commit the result."
+            git --no-pager diff -- docs/reference/tier-applicability.md site-docs
+            exit 1
+          fi
+
+      - name: Validate documentation contracts
+        if: steps.changes.outputs.docs_changed == 'true'
+        run: |
+          python scripts/validate-contracts.py
+          python scripts/validate_data_classification.py
+          python scripts/validate-solutions.py
+          python scripts/validate-documentation.py
+          python scripts/verify_commercial_scope.py
+
+      - name: Validate solution indexes
+        if: steps.changes.outputs.docs_changed == 'true'
+        shell: bash
+        run: |
+          python scripts/validate_solutions_json.py
+          python scripts/build_solutions_graph.py
+          if ! git diff --quiet -I '"generatedAt"' -- solutions-graph.json; then
+            echo "::error::solutions-graph.json is stale. Run 'python scripts/build_solutions_graph.py' and commit."
+            git --no-pager diff -I '"generatedAt"' -- solutions-graph.json
+            exit 1
+          fi
+          python scripts/build_solutions_json.py
+          if ! git diff --quiet -I '"generatedAt"' -- solutions.json; then
+            echo "::error::solutions.json is stale. Run 'python scripts/build_solutions_json.py' and commit."
+            git --no-pager diff -I '"generatedAt"' -- solutions.json
+            exit 1
+          fi
+          python scripts/validate_solutions_graph.py
+          python scripts/verify_readme_counts.py
+          python scripts/sync-agent-md-versions.py --check
+
+      - name: Validate evidence exports
+        if: steps.changes.outputs.docs_changed == 'true'
+        shell: pwsh
+        run: ./scripts/validate-evidence.ps1 -ConfigurationTier baseline
+
+      - name: Build site strictly
+        if: steps.changes.outputs.docs_changed == 'true'
+        run: mkdocs build --strict
