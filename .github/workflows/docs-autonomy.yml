@@ -81,7 +81,12 @@ jobs:
         shell: pwsh
         run: |
           ./scripts/validate-lab-package.ps1 -Path ./scripts/tests/fixtures/lab-package/portable-evidence.json -ResultPath ./scripts/tests/fixtures/lab-results/valid/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json
-          Invoke-Pester -Path ./scripts/tests/lab-validation.Tests.ps1 -Output Detailed
+          $pesterConfig = New-PesterConfiguration
+          $pesterConfig.Run.Path = './scripts/tests/lab-validation.Tests.ps1'
+          $pesterConfig.Run.Exit = $true
+          $pesterConfig.Output.Verbosity = 'Detailed'
+          $pesterConfig.Output.CIFormat = 'GithubActions'
+          Invoke-Pester -Configuration $pesterConfig
 
       - name: Validate solution indexes
         if: steps.changes.outputs.docs_changed == 'true'
