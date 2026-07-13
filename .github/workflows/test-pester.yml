@@ -30,8 +30,8 @@ jobs:
       - name: Install Pester 5.x
         shell: pwsh
         run: |
-          Install-Module -Name Pester -MinimumVersion 5.5.0 -Force -Scope CurrentUser -SkipPublisherCheck
-          Import-Module Pester
+          Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser -SkipPublisherCheck
+          Import-Module Pester -RequiredVersion 5.7.1
           (Get-Module Pester).Version | Write-Host
 
       - name: Discover and run Pester tests

@@ -54,9 +54,9 @@ jobs:
             echo "No pytest tests found under scripts/ (no scripts/tests directory and no test_*.py / *_test.py files). Skipping pytest."
           fi
 
-      - name: Install pytest
+      - name: Install pytest dependencies
         if: steps.detect_tests.outputs.has_tests == 'true'
-        run: pip install pytest
+        run: pip install pytest "jsonschema[format]>=4.25.1"
 
       - name: Run pytest
         if: steps.detect_tests.outputs.has_tests == 'true'

@@ -70,6 +70,16 @@
             "error"
           ]
         },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "BLOCKED",
+            "NOT-APPLICABLE",
+            "FAIL"
+          ]
+        },
         "recordCount": {
           "type": "integer",
           "minimum": 0

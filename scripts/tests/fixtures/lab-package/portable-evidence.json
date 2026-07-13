@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "solution": "01-copilot-readiness-scanner",
+    "solutionCode": "01",
+    "exportVersion": "1.1.0",
+    "exportedAt": "2026-07-12T16:00:00Z",
+    "tier": "baseline"
+  },
+  "summary": {
+    "overallStatus": "monitor-only",
+    "disposition": "BLOCKED",
+    "recordCount": 1
+  },
+  "controls": [
+    {
+      "controlId": "1.1",
+      "status": "monitor-only",
+      "notes": "Fixture data for portable package path validation."
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "lab-summary",
+      "type": "json",
+      "path": "artifacts/lab-summary.json",
+      "hash": "4a78dcf5d16344d747bb01095f4377971381e8ec074952b6c23fe438c83b3779"
+    }
+  ]
+}

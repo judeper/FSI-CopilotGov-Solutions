@@ -104,9 +104,16 @@ class DocsProtectionTests(unittest.TestCase):
             "python scripts/build-docs.py",
             "python scripts/validate-contracts.py",
             "python scripts/validate_data_classification.py",
+            "python scripts/test_lab_validation_contracts.py",
+            "python scripts/validate-lab-contracts.py",
+            "python scripts/validate-lab-result.py",
             "python scripts/validate-solutions.py",
             "python scripts/validate-documentation.py",
             "python scripts/verify_commercial_scope.py",
+            "./scripts/validate-lab-package.ps1 -Path ./scripts/tests/fixtures/lab-package/portable-evidence.json -ResultPath ./scripts/tests/fixtures/lab-results/valid/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json",
+            "$pesterConfig.Run.Path = './scripts/tests/lab-validation.Tests.ps1'",
+            "$pesterConfig.Run.Exit = $true",
+            "Invoke-Pester -Configuration $pesterConfig",
             "python scripts/validate_solutions_json.py",
             "python scripts/validate_solutions_graph.py",
             "python scripts/verify_readme_counts.py",
@@ -123,6 +130,9 @@ class DocsProtectionTests(unittest.TestCase):
         self.assertTrue(is_docs_relevant("solutions/01-example/README.md"))
         self.assertTrue(is_docs_relevant("data/solution-catalog.json"))
         self.assertTrue(is_docs_relevant(".github/branch-protection.json"))
+        self.assertTrue(is_docs_relevant("scripts/validate-lab-contracts.py"))
+        self.assertTrue(is_docs_relevant("scripts/common/EvidenceExport.psm1"))
+        self.assertTrue(is_docs_relevant("scripts/tests/lab-validation.Tests.ps1"))
         self.assertFalse(is_docs_relevant(".github/workflows/release.yml"))
         self.assertFalse(is_docs_relevant("scripts/deploy.ps1"))
 

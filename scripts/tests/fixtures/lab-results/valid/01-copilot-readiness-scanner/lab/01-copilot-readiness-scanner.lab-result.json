@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "resultId": "lab-result:01-copilot-readiness-scanner:2026-07-12-run1",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-foundation",
+  "solutionId": "01-copilot-readiness-scanner",
+  "generatedAt": "2026-07-12T16:00:00Z",
+  "preflight": {
+    "decision": "GO",
+    "checkedOn": "2026-07-12T15:45:00Z",
+    "notes": "Prerequisite checks completed with representative sample configuration."
+  },
+  "summary": {
+    "disposition": "BLOCKED",
+    "accepted": true,
+    "controlImplementation": "not-evaluated",
+    "notes": "Lab run blocked by missing add-on license in the dedicated tenant."
+  },
+  "stepResults": [
+    {
+      "phaseId": "setup",
+      "stepId": "step-verify-prerequisites",
+      "outcome": "PASS",
+      "notes": "Prerequisite page was accessible and baseline controls were visible.",
+      "readBackVerified": true,
+      "mutationExecuted": false,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/ui-prereq.png"
+      ]
+    },
+    {
+      "phaseId": "exercise",
+      "stepId": "step-run-readiness-script",
+      "outcome": "BLOCKED",
+      "notes": "Script execution halted because a required license SKU was unavailable.",
+      "readBackVerified": false,
+      "mutationExecuted": false,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/license-block.txt"
+      ]
+    },
+    {
+      "phaseId": "cleanup",
+      "stepId": "step-cleanup-sample-policy",
+      "outcome": "NOT-RUN",
+      "notes": "No mutable object was created, so cleanup runbook was not required.",
+      "readBackVerified": true,
+      "mutationExecuted": false,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/cleanup-note.txt"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "blocker-license-sku",
+      "reason": "Copilot add-on SKU is not available in the isolated lab tenant.",
+      "evidenceRefs": [
+        "evidence/license-block.txt"
+      ],
+      "sourceClaimIds": [
+        "claim-setup-guidance"
+      ]
+    }
+  ],
+  "cleanup": {
+    "state": "not-required",
+    "completedBy": "fsi-governance-lab-operators",
+    "notes": "No mutable change was applied because execution stopped at licensing checks.",
+    "orphanedMutations": []
+  },
+  "sourceVerification": {
+    "claims": [
+      {
+        "claimId": "claim-setup-guidance",
+        "status": "negative-verified",
+        "checkedOn": "2026-07-12T15:58:00Z",
+        "evidenceRefs": [
+          "evidence/license-block.txt",
+          "evidence/learn-citation.txt"
+        ],
+        "sourceUrl": "https://learn.microsoft.com/microsoft-365-copilot/microsoft-365-copilot-setup"
+      }
+    ]
+  },
+  "evidencePackage": {
+    "path": "scripts/tests/fixtures/lab-package/portable-evidence.json",
+    "sha256": "6442ec235e2480205472b6564c9dc64f0306c75a8c1804af6277c973b605f1bb"
+  }
+}

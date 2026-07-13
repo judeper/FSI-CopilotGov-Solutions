@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "resultId": "lab-result:01-copilot-readiness-scanner:2026-07-12-readonly",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-readonly-zero-mutations",
+  "solutionId": "01-copilot-readiness-scanner",
+  "generatedAt": "2026-07-12T18:00:00Z",
+  "preflight": {
+    "decision": "GO",
+    "checkedOn": "2026-07-12T17:50:00Z",
+    "notes": "Prerequisites verified for a read-only documentation-first validation run."
+  },
+  "summary": {
+    "disposition": "PASS",
+    "accepted": true,
+    "controlImplementation": "implemented",
+    "notes": "All planned steps were read-only and completed with required evidence."
+  },
+  "stepResults": [
+    {
+      "phaseId": "setup",
+      "stepId": "step-verify-prerequisites",
+      "outcome": "PASS",
+      "notes": "Prerequisite page was accessible and baseline controls were visible.",
+      "readBackVerified": true,
+      "mutationExecuted": false,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/ui-prereq.png"
+      ]
+    },
+    {
+      "phaseId": "exercise",
+      "stepId": "step-run-readiness-script",
+      "outcome": "PASS",
+      "notes": "Representative script completed in documentation-first mode without tenant changes.",
+      "readBackVerified": true,
+      "mutationExecuted": false,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/read-only-run.txt"
+      ]
+    },
+    {
+      "phaseId": "cleanup",
+      "stepId": "step-confirm-no-cleanup-needed",
+      "outcome": "NOT-APPLICABLE",
+      "notes": "Cleanup was not required because no mutable changes were executed.",
+      "readBackVerified": true,
+      "mutationExecuted": false,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/cleanup-note.txt"
+      ]
+    }
+  ],
+  "blockers": [],
+  "cleanup": {
+    "state": "not-required",
+    "completedBy": "fsi-governance-lab-operators",
+    "notes": "No mutation execution occurred during this run.",
+    "orphanedMutations": []
+  },
+  "sourceVerification": {
+    "claims": [
+      {
+        "claimId": "claim-setup-guidance",
+        "status": "verified",
+        "checkedOn": "2026-07-12T17:58:00Z",
+        "evidenceRefs": [
+          "evidence/learn-citation.txt"
+        ],
+        "sourceUrl": "https://learn.microsoft.com/microsoft-365-copilot/microsoft-365-copilot-setup"
+      }
+    ]
+  }
+}

@@ -48,7 +48,7 @@ jobs:
 
       - name: Install documentation validation dependencies
         if: steps.changes.outputs.docs_changed == 'true'
-        run: pip install -r requirements-docs.txt jsonschema
+        run: pip install -r requirements-docs.txt
 
       - name: Build documentation
         if: steps.changes.outputs.docs_changed == 'true'
@@ -69,9 +69,24 @@ jobs:
         run: |
           python scripts/validate-contracts.py
           python scripts/validate_data_classification.py
+          python scripts/test_lab_validation_contracts.py
+          python scripts/validate-lab-contracts.py
+          python scripts/validate-lab-result.py
           python scripts/validate-solutions.py
           python scripts/validate-documentation.py
           python scripts/verify_commercial_scope.py
+
+      - name: Validate lab package fixtures
+        if: steps.changes.outputs.docs_changed == 'true'
+        shell: pwsh
+        run: |
+          ./scripts/validate-lab-package.ps1 -Path ./scripts/tests/fixtures/lab-package/portable-evidence.json -ResultPath ./scripts/tests/fixtures/lab-results/valid/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json
+          $pesterConfig = New-PesterConfiguration
+          $pesterConfig.Run.Path = './scripts/tests/lab-validation.Tests.ps1'
+          $pesterConfig.Run.Exit = $true
+          $pesterConfig.Output.Verbosity = 'Detailed'
+          $pesterConfig.Output.CIFormat = 'GithubActions'
+          Invoke-Pester -Configuration $pesterConfig
 
       - name: Validate solution indexes
         if: steps.changes.outputs.docs_changed == 'true'
