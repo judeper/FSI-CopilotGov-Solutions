@@ -27,7 +27,7 @@ Solution 18 provides a documentation-first pattern for coordinating access revie
 | New-AccessReview.ps1                                           |
 | - reads risk scores from upstream output                       |
 | - prepares review definitions via Microsoft Graph patterns     |
-| - sets cadence per risk tier (30 / 90 / 180 days)              |
+| - sets cadence per risk tier (monthly / quarterly / semiannual) |
 | - assigns site owner as reviewer                               |
 +-----------+----------------------+-----------------------------+
             |                      |
@@ -66,7 +66,7 @@ Solution 18 provides a documentation-first pattern for coordinating access revie
 5. Review scope targets Microsoft Entra group direct or transitive members, or access package assignments, that grant SharePoint access; reviewer is set to the resource owner or documented fallback reviewer.
 6. Review cadence and duration are driven by `config/review-schedule.json` settings per risk tier.
 7. `Get-ReviewResults.ps1` queries `GET /identityGovernance/accessReviews/definitions/{id}/instances/{id}/decisions` for pending and completed decisions.
-8. Reviews approaching expiry (within 48 hours) are flagged for escalation.
+8. Reviews approaching expiry are flagged for escalation using the selected tier threshold (48 hours in recommended, 24 hours in regulated).
 9. `Apply-ReviewDecisions.ps1` applies deny decisions via `POST /identityGovernance/accessReviews/definitions/{accessReviewScheduleDefinitionId}/instances/{accessReviewInstanceId}/applyDecisions` and logs applied actions.
 10. `Export-Evidence.ps1` packages review definitions, decisions, and applied actions into schema-aligned JSON plus SHA-256 checksum files.
 
@@ -79,14 +79,14 @@ Access reviews are created for each Microsoft Entra resource mapped to a SharePo
 - **Scope**: Group direct or transitive members, guest-filtered group members when configured, or access package assignments
 - **Reviewer**: Resource owner or site owner mapping, with compliance officer fallback
 - **Duration**: 7 days for HIGH, 14 days for MEDIUM and LOW
-- **Recurrence**: Every 30, 90, or 180 days depending on risk tier
+- **Recurrence**: Monthly, quarterly, or semiannual depending on risk tier (serialized as `absoluteMonthly` interval 1/3/6)
 
 ### Monitoring Phase
 
 Active reviews are monitored for:
 
 - Pending decisions that have not been completed
-- Reviews approaching expiry within the configured reminder window (default 48 hours)
+- Reviews approaching expiry within the configured tier escalation window
 - Reviewer responsiveness and escalation needs
 
 ### Decision Application Phase
@@ -101,9 +101,9 @@ Completed review decisions are processed:
 
 | Risk Tier | Review Frequency | Duration | Justification |
 |-----------|-----------------|----------|---------------|
-| HIGH | Every 30 days | 7 days | Sites with customer PII, trading data, or regulated records require frequent recertification |
-| MEDIUM | Every 90 days | 14 days | Sites with broad internal sharing need quarterly review |
-| LOW | Every 180 days | 14 days | Sites with targeted sharing receive semi-annual review |
+| HIGH | Monthly | 7 days | Sites with customer PII, trading data, or regulated records require frequent recertification |
+| MEDIUM | Quarterly | 14 days | Sites with broad internal sharing need periodic review |
+| LOW | Semiannual | 14 days | Sites with targeted sharing receive lower-frequency recertification |
 
 ## Integration with 02-oversharing-risk-assessment
 
@@ -126,3 +126,7 @@ The deployment script checks for upstream output before writing the local deploy
 5. Export evidence package
 
 This provides a single entry point for scheduled automation while keeping individual scripts available for targeted operations.
+
+## Current Scope Limitation
+
+This implementation targets human and group access review scenarios. Agent identity and application identity review governance remains preview-scoped in Microsoft Learn and is intentionally excluded from current runtime behavior until lifecycle guidance reaches stable coverage.

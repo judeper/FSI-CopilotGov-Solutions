@@ -5,6 +5,7 @@
 - Microsoft Entra ID Governance or Microsoft Entra Suite subscriptions are required for many access review capabilities. If licensing is not available, document the limitation before enabling this solution.
 - For application or group access review scenarios where Microsoft Learn lists additional options, validate Microsoft Entra ID Governance, Microsoft Entra Suite, or Microsoft Entra ID P2 coverage as applicable.
 - The target tenant should already have a defined Copilot pilot or rollout scope so access reviews can be prioritized against real exposure risk.
+- This scaffold currently targets human and group review paths. Treat agent identity and application identity review governance as preview-scoped and out of current implementation scope until Microsoft Learn guidance is stable ([Access reviews overview](https://learn.microsoft.com/entra/id-governance/access-reviews-overview)).
 
 ## Required Administrative Roles
 

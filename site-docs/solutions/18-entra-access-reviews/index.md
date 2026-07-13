@@ -10,19 +10,19 @@ This solution provides a framework for coordinating access reviews in Microsoft 
 
 Access reviews in Microsoft Entra ID Governance allow organizations to periodically verify that users still require access to specific resources. By automating the creation and management of these reviews, institutions can help meet regulatory expectations for periodic access recertification at a cadence proportional to each site's risk profile.
 
-The solution reads risk scores from solution 02-oversharing-risk-assessment to prioritize which site-associated Microsoft Entra resources receive access reviews first, setting review cadence based on the mapped site risk tier: HIGH-risk resources are reviewed every 30 days, MEDIUM-risk every 90 days, and LOW-risk every 180 days. This risk-triage approach helps compliance teams focus attention on sites that pose the greatest exposure to regulated data.
+The solution reads risk scores from solution 02-oversharing-risk-assessment to prioritize which site-associated Microsoft Entra resources receive access reviews first, setting review cadence based on the mapped site risk tier: HIGH-risk resources use a monthly cycle, MEDIUM-risk use a quarterly cycle, and LOW-risk use a semiannual cycle. The Microsoft Graph recurrence payload serializes these as `absoluteMonthly` intervals (1, 3, and 6 months). This risk-triage approach helps compliance teams focus attention on sites that pose the greatest exposure to regulated data.
 
 Integration with solution 02 provides the upstream oversharing findings that drive prioritization. Integration with solution 16 (if available) supports broader access governance workflows. The review lifecycle covers creation, monitoring, decision collection, and evidence export for audit preparation.
 
 ## Features
 
 - Risk-triaged access review definition patterns for Microsoft Entra resources associated with SharePoint access
-- Cadence scheduling by risk tier: HIGH (30-day), MEDIUM (90-day), LOW (180-day) review cycles
+- Cadence scheduling by risk tier: HIGH (monthly), MEDIUM (quarterly), LOW (semiannual) review cycles
 - Resource or site owner assignment as primary reviewer, with compliance officer fallback
-- Review results collection and expiry monitoring with 48-hour escalation alerts
+- Review results collection and expiry monitoring with tier-aware escalation alerts (recommended 48-hour, regulated 24-hour threshold)
 - Decision application workflow for deny outcomes on the reviewed Microsoft Entra resource with evidence logging
 - Orchestrator script for end-to-end review lifecycle management
-- Evidence export packages for access-review-definitions, review-decisions, and applied-actions
+- Evidence export packages for access-review-definitions, review-decisions, and applied-actions, with emitted-artifact reuse when available and representative sample fallback when not
 
 ## Scope Boundaries
 
@@ -34,7 +34,7 @@ Integration with solution 02 provides the upstream oversharing findings that dri
 - ❌ Does not directly remove SharePoint site permissions or apply deny decisions automatically (decision application is documented, not enforced)
 - ❌ Does not deploy Power Automate flows (escalation and notification designs are documented, not exported)
 - ❌ Does not replace Microsoft Entra ID Governance licensing or Privileged Identity Management workflows
-- ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not claim tenant validation outcomes; evidence export reuses local emitted artifacts when available and otherwise emits representative sample records for schema validation
 
 > **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
 
@@ -57,6 +57,14 @@ See [docs/architecture.md](architecture.md) for the component diagram, data flow
 5. Run `scripts\New-AccessReview.ps1` to generate access review definitions based on risk-scored site-to-resource mappings.
 6. Run `scripts\Get-ReviewResults.ps1` to collect pending and completed review decisions.
 7. Run `scripts\Export-Evidence.ps1` to package evidence artifacts and SHA-256 companion files.
+
+## Implementation Handoff
+
+- Use `scripts\Deploy-Solution.ps1 -WhatIf` first to capture truthful upstream dependency state (`not-found`, `empty`, or `validated`) before any rollout decision.
+- Treat `Get-ReviewResults.ps1` escalation as tier-driven by default (baseline disabled, recommended 48 hours, regulated 24 hours) unless an explicit threshold override is approved.
+- Keep `autoApplyDecisions` aligned to selected tier config; review definitions now carry this setting as output evidence.
+- Use `lab\18-entra-access-reviews.lab.json` for read-only validation runs and source-reference verification without posting `applyDecisions`.
+- Rebuild generated site docs after documentation edits and keep solution indexes unchanged unless structural navigation changes are intentional.
 
 ## Deployment
 
@@ -118,3 +126,4 @@ Each JSON artifact is written with a companion `.sha256` file so control evidenc
 - Access review scope is limited to Microsoft Entra group or access-package memberships mapped to SharePoint access; direct SharePoint site permissions require separate inventory and remediation patterns.
 - Reviewer resolution depends on site owner information being available and accurate in SharePoint site properties.
 - Auto-apply of deny decisions is intentionally gated behind configuration approval because FSI institutions typically require business-owner review before removing access to regulated content.
+- Access reviews for agent identities (for example, service principals/application identities) are preview-scoped in Microsoft Learn guidance ([Access reviews overview](https://learn.microsoft.com/entra/id-governance/access-reviews-overview)) and are intentionally out of this solution's current human/group implementation scope.

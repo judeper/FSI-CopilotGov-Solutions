@@ -102,7 +102,7 @@ function Get-ReviewSchedule {
     return (Get-Content -Path $fullPath -Raw | ConvertFrom-Json)
 }
 
-function Get-ConfiguredMaxSitesPerRun {
+function Get-TierConfigurationValues {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -112,6 +112,7 @@ function Get-ConfiguredMaxSitesPerRun {
 
     $configRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\config'))
     $maxSites = -1
+    $autoApplyDecisions = $false
 
     foreach ($configFile in @('default-config.json', ("{0}.json" -f $ConfigurationTier))) {
         $configPath = Join-Path $configRoot $configFile
@@ -123,9 +124,15 @@ function Get-ConfiguredMaxSitesPerRun {
         if ($config.PSObject.Properties.Name -contains 'maxSitesPerRun') {
             $maxSites = [int]$config.maxSitesPerRun
         }
+        if ($config.PSObject.Properties.Name -contains 'autoApplyDecisions') {
+            $autoApplyDecisions = [bool]$config.autoApplyDecisions
+        }
     }
 
-    return $maxSites
+    return [pscustomobject]@{
+        maxSitesPerRun = $maxSites
+        autoApplyDecisions = $autoApplyDecisions
+    }
 }
 
 function Get-RiskScoredSite {
@@ -168,6 +175,9 @@ function New-ReviewDefinition {
         [Parameter(Mandatory)]
         [string]$RiskTier,
 
+        [Parameter(Mandatory)]
+        [bool]$AutoApplyDecisions,
+
         [Parameter()]
         [object]$GraphContext
     )
@@ -180,6 +190,16 @@ function New-ReviewDefinition {
 
     $reviewer = if ($Site.owner) { $Site.owner } else { $Schedule.fallbackReviewer }
     $reviewStartDate = Get-Date
+    $defaultDecisionEnabled = $false
+    $frequencyMonths = if (
+        ($cadence.PSObject.Properties.Name -contains 'frequencyMonths') -and
+        ([int]$cadence.frequencyMonths -gt 0)
+    ) {
+        [int]$cadence.frequencyMonths
+    }
+    else {
+        [math]::Ceiling($cadence.frequencyDays / 30)
+    }
 
     $reviewBody = [ordered]@{
         displayName = "Access Review - $($Site.siteUrl) [$RiskTier]"
@@ -200,15 +220,14 @@ function New-ReviewDefinition {
             mailNotificationsEnabled = $true
             reminderNotificationsEnabled = $true
             justificationRequiredOnApproval = $true
-            defaultDecisionEnabled = $false
-            defaultDecision = 'None'
+            defaultDecisionEnabled = $defaultDecisionEnabled
             instanceDurationInDays = $cadence.durationDays
-            autoApplyDecisionsEnabled = [bool]$Schedule.autoApplyDecisions
+            autoApplyDecisionsEnabled = $AutoApplyDecisions
             recommendationsEnabled = $true
             recurrence = [ordered]@{
                 pattern = [ordered]@{
                     type = 'absoluteMonthly'
-                    interval = [math]::Ceiling($cadence.frequencyDays / 30)
+                    interval = $frequencyMonths
                     dayOfMonth = [int]$reviewStartDate.Day
                 }
                 range = [ordered]@{
@@ -217,6 +236,10 @@ function New-ReviewDefinition {
                 }
             }
         }
+    }
+
+    if ($defaultDecisionEnabled) {
+        $reviewBody.settings.defaultDecision = 'Recommendation'
     }
 
     if ($null -ne $GraphContext -and $GraphContext.Mode -ne 'placeholder') {
@@ -230,9 +253,11 @@ function New-ReviewDefinition {
                 siteUrl = $Site.siteUrl
                 riskTier = $RiskTier
                 reviewFrequencyDays = $cadence.frequencyDays
+                reviewFrequencyMonths = $frequencyMonths
                 reviewDurationDays = $cadence.durationDays
                 reviewer = $reviewer
                 scope = 'group-transitive-members'
+                autoApplyDecisionsEnabled = $AutoApplyDecisions
                 createdAt = (Get-Date).ToString('o')
                 status = 'created'
             }
@@ -244,9 +269,11 @@ function New-ReviewDefinition {
                 siteUrl = $Site.siteUrl
                 riskTier = $RiskTier
                 reviewFrequencyDays = $cadence.frequencyDays
+                reviewFrequencyMonths = $frequencyMonths
                 reviewDurationDays = $cadence.durationDays
                 reviewer = $reviewer
                 scope = 'group-transitive-members'
+                autoApplyDecisionsEnabled = $AutoApplyDecisions
                 createdAt = (Get-Date).ToString('o')
                 status = 'failed'
                 error = $_.Exception.Message
@@ -259,9 +286,11 @@ function New-ReviewDefinition {
         siteUrl = $Site.siteUrl
         riskTier = $RiskTier
         reviewFrequencyDays = $cadence.frequencyDays
+        reviewFrequencyMonths = $frequencyMonths
         reviewDurationDays = $cadence.durationDays
         reviewer = $reviewer
         scope = 'group-transitive-members'
+        autoApplyDecisionsEnabled = $AutoApplyDecisions
         createdAt = (Get-Date).ToString('o')
         status = 'sample-data'
     }
@@ -269,8 +298,11 @@ function New-ReviewDefinition {
 
 $schedule = Get-ReviewSchedule -Path $ConfigPath
 $sites = Get-RiskScoredSite -InputPath $RiskScoreInputPath
-$configuredMaxSitesPerRun = Get-ConfiguredMaxSitesPerRun -ConfigurationTier $ConfigurationTier
+$tierConfiguration = Get-TierConfigurationValues -ConfigurationTier $ConfigurationTier
+$configuredMaxSitesPerRun = [int]$tierConfiguration.maxSitesPerRun
+$configuredAutoApplyDecisions = [bool]$tierConfiguration.autoApplyDecisions
 $effectiveMaxSitesPerRun = if ($PSBoundParameters.ContainsKey('MaxSitesPerRun')) { $MaxSitesPerRun } else { $configuredMaxSitesPerRun }
+$effectiveAutoApplyDecisions = $configuredAutoApplyDecisions
 
 $graphContext = $null
 if ($UseMgGraph.IsPresent) {
@@ -319,7 +351,7 @@ foreach ($tier in $tierOrder) {
     Write-Verbose "Creating access reviews for $($tierSites.Count) resources mapped to $tier-risk sites."
 
     foreach ($site in $tierSites) {
-        $definition = New-ReviewDefinition -Site $site -Schedule $schedule -RiskTier $tier -GraphContext $graphContext
+        $definition = New-ReviewDefinition -Site $site -Schedule $schedule -RiskTier $tier -AutoApplyDecisions $effectiveAutoApplyDecisions -GraphContext $graphContext
         if ($null -ne $definition) {
             $results += $definition
         }
@@ -338,6 +370,7 @@ $results | ConvertTo-Json -Depth 10 | Set-Content -Path $outputFile -Encoding ut
 [pscustomobject]@{
     TenantId = $TenantId
     ConfigurationTier = $ConfigurationTier
+    AutoApplyDecisions = $effectiveAutoApplyDecisions
     MaxSitesPerRun = $effectiveMaxSitesPerRun
     ReviewsCreated = @($results).Count
     HighRisk = @($results | Where-Object { $_.riskTier -eq 'HIGH' }).Count

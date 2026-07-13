@@ -12,7 +12,7 @@ Use this checklist to move solution 18 from documentation review into controlled
 ## 2. Licensing and Platform Prerequisites
 
 - [ ] Validate Microsoft Entra ID Governance or Microsoft Entra Suite subscriptions for the tenant, or document the approved alternative control path.
-- [ ] Validate Microsoft Entra ID P2 or Enterprise Mobility + Security (EMS) E5 coverage where Microsoft Learn lists those subscriptions for the planned access review scenario.
+- [ ] Validate Microsoft Entra ID P2 coverage only where Microsoft Learn documents support for the planned access review scenario.
 - [ ] Confirm Microsoft Graph API access from the execution environment with AccessReview.ReadWrite.All permissions.
 - [ ] Confirm the required PowerShell modules are installed and approved for use in the administration workstation or automation host.
 
@@ -39,6 +39,7 @@ Use this checklist to move solution 18 from documentation review into controlled
 ## 6. Initial Deployment Planning
 
 - [ ] Start with resources mapped to HIGH-risk sites before expanding to MEDIUM and LOW tiers.
+- [ ] Confirm calendar cadence expectations (monthly for HIGH, quarterly for MEDIUM, semiannual for LOW) align with governance policy.
 - [ ] Plan for Graph API throttling management during bulk review creation.
 - [ ] Confirm how review results will be monitored and reported to compliance stakeholders.
 - [ ] Decide when to enable auto-apply of deny decisions versus manual review application.
@@ -70,6 +71,14 @@ Use this checklist to move solution 18 from documentation review into controlled
 - [ ] Run `scripts\New-AccessReview.ps1` to create initial review definitions for resources mapped to HIGH-risk sites.
 - [ ] Run `scripts\Get-ReviewResults.ps1` and verify review monitoring is working as expected.
 - [ ] Run `scripts\Export-Evidence.ps1` and archive the resulting package and checksums.
+
+## 11. Implementation Handoff and Boundaries
+
+- [ ] Record dependency status from `Deploy-Solution.ps1` as `not-found`, `empty`, or `validated`; do not override status text manually.
+- [ ] Confirm `autoApplyDecisions` behavior matches selected tier configuration before reviewer communications are sent.
+- [ ] Confirm escalation thresholds are tier-appropriate (recommended 48-hour, regulated 24-hour) or document approved overrides.
+- [ ] Confirm operator runbook references `lab\18-entra-access-reviews.lab.json` for read-only/source-verification exercises.
+- [ ] Confirm implementation scope remains focused on human/group access reviews; agent-identity review patterns remain preview-scoped and out of current implementation.
 
 ## Sign-Off
 

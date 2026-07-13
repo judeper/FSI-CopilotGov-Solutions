@@ -2,9 +2,11 @@
 
 ## Evidence Package Overview
 
-`Export-Evidence.ps1` writes a JSON package aligned to `..\..\data\evidence-schema.json`. The package includes metadata, summary details, control statuses, and references to the underlying evidence artifacts.
+`Export-Evidence.ps1` writes a JSON package aligned to `..\..\data\evidence-schema.json`. The exporter first attempts to read emitted review artifacts (`access-review-definitions.json`, `review-decisions.json`, and `applied-actions.json`) and repackage them; if those artifacts are missing, it emits representative sample data and labels the package as sample-sourced.
 
 Every JSON evidence file receives a companion `.sha256` file so reviewers can verify integrity during internal review, audit preparation, or regulator response.
+
+Package artifact `path` values are stored as output-relative paths for portability, while command output returns an absolute `PackagePath`.
 
 ## Evidence Types
 

@@ -89,4 +89,8 @@ Run the first execution with a small number of resources mapped to HIGH-risk sit
 
 ## Tip: Monitor review expiry proactively
 
-Use `Get-ReviewResults.ps1` regularly to identify reviews approaching their expiry window. The current scaffold uses a 48-hour threshold in the script; `config/review-schedule.json` `reminderDays` remains reference metadata until tenant-specific scheduling is wired in.
+Use `Get-ReviewResults.ps1` regularly to identify reviews approaching their expiry window. Escalation follows tier configuration by default (recommended 48 hours, regulated 24 hours), and the threshold can be overridden per run when needed. `config/review-schedule.json` `reminderDays` remains reference metadata until tenant-specific scheduling is wired in.
+
+## Tip: Keep preview identity scenarios out of production scope
+
+If stakeholders request service principal or agent identity access review automation, document the request as a roadmap item and keep current implementation focused on supported human/group patterns until preview guidance in Microsoft Learn stabilizes.

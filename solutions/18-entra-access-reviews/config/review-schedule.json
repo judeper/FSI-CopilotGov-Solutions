@@ -1,8 +1,8 @@
 {
   "reviewCadence": {
-    "HIGH": { "frequencyDays": 30, "durationDays": 7 },
-    "MEDIUM": { "frequencyDays": 90, "durationDays": 14 },
-    "LOW": { "frequencyDays": 180, "durationDays": 14 }
+    "HIGH": { "calendarCadence": "monthly", "frequencyMonths": 1, "frequencyDays": 30, "durationDays": 7 },
+    "MEDIUM": { "calendarCadence": "quarterly", "frequencyMonths": 3, "frequencyDays": 90, "durationDays": 14 },
+    "LOW": { "calendarCadence": "semiannual", "frequencyMonths": 6, "frequencyDays": 180, "durationDays": 14 }
   },
   "defaultReviewer": "site-owner",
   "fallbackReviewer": "compliance-officer@contoso.com",
