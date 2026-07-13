@@ -9,13 +9,7 @@
   "reviewedOn": "2026-07-12",
   "scope": {
     "cloud": "m365-us-commercial",
-    "usCommercialOnly": true,
-    "prohibitedClouds": [
-      "gcc",
-      "gcc-high",
-      "dod",
-      "sovereign"
-    ]
+    "usCommercialOnly": true
   },
   "controls": [
     "1.1",
