@@ -2,7 +2,10 @@
 
 ## Platform and Licensing
 
-- SharePoint Advanced Management licensing is recommended for the intended production posture. If licensing is not available, document the limitation before enabling this solution.
+- Restricted Content Discovery (RCD) is the go-forward SharePoint discoverability control for Copilot governance review windows.
+- Restricted SharePoint Search (RSS) is retiring; starting 2026-07-31, new enablement is blocked.
+- RCD is discoverability-only: it doesn't change permissions, isn't a security boundary, and isn't supported for OneDrive sites.
+- SharePoint Advanced Management prerequisites for US commercial tenants require a qualifying base subscription (Office 365 E3/E5/A5 or Microsoft 365 E1/E3/E5/A5) and at least one of: an assigned Microsoft 365 Copilot license, the SharePoint Advanced Management Plan 1 add-on (with SharePoint K/P1/P2), or Microsoft 365 E7.
 - Microsoft Purview Data Security Posture Management (DSPM) licensing and permissions should be available for the tenant; if using DSPM for AI, document it as DSPM for AI (classic).
 - The target tenant should already have a defined Copilot pilot or rollout scope so item-level findings can be prioritized against real exposure risk.
 
@@ -15,7 +18,7 @@ Solution 02-oversharing-risk-assessment must complete a site-level assessment be
 Use task-specific access rather than treating Microsoft 365 admin roles as interchangeable for SharePoint content access:
 
 - For delegated item-level permission enumeration, the operator should be a site collection administrator on each target site.
-- A SharePoint Administrator or Global Administrator may grant or manage site access, but those roles do not automatically provide content access to every site or OneDrive.
+- SharePoint Administrator or SharePoint Advanced Management Administrator roles are required for SharePoint Advanced Management and Restricted Content Discovery administration, but these roles don't automatically provide content access to every site or OneDrive.
 - Use Compliance Administrator, Microsoft Purview Compliance Administrator, or DSPM roles for Purview/DSPM review and investigation tasks, not as substitutes for target-site content access.
 
 ## Required PowerShell Modules
@@ -32,11 +35,17 @@ Example installation command:
 Install-Module PnP.PowerShell -Scope CurrentUser
 ```
 
-> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments are limited to PnP.PowerShell 2.12.0 (PowerShell 7.2 only).
+> **Runtime note:** Microsoft Learn documents Azure Automation support for PowerShell 7.4 runbooks. PnP.PowerShell module version behavior and app-registration compatibility should be documented in the project runbook and validated in lab before production rollout.
 
 ## API Permissions
 
-When using Microsoft Graph to list `driveItem` permissions, select permissions documented for that endpoint. For read-only application enumeration, `Files.Read.All` is the least-privileged application permission; `Files.ReadWrite.All`, `Sites.Read.All`, and `Sites.ReadWrite.All` are higher-privileged options.
+When using Microsoft Graph to list `driveItem` permissions, use the documented least-privileged permission for the selected auth model:
+
+- Delegated least privilege: `Files.Read`
+- Application least privilege: `Files.Read.All`
+- Higher privilege options: `Files.ReadWrite.All`, `Sites.Read.All`, `Sites.ReadWrite.All`
+
+The `driveItem` list-permissions API returns all sharing permissions only to owners (including co-owners). Non-owner callers only receive permission entries that apply to the caller.
 
 Use broader SharePoint/PnP or write permissions only when the approved implementation requires remediation or site administration, and document that API surface separately. If identity enrichment uses a separate endpoint, document and consent only the least-privileged permission required for that endpoint.
 

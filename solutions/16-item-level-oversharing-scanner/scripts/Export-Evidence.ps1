@@ -341,10 +341,20 @@ else {
     }
 }
 
-$artifacts = @()
-$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'item-oversharing-findings.json') -Content @($itemFindings) -ArtifactName 'item-oversharing-findings' -ArtifactType 'item-oversharing-findings'
-$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'risk-scored-report.json') -Content @($riskReport) -ArtifactName 'risk-scored-report' -ArtifactType 'risk-scored-report'
-$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'remediation-actions.json') -Content @($remediationActions) -ArtifactName 'remediation-actions' -ArtifactType 'remediation-actions'
+$artifactOutputs = @()
+$artifactOutputs += Write-JsonWithHash -Path (Join-Path $outputRoot 'item-oversharing-findings.json') -Content @($itemFindings) -ArtifactName 'item-oversharing-findings' -ArtifactType 'item-oversharing-findings'
+$artifactOutputs += Write-JsonWithHash -Path (Join-Path $outputRoot 'risk-scored-report.json') -Content @($riskReport) -ArtifactName 'risk-scored-report' -ArtifactType 'risk-scored-report'
+$artifactOutputs += Write-JsonWithHash -Path (Join-Path $outputRoot 'remediation-actions.json') -Content @($remediationActions) -ArtifactName 'remediation-actions' -ArtifactType 'remediation-actions'
+
+$packageArtifacts = foreach ($artifact in $artifactOutputs) {
+    $artifactFullPath = [System.IO.Path]::GetFullPath([string]$artifact.path)
+    [pscustomobject]@{
+        name = $artifact.name
+        type = $artifact.type
+        path = [System.IO.Path]::GetRelativePath($outputRoot, $artifactFullPath)
+        hash = $artifact.hash
+    }
+}
 
 $controls = @(
     [pscustomobject]@{
@@ -355,7 +365,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '1.3'
         status = 'monitor-only'
-        notes = 'Supports temporary Restricted SharePoint Search or Restricted Content Discovery planning by identifying overshared sites/items for permission cleanup; RSS is not a security boundary and does not change permissions.'
+        notes = "Supports temporary discoverability governance by identifying overshared sites/items before applying Restricted Content Discovery (RCD). RSS is retiring and blocks new enablement starting 2026-07-31; RCD doesn't change permissions, isn't a security boundary, and doesn't apply to OneDrive."
     }
     [pscustomobject]@{
         controlId = '1.4'
@@ -393,7 +403,7 @@ $package = [ordered]@{
         lowRiskCount = @($riskReport | Where-Object { $_.riskTier -eq 'LOW' }).Count
     }
     controls = $controls
-    artifacts = $artifacts
+    artifacts = @($packageArtifacts)
 }
 
 $packageArtifact = Write-JsonWithHash -Path (Join-Path $outputRoot '16-item-level-oversharing-scanner-evidence-package.json') -Content $package -ArtifactName 'ios-evidence-package' -ArtifactType 'evidence-package'
@@ -406,7 +416,7 @@ if (-not $validation.IsValid) {
 [pscustomobject]@{
     PackagePath = $packageArtifact.path
     PackageHash = $packageArtifact.hash
-    ArtifactCount = @($artifacts).Count
+    ArtifactCount = @($packageArtifacts).Count
     Findings = @($itemFindings).Count
     RiskScoredItems = @($riskReport).Count
     RemediationActions = @($remediationActions).Count

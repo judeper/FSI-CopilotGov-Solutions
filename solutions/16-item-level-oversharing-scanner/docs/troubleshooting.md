@@ -11,8 +11,9 @@
 **Actions**
 
 - Confirm the correct tenant admin URL and authentication method are being used
-- Confirm the operator is a site collection administrator on each target site, or that a SharePoint Administrator/Global Administrator has granted that access
+- Confirm the operator is a site collection administrator on each target site, or that a SharePoint Administrator/SharePoint Advanced Management Administrator has granted that access
 - Reinstall or update `PnP.PowerShell` if the module version is outdated
+- Confirm the execution host runtime and module combination is project-approved (for example, PowerShell 7.4 in Azure Automation) and validated in the solution lab contract before production use
 - Validate that conditional access does not block the execution host
 - For app-only Graph read-only permission listing, validate the documented permissions for the selected endpoint; reserve broader SharePoint/PnP or write permissions for approved remediation scenarios
 
@@ -44,6 +45,7 @@
 
 - Verify the operator has site collection administrator access on target sites
 - For Graph read-only permission listing, validate `Files.Read.All` or the applicable documented higher-privileged permission for the selected endpoint
+- For Graph `driveItem` list-permissions, confirm caller context: owners/co-owners receive full sharing permissions, while non-owner callers only see permissions that apply to themselves
 - If identity enrichment uses a separate endpoint, document and consent only the least-privileged permission required for that endpoint
 - Review tenant settings that restrict visibility into item-level sharing or sensitivity labels
 
@@ -72,9 +74,9 @@
 **Actions**
 
 - Verify `config/remediation-policy.json` has `approval-gate` mode for all tiers
-- Confirm `autoRemediationEnabled` is `false` in the configuration
+- Confirm `autoRemediationEnabled` is intentionally set and remember that `false` (or an absent value) forces approval-gate behavior for all tiers
 - Check that the risk tier assignment in the scored report matches expected values
-- Review the remediation log for any items that bypassed the policy check
+- Review the remediation log for kill-switch enforcement, AnyoneLink/HIGH approval routing, and `planned-whatif` entries when `-WhatIf` is used
 
 ## Tip: Use a small site set for initial validation
 
