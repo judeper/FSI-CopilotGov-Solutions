@@ -3,3 +3,7 @@
 .squad/agents/*/history.md merge=union
 .squad/log/** merge=union
 .squad/orchestration-log/** merge=union
+
+# Hash fixtures must have identical bytes on Windows and Linux.
+scripts/tests/fixtures/lab-package/**/*.json text eol=lf
+scripts/tests/fixtures/lab-package/**/*.sha256 text eol=lf
