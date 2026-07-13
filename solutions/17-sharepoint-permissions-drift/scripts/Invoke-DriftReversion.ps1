@@ -19,10 +19,12 @@
     Pending approval records include approvalWindowHours and onTimeout metadata for an
     external approval processor; this scaffold does not process responses or timeouts.
 
-    The -AutoRevert switch overrides autoRevertEnabled to true for the current run.
+    The -AutoRevert switch overrides autoRevertEnabled to true for the current run,
+    but keeps HIGH-risk drift in approval-gate mode for safety.
 
 .PARAMETER AutoRevert
-    Switch to override autoRevertEnabled to true for this execution.
+    Switch to override autoRevertEnabled to true for this execution. LOW or MEDIUM
+    auto-revert scopes must be enabled in policy; otherwise execution fails loudly.
 
 .PARAMETER ConfigPath
     Path to auto-revert-policy.json. Defaults to ./config/auto-revert-policy.json.
@@ -281,6 +283,41 @@ function Merge-PendingApproval {
     return @($mergedByKey.Values)
 }
 
+function Get-EffectiveAutoRevertScope {
+    param(
+        [pscustomobject]$Policy,
+        [bool]$AutoRevertRequested
+    )
+
+    $scopes = [ordered]@{
+        HIGH   = $false
+        MEDIUM = $false
+        LOW    = $false
+    }
+
+    if (($Policy.PSObject.Properties.Name -contains 'autoRevertScopes') -and $null -ne $Policy.autoRevertScopes) {
+        foreach ($scopeName in @('HIGH', 'MEDIUM', 'LOW')) {
+            if ($Policy.autoRevertScopes.PSObject.Properties.Name -contains $scopeName) {
+                $scopes[$scopeName] = [bool]$Policy.autoRevertScopes.$scopeName
+            }
+        }
+    }
+
+    if ($AutoRevertRequested) {
+        if ($scopes['HIGH']) {
+            Write-Warning 'AutoRevert override keeps HIGH-risk drift approval-gated. HIGH scope will remain disabled for this run.'
+        }
+
+        $scopes['HIGH'] = $false
+
+        if (-not ($scopes['LOW'] -or $scopes['MEDIUM'])) {
+            throw 'AutoRevert override requested, but LOW/MEDIUM autoRevertScopes are disabled. Enable LOW or MEDIUM scope in auto-revert-policy.json before retrying.'
+        }
+    }
+
+    return [pscustomobject]$scopes
+}
+
 #endregion
 
 #region Main Logic
@@ -290,9 +327,11 @@ $policy = Get-RevertPolicy -Path $ConfigPath
 
 # Override autoRevertEnabled if -AutoRevert switch is used
 if ($AutoRevert.IsPresent) {
-    Write-Host "AutoRevert switch specified — overriding autoRevertEnabled to true for this run."
+    Write-Host "AutoRevert switch specified — enabling policy auto-revert for this run while preserving HIGH-risk approval-gate safety."
     $policy.autoRevertEnabled = $true
 }
+
+$effectiveAutoRevertScopes = Get-EffectiveAutoRevertScope -Policy $policy -AutoRevertRequested $AutoRevert.IsPresent
 
 # Load drift report
 if (-not $DriftReportPath -or -not (Test-Path $DriftReportPath)) {
@@ -330,9 +369,9 @@ foreach ($item in $driftReport.items) {
     # Determine if auto-revert is enabled for this risk tier
     $autoRevertForTier = $false
     if ($policy.autoRevertEnabled) {
-        $tierProperty = $policy.autoRevertScopes.PSObject.Properties | Where-Object { $_.Name -eq $riskTier }
+        $tierProperty = $effectiveAutoRevertScopes.PSObject.Properties | Where-Object { $_.Name -eq $riskTier }
         if ($tierProperty) {
-            $autoRevertForTier = $tierProperty.Value
+            $autoRevertForTier = [bool]$tierProperty.Value
         }
     }
 
@@ -345,44 +384,49 @@ foreach ($item in $driftReport.items) {
         }
     }
     else {
-        # Queue for approval
-        Write-Host "  Queuing for approval [$riskTier]: $($item.SiteUrl) — $($item.ItemPath)"
+        if ($PSCmdlet.ShouldProcess("$($item.SiteUrl)/$($item.ItemPath)", "Queue approval request and notify approvers")) {
+            Write-Host "  Queuing for approval [$riskTier]: $($item.SiteUrl) — $($item.ItemPath)"
 
-        $approvalRecord = [pscustomobject]@{
-            approvalId        = [guid]::NewGuid().ToString()
-            siteUrl           = $item.SiteUrl
-            itemPath          = $item.ItemPath
-            driftType         = $item.DriftType
-            riskTier          = $riskTier
-            riskScore         = $item.RiskScore
-            before            = $item.Before
-            after             = $item.After
-            requestedAt       = (Get-Date).ToString('o')
-            approvalDeadline  = (Get-Date).AddHours($policy.approvalGate.approvalWindowHours).ToString('o')
-            status            = 'pending'
-            assignedApprovers = $policy.approvalGate.approvers
-            onTimeout         = $policy.approvalGate.onTimeout
+            $approvalRecord = [pscustomobject]@{
+                approvalId        = [guid]::NewGuid().ToString()
+                siteUrl           = $item.SiteUrl
+                itemPath          = $item.ItemPath
+                driftType         = $item.DriftType
+                riskTier          = $riskTier
+                riskScore         = $item.RiskScore
+                before            = $item.Before
+                after             = $item.After
+                requestedAt       = (Get-Date).ToString('o')
+                approvalDeadline  = (Get-Date).AddHours($policy.approvalGate.approvalWindowHours).ToString('o')
+                status            = 'pending'
+                assignedApprovers = $policy.approvalGate.approvers
+                onTimeout         = $policy.approvalGate.onTimeout
+            }
+
+            $pendingApprovals += $approvalRecord
+
+            # Send approval request email
+            Send-ApprovalRequest -DriftItem $item -ApprovalGate $policy.approvalGate -SenderAddress $ApprovalSender
         }
-
-        $pendingApprovals += $approvalRecord
-
-        # Send approval request email
-        Send-ApprovalRequest -DriftItem $item -ApprovalGate $policy.approvalGate -SenderAddress $ApprovalSender
     }
 }
 
 # Save reversion log
-if ($reversionLog.Count -gt 0) {
+if (@($reversionLog).Count -gt 0) {
     $reversionLogPath = Join-Path $reportDir "reversion-log-$(Get-Date -Format 'yyyyMMddTHHmmss').json"
-    $reversionLog | ConvertTo-Json -Depth 10 | Set-Content -Path $reversionLogPath -Encoding UTF8
-    Write-Host "Reversion log saved: $reversionLogPath"
+    if ($PSCmdlet.ShouldProcess($reversionLogPath, 'Write reversion log')) {
+        $reversionLog | ConvertTo-Json -Depth 10 | Set-Content -Path $reversionLogPath -Encoding UTF8
+        Write-Host "Reversion log saved: $reversionLogPath"
+    }
 }
 
 # Save pending approvals, preserving records from prior runs.
 $mergedPendingApprovals = Merge-PendingApproval -ExistingApprovals $existingPendingApprovals -NewApprovals $pendingApprovals
-if ($mergedPendingApprovals.Count -gt 0) {
-    $mergedPendingApprovals | ConvertTo-Json -Depth 10 | Set-Content -Path $pendingApprovalsPath -Encoding UTF8
-    Write-Host "Pending approvals saved: $pendingApprovalsPath"
+if (@($mergedPendingApprovals).Count -gt 0) {
+    if ($PSCmdlet.ShouldProcess($pendingApprovalsPath, 'Write pending approvals')) {
+        $mergedPendingApprovals | ConvertTo-Json -Depth 10 | Set-Content -Path $pendingApprovalsPath -Encoding UTF8
+        Write-Host "Pending approvals saved: $pendingApprovalsPath"
+    }
 }
 
 #endregion
@@ -390,8 +434,8 @@ if ($mergedPendingApprovals.Count -gt 0) {
 # Return summary
 [pscustomobject]@{
     Status        = 'ReversionComplete'
-    RevertedCount = $reversionLog.Count
-    PendingCount  = $mergedPendingApprovals.Count
+    RevertedCount = @($reversionLog).Count
+    PendingCount  = @($mergedPendingApprovals).Count
     ReversionMode = $policy.reversionMode
     AutoRevertOverride = $AutoRevert.IsPresent
 }

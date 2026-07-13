@@ -21,15 +21,26 @@ All notable changes to this solution are documented in this file.
 
 ## [Unreleased]
 
-### Validation sweep — 2026-05-25
+### Fixed
 
-- Verified PnP PowerShell cmdlets and minimum version (2.3.0) are current.
-- Verified PnP.PowerShell v3.x prerequisite note (PS 7.4+, .NET 8.0, own app registration since Sept 2024) is accurate.
-- Verified Microsoft Graph API permissions (`Files.Read.All`, `Sites.Read.All`, `Sites.FullControl.All`, `Mail.Send`, `User.Read.All`, `GroupMember.Read.All`) are current.
-- Verified Microsoft.Graph minimum version (2.0.0) is reasonable for the documented endpoints.
-- Verified cross-solution reference to 02-oversharing-risk-assessment is valid.
-- Verified script parameter names and shared module imports match implementation.
-- No corrections required; all content verified accurate as of 2026-05-25.
+- Hardened `Invoke-DriftScan.ps1` for StrictMode by wrapping filtered collections before `.Count`, preventing empty-category crashes.
+- Added OrganizationWide drift weighting in risk scoring and aligned representative sample scoring with the active scorer.
+- Updated `Monitor-Compliance.ps1` to return truthful baseline status values (`Missing`, `Stale`, `Current`, `Invalid`) and to surface `ScanFailed` with error detail when drift scans fail.
+- Updated `Invoke-DriftReversion.ps1` so approval emails and file writes are gated behind `ShouldProcess`; `-WhatIf` now performs no mail or file mutations.
+- Updated `Invoke-DriftReversion.ps1 -AutoRevert` handling to fail loudly when LOW/MEDIUM scopes are disabled while preserving HIGH-risk approval-gate safety.
+- Updated `Deploy-Solution.ps1` to source manifest version from `config/default-config.json` (`v0.1.4`) instead of a stale hardcoded value.
+- Normalized rooted artifact paths to package-relative paths in `Export-SolutionEvidencePackage` while keeping returned package file paths absolute.
+- Updated `Invoke-DriftScan.ps1` to fail closed on missing risk configuration, load scoring from `config/default-config.json` (or explicit `-ConfigPath`), and apply illustrative principal-type + threshold calibration consistently across ADDED/CHANGED risk scoring.
+
+### Added
+
+- Added read-only lab validation contract `lab/17-sharepoint-permissions-drift.lab.json` with controls 1.2/1.4/1.6/2.5, upstream Solution 02 context, and BLOCKED-state prerequisite handling.
+- Added regression and behavior tests for drift-scan StrictMode handling, monitor failure signaling, auto-revert safety, and rooted artifact path packaging.
+- Added README and delivery/deployment handoff components linking checklist and lab contract materials.
+
+### Deferred
+
+- Deferred broad dead-config cleanup for comparison-extension fields; `Compare-PermissionSet` and related illustrative config remain documented as tenant-binding extension targets.
 
 ## [v0.1.2] — 2026-05-23 — Council review remediation
 

@@ -74,19 +74,31 @@ function Get-BaselineStatus {
             IsStale   = $true
             Age       = $null
             FilePath  = $null
+            Status    = 'Missing'
+            Error     = $null
         }
     }
 
     try {
         $pointer = Get-Content -Path $latestPointer -Raw | ConvertFrom-Json
+        if ([string]::IsNullOrWhiteSpace([string]$pointer.capturedAt) -or
+            [string]::IsNullOrWhiteSpace([string]$pointer.baselinePath)) {
+            throw 'latest-baseline.json must include capturedAt and baselinePath.'
+        }
+
         $capturedAt = [datetime]::Parse($pointer.capturedAt)
         $ageHours = ((Get-Date) - $capturedAt).TotalHours
+        $resolvedBaselinePath = Join-Path $BaselinePath $pointer.baselinePath
+        $baselineExists = Test-Path -Path $resolvedBaselinePath
+        $isStale = ($ageHours -gt $ScanFrequencyHours)
 
         return [pscustomobject]@{
-            Exists    = $true
-            IsStale   = ($ageHours -gt $ScanFrequencyHours)
+            Exists    = $baselineExists
+            IsStale   = ($isStale -or -not $baselineExists)
             Age       = [math]::Round($ageHours, 1)
-            FilePath  = Join-Path $BaselinePath $pointer.baselinePath
+            FilePath  = $resolvedBaselinePath
+            Status    = if (-not $baselineExists) { 'Missing' } elseif ($isStale) { 'Stale' } else { 'Current' }
+            Error     = $null
         }
     }
     catch {
@@ -96,6 +108,8 @@ function Get-BaselineStatus {
             IsStale   = $true
             Age       = $null
             FilePath  = $null
+            Status    = 'Invalid'
+            Error     = $_.Exception.Message
         }
     }
 }
@@ -112,6 +126,7 @@ $solutionRoot = Join-Path $PSScriptRoot '..'
 
 # Load baseline config for scan frequency
 $baselineConfigPath = Join-Path $solutionRoot 'config\baseline-config.json'
+$driftScoringConfigPath = Join-Path $solutionRoot 'config\default-config.json'
 $scanFrequency = 24
 if (Test-Path $baselineConfigPath) {
     $baselineConfig = Get-Content -Path $baselineConfigPath -Raw | ConvertFrom-Json
@@ -134,13 +149,17 @@ $reportsDir = Join-Path $solutionRoot 'reports'
 Write-Host "`nStep 1: Checking baseline status..." -ForegroundColor Yellow
 $baselineStatus = Get-BaselineStatus -BaselinePath $baselinesDir -ScanFrequencyHours $scanFrequency
 
-if (-not $baselineStatus.Exists) {
+if ($baselineStatus.Status -eq 'Missing') {
     Write-Host "  No baseline found. A new baseline should be captured using New-PermissionsBaseline.ps1."
     Write-Host "  Proceeding with drift scan using sample data."
 }
-elseif ($baselineStatus.IsStale) {
+elseif ($baselineStatus.Status -eq 'Stale') {
     Write-Host "  Baseline is stale ($($baselineStatus.Age) hours old, threshold: $scanFrequency hours)."
     Write-Host "  Consider recapturing baseline using New-PermissionsBaseline.ps1."
+}
+elseif ($baselineStatus.Status -eq 'Invalid') {
+    Write-Host "  Baseline pointer is invalid. A new baseline should be captured using New-PermissionsBaseline.ps1."
+    Write-Host "  Proceeding with drift scan using sample data."
 }
 else {
     Write-Host "  Baseline is current ($($baselineStatus.Age) hours old)."
@@ -155,7 +174,7 @@ $driftScanParams = @{
     TenantUrl    = $TenantUrl
     BaselinePath = $baselineFile
     OutputPath   = $reportsDir
-    ConfigPath   = $baselineConfigPath
+    ConfigPath   = $driftScoringConfigPath
 }
 if ($AlertRecipient) {
     $driftScanParams['AlertRecipient'] = $AlertRecipient
@@ -174,8 +193,21 @@ catch {
         MediumRisk = 0
         LowRisk    = 0
         ReportFile = $null
-        Status     = 'Failed'
+        Status     = 'ScanFailed'
+        ErrorMessage = $_.Exception.Message
     }
+}
+
+$scanStatus = if ($scanResult.PSObject.Properties.Name -contains 'Status') { [string]$scanResult.Status } else { 'DriftScanComplete' }
+$scanErrorMessage = if ($scanResult.PSObject.Properties.Name -contains 'ErrorMessage') { [string]$scanResult.ErrorMessage } else { $null }
+$monitorStatus = if ($scanStatus -eq 'ScanFailed' -or $scanStatus -eq 'Failed') {
+    'ScanFailed'
+}
+elseif ($scanResult.TotalDrift -eq 0) {
+    'NoDriftDetected'
+}
+else {
+    'DriftDetected'
 }
 
 # Ensure output directory
@@ -201,7 +233,8 @@ $monitoringSummary = [pscustomobject]@{
         lowRisk    = $scanResult.LowRisk
         reportFile = $scanResult.ReportFile
     }
-    status = if ($scanResult.TotalDrift -eq 0) { 'NoDriftDetected' } else { 'DriftDetected' }
+    scanError = $scanErrorMessage
+    status = $monitorStatus
 }
 
 $summaryPath = Join-Path $OutputPath "SPD-monitoring-$(Get-Date -Format 'yyyyMMddTHHmmss').json"
@@ -214,7 +247,7 @@ Write-Host "Monitoring summary saved: $summaryPath" -ForegroundColor Green
 [pscustomobject]@{
     Solution          = '17-sharepoint-permissions-drift'
     ConfigurationTier = $ConfigurationTier
-    BaselineStatus    = if ($baselineStatus.Exists) { 'Current' } else { 'Missing' }
+    BaselineStatus    = $baselineStatus.Status
     TotalDrift        = $scanResult.TotalDrift
     HighRisk          = $scanResult.HighRisk
     SummaryFile       = $summaryPath

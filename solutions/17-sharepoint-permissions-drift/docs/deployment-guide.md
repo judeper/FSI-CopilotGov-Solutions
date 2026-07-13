@@ -105,6 +105,16 @@ Generate the evidence package for compliance review:
     -OutputPath "./evidence"
 ```
 
+### Step 11 — Complete handoff package
+
+Before tenant-bound implementation work, provide the following existing artifacts as the handoff packet:
+
+- `README.md` (Implementation Handoff and Lab Validation Contract sections)
+- `DELIVERY-CHECKLIST.md`
+- `lab/17-sharepoint-permissions-drift.lab.json`
+
+Confirm blocked prerequisite handling (missing role, app-permission, or licensing state) with operators before any non-template execution.
+
 ## Rollback Guidance
 
 To roll back the solution:

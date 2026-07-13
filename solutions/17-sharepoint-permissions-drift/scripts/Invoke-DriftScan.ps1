@@ -24,7 +24,7 @@
     Directory for drift report output files. Defaults to ./reports.
 
 .PARAMETER ConfigPath
-    Path to baseline-config.json. Defaults to ./config/baseline-config.json.
+    Path to default-config.json (or equivalent scoring config). Defaults to ./config/default-config.json.
 
 .PARAMETER AlertRecipient
     Email address to receive HIGH-risk drift alert notifications.
@@ -51,7 +51,7 @@ param(
     [string]$OutputPath = './reports',
 
     [Parameter()]
-    [string]$ConfigPath = './config/baseline-config.json',
+    [string]$ConfigPath = './config/default-config.json',
 
     [Parameter()]
     [string]$AlertRecipient,
@@ -63,14 +63,53 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# ConfigPath accepted for future per-tenant config overlay; not yet referenced in scaffold path.
-$null = $ConfigPath
-
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 
 #region Helper Functions
+
+function Get-ConfigAsHashtable {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+        [Parameter(Mandatory)]
+        [string]$SolutionRoot
+    )
+
+    $resolvedPath = $Path
+    if (-not [System.IO.Path]::IsPathRooted($resolvedPath)) {
+        $trimmed = $resolvedPath -replace '^[.][\\/]', ''
+        $resolvedPath = Join-Path $SolutionRoot $trimmed
+    }
+
+    if (-not (Test-Path -Path $resolvedPath)) {
+        throw "Risk scoring configuration file was not found: $resolvedPath"
+    }
+
+    return Get-Content -Path $resolvedPath -Raw | ConvertFrom-Json -AsHashtable
+}
+
+function Get-RequiredIntConfigValue {
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Table,
+        [Parameter(Mandatory)]
+        [string]$Key,
+        [Parameter(Mandatory)]
+        [string]$Context
+    )
+
+    if (-not $Table.ContainsKey($Key)) {
+        throw "Missing required scoring configuration key '$Context.$Key'."
+    }
+
+    if ($null -eq $Table[$Key] -or -not ($Table[$Key] -is [ValueType])) {
+        throw "Scoring configuration key '$Context.$Key' must be numeric."
+    }
+
+    return [int]$Table[$Key]
+}
 
 function Test-FullControlPermissionLevel {
     param([AllowNull()][string]$PermissionLevel)
@@ -81,39 +120,98 @@ function Test-FullControlPermissionLevel {
     return $normalized -eq 'fullcontrol'
 }
 
-function Get-DriftTypeWeight {
-    param([string]$DriftType, [pscustomobject]$DriftItem)
+function Get-PrincipalTypeWeight {
+    param(
+        [AllowNull()][string]$PrincipalType,
+        [hashtable]$PrincipalTypeWeights
+    )
 
-    $weight = 0
+    if (-not $PrincipalTypeWeights.ContainsKey('Default')) {
+        throw "Missing required scoring configuration key 'driftTypeWeights.principalType.Default'."
+    }
+
+    if ([string]::IsNullOrWhiteSpace($PrincipalType)) {
+        return Get-RequiredIntConfigValue -Table $PrincipalTypeWeights -Key 'Default' -Context 'driftTypeWeights.principalType'
+    }
+
+    if ($PrincipalTypeWeights.ContainsKey($PrincipalType)) {
+        return Get-RequiredIntConfigValue -Table $PrincipalTypeWeights -Key $PrincipalType -Context 'driftTypeWeights.principalType'
+    }
+
+    return Get-RequiredIntConfigValue -Table $PrincipalTypeWeights -Key 'Default' -Context 'driftTypeWeights.principalType'
+}
+
+function Get-DriftTypeWeight {
+    param(
+        [string]$DriftType,
+        [pscustomobject]$DriftItem,
+        [hashtable]$DriftTypeWeights
+    )
+
+    $baseWeights = $DriftTypeWeights['base']
+    $permissionWeights = $DriftTypeWeights['permissionLevel']
+    $principalTypeWeights = $DriftTypeWeights['principalType']
+
+    if ($null -eq $baseWeights -or $null -eq $permissionWeights -or $null -eq $principalTypeWeights) {
+        throw 'driftTypeWeights must include base, permissionLevel, and principalType tables.'
+    }
+
+    $weight = Get-RequiredIntConfigValue -Table $baseWeights -Key $DriftType -Context 'driftTypeWeights.base'
     switch ($DriftType) {
         'ADDED' {
-            if (Test-FullControlPermissionLevel -PermissionLevel $DriftItem.After.permissionLevel) { $weight += 25 }
-            elseif ($DriftItem.After.permissionLevel -eq 'Contribute') { $weight += 15 }
-            else { $weight += 10 }
+            if (Test-FullControlPermissionLevel -PermissionLevel $DriftItem.After.permissionLevel) {
+                $weight += Get-RequiredIntConfigValue -Table $permissionWeights -Key 'FullControl' -Context 'driftTypeWeights.permissionLevel'
+            }
+            elseif ($DriftItem.After.permissionLevel -eq 'Contribute') {
+                $weight += Get-RequiredIntConfigValue -Table $permissionWeights -Key 'Contribute' -Context 'driftTypeWeights.permissionLevel'
+            }
+            else {
+                $weight += Get-RequiredIntConfigValue -Table $permissionWeights -Key 'Default' -Context 'driftTypeWeights.permissionLevel'
+            }
 
-            if ($DriftItem.After.principalType -eq 'ExternalUser') { $weight += 30 }
-            if ($DriftItem.After.principalType -eq 'AnonymousLink') { $weight += 40 }
-        }
-        'REMOVED' {
-            $weight += 5
+            $weight += Get-PrincipalTypeWeight -PrincipalType $DriftItem.After.principalType -PrincipalTypeWeights $principalTypeWeights
         }
         'CHANGED' {
-            $weight += 15
             if ((Test-FullControlPermissionLevel -PermissionLevel $DriftItem.After.permissionLevel) -and
                 -not (Test-FullControlPermissionLevel -PermissionLevel $DriftItem.Before.permissionLevel)) {
-                $weight += 20
+                $weight += Get-RequiredIntConfigValue -Table $permissionWeights -Key 'ChangedToFullControl' -Context 'driftTypeWeights.permissionLevel'
             }
+
+            $weight += Get-PrincipalTypeWeight -PrincipalType $DriftItem.After.principalType -PrincipalTypeWeights $principalTypeWeights
         }
     }
     return $weight
 }
 
 function Get-RiskTier {
-    param([int]$Score)
+    param(
+        [int]$Score,
+        [hashtable]$RiskThresholds
+    )
 
-    if ($Score -ge 70) { return 'HIGH' }
-    if ($Score -ge 40) { return 'MEDIUM' }
+    $highThreshold = Get-RequiredIntConfigValue -Table $RiskThresholds -Key 'high' -Context 'riskThresholds'
+    $mediumThreshold = Get-RequiredIntConfigValue -Table $RiskThresholds -Key 'medium' -Context 'riskThresholds'
+    $lowThreshold = Get-RequiredIntConfigValue -Table $RiskThresholds -Key 'low' -Context 'riskThresholds'
+
+    if ($highThreshold -lt $mediumThreshold -or $mediumThreshold -lt $lowThreshold) {
+        throw 'riskThresholds must satisfy high >= medium >= low.'
+    }
+
+    if ($Score -ge $highThreshold) { return 'HIGH' }
+    if ($Score -ge $mediumThreshold) { return 'MEDIUM' }
     return 'LOW'
+}
+
+function Set-RiskClassification {
+    param(
+        [pscustomobject]$DriftItem,
+        [hashtable]$DriftTypeWeights,
+        [hashtable]$RiskThresholds
+    )
+
+    $DriftItem.RiskScore = Get-DriftTypeWeight -DriftType $DriftItem.DriftType -DriftItem $DriftItem -DriftTypeWeights $DriftTypeWeights
+    $DriftItem.RiskTier = Get-RiskTier -Score $DriftItem.RiskScore -RiskThresholds $RiskThresholds
+    return $DriftItem
 }
 
 function Compare-PermissionSet {
@@ -123,7 +221,9 @@ function Compare-PermissionSet {
     #>
     param(
         [pscustomobject]$BaselineSite,
-        [pscustomobject]$CurrentSite
+        [pscustomobject]$CurrentSite,
+        [hashtable]$DriftTypeWeights,
+        [hashtable]$RiskThresholds
     )
 
     $driftItems = @()
@@ -155,9 +255,7 @@ function Compare-PermissionSet {
                 RiskTier   = 'LOW'
                 DetectedAt = (Get-Date).ToString('o')
             }
-            $driftItem.RiskScore = Get-DriftTypeWeight -DriftType 'ADDED' -DriftItem $driftItem
-            $driftItem.RiskTier = Get-RiskTier -Score $driftItem.RiskScore
-            $driftItems += $driftItem
+            $driftItems += (Set-RiskClassification -DriftItem $driftItem -DriftTypeWeights $DriftTypeWeights -RiskThresholds $RiskThresholds)
         }
     }
 
@@ -174,9 +272,7 @@ function Compare-PermissionSet {
                 RiskTier   = 'LOW'
                 DetectedAt = (Get-Date).ToString('o')
             }
-            $driftItem.RiskScore = Get-DriftTypeWeight -DriftType 'REMOVED' -DriftItem $driftItem
-            $driftItem.RiskTier = Get-RiskTier -Score $driftItem.RiskScore
-            $driftItems += $driftItem
+            $driftItems += (Set-RiskClassification -DriftItem $driftItem -DriftTypeWeights $DriftTypeWeights -RiskThresholds $RiskThresholds)
         }
     }
 
@@ -196,9 +292,7 @@ function Compare-PermissionSet {
                     RiskTier   = 'LOW'
                     DetectedAt = (Get-Date).ToString('o')
                 }
-                $driftItem.RiskScore = Get-DriftTypeWeight -DriftType 'CHANGED' -DriftItem $driftItem
-                $driftItem.RiskTier = Get-RiskTier -Score $driftItem.RiskScore
-                $driftItems += $driftItem
+                $driftItems += (Set-RiskClassification -DriftItem $driftItem -DriftTypeWeights $DriftTypeWeights -RiskThresholds $RiskThresholds)
             }
         }
     }
@@ -211,9 +305,13 @@ function Get-SampleDriftData {
     .SYNOPSIS
         Returns representative sample drift data for documentation-first scaffold.
     #>
-    param([string]$TenantUrl)
+    param(
+        [string]$TenantUrl,
+        [hashtable]$DriftTypeWeights,
+        [hashtable]$RiskThresholds
+    )
 
-    return @(
+    $sampleItems = @(
         [pscustomobject]@{
             SiteUrl    = "$TenantUrl/sites/Finance"
             ItemPath   = 'Shared Documents/Confidential'
@@ -222,10 +320,10 @@ function Get-SampleDriftData {
             After      = [pscustomobject]@{
                 principalName   = 'External Consultant'
                 principalType   = 'ExternalUser'
-                permissionLevel = 'Contribute'
+                permissionLevel = 'Full Control'
             }
-            RiskScore  = 45
-            RiskTier   = 'MEDIUM'
+            RiskScore  = 0
+            RiskTier   = 'LOW'
             DetectedAt = (Get-Date).ToString('o')
         }
         [pscustomobject]@{
@@ -242,8 +340,8 @@ function Get-SampleDriftData {
                 principalType   = 'SecurityGroup'
                 permissionLevel = 'Full Control'
             }
-            RiskScore  = 55
-            RiskTier   = 'MEDIUM'
+            RiskScore  = 0
+            RiskTier   = 'LOW'
             DetectedAt = (Get-Date).ToString('o')
         }
         [pscustomobject]@{
@@ -256,8 +354,8 @@ function Get-SampleDriftData {
                 principalType   = 'OrganizationWide'
                 permissionLevel = 'Read'
             }
-            RiskScore  = 45
-            RiskTier   = 'MEDIUM'
+            RiskScore  = 0
+            RiskTier   = 'LOW'
             DetectedAt = (Get-Date).ToString('o')
         }
         [pscustomobject]@{
@@ -270,11 +368,18 @@ function Get-SampleDriftData {
                 permissionLevel = 'Full Control'
             }
             After      = $null
-            RiskScore  = 10
+            RiskScore  = 0
             RiskTier   = 'LOW'
             DetectedAt = (Get-Date).ToString('o')
         }
     )
+
+    $classifiedItems = @()
+    foreach ($sampleItem in $sampleItems) {
+        $classifiedItems += (Set-RiskClassification -DriftItem $sampleItem -DriftTypeWeights $DriftTypeWeights -RiskThresholds $RiskThresholds)
+    }
+
+    return $classifiedItems
 }
 
 function Send-DriftAlert {
@@ -288,7 +393,7 @@ function Send-DriftAlert {
         [array]$HighRiskItems
     )
 
-    if (-not $Recipient -or $HighRiskItems.Count -eq 0) { return }
+    if (-not $Recipient -or @($HighRiskItems).Count -eq 0) { return }
 
     $graphContext = $null
     try {
@@ -299,12 +404,12 @@ function Send-DriftAlert {
     }
 
     if ($null -eq $graphContext) {
-        Write-Warning "Graph API context not available — alert email not sent. $($HighRiskItems.Count) HIGH-risk drift item(s) detected."
+        Write-Warning "Graph API context not available — alert email not sent. $(@($HighRiskItems).Count) HIGH-risk drift item(s) detected."
         return
     }
 
     try {
-        $subject = "SharePoint Permissions Drift Alert — $($HighRiskItems.Count) HIGH-Risk Item(s)"
+        $subject = "SharePoint Permissions Drift Alert — $(@($HighRiskItems).Count) HIGH-Risk Item(s)"
         $body = "HIGH-risk permissions drift detected on the following sites:`n"
         foreach ($item in $HighRiskItems) {
             $body += "  - $($item.SiteUrl) | $($item.ItemPath) | $($item.DriftType) | Score: $($item.RiskScore)`n"
@@ -338,6 +443,15 @@ function Send-DriftAlert {
 
 #region Main Logic
 
+$solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$config = Get-ConfigAsHashtable -Path $ConfigPath -SolutionRoot $solutionRoot
+if (-not $config.ContainsKey('driftTypeWeights') -or -not $config.ContainsKey('riskThresholds')) {
+    throw "Risk scoring configuration must include 'driftTypeWeights' and 'riskThresholds'."
+}
+
+$driftTypeWeights = $config['driftTypeWeights']
+$riskThresholds = $config['riskThresholds']
+
 # Load baseline
 $baselineData = $null
 if (Test-Path $BaselinePath) {
@@ -368,12 +482,12 @@ if ($useSampleData) {
 $driftItems = @()
 
 if ($useSampleData) {
-    $driftItems = Get-SampleDriftData -TenantUrl $TenantUrl
+    $driftItems = Get-SampleDriftData -TenantUrl $TenantUrl -DriftTypeWeights $driftTypeWeights -RiskThresholds $riskThresholds
 }
 else {
     foreach ($baselineSite in $baselineData.sites) {
         # Tenant-bound current-state capture is pending; scope representative sample drift to baseline sites.
-        $sampleDrift = Get-SampleDriftData -TenantUrl $TenantUrl
+        $sampleDrift = Get-SampleDriftData -TenantUrl $TenantUrl -DriftTypeWeights $driftTypeWeights -RiskThresholds $riskThresholds
         $siteDrift = $sampleDrift | Where-Object { $_.SiteUrl -eq $baselineSite.siteUrl }
         if ($siteDrift) {
             $driftItems += $siteDrift
@@ -387,14 +501,14 @@ $driftReport = [pscustomobject]@{
     generatedAt    = (Get-Date).ToString('o')
     tenantUrl      = $TenantUrl
     baselinePath   = $BaselinePath
-    totalDriftItems = $driftItems.Count
+    totalDriftItems = @($driftItems).Count
     summary        = [pscustomobject]@{
-        added   = ($driftItems | Where-Object { $_.DriftType -eq 'ADDED' }).Count
-        removed = ($driftItems | Where-Object { $_.DriftType -eq 'REMOVED' }).Count
-        changed = ($driftItems | Where-Object { $_.DriftType -eq 'CHANGED' }).Count
-        high    = ($driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }).Count
-        medium  = ($driftItems | Where-Object { $_.RiskTier -eq 'MEDIUM' }).Count
-        low     = ($driftItems | Where-Object { $_.RiskTier -eq 'LOW' }).Count
+        added   = @($driftItems | Where-Object { $_.DriftType -eq 'ADDED' }).Count
+        removed = @($driftItems | Where-Object { $_.DriftType -eq 'REMOVED' }).Count
+        changed = @($driftItems | Where-Object { $_.DriftType -eq 'CHANGED' }).Count
+        high    = @($driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }).Count
+        medium  = @($driftItems | Where-Object { $_.RiskTier -eq 'MEDIUM' }).Count
+        low     = @($driftItems | Where-Object { $_.RiskTier -eq 'LOW' }).Count
     }
     items          = $driftItems
 }
@@ -411,8 +525,8 @@ $driftReport | ConvertTo-Json -Depth 10 | Set-Content -Path $reportFilePath -Enc
 Write-Host "Drift report saved: $reportFilePath"
 
 # Send alert for HIGH-risk items
-$highRiskItems = $driftItems | Where-Object { $_.RiskTier -eq 'HIGH' }
-if ($highRiskItems.Count -gt 0) {
+$highRiskItems = @($driftItems | Where-Object { $_.RiskTier -eq 'HIGH' })
+if (@($highRiskItems).Count -gt 0) {
     Send-DriftAlert -Recipient $AlertRecipient -SenderAddress $AlertSender -HighRiskItems $highRiskItems
 }
 
@@ -421,10 +535,10 @@ if ($highRiskItems.Count -gt 0) {
 # Return summary
 [pscustomobject]@{
     ReportFile     = $reportFilePath
-    TotalDrift     = $driftItems.Count
-    HighRisk       = $highRiskItems.Count
-    MediumRisk     = ($driftItems | Where-Object { $_.RiskTier -eq 'MEDIUM' }).Count
-    LowRisk        = ($driftItems | Where-Object { $_.RiskTier -eq 'LOW' }).Count
-    AlertSent      = ($highRiskItems.Count -gt 0 -and $AlertRecipient)
+    TotalDrift     = @($driftItems).Count
+    HighRisk       = @($highRiskItems).Count
+    MediumRisk     = @($driftItems | Where-Object { $_.RiskTier -eq 'MEDIUM' }).Count
+    LowRisk        = @($driftItems | Where-Object { $_.RiskTier -eq 'LOW' }).Count
+    AlertSent      = (@($highRiskItems).Count -gt 0 -and $AlertRecipient)
     Status         = 'DriftScanComplete'
 }

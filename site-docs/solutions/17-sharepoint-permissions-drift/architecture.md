@@ -46,11 +46,11 @@
 
 ## Core Data Flow
 
-1. **Baseline capture** — `New-PermissionsBaseline.ps1` writes representative baseline snapshots for site-level sharing settings, unique permission entries, sharing links, and external user scenarios. The PnP block is illustrative; production tenant binding must add complete role-assignment, sharing-link, and external-user enumeration. Future tenant binding should leverage **SharePoint Advanced Management (SAM) Data Access Governance** reports — specifically the Site permissions report, Sharing links report, and EEEU (Everyone Except External Users) insights — as the authoritative backing capability for drift-state detection. The snapshot is saved as a timestamped JSON file with a `latest-baseline.json` pointer.
+1. **Baseline capture** — `New-PermissionsBaseline.ps1` writes representative baseline snapshots for site-level sharing settings, unique permission entries, sharing links, and external user scenarios. The PnP block is illustrative; production tenant binding must add complete role-assignment, sharing-link, and external-user enumeration. Future tenant binding should leverage **SharePoint Advanced Management (SAM) Data Access Governance** reports — specifically the Site permissions report, Sharing links report, and EEEU (Everyone Except External Users) insights — as the authoritative backing capability for drift-state detection. **Restricted Content Discovery (RCD)** is an adjacent SAM discoverability control that can reduce broad search/Copilot surfacing during review windows, but it does not change underlying SharePoint permissions. The snapshot is saved as a timestamped JSON file with a `latest-baseline.json` pointer.
 
-2. **Drift detection** — `Invoke-DriftScan.ps1` loads the latest baseline and returns representative sample drift scoped to baseline sites until tenant-bound current-state capture is added. `Compare-PermissionSet` documents a permission-entry comparison helper, but the scaffold main path does not perform live tenant comparison.
+2. **Drift detection** — `Invoke-DriftScan.ps1` loads the latest baseline and returns representative sample drift scoped to baseline sites until tenant-bound current-state capture is added. `Compare-PermissionSet` remains an extension target for future live comparison. Tenant-bound expansion should add stable principal identifiers before treating cross-run principal matching as authoritative.
 
-3. **Risk classification** — Each drift item receives a scaffold risk score based on drift type, permission level, and principal type. Classifier matches, multiple concurrent drift, and Solution 02 risk elevation are design factors for future tenant-bound scoring.
+3. **Risk classification** — Each drift item receives a scaffold risk score based on drift type, permission level, and principal type, including organization-wide sharing expansion weighting so broad internal exposure does not default to LOW risk. Classifier matches, multiple concurrent drift, and Solution 02 risk elevation are design factors for future tenant-bound scoring.
 
 4. **Alert notification** — HIGH-risk drift can trigger an alert summary via Microsoft Graph API using `/me/sendMail` or `POST /users/{sender}/sendMail` to send to the configured alert recipient.
 
@@ -77,7 +77,7 @@
 | Permission level and principal type | Implemented in sample scoring | `Invoke-DriftScan.ps1` scores ADDED/REMOVED/CHANGED permission-entry samples using fixed factors. |
 | Anonymous sharing link added | Future tenant-bound factor | Listed in `default-config.json` as an illustrative design weight until sharing-link comparison is added. |
 | External user access granted | Implemented for sample principal type | External principals add risk in the scaffold scorer; live external-user comparison is pending. |
-| Organization-wide sharing expanded | Future tenant-bound factor | Listed as an illustrative design weight until site-sharing comparison is added. |
+| Organization-wide sharing expanded | Implemented in sample scoring | OrganizationWide principal expansion now contributes risk weight in scaffold scoring to prevent default LOW classification for broad internal exposure. |
 | FSI data classifier match | Future tenant-bound factor | Requires integration with classification output before it affects scores. |
 | Multiple concurrent drifts | Future tenant-bound factor | Requires aggregation across live drift results before it affects scores. |
 

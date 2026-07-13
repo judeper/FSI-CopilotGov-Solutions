@@ -40,15 +40,27 @@
     "low": 0
   },
   "driftTypeWeights": {
-    "anonymousSharingAdded": 40,
-    "externalUserAdded": 30,
-    "orgWideSharingExpanded": 20,
-    "permissionLevelElevated": 15,
-    "fsiDataClassifierMatch": 15,
-    "multipleConcurrentDrifts": 10
+    "base": {
+      "ADDED": 10,
+      "REMOVED": 5,
+      "CHANGED": 15
+    },
+    "permissionLevel": {
+      "FullControl": 30,
+      "Contribute": 15,
+      "ChangedToFullControl": 25,
+      "Default": 10
+    },
+    "principalType": {
+      "ExternalUser": 30,
+      "AnonymousLink": 40,
+      "OrganizationWide": 35,
+      "Default": 0
+    }
   },
   "configurationNotes": {
-    "driftTypeWeights": "Illustrative design weights for future tenant-bound scoring; Invoke-DriftScan.ps1 currently uses fixed scaffold scoring for permission-level and principal-type samples.",
+    "driftTypeWeights": "Illustrative scaffold scoring only (not Microsoft defaults). Weights are tuned for documentation-first risk calibration examples and intentionally allow ADDED ExternalUser/AnonymousLink/OrganizationWide + Full Control to reach HIGH risk.",
+    "riskThresholds": "Illustrative scaffold thresholds only (not Microsoft defaults). HIGH applies at or above the configured high threshold; MEDIUM applies at or above the configured medium threshold.",
     "tierNotificationFlags": "Site-owner notification and high-risk approval flags are omitted from tier configs until those behaviors are wired into scripts; use auto-revert-policy.json for approval-gate behavior."
   },
   "scanWorkloads": [

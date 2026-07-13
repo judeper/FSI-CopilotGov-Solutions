@@ -81,3 +81,10 @@
 - [ ] Stakeholder sign-off has been obtained (IT Security, Compliance, SharePoint Admin)
 - [ ] Runbook for ongoing operations has been documented
 - [ ] Escalation contacts for production issues have been confirmed
+
+## 11. Documentation Handoff and Lab Validation
+
+- [ ] README handoff section has been reviewed with implementation owners
+- [ ] Deployment, prerequisites, and evidence-export guides are attached to the handoff package
+- [ ] Read-only lab contract `lab/17-sharepoint-permissions-drift.lab.json` is shared with validation operators
+- [ ] BLOCKED-state handling for role/app-permission/licensing gaps is acknowledged in handoff notes

@@ -28,14 +28,30 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
-    def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+    def test_contract_validator_accepts_repository_contracts(self) -> None:
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+        self.assertIn(
+            "solutions/17-sharepoint-permissions-drift/lab/17-sharepoint-permissions-drift.lab.json",
+            result.stdout.replace("\\", "/"),
+        )
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
         result = run_validator(CONTRACT_VALIDATOR, valid_path)
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+
+    def test_contract_validator_accepts_solution17_repository_contract(self) -> None:
+        contract_path = (
+            ROOT
+            / "solutions"
+            / "17-sharepoint-permissions-drift"
+            / "lab"
+            / "17-sharepoint-permissions-drift.lab.json"
+        )
+        result = run_validator(CONTRACT_VALIDATOR, contract_path)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
         self.assertIn("validation passed", result.stdout.lower())
 
