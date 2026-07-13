@@ -121,7 +121,7 @@ Describe 'Documentation regression checks' {
     It 'does not publish unverified 2027 retirement dates in solution files' {
         $filesToScan = @(
             Get-ChildItem -Path $script:solutionRoot -Recurse -File -Include *.md,*.ps1,*.json |
-                Where-Object { $_.FullName -notmatch '\\tests\\' }
+                Where-Object { $_.FullName -notmatch '[\\/]tests[\\/]' }
         )
 
         foreach ($file in $filesToScan) {
