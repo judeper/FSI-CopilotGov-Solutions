@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "resultId": "lab-result:01-copilot-readiness-scanner:2026-07-12-mutation-ref-missing",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-foundation",
+  "solutionId": "01-copilot-readiness-scanner",
+  "generatedAt": "2026-07-12T20:00:00Z",
+  "preflight": {
+    "decision": "GO",
+    "checkedOn": "2026-07-12T19:55:00Z",
+    "notes": "Fixture intentionally violates mutation reference semantics."
+  },
+  "summary": {
+    "disposition": "FAIL",
+    "accepted": false,
+    "controlImplementation": "not-implemented",
+    "notes": "Intentional invalid fixture: mutationExecuted is true while mutationRef is null."
+  },
+  "stepResults": [
+    {
+      "phaseId": "exercise",
+      "stepId": "step-run-readiness-script",
+      "outcome": "FAIL",
+      "notes": "Mutation execution flag is set without a matching mutation reference.",
+      "readBackVerified": false,
+      "mutationExecuted": true,
+      "mutationRef": null,
+      "evidenceRefs": [
+        "evidence/mutation-error.txt"
+      ]
+    }
+  ],
+  "blockers": [],
+  "cleanup": {
+    "state": "not-started",
+    "completedBy": "fsi-governance-lab-operators",
+    "notes": "Cleanup status intentionally left as not-started for this negative fixture.",
+    "orphanedMutations": []
+  },
+  "sourceVerification": {
+    "claims": [
+      {
+        "claimId": "claim-setup-guidance",
+        "status": "not-verified",
+        "checkedOn": "2026-07-12T19:58:00Z",
+        "evidenceRefs": [],
+        "sourceUrl": "https://learn.microsoft.com/microsoft-365-copilot/microsoft-365-copilot-setup"
+      }
+    ]
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-readonly-zero-mutations",
+  "solution": {
+    "id": "01-copilot-readiness-scanner",
+    "name": "Copilot Readiness Assessment Scanner",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-12",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true,
+    "prohibitedClouds": [
+      "gcc",
+      "gcc-high",
+      "dod",
+      "sovereign"
+    ]
+  },
+  "controls": [
+    "1.1",
+    "1.5",
+    "1.6"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-purview-compliance-portal"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-setup-guidance",
+      "claimText": "Microsoft Learn documents baseline setup requirements for Microsoft 365 Copilot in commercial tenants.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365-copilot/microsoft-365-copilot-setup",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-10",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot license assigned to test operator"
+    ],
+    "roles": [
+      "Global Reader"
+    ],
+    "features": [
+      "Copilot usage reporting enabled"
+    ],
+    "capacityRequirements": [
+      "One disposable test workspace for representative sample validation"
+    ],
+    "dataRequirements": [
+      "Representative sample records only"
+    ],
+    "tenantCount": 1
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm preconditions",
+        "steps": [
+          {
+            "id": "step-verify-prerequisites",
+            "mode": "ui",
+            "intent": "Review readiness settings in the Microsoft 365 admin center.",
+            "expected": "Required readiness controls are visible for baseline validation.",
+            "locator": "AdminCenter > Copilot > Setup readiness",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Readiness settings panel",
+              "expectation": "Readiness panel confirms baseline requirements are listed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run representative validation",
+        "steps": [
+          {
+            "id": "step-run-readiness-script",
+            "mode": "powershell",
+            "intent": "Execute representative readiness assessment script in documentation-first mode.",
+            "expected": "Script emits representative findings with documentation-first runtime markers.",
+            "command": "pwsh -File solutions/01-copilot-readiness-scanner/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -ExportPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance script output",
+              "expectation": "Output includes runtime mode markers and representative findings."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify source and read-back",
+        "steps": [
+          {
+            "id": "step-verify-graph-reference",
+            "mode": "api",
+            "intent": "Confirm Microsoft Graph reporting endpoint documentation references remain current.",
+            "expected": "Source citation remains available on Microsoft Learn.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/reports/getMicrosoft365CopilotUsageUserDetail"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Learn source URL",
+              "expectation": "Source remains published and matches claim lifecycle state."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record cleanup decision",
+        "steps": [
+          {
+            "id": "step-confirm-no-cleanup-needed",
+            "mode": "manual",
+            "intent": "Capture operator attestation that no mutable changes were applied.",
+            "expected": "Operator note confirms cleanup is not required for this run.",
+            "operatorNote": "No mutation was executed in this documentation-first validation run.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no mutable changes occurred."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-readback-log",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript and read-back output from representative validation.",
+        "requiredForControls": [
+          "1.1",
+          "1.5",
+          "1.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-readback-log"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

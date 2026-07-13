@@ -184,6 +184,8 @@ function Test-CopilotGovEvidencePackage {
     }
 
     if ($null -ne $package) {
+        $resolvedPackagePath = (Resolve-Path -Path $Path).Path
+        $packageDirectory = Split-Path -Path $resolvedPackagePath -Parent
         $expectedVersion = Get-CopilotGovEvidenceSchemaVersion
         if ([string]$package.metadata.exportVersion -ne $expectedVersion) {
             $errors += ('Evidence package {0} declares exportVersion {1}; expected {2}.' -f $Path, $package.metadata.exportVersion, $expectedVersion)
@@ -206,9 +208,21 @@ function Test-CopilotGovEvidencePackage {
                 continue
             }
 
-            $artifactPath = [string]$artifact.path
+            $rawArtifactPath = [string]$artifact.path
+            $artifactPath = if ([IO.Path]::IsPathRooted($rawArtifactPath)) {
+                $rawArtifactPath
+            }
+            else {
+                Join-Path -Path $packageDirectory -ChildPath $rawArtifactPath
+            }
+
             if (-not (Test-Path -Path $artifactPath -PathType Leaf)) {
-                $errors += ('Artifact entry {0} references a file that was not emitted: {1}' -f $artifactName, $artifactPath)
+                $errors += (
+                    'Artifact entry {0} references a file that was not emitted: {1} (resolved to {2})' -f
+                    $artifactName,
+                    $rawArtifactPath,
+                    $artifactPath
+                )
                 continue
             }
 

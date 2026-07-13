@@ -69,9 +69,19 @@ jobs:
         run: |
           python scripts/validate-contracts.py
           python scripts/validate_data_classification.py
+          python scripts/test_lab_validation_contracts.py
+          python scripts/validate-lab-contracts.py
+          python scripts/validate-lab-result.py
           python scripts/validate-solutions.py
           python scripts/validate-documentation.py
           python scripts/verify_commercial_scope.py
+
+      - name: Validate lab package fixtures
+        if: steps.changes.outputs.docs_changed == 'true'
+        shell: pwsh
+        run: |
+          ./scripts/validate-lab-package.ps1 -Path ./scripts/tests/fixtures/lab-package/portable-evidence.json -ResultPath ./scripts/tests/fixtures/lab-results/valid/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json
+          Invoke-Pester -Path ./scripts/tests/lab-validation.Tests.ps1 -Output Detailed
 
       - name: Validate solution indexes
         if: steps.changes.outputs.docs_changed == 'true'

@@ -19,3 +19,12 @@ testResults.xml
 # Local tooling output
 .gitleaks-report.json
 .tools/
+
+# Lab validation runtime output (external executor artifacts)
+.lab-runtime/
+lab-runtime/
+lab-evidence/
+lab-auth/
+lab-reports/
+lab-traces/
+*.storage-state.json

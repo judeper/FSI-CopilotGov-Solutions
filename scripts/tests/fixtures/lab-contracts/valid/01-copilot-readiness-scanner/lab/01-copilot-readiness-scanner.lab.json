@@ -1,0 +1,257 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-foundation",
+  "solution": {
+    "id": "01-copilot-readiness-scanner",
+    "name": "Copilot Readiness Assessment Scanner",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-12",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true,
+    "prohibitedClouds": [
+      "gcc",
+      "gcc-high",
+      "dod",
+      "sovereign"
+    ]
+  },
+  "controls": [
+    "1.1",
+    "1.5",
+    "1.6"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-purview-compliance-portal",
+    "microsoft-entra-admin-center"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-setup-guidance",
+      "claimText": "Microsoft Learn documents baseline setup requirements for Microsoft 365 Copilot in commercial tenants.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365-copilot/microsoft-365-copilot-setup",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-10",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-graph-reporting",
+      "claimText": "Microsoft Graph reporting endpoints are available for documentation-first usage telemetry validation patterns.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/docs/evidence-export.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/resources/report",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-10",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot license assigned to test operator"
+    ],
+    "roles": [
+      "Global Reader",
+      "Compliance Reader"
+    ],
+    "features": [
+      "Copilot usage reporting enabled"
+    ],
+    "capacityRequirements": [
+      "One disposable test workspace for representative sample validation"
+    ],
+    "dataRequirements": [
+      "Representative sample records only"
+    ],
+    "tenantCount": 1,
+    "notes": "Template contract intended for lab preflight and test harness validation."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm preconditions",
+        "steps": [
+          {
+            "id": "step-verify-prerequisites",
+            "mode": "ui",
+            "intent": "Review readiness settings in the Microsoft 365 admin center.",
+            "expected": "Required readiness controls are visible for baseline validation.",
+            "locator": "AdminCenter > Copilot > Setup readiness",
+            "mutationRef": "mutation-readiness-check",
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Readiness settings panel",
+              "expectation": "Readiness panel confirms baseline requirements are listed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run representative validation",
+        "steps": [
+          {
+            "id": "step-run-readiness-script",
+            "mode": "powershell",
+            "intent": "Execute representative readiness assessment script in documentation-first mode.",
+            "expected": "Script emits representative findings with documentation-first runtime markers.",
+            "command": "pwsh -File solutions/01-copilot-readiness-scanner/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -ExportPath lab-output",
+            "mutationRef": "mutation-sample-policy",
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance script output",
+              "expectation": "Output includes runtime mode markers and representative findings."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify source and read-back",
+        "steps": [
+          {
+            "id": "step-verify-graph-reference",
+            "mode": "api",
+            "intent": "Confirm Microsoft Graph reporting endpoint documentation references remain current.",
+            "expected": "Source citation remains available on Microsoft Learn.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/reports/getMicrosoft365CopilotUsageUserDetail"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Learn source URL",
+              "expectation": "Source remains published and matches claim lifecycle state."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Revert disposable changes",
+        "steps": [
+          {
+            "id": "step-cleanup-sample-policy",
+            "mode": "manual",
+            "intent": "Remove disposable sample policy objects created for lab verification.",
+            "expected": "Disposable sample objects are removed and cleanup evidence is captured.",
+            "operatorNote": "Use documented rollback runbook and capture cleanup proof.",
+            "mutationRef": "mutation-sample-policy",
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup checklist and screenshot",
+              "expectation": "Cleanup checklist confirms sample objects were removed."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [
+    {
+      "id": "mutation-readiness-check",
+      "summary": "Read-only review of readiness settings and portal metadata.",
+      "reversibilityClass": "read-only",
+      "owner": "fsi-governance-lab-owners",
+      "breakGlassRequired": false,
+      "cleanupRequired": false,
+      "cleanupStrategy": "none",
+      "readBackRequired": true,
+      "notes": "No tenant mutation is expected."
+    },
+    {
+      "id": "mutation-sample-policy",
+      "summary": "Create and remove disposable sample policy metadata for controlled lab execution.",
+      "reversibilityClass": "reversible",
+      "owner": "fsi-governance-lab-owners",
+      "breakGlassRequired": false,
+      "cleanupRequired": true,
+      "cleanupStrategy": "inline-step",
+      "readBackRequired": true,
+      "notes": "Cleanup must complete in the same run."
+    }
+  ],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-ui-prerequisites",
+        "type": "screenshot",
+        "description": "Portal screenshot showing readiness prerequisites.",
+        "requiredForControls": [
+          "1.1"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-readback-log",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript and read-back output from representative validation.",
+        "requiredForControls": [
+          "1.1",
+          "1.5",
+          "1.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Microsoft source citation confirming lifecycle and scope boundaries.",
+        "requiredForControls": [
+          "1.5"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-readback-log"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

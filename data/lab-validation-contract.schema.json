@@ -1,0 +1,725 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://judeper.github.io/FSI-CopilotGov-Solutions/schemas/lab-validation-contract.schema.json",
+  "title": "FSI Lab Validation Contract",
+  "description": "Machine-readable contract for lab validation of documentation-first solutions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contractId",
+    "solution",
+    "reviewedOn",
+    "scope",
+    "controls",
+    "portals",
+    "microsoftSourceClaims",
+    "prerequisites",
+    "execution",
+    "mutations",
+    "ownership",
+    "evidence",
+    "dispositionRules"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^1\\.0(?:\\.\\d+)?$"
+    },
+    "contractId": {
+      "type": "string",
+      "pattern": "^lab-contract:[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9.-]*$"
+    },
+    "solution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "binding"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9]{2}-[a-z0-9-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "binding": {
+          "type": "string",
+          "enum": [
+            "template",
+            "tenant-bound"
+          ]
+        }
+      }
+    },
+    "reviewedOn": {
+      "type": "string",
+      "format": "date"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cloud",
+        "usCommercialOnly",
+        "prohibitedClouds"
+      ],
+      "properties": {
+        "cloud": {
+          "const": "m365-us-commercial"
+        },
+        "usCommercialOnly": {
+          "const": true
+        },
+        "prohibitedClouds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "gcc",
+              "gcc-high",
+              "dod",
+              "sovereign"
+            ]
+          }
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9]+\\.[0-9]+[a-z]?$"
+      }
+    },
+    "portals": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "microsoft-365-admin-center",
+          "microsoft-purview-compliance-portal",
+          "microsoft-entra-admin-center",
+          "microsoft-teams-admin-center",
+          "sharepoint-admin-center",
+          "exchange-admin-center",
+          "power-platform-admin-center",
+          "microsoft-defender-portal",
+          "microsoft-365-app-admin-center",
+          "microsoft-intune-admin-center",
+          "manual-verification"
+        ]
+      }
+    },
+    "microsoftSourceClaims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sourceClaim"
+      }
+    },
+    "prerequisites": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "licenses",
+        "roles",
+        "features",
+        "capacityRequirements",
+        "dataRequirements",
+        "tenantCount"
+      ],
+      "properties": {
+        "licenses": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "roles": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "features": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "capacityRequirements": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "dataRequirements": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "tenantCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phases"
+      ],
+      "properties": {
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/executionPhase"
+          }
+        }
+      }
+    },
+    "mutations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mutation"
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primaryOwner",
+        "breakGlassApprover",
+        "cleanupOwner",
+        "cleanupWindowHours"
+      ],
+      "properties": {
+        "primaryOwner": {
+          "type": "string",
+          "minLength": 3
+        },
+        "breakGlassApprover": {
+          "type": "string",
+          "minLength": 3
+        },
+        "cleanupOwner": {
+          "type": "string",
+          "minLength": 3
+        },
+        "cleanupWindowHours": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 720
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requiredArtifacts",
+        "minimumForAccepted"
+      ],
+      "properties": {
+        "requiredArtifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/requiredArtifact"
+          }
+        },
+        "minimumForAccepted": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^artifact-[a-z0-9-]+$"
+          }
+        }
+      }
+    },
+    "dispositionRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowedDispositions",
+        "acceptedDispositions",
+        "failIsBlocking",
+        "blockedRequiresSourceEvidence",
+        "notApplicableRequiresSourceEvidence",
+        "partialRequiresFollowUp"
+      ],
+      "properties": {
+        "allowedDispositions": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/disposition"
+          }
+        },
+        "acceptedDispositions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "BLOCKED",
+              "NOT-APPLICABLE"
+            ]
+          }
+        },
+        "failIsBlocking": {
+          "type": "boolean"
+        },
+        "blockedRequiresSourceEvidence": {
+          "type": "boolean"
+        },
+        "notApplicableRequiresSourceEvidence": {
+          "type": "boolean"
+        },
+        "partialRequiresFollowUp": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "disposition": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "BLOCKED",
+        "NOT-APPLICABLE",
+        "FAIL"
+      ]
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "sourceClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "claimText",
+        "affectedFiles",
+        "sourceType",
+        "sourceUrl",
+        "lifecycleState",
+        "verifiedOn",
+        "disposition"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^claim-[a-z0-9-]+$"
+        },
+        "claimText": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 4000
+        },
+        "affectedFiles": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "learn-doc",
+            "graph-reference",
+            "service-description",
+            "support-article",
+            "m365-roadmap",
+            "azure-update",
+            "message-center",
+            "release-notes"
+          ]
+        },
+        "sourceUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "lifecycleState": {
+          "type": "string",
+          "enum": [
+            "generally-available",
+            "preview",
+            "deprecated",
+            "retired",
+            "unknown"
+          ]
+        },
+        "verifiedOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "contradicted",
+            "pending-review"
+          ]
+        }
+      }
+    },
+    "executionPhase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "steps"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/executionStep"
+          }
+        }
+      }
+    },
+    "executionStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "mode",
+        "intent",
+        "expected",
+        "readBack"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^step-[a-z0-9-]+$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "api",
+            "powershell",
+            "manual"
+          ]
+        },
+        "intent": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 4000
+        },
+        "expected": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 4000
+        },
+        "operatorNote": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "api": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "endpoint"
+          ],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE"
+              ]
+            },
+            "endpoint": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            },
+            "requestTemplate": {
+              "type": "string",
+              "maxLength": 4000
+            }
+          }
+        },
+        "mutationRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^mutation-[a-z0-9-]+$"
+        },
+        "readBack": {
+          "$ref": "#/$defs/readBack"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "ui"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "locator"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "powershell"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "command"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "api"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "api"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "manual"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "operatorNote"
+            ]
+          }
+        }
+      ]
+    },
+    "readBack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "method",
+        "expectation"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "api",
+            "powershell",
+            "manual",
+            "none"
+          ]
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "expectation": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 4000
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "required": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "method": {
+                "not": {
+                  "const": "none"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "mutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "summary",
+        "reversibilityClass",
+        "owner",
+        "breakGlassRequired",
+        "cleanupRequired",
+        "cleanupStrategy",
+        "readBackRequired"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^mutation-[a-z0-9-]+$"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 4000
+        },
+        "reversibilityClass": {
+          "type": "string",
+          "enum": [
+            "read-only",
+            "reversible",
+            "delayed-cleanup",
+            "tenant-reset",
+            "prohibited"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "breakGlassRequired": {
+          "type": "boolean"
+        },
+        "cleanupRequired": {
+          "type": "boolean"
+        },
+        "cleanupStrategy": {
+          "type": "string",
+          "enum": [
+            "none",
+            "inline-step",
+            "deferred-runbook",
+            "tenant-reset"
+          ]
+        },
+        "readBackRequired": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000
+        }
+      }
+    },
+    "requiredArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "description",
+        "requiredForControls",
+        "requiredForDispositions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^artifact-[a-z0-9-]+$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "screenshot",
+            "json",
+            "csv",
+            "log",
+            "powershell-transcript",
+            "api-response",
+            "manual-attestation",
+            "source-citation",
+            "cleanup-proof"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "requiredForControls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+[a-z]?$"
+          }
+        },
+        "requiredForDispositions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/disposition"
+          }
+        }
+      }
+    }
+  }
+}

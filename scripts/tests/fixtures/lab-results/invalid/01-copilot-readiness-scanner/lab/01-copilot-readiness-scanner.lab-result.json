@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "resultId": "lab-result:01-copilot-readiness-scanner:2026-07-12-invalid",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-foundation",
+  "solutionId": "01-copilot-readiness-scanner",
+  "generatedAt": "2026-07-12T16:10:00Z",
+  "preflight": {
+    "decision": "NO-GO",
+    "checkedOn": "2026-07-12T16:05:00Z",
+    "notes": "Preflight failed but execution continued for fixture coverage."
+  },
+  "summary": {
+    "disposition": "FAIL",
+    "accepted": true,
+    "controlImplementation": "implemented",
+    "notes": "Intentional invalid result fixture."
+  },
+  "stepResults": [
+    {
+      "phaseId": "exercise",
+      "stepId": "step-run-readiness-script",
+      "outcome": "PASS",
+      "notes": "Intentional inconsistency for validator testing.",
+      "readBackVerified": false,
+      "mutationExecuted": true,
+      "mutationRef": "mutation-sample-policy",
+      "evidenceRefs": []
+    }
+  ],
+  "blockers": [],
+  "cleanup": {
+    "state": "completed",
+    "completedBy": "fsi-governance-lab-operators",
+    "notes": "Intentional orphaned mutation mismatch.",
+    "orphanedMutations": [
+      "mutation-sample-policy"
+    ]
+  },
+  "sourceVerification": {
+    "claims": [
+      {
+        "claimId": "claim-setup-guidance",
+        "status": "not-verified",
+        "checkedOn": "2026-07-12T16:08:00Z",
+        "evidenceRefs": [],
+        "sourceUrl": "https://learn.microsoft.com/microsoft-365-copilot/microsoft-365-copilot-setup"
+      }
+    ]
+  }
+}
