@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "contractId": "lab-contract:18-entra-access-reviews:2026-07-v015-hardening",
+  "contractId": "lab-contract:18-entra-access-reviews:2026-07-review",
   "solution": {
     "id": "18-entra-access-reviews",
     "name": "Entra Access Reviews Automation",
