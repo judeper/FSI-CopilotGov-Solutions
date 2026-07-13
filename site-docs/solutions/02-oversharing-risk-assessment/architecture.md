@@ -20,7 +20,7 @@ Solution 02 provides a documentation-first but implementation-ready pattern for 
 | - loads default + tier config                                  |
 | - validates dependency output                                  |
 | - records deployment manifest                                  |
-| - plans Restricted SharePoint Search action                    |
+| - records RSS legacy status and RCD planning                   |
 +--------------------------+------------------------------------+
                            |
                            v
@@ -64,8 +64,17 @@ Solution 02 provides a documentation-first but implementation-ready pattern for 
 4. Raw sharing information is normalized into candidate findings with sharing scope, detected FSI signals, and permission anomaly counts.
 5. The risk classification engine assigns HIGH, MEDIUM, or LOW based on the configured thresholds and weighted data-type indicators.
 6. Findings feed the `oversharing-findings` dataset and create a prioritized `remediation-queue`.
-7. Documentation-first Power Automate flows notify site owners, collect approvals, and route exceptions.
-8. `Export-Evidence.ps1` packages findings, remediation queue records, and site owner attestations into schema-aligned JSON plus SHA-256 checksum files.
+7. The deployment manifest keeps Restricted SharePoint Search as legacy transition guidance only and tracks Restricted Content Discovery planning as the go-forward discoverability control for SharePoint.
+8. Documentation-first Power Automate flows notify site owners, collect approvals, and route exceptions.
+9. `Export-Evidence.ps1` packages findings, remediation queue records, and site owner attestations into schema-aligned JSON plus SHA-256 checksum files.
+
+## Discoverability Control Posture (RSS Legacy to RCD)
+
+- Restricted SharePoint Search (RSS) is documented as legacy/transition guidance only: Microsoft Learn states RSS is retiring and new enablement is blocked starting **2026-07-31**.
+- Existing RSS caveats remain explicit for transition review: up to 100-site allow list, not a security boundary, and no SharePoint permission changes.
+- Restricted Content Discovery (RCD) is the go-forward discoverability control and is configured per SharePoint site.
+- RCD does not change permissions, is SharePoint-only (not OneDrive), can be managed by SharePoint Administrator by default with optional delegated site-admin management, is audited in Microsoft Purview, and may suppress AI entry points on restricted sites.
+- RCD planning assumes Copilot plus SharePoint Advanced Management prerequisites are met before tenant implementation.
 
 ## Workload Coverage
 

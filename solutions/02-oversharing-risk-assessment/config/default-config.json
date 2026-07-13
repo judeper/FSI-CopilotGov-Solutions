@@ -48,6 +48,7 @@
   "alertThreshold": 10,
   "enableSiteOwnerNotifications": false,
   "enableRestrictedSharePointSearch": false,
+  "enableRestrictedContentDiscoveryPlanning": false,
   "evidenceRetentionDays": 90,
   "maxSitesPerRun": 1000,
   "requireOwnerAttestation": false,

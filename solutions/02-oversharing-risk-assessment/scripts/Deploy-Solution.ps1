@@ -6,7 +6,8 @@ Deploys the Oversharing Risk Assessment and Remediation solution.
 Loads the solution default configuration plus the selected governance tier,
 checks for upstream output from solution 01-copilot-readiness-scanner,
 records a placeholder SharePoint Advanced Management feature-entitlement validation,
-marks temporary Restricted SharePoint Search readiness when configured, and writes a
+records legacy Restricted SharePoint Search retirement guidance and Restricted Content
+Discovery planning state, and writes a
 deployment manifest for auditability.
 
 .PARAMETER ConfigurationTier
@@ -75,17 +76,18 @@ function Test-SharePointAdvancedManagementEntitlement {
         'ORA_ASSUME_SAM_ENTITLEMENT=1 or ORA_ASSUME_SAM_LICENSE=1 was supplied for stub validation.'
     }
     else {
-        'Validate the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license before production deployment.'
+        'Validate an eligible Microsoft 365 or Office 365 base subscription plus one entitlement path (Microsoft 365 Copilot, SharePoint Advanced Management Plan 1 add-on, or Microsoft 365 E7 where available) before production deployment.'
     }
 
     return [pscustomobject]@{
         Requirement = 'SharePoint Advanced Management feature entitlement'
         TenantId = $TenantId
         Status = $status
-        BaseLicenseRequirement = 'Office 365 E3/E5/A5 or Microsoft 365 E1/E3/E5/A5'
+        BaseLicenseRequirement = 'Office 365 E3/E5/A5 or Microsoft 365 E1/E3/E5/A5/E7'
         EntitlementPaths = @(
             'Microsoft 365 Copilot license assigned to at least one user'
             'Standalone SharePoint Advanced Management Plan 1 license'
+            'Microsoft 365 E7 (Frontier Suite) entitlement path where available'
         )
         Notes = $notes
     }
@@ -95,18 +97,49 @@ function Test-UpstreamReadinessOutput {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [string]$DependencyName
+        [string]$DependencyName,
+
+        [Parameter()]
+        [switch]$AllowPreviewFallback
     )
 
     $dependencyRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\01-copilot-readiness-scanner\artifacts'))
 
     if (-not (Test-Path -Path $dependencyRoot)) {
-        throw ("Upstream dependency output path not found: {0}. Run {1} first." -f $dependencyRoot, $DependencyName)
+        $message = "Upstream dependency output path not found: $dependencyRoot. Run $DependencyName first."
+        if (-not $AllowPreviewFallback.IsPresent) {
+            throw $message
+        }
+
+        Write-Warning "$message Returning preview-only dependency status because -WhatIf was supplied."
+        return [pscustomobject]@{
+            Dependency = $DependencyName
+            Status = 'preview-blocked-missing-upstream-output'
+            OutputPath = $dependencyRoot
+            ArtifactCount = 0
+            SampleArtifact = $null
+            Blocking = $true
+            Notes = 'Preview result only. Real deployment remains blocked until upstream artifacts exist.'
+        }
     }
 
     $artifactFiles = Get-ChildItem -Path $dependencyRoot -Filter *.json -Recurse -File -ErrorAction Stop
     if (-not $artifactFiles) {
-        throw ("Upstream dependency output path '{0}' does not contain JSON artifacts." -f $dependencyRoot)
+        $message = "Upstream dependency output path '$dependencyRoot' does not contain JSON artifacts."
+        if (-not $AllowPreviewFallback.IsPresent) {
+            throw $message
+        }
+
+        Write-Warning "$message Returning preview-only dependency status because -WhatIf was supplied."
+        return [pscustomobject]@{
+            Dependency = $DependencyName
+            Status = 'preview-blocked-empty-upstream-output'
+            OutputPath = $dependencyRoot
+            ArtifactCount = 0
+            SampleArtifact = $null
+            Blocking = $true
+            Notes = 'Preview result only. Real deployment remains blocked until upstream JSON artifacts exist.'
+        }
     }
 
     return [pscustomobject]@{
@@ -122,35 +155,38 @@ function Resolve-RestrictedSharePointSearchState {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [hashtable]$Configuration,
-
-        [Parameter(Mandatory)]
-        [ValidateSet('DetectOnly', 'Notify', 'AutoRemediate')]
-        [string]$ScanMode
+        [hashtable]$Configuration
     )
 
-    $enabled = [bool]$Configuration.enableRestrictedSharePointSearch
-    if (-not $enabled) {
-        return [pscustomobject]@{
-            Enabled = $false
-            Status = 'not-requested'
-            Notes = 'Selected tier does not request Restricted SharePoint Search.'
-        }
-    }
-
-    $status = if ($ScanMode -eq 'AutoRemediate') { 'planned-temporary-enable-with-approval' } else { 'planned-temporary-enable' }
-
+    $legacyRequested = [bool]$Configuration.enableRestrictedSharePointSearch
     return [pscustomobject]@{
-        Enabled = $true
-        Status = $status
-        Notes = 'Temporary planning placeholder only. Restricted SharePoint Search is limited to 100 allowed sites, is not a security boundary, does not change permissions, and documents that allowed-list membership is not the only way content can appear in search or Copilot responses.'
+        Enabled = $false
+        Status = if ($legacyRequested) { 'legacy-transition-requested' } else { 'legacy-not-requested' }
+        Notes = 'Restricted SharePoint Search is legacy transition guidance only. Microsoft Learn states retirement with new enablement blocked starting 2026-07-31. Existing tenants should treat RSS as temporary: up to 100 allowed sites, not a security boundary, no permission changes, and allowed-list membership is not the only way content can appear in search or Copilot responses.'
+    }
+}
+
+function Resolve-RestrictedContentDiscoveryState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Configuration
+    )
+
+    $planningEnabled = [bool]$Configuration.enableRestrictedContentDiscoveryPlanning
+    return [pscustomobject]@{
+        Enabled = $planningEnabled
+        Status = if ($planningEnabled) { 'planning-enabled' } else { 'not-requested' }
+        Notes = 'Restricted Content Discovery is the go-forward discoverability control. It is configured per SharePoint site, does not change permissions, applies to SharePoint (not OneDrive), requires Copilot plus SharePoint Advanced Management prerequisites, is managed by SharePoint Administrator by default with optional delegated site-admin management, is audited in Microsoft Purview, and may suppress AI entry points on restricted sites.'
     }
 }
 
 $configuration = Get-Configuration -ConfigurationTier $ConfigurationTier -ScriptRoot $PSScriptRoot
-$upstreamCheck = Test-UpstreamReadinessOutput -DependencyName $configuration.upstreamDependency
+$previewOnly = [bool]$WhatIfPreference
+$upstreamCheck = Test-UpstreamReadinessOutput -DependencyName $configuration.upstreamDependency -AllowPreviewFallback:$previewOnly
 $licenseCheck = Test-SharePointAdvancedManagementEntitlement -Configuration $configuration -TenantId $TenantId
-$restrictedSearchState = Resolve-RestrictedSharePointSearchState -Configuration $configuration -ScanMode $ScanMode
+$restrictedSearchState = Resolve-RestrictedSharePointSearchState -Configuration $configuration
+$restrictedContentDiscoveryState = Resolve-RestrictedContentDiscoveryState -Configuration $configuration
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $manifestPath = Join-Path $outputRoot '02-oversharing-risk-assessment-deployment.json'
@@ -167,12 +203,15 @@ $manifest = [ordered]@{
     dependency = $upstreamCheck
     sharePointAdvancedManagement = $licenseCheck
     restrictedSharePointSearch = $restrictedSearchState
+    restrictedContentDiscovery = $restrictedContentDiscoveryState
     configurationSnapshot = [ordered]@{
         scanWorkloads = $configuration.scanWorkloads
         remediationMode = $configuration.remediationMode
         maxSitesPerRun = $configuration.maxSitesPerRun
         notificationMode = $configuration.notificationMode
         enableSiteOwnerNotifications = $configuration.enableSiteOwnerNotifications
+        enableRestrictedSharePointSearch = $configuration.enableRestrictedSharePointSearch
+        enableRestrictedContentDiscoveryPlanning = $configuration.enableRestrictedContentDiscoveryPlanning
         evidenceRetentionDays = $configuration.evidenceRetentionDays
         riskThresholds = $configuration.riskThresholds
         requireOwnerAttestation = $configuration.requireOwnerAttestation
@@ -193,5 +232,6 @@ if ($PSCmdlet.ShouldProcess($outputRoot, 'Create oversharing deployment manifest
     DependencyStatus = $upstreamCheck.Status
     SharePointAdvancedManagementStatus = $licenseCheck.Status
     RestrictedSharePointSearchStatus = $restrictedSearchState.Status
+    RestrictedContentDiscoveryStatus = $restrictedContentDiscoveryState.Status
     DeploymentManifestPath = $manifestPath
 }

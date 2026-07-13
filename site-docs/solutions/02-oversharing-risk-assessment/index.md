@@ -17,16 +17,19 @@ The design focuses on the highest-risk FSI exposure scenarios: customer PII, tra
 - Remediation queue generation for high-priority permissions cleanup and owner follow-up
 - Site owner notification support through documentation-first Power Automate patterns
 - Guest access governance checks for external sharing, anyone links, and broad internal exposure
-- Restricted SharePoint Search planning that documents the temporary 100-site allowed-list limit, non-security-boundary caveat, and unchanged SharePoint permissions
+- Restricted SharePoint Search legacy transition guidance (retiring, with new enablement blocked starting 2026-07-31) plus Restricted Content Discovery planning as the go-forward per-site discoverability control for SharePoint
+- Restricted Content Discovery operating notes covering no permission changes, SharePoint-only scope (not OneDrive), SharePoint Administrator default ownership with optional delegated site-admin management, Microsoft Purview audit visibility, and possible AI entry-point suppression on restricted sites
 - Evidence export packages for oversharing-findings, remediation-queue, and site-owner-attestations
 
 ## Scope Boundaries
 
 > **Important:** This solution provides governance scaffolds, templates, and documentation-first
-> scripts. It does not modify tenant state or connect to live services in its repository form.
+> scripts. It does not modify tenant state in its repository form.
 
-- ❌ Does not connect to Microsoft Graph or SharePoint APIs (scripts use representative sample data)
+- ❌ Default/sample mode does not connect to Microsoft Graph or SharePoint APIs (representative data only)
+- ❌ Optional read-only Microsoft Graph mode must be explicitly enabled and falls back to sample data if authentication fails
 - ❌ Does not remediate oversharing automatically (remediation queue is documented, not executed)
+- ❌ Does not execute tenant writes, permission changes, or automated remediations
 - ❌ Does not deploy Power Automate flows (flow designs are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
@@ -41,13 +44,13 @@ See [docs/architecture.md](architecture.md) for the component diagram, workload 
 
 - Review [docs/prerequisites.md](prerequisites.md) and confirm the required admin roles, PowerShell modules, and API access are in place.
 - Verify that solution [01-copilot-readiness-scanner](../01-copilot-readiness-scanner/index.md) has already produced baseline output that can be used to prioritize high-risk workloads.
-- Confirm SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license, and confirm Microsoft Purview Data Security Posture Management (DSPM) prerequisites for the target scenarios.
+- Confirm SharePoint Advanced Management feature entitlement is available through the required base license and one documented entitlement path (Microsoft 365 Copilot, standalone SharePoint Advanced Management Plan 1, or Microsoft 365 E7 where available), and confirm Microsoft Purview Data Security Posture Management (DSPM) prerequisites for the target scenarios.
 
 ## Quick Start
 
 1. Review [docs/prerequisites.md](prerequisites.md) and confirm the required admin roles, PowerShell modules, and API access are in place.
 2. Verify that solution [01-copilot-readiness-scanner](../01-copilot-readiness-scanner/index.md) has already produced baseline output that can be used to prioritize high-risk workloads.
-3. Check that SharePoint Advanced Management feature entitlement and Microsoft Purview Data Security Posture Management (DSPM) prerequisites are available for the target tenant scenarios.
+3. Check that SharePoint Advanced Management entitlement, Restricted Content Discovery prerequisites, and Microsoft Purview DSPM prerequisites are available for the target tenant scenarios.
 4. Select the appropriate governance tier from `config\baseline.json`, `config\recommended.json`, or `config\regulated.json`.
 5. Run `scripts\Deploy-Solution.ps1 -ConfigurationTier <tier> -TenantId <tenant-guid> -ScanMode DetectOnly` to validate configuration and create the deployment manifest.
 6. Run `scripts\Monitor-Compliance.ps1` in detect-only mode to generate the initial oversharing findings set.
@@ -69,6 +72,7 @@ Deploy this solution in detect-only mode first so stakeholders can review oversh
 | `config\baseline.json` | Minimum viable rollout posture focused on SharePoint and detect-only scanning |
 | `config\recommended.json` | Production-oriented posture with multi-workload coverage and owner notifications |
 | `config\regulated.json` | Examination-ready posture with extended evidence retention and attestation requirements |
+| `lab\02-oversharing-risk-assessment.lab.json` | Read-only lab validation contract for US commercial-cloud preflight, evidence expectations, and accepted PASS/BLOCKED/NOT-APPLICABLE dispositions |
 | `docs\*.md` | Architecture, deployment, prerequisites, evidence, and troubleshooting guidance |
 | `tests\02-oversharing-risk-assessment.Tests.ps1` | Pester validation for structure, content expectations, and script syntax |
 
@@ -85,7 +89,7 @@ Solution 02 depends on the baseline inventory and readiness outputs from solutio
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|
 | 1.2 | Primary | Documents patterns for detecting overshared SharePoint, Teams, and OneDrive content and prepares governed remediation actions |
-| 1.3 | Primary | Documents where Restricted SharePoint Search can temporarily help limit search and Copilot scope while noting it is not a security boundary and does not change permissions |
+| 1.3 | Primary | Documents Restricted SharePoint Search as legacy transition guidance only (retiring with new enablement blocked from 2026-07-31) and positions Restricted Content Discovery as the go-forward per-site discoverability control without permission changes |
 | 1.4 | Primary | Supports semantic index governance by identifying high-risk sites that should be limited or re-scoped |
 | 1.6 | Supporting | Supplements permission model audits with workload-level anomaly counts and remediation recommendations |
 | 2.5 | Primary | Promotes data minimization by reducing broadly accessible content in Copilot grounding paths |
@@ -116,5 +120,6 @@ Power Automate assets are documentation-first in this version. The repository do
 
 - The monitoring script uses implementation stubs and sample workload logic until tenant-specific API calls and throttling controls are connected.
 - Teams findings are inferred from Teams-connected SharePoint locations and channel exposure patterns; they are not a replacement for a full Teams governance review.
-- Restricted SharePoint Search planning is represented as a temporary deployment action placeholder; it is limited to up to 100 allowed sites, is not a security boundary, does not change permissions, and documents that allowed-list membership is not the only way content can appear in search or Copilot responses.
+- Restricted SharePoint Search is documented as legacy transition guidance only; for existing tenants it remains temporary, limited to up to 100 allowed sites, is not a security boundary, and does not change permissions.
+- Restricted Content Discovery planning in this scaffold is SharePoint-only (not OneDrive), requires Copilot plus SharePoint Advanced Management prerequisites, and may suppress AI entry points on restricted SharePoint sites.
 - Auto-remediation is intentionally not the default mode because high-risk FSI content often requires legal, compliance, and records-management review before permissions change.

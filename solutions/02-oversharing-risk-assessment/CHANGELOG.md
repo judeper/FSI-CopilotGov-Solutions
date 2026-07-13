@@ -4,6 +4,22 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog and uses solution version tags instead of package release tags.
 
+## [Unreleased]
+
+### Changed
+
+- Updated Restricted SharePoint Search guidance across solution 02 to legacy transition posture only and documented retirement with new enablement blocked starting 2026-07-31.
+- Added Restricted Content Discovery planning posture across docs, config, and deployment manifest output as the go-forward discoverability control.
+- Updated SharePoint Advanced Management prerequisite language to include Microsoft 365 E7 entitlement path where supported and clarified role boundaries for SharePoint/SAM versus Purview/DSPM tasks.
+- Added `lab\02-oversharing-risk-assessment.lab.json` and integrated lab contract handoff references in README, deployment guide, and delivery checklist.
+
+### Fixed
+
+- `Monitor-Compliance.ps1` sensitivity-label sample coverage now uses the supplied `ScannedSites` count and only uses a seven-site fallback when `ScannedSites` is not supplied.
+- `Deploy-Solution.ps1 -WhatIf` now returns a preview dependency result with warning output when upstream solution 01 artifacts are missing; non-WhatIf deployment remains blocking.
+- `Export-Evidence.ps1` now generates owner-attestation records automatically for regulated tier exports with `requireOwnerAttestation: true`.
+- Evidence package artifact paths are now package-relative filenames while `PackagePath` in script output remains absolute.
+
 ## [v0.2.4] - 2026-06-07
 
 ### Fixed

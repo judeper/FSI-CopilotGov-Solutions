@@ -20,7 +20,8 @@
   "alertThreshold": 1,
   "notificationMode": "strict",
   "enableSiteOwnerNotifications": true,
-  "enableRestrictedSharePointSearch": true,
+  "enableRestrictedSharePointSearch": false,
+  "enableRestrictedContentDiscoveryPlanning": true,
   "requireOwnerAttestation": true,
   "requireExaminerReadyEvidence": true
 }
