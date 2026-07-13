@@ -48,7 +48,7 @@ jobs:
 
       - name: Install documentation validation dependencies
         if: steps.changes.outputs.docs_changed == 'true'
-        run: pip install -r requirements-docs.txt jsonschema
+        run: pip install -r requirements-docs.txt
 
       - name: Build documentation
         if: steps.changes.outputs.docs_changed == 'true'

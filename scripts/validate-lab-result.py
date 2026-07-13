@@ -15,8 +15,8 @@ try:
     from jsonschema import Draft202012Validator, FormatChecker
 except ImportError as exc:  # pragma: no cover - exercised in CLI environments only
     print(
-        "ERROR: jsonschema is required. Install dependencies with "
-        "'pip install -r requirements-docs.txt jsonschema'.",
+        "ERROR: jsonschema format validation is required. Install dependencies with "
+        "'pip install -r requirements-docs.txt'.",
         file=sys.stderr,
     )
     raise SystemExit(2) from exc

@@ -3,8 +3,10 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -108,6 +110,28 @@ class LabValidationTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0, msg=result.stdout)
         combined_output = f"{result.stdout}\n{result.stderr}".lower()
         self.assertIn("mutationexecuted=true requires a non-null mutationref", combined_output)
+
+    def test_result_validator_rejects_invalid_datetime_formats(self) -> None:
+        source_path = (
+            FIXTURES
+            / "lab-results"
+            / "valid"
+            / "01-copilot-readiness-scanner"
+            / "lab"
+            / "01-copilot-readiness-scanner.lab-result.json"
+        )
+        document = json.loads(source_path.read_text(encoding="utf-8"))
+        document["generatedAt"] = "not-a-date-time"
+        document["preflight"]["checkedOn"] = "also-not-a-date-time"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            invalid_path = Path(temp_dir) / "invalid-format.lab-result.json"
+            invalid_path.write_text(json.dumps(document), encoding="utf-8")
+            result = run_validator(RESULT_VALIDATOR, invalid_path)
+
+        self.assertNotEqual(result.returncode, 0, msg=result.stdout)
+        combined_output = f"{result.stdout}\n{result.stderr}".lower()
+        self.assertIn("is not a 'date-time'", combined_output)
 
 
 if __name__ == "__main__":
