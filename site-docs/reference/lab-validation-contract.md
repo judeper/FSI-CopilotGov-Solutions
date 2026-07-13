@@ -10,6 +10,12 @@ This reference defines the machine-readable lab contract and result model used b
 - Playwright execution, browser automation, and attended tenant runs remain in the separate studio executor lane.
 - Contract evidence supports compliance with control verification expectations, but it does not replace control-owner judgment.
 
+### Commercial Scope Constants
+
+- `scope.cloud` is required and fixed to `m365-us-commercial`.
+- `scope.usCommercialOnly` is required and fixed to `true`.
+- `scope.prohibitedClouds` is optional in forward-facing contracts; it remains available for fixture and negative-test coverage when needed.
+
 ## Contract, Result, and Evidence Lifecycle
 
 1. Author a contract (`*.lab.json`) using `data/lab-validation-contract.schema.json`.

@@ -9,13 +9,7 @@
   "reviewedOn": "2026-07-12",
   "scope": {
     "cloud": "m365-us-commercial",
-    "usCommercialOnly": true,
-    "prohibitedClouds": [
-      "gcc",
-      "gcc-high",
-      "dod",
-      "sovereign"
-    ]
+    "usCommercialOnly": true
   },
   "controls": [
     "1.1",
@@ -111,7 +105,7 @@
             "expected": "Source citation remains available on Microsoft Learn.",
             "api": {
               "method": "GET",
-              "endpoint": "https://graph.microsoft.com/v1.0/reports/getMicrosoft365CopilotUsageUserDetail"
+              "endpoint": "https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D7')"
             },
             "mutationRef": null,
             "readBack": {

@@ -19,6 +19,7 @@
 - docs\evidence-export.md
 - docs\prerequisites.md
 - docs\troubleshooting.md
+- lab\01-copilot-readiness-scanner.lab.json
 - scripts\Deploy-Solution.ps1
 - scripts\Monitor-Compliance.ps1
 - scripts\Export-Evidence.ps1
@@ -45,6 +46,7 @@
 - [ ] `pwsh -Command "Invoke-Pester tests/ -Passthru"` — Pester tests pass
 - [ ] PowerShell syntax validation completed for all three scripts and `CRS-Common.psm1`
 - [ ] Pester test file executed successfully
+- [ ] `python ..\..\scripts\validate-lab-contracts.py ..\..\solutions\01-copilot-readiness-scanner\lab\01-copilot-readiness-scanner.lab.json` — lab contract passes schema + semantic validation
 - [ ] Tier configuration values reviewed for retention, threshold, notification, and scan scope
 - [ ] Evidence export verified to create JSON artifacts and matching `.sha256` files
 - [ ] Power BI consumers have confirmed the expected JSON artifact naming and folder structure
@@ -72,5 +74,6 @@
 ## Handover Notes
 
 - Provide the customer with the README, deployment guide, prerequisites, troubleshooting guide, and evidence export documentation.
+- Include `lab\01-copilot-readiness-scanner.lab.json` in the handoff package and confirm the external lab executor accepted the read-only contract.
 - Record the selected governance tier, output path, and tenant identifier used for the initial baseline.
 - Document any manual remediation actions that remain outside the current automation scope.

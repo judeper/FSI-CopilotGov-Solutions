@@ -222,12 +222,6 @@ def validate_scope(data: dict[str, Any], path: Path, errors: list[str]) -> None:
     if scope.get("usCommercialOnly") is not True:
         errors.append(err(path, "scope.usCommercialOnly must be true"))
 
-    prohibited = set(scope.get("prohibitedClouds", []))
-    required = {"gcc", "gcc-high", "dod", "sovereign"}
-    if not required.issubset(prohibited):
-        missing = sorted(required - prohibited)
-        errors.append(err(path, f"scope.prohibitedClouds is missing required entries: {missing}"))
-
 
 def validate_sources(data: dict[str, Any], path: Path, reviewed_on: date | None, errors: list[str]) -> None:
     claims = data.get("microsoftSourceClaims", [])

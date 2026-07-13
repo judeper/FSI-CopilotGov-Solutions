@@ -1,0 +1,453 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:01-copilot-readiness-scanner:2026-07-13-commercial-readonly",
+  "solution": {
+    "id": "01-copilot-readiness-scanner",
+    "name": "Copilot Readiness Assessment Scanner",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.1",
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.9"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-entra-admin-center",
+    "microsoft-purview-compliance-portal",
+    "microsoft-defender-portal",
+    "sharepoint-admin-center",
+    "microsoft-teams-admin-center",
+    "power-platform-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-optimization-assessment-name",
+      "claimText": "The current Microsoft Learn enablement resources page references Microsoft 365 Copilot Optimization Assessment as a readiness input for onboarding and operational planning.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/README.md",
+        "solutions/01-copilot-readiness-scanner/CHANGELOG.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-enablement-resources",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-admin-roles-settings",
+      "claimText": "Microsoft 365 Copilot setup and settings guidance documents admin-role and settings prerequisites used for control-readiness validation in the Microsoft 365 admin center.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/docs/prerequisites.md",
+        "solutions/01-copilot-readiness-scanner/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-setup",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-control-system-surfaces",
+      "claimText": "Manage Microsoft 365 Copilot Scenarios documents control-system management surfaces and portal pivots used for cross-admin-center visibility checks.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/README.md",
+        "solutions/01-copilot-readiness-scanner/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-page",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-licenseassignmentreadall-permission",
+      "claimText": "Microsoft Graph permissions reference documents LicenseAssignment.Read.All for least-privilege licensing reads used by deployment and monitoring prerequisites.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/docs/prerequisites.md",
+        "solutions/01-copilot-readiness-scanner/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/en-us/graph/permissions-reference#licenseassignmentreadall",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-licensing-model",
+      "claimText": "Microsoft 365 Copilot licensing guidance distinguishes add-on licensing from no-additional-cost Copilot Chat eligibility and informs control 1.9 readiness checks.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/docs/prerequisites.md",
+        "solutions/01-copilot-readiness-scanner/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-licensing",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-rcd-governance-input",
+      "claimText": "SharePoint Restricted Content Discovery is documented as a discoverability governance control that does not change permissions and is not a security boundary.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/README.md",
+        "solutions/01-copilot-readiness-scanner/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/sharepoint/restricted-content-discovery",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-usage-report-d7",
+      "claimText": "Microsoft Graph documentation for Copilot usage reports supports using GET https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D7') with Reports.Read.All.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab.json"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/api/admin-settings/reports/copilotreportroot-getmicrosoft365copilotusageuserdetail",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-retrieval-api-license-distinction",
+      "claimText": "Microsoft 365 Copilot Retrieval API documentation distinguishes no-additional-cost inclusion for add-on licensed users from preview pay-as-you-go consumption for non-licensed users.",
+      "affectedFiles": [
+        "solutions/01-copilot-readiness-scanner/README.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/api/ai-services/retrieval/overview",
+      "lifecycleState": "unknown",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot add-on licenses for validation personas.",
+      "SharePoint Advanced Management capability enabled for Restricted Content Discovery visibility checks."
+    ],
+    "roles": [
+      "Global Reader",
+      "AI Administrator",
+      "Security Reader",
+      "Compliance Administrator",
+      "SharePoint Administrator",
+      "Teams Administrator",
+      "Power Platform Administrator"
+    ],
+    "features": [
+      "Microsoft 365 Copilot Optimization Assessment visibility in onboarding guidance.",
+      "Copilot management surfaces visible in Microsoft 365 admin center.",
+      "Copilot usage reports accessible through Microsoft Graph with Reports.Read.All.",
+      "Restricted Content Discovery configuration visible in SharePoint admin center."
+    ],
+    "capacityRequirements": [
+      "One isolated validation tenant in US commercial cloud scope.",
+      "PowerShell 7 runner with repository scripts and read-only admin credentials."
+    ],
+    "dataRequirements": [
+      "Representative sample outputs from repository scripts only.",
+      "No production customer records or tenant identifiers embedded in contract evidence."
+    ],
+    "tenantCount": 1,
+    "notes": "Read-only contract. Tenant execution artifacts and result files are produced outside this repository."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Validate portal visibility prerequisites",
+        "steps": [
+          {
+            "id": "step-ui-copilot-settings",
+            "mode": "ui",
+            "intent": "Confirm Microsoft 365 admin center Copilot settings and scenario controls are visible.",
+            "expected": "Copilot settings page is accessible and shows optimization and governance entry points.",
+            "locator": "Microsoft 365 admin center > Copilot > Settings",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Copilot settings screenshot",
+              "expectation": "Screenshot records visible settings navigation and scenario tiles."
+            }
+          },
+          {
+            "id": "step-ui-entra-roles",
+            "mode": "ui",
+            "intent": "Confirm Microsoft Entra role assignments needed for read-only readiness review are visible.",
+            "expected": "Role assignment views for reader and administrator roles can be opened.",
+            "locator": "Microsoft Entra admin center > Roles and administrators",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Entra role assignment screenshot",
+              "expectation": "Evidence shows required roles are visible for validation planning."
+            }
+          },
+          {
+            "id": "step-ui-purview-defender-sharepoint-teams-ppac",
+            "mode": "ui",
+            "intent": "Confirm Purview, Defender, SharePoint admin, Teams admin, and Power Platform admin surfaces are reachable for control checks.",
+            "expected": "All listed portals are reachable with read-only visibility for governance review.",
+            "locator": "Purview portal + Defender portal + SharePoint admin center + Teams admin center + Power Platform admin center",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Portal reachability screenshot set",
+              "expectation": "Evidence set captures each portal landing view and confirms no write action was required."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run documentation-first read-only checks",
+        "steps": [
+          {
+            "id": "step-powershell-deploy-whatif",
+            "mode": "powershell",
+            "intent": "Run deployment in WhatIf mode to capture prerequisite and preview status without writes.",
+            "expected": "Deploy-Solution returns whatif status and any missing heavy-module prerequisites as warnings.",
+            "command": "pwsh -File solutions/01-copilot-readiness-scanner/scripts/Deploy-Solution.ps1 -ConfigurationTier baseline -TenantId $env:FSI_LAB_TENANT -OutputPath .\\lab-output -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Deploy-Solution WhatIf transcript",
+              "expectation": "Transcript shows no file writes and includes preview status output."
+            }
+          },
+          {
+            "id": "step-powershell-monitor-baseline",
+            "mode": "powershell",
+            "intent": "Run Monitor-Compliance to produce representative fixed and tier-adjusted sample scores.",
+            "expected": "Output shows documentation-first runtime markers and representative domain score objects.",
+            "command": "pwsh -File solutions/01-copilot-readiness-scanner/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -TenantId $env:FSI_LAB_TENANT -ExportPath .\\lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance transcript and JSON output",
+              "expectation": "RuntimeMode and SimulationWarning markers are present with sample domain scores."
+            }
+          },
+          {
+            "id": "step-powershell-export-evidence",
+            "mode": "powershell",
+            "intent": "Run Export-Evidence to generate package-relative artifact entries and hash sidecars.",
+            "expected": "Evidence package includes relative artifact paths and matching SHA-256 files.",
+            "command": "pwsh -File solutions/01-copilot-readiness-scanner/scripts/Export-Evidence.ps1 -ConfigurationTier baseline -TenantId $env:FSI_LAB_TENANT -OutputPath .\\lab-output -PeriodStart (Get-Date).AddDays(-7) -PeriodEnd (Get-Date)",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence transcript and package JSON",
+              "expectation": "Package artifacts contain non-rooted paths that resolve beside the package file."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify API and manual evidence conditions",
+        "steps": [
+          {
+            "id": "step-api-copilot-usage-report-d7",
+            "mode": "api",
+            "intent": "Verify documented Microsoft Graph endpoint and permission requirement for Copilot usage detail reporting.",
+            "expected": "Endpoint and permission mapping are captured with acceptable PASS or BLOCKED evidence.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D7')"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "HTTP trace plus Reports.Read.All permission note",
+              "expectation": "Evidence records either successful CSV response or blocked outcome with source citation and operator rationale."
+            }
+          },
+          {
+            "id": "step-manual-separate-ui-vs-score-verification",
+            "mode": "manual",
+            "intent": "Record separation of UI visibility checks from score and evidence-hash verification tasks.",
+            "expected": "Runbook states Playwright-style UI checks do not validate scoring math or hash integrity.",
+            "operatorNote": "Capture explicit note: UI automation validates surface visibility only; PowerShell/API/manual checks validate scoring assumptions and hash evidence.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Manual verification attestation",
+              "expectation": "Attestation confirms score and hash verification were executed outside UI automation."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Attest no-mutation cleanup outcome",
+        "steps": [
+          {
+            "id": "step-manual-no-mutation-cleanup-attestation",
+            "mode": "manual",
+            "intent": "Capture cleanup proof for a read-only run with no tenant mutations.",
+            "expected": "Cleanup note confirms no mutation was executed and no rollback actions were required.",
+            "operatorNote": "Attach cleanup proof statement referencing mutations array = [] and mutationRef = null in all steps.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation artifact",
+              "expectation": "Evidence confirms a no-mutation run and closes the validation window."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-copilotgov-lab-owners",
+    "breakGlassApprover": "fsi-copilotgov-breakglass-approver",
+    "cleanupOwner": "fsi-copilotgov-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-ui-portal-visibility",
+        "type": "screenshot",
+        "description": "Portal visibility screenshot bundle across required admin surfaces.",
+        "requiredForControls": [
+          "1.1",
+          "1.5",
+          "1.6",
+          "1.7",
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-powershell-readback",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcripts for Deploy-Solution WhatIf, Monitor-Compliance, and Export-Evidence runs.",
+        "requiredForControls": [
+          "1.1",
+          "1.5",
+          "1.6",
+          "1.7",
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-api-readback",
+        "type": "api-response",
+        "description": "API response or blocked trace for Copilot usage report endpoint verification.",
+        "requiredForControls": [
+          "1.1",
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Source citation bundle proving claim currency and lifecycle disposition.",
+        "requiredForControls": [
+          "1.1",
+          "1.5",
+          "1.6",
+          "1.7",
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-manual-attestation",
+        "type": "manual-attestation",
+        "description": "Manual attestation that UI automation was not used to validate scoring or evidence hashes.",
+        "requiredForControls": [
+          "1.1",
+          "1.7",
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-cleanup-proof",
+        "type": "cleanup-proof",
+        "description": "Cleanup proof confirming no tenant mutations were executed in this read-only contract run.",
+        "requiredForControls": [
+          "1.1",
+          "1.5",
+          "1.6",
+          "1.7",
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-powershell-readback",
+      "artifact-source-citation",
+      "artifact-cleanup-proof"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

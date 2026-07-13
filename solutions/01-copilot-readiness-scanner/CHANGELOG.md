@@ -2,6 +2,22 @@
 
 All notable changes to this solution are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added `lab/01-copilot-readiness-scanner.lab.json` as the first read-only lab validation contract handoff for Solution 01.
+- Added delivery and deployment-guide handoff guidance for the lab contract.
+
+### Fixed
+
+- Restored the current Microsoft Learn product name `Microsoft 365 Copilot Optimization Assessment` in Solution 01 documentation.
+- Updated Retrieval API licensing wording to distinguish add-on licensed inclusion from preview pay-as-you-go consumption for non-licensed users.
+- Added Restricted Content Discovery as a documented temporary control 1.7 readiness input with explicit non-security-boundary language.
+- Corrected architecture scoring text to match current representative fixed/tier-adjusted sample scoring behavior and identify percentage-of-passed-checks as a tenant-bound extension model.
+- Updated `Deploy-Solution.ps1` so `-WhatIf` warns and continues when heavy Microsoft modules are missing, while real deployments still fail prerequisite checks.
+- Updated `Export-Evidence.ps1` package artifact paths to use package-relative filenames.
+
 ## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy corrections
 
 ### Fixed

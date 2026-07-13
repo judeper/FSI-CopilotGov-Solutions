@@ -115,6 +115,18 @@ Review the generated files under the output folder:
 - Confirm every JSON artifact has a matching `.sha256` file.
 - Confirm the output naming convention aligns with the expected Power BI ingestion pattern.
 
+## Step 8: Handoff the Lab Validation Contract
+
+Before operational handoff, include `lab\01-copilot-readiness-scanner.lab.json` with the deployment package so the external lab executor has the approved read-only validation contract.
+
+- Confirm the contract keeps `binding: template`, `scope.cloud: m365-us-commercial`, and `scope.usCommercialOnly: true`.
+- Confirm cleanup remains a no-mutation attestation (`mutations: []` and `mutationRef: null` for every step).
+- Validate the contract locally:
+
+```powershell
+python ..\..\scripts\validate-lab-contracts.py ..\..\solutions\01-copilot-readiness-scanner\lab\01-copilot-readiness-scanner.lab.json
+```
+
 ## Troubleshooting
 
 Deployment issues are most commonly caused by permissions, missing modules, or invalid configuration references.

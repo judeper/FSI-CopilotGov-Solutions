@@ -31,6 +31,8 @@ BeforeAll {
     $script:regulatedConfigPath = Join-Path $configPath 'regulated.json'
     $script:changelogPath = Join-Path $solutionRoot 'CHANGELOG.md'
     $script:evidenceDocPath = Join-Path $docsPath 'evidence-export.md'
+    $script:deployScriptPath = Join-Path $scriptsPath 'Deploy-Solution.ps1'
+    $script:exportScriptPath = Join-Path $scriptsPath 'Export-Evidence.ps1'
 }
 
 Describe 'Solution structure' {
@@ -109,6 +111,28 @@ Describe 'Script syntax validation' {
     }
 }
 
+Describe 'Deployment preview behavior' {
+    It 'Deploy-Solution.ps1 warns and returns preview output in WhatIf mode when Microsoft modules are missing' {
+        $previewOutputPath = Join-Path $TestDrive 'deploy-preview'
+        Mock Get-Module { @() } -ParameterFilter {
+            $ListAvailable -and $Name -in @(
+                'Microsoft.Graph',
+                'ExchangeOnlineManagement',
+                'PnP.PowerShell',
+                'MicrosoftTeams'
+            )
+        }
+
+        $warnings = @()
+        $result = & $script:deployScriptPath -ConfigurationTier baseline -TenantId 'lab-placeholder' -OutputPath $previewOutputPath -WhatIf -WarningVariable +warnings
+
+        $result.Status | Should -Be 'whatif'
+        $result.GraphConnectivity | Should -Be 'placeholder'
+        ($warnings -join [Environment]::NewLine) | Should -Match 'WhatIf preview continuing with missing Microsoft modules'
+        Test-Path $previewOutputPath | Should -BeFalse
+    }
+}
+
 Describe 'CHANGELOG format' {
     It 'CHANGELOG has v0.2.3 entry' {
         (Get-Content -Path $script:changelogPath -Raw) | Should -Match '## \[v0\.2\.3\]'
@@ -141,10 +165,16 @@ Describe 'Runtime honesty markers' {
 
     It 'Export-Evidence.ps1 tags sample evidence packages' {
         $evidenceOutputPath = Join-Path $TestDrive 'evidence'
-        $exportResult = & (Join-Path $scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -TenantId 'contoso.onmicrosoft.com' -OutputPath $evidenceOutputPath
+        $exportResult = & $script:exportScriptPath -ConfigurationTier baseline -TenantId 'contoso.onmicrosoft.com' -OutputPath $evidenceOutputPath
         $package = Get-Content -Path $exportResult.PackagePath -Raw | ConvertFrom-Json -Depth 20
 
         $package.metadata.runtimeMode | Should -Be 'documentation-first-sample-data'
         $package.summary.statusSemantics | Should -Match 'documentation-first sample evidence'
+
+        $packageDirectory = Split-Path -Path $exportResult.PackagePath -Parent
+        foreach ($artifact in $package.artifacts) {
+            [System.IO.Path]::IsPathRooted([string]$artifact.path) | Should -BeFalse
+            Test-Path (Join-Path $packageDirectory ([string]$artifact.path)) | Should -BeTrue
+        }
     }
 }

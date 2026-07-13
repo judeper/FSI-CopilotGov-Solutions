@@ -348,24 +348,27 @@ try {
         $readinessArtifact = Write-JsonArtifact -Path (Join-Path $resolvedOutputPath $readinessArtifactName) -Payload $readinessPayload
         $findingsArtifact = Write-JsonArtifact -Path (Join-Path $resolvedOutputPath $findingsArtifactName) -Payload $findingsPayload
         $remediationArtifact = Write-JsonArtifact -Path (Join-Path $resolvedOutputPath $remediationArtifactName) -Payload $remediationPayload
+        $readinessArtifactRelativePath = [System.IO.Path]::GetFileName($readinessArtifact.Path)
+        $findingsArtifactRelativePath = [System.IO.Path]::GetFileName($findingsArtifact.Path)
+        $remediationArtifactRelativePath = [System.IO.Path]::GetFileName($remediationArtifact.Path)
 
         $artifactEntries = @(
             [ordered]@{
                 name = 'readiness-scorecard'
                 type = 'readiness-scorecard'
-                path = $readinessArtifact.Path
+                path = $readinessArtifactRelativePath
                 hash = $readinessArtifact.Hash
             },
             [ordered]@{
                 name = 'data-hygiene-findings'
                 type = 'data-hygiene-findings'
-                path = $findingsArtifact.Path
+                path = $findingsArtifactRelativePath
                 hash = $findingsArtifact.Hash
             },
             [ordered]@{
                 name = 'remediation-plan'
                 type = 'remediation-plan'
-                path = $remediationArtifact.Path
+                path = $remediationArtifactRelativePath
                 hash = $remediationArtifact.Hash
             }
         )
