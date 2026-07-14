@@ -14,7 +14,7 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 ## 1. Prerequisites and access
 
 - [ ] Confirm Power Apps Premium, Power Automate Premium, and eligible Communication Compliance licensing such as Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with Advanced Compliance are assigned.
-- [ ] Confirm Power Platform administrator, Global Reader, and Communication Compliance Admins role group or Compliance Administrator role/role group access are available to the deployment team.
+- [ ] Confirm Power Platform administrator, Global Reader, and Communication Compliance Admins role group or Compliance Administrator role/role group access are available to the deployment team, and that reviewers are assigned the least-privileged Communication Compliance Analysts role group and named on the Communication Compliance policy.
 - [ ] Confirm Microsoft Entra ID groups exist for supervisory principals, escalation recipients, and service accounts.
 - [ ] Confirm the target Dataverse environment URL is known and approved for use.
 - [ ] Confirm PowerShell 7 or later is installed on the admin workstation.
@@ -55,6 +55,8 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 - [ ] Verify the evidence package contains `supervision-queue-snapshot`, `review-disposition-log`, and `sampling-summary`.
 - [ ] Verify each evidence file has a matching `.sha256` companion file.
 - [ ] Verify the final evidence package conforms to `config\evidence-schema.json`.
+- [ ] Validate the lab contract with `python scripts\validate-lab-contracts.py solutions\04-finra-supervision-workflow\lab\04-finra-supervision-workflow.lab.json` and confirm the first lab cycle is read-only/detect-only (`mutations: []`) before any tenant validation.
+- [ ] Confirm tenant identity matches the separately maintained sanctioned-lab record, Dataverse metadata variables contain no placeholders, and ignored lab staging is removed after evidence capture.
 
 ## 6. Sign-off
 
@@ -63,4 +65,3 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 - [ ] Power Platform administrator has approved Dataverse security roles and environment variables.
 - [ ] Records management has approved the retention period for evidence artifacts.
 - [ ] Project owner has recorded final deployment date, tier, and evidence package location.
-

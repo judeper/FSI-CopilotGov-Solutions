@@ -3,18 +3,18 @@
     "solution": "04-finra-supervision-workflow",
     "solutionCode": "FSW",
     "exportVersion": "1.1.0",
-    "exportedAt": "2026-05-23T00:12:07.4413334-04:00",
+    "exportedAt": "2026-07-14T05:26:56.6185199-04:00",
     "tier": "regulated",
+    "policyId": "00000000-0000-0000-0000-000000000000",
     "environmentUrl": "https://REPLACE-ME.crm.dynamics.com",
     "warning": "Documentation-first export emits configuration-based sample evidence. Use -LiveExport with Dataverse connectivity before treating supervisory controls as implemented.",
-    "evidenceMode": "documentation-first",
-    "policyId": "00000000-0000-0000-0000-000000000000",
+    "periodEnd": "2026-01-31",
     "periodStart": "2026-01-01",
-    "periodEnd": "2026-01-31"
+    "evidenceMode": "documentation-first"
   },
   "summary": {
-    "exceptionCount": 1,
     "overallStatus": "partial",
+    "exceptionCount": 1,
     "recordCount": 13,
     "findingCount": 3
   },
@@ -39,19 +39,19 @@
     {
       "name": "supervision-queue-snapshot",
       "type": "supervision-queue-snapshot",
-      "path": "artifacts\\evidence\\supervision-queue-snapshot.json",
+      "path": "supervision-queue-snapshot.json",
       "hash": "019a8f20058fbdc333bf52c5fdfa71075a0648e3372e7e7a8389204fa9e18b19"
     },
     {
       "name": "review-disposition-log",
       "type": "review-disposition-log",
-      "path": "artifacts\\evidence\\review-disposition-log.json",
+      "path": "review-disposition-log.json",
       "hash": "d4eebabf05e126e6fd6ae79bcad24c6d078c558f55fbfacaa67261acc6511967"
     },
     {
       "name": "sampling-summary",
       "type": "sampling-summary",
-      "path": "artifacts\\evidence\\sampling-summary.json",
+      "path": "sampling-summary.json",
       "hash": "3f6a491595a05344b9f3f4d357e7d795fcf0dd68bfc8b6cf4e705011a8416c13"
     }
   ]

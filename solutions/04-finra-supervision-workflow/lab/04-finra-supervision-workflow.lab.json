@@ -1,0 +1,391 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:04-finra-supervision-workflow:2026-07-readonly",
+  "solution": {
+    "id": "04-finra-supervision-workflow",
+    "name": "FINRA Supervision Workflow for Copilot",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "3.4",
+    "3.5",
+    "3.6"
+  ],
+  "portals": [
+    "microsoft-purview-compliance-portal",
+    "power-platform-admin-center"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-cc-copilot-detection",
+      "claimText": "Microsoft Purview Communication Compliance detects Microsoft 365 Copilot and Microsoft 365 Copilot Chat prompts and responses through a policy created from the Detect Microsoft Copilot interactions template, which includes the Microsoft Copilot experiences location.",
+      "affectedFiles": [
+        "solutions/04-finra-supervision-workflow/README.md",
+        "solutions/04-finra-supervision-workflow/docs/prerequisites.md",
+        "solutions/04-finra-supervision-workflow/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-copilot",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cc-reviewer-roles",
+      "claimText": "The least-privileged Communication Compliance review role group is Communication Compliance Analysts, which can access and investigate alerts but cannot configure policies or take advanced remediation actions; reviewers must also be named on the policy.",
+      "affectedFiles": [
+        "solutions/04-finra-supervision-workflow/docs/prerequisites.md",
+        "solutions/04-finra-supervision-workflow/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-permissions",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cc-power-automate-handoff",
+      "claimText": "Communication Compliance supports Power Automate flows created from a recommended default template through the Automate menu on an alert; creating or running these flows requires membership in a Communication Compliance role group.",
+      "affectedFiles": [
+        "solutions/04-finra-supervision-workflow/docs/prerequisites.md",
+        "solutions/04-finra-supervision-workflow/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-power-automate",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cc-licensing",
+      "claimText": "Communication Compliance requires a Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) license, an Office 365 Enterprise E3 license with the Advanced Compliance add-on, or an Office 365 Enterprise E5 subscription for scoped users.",
+      "affectedFiles": [
+        "solutions/04-finra-supervision-workflow/docs/prerequisites.md",
+        "solutions/04-finra-supervision-workflow/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-configure",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-dataverse-entitysetname",
+      "claimText": "For Dataverse Web API calls, the entity set name should be read from table metadata rather than assumed from the logical name, because the default plural collection name should not be depended on.",
+      "affectedFiles": [
+        "solutions/04-finra-supervision-workflow/scripts/Export-Evidence.ps1",
+        "solutions/04-finra-supervision-workflow/config/default-config.json",
+        "solutions/04-finra-supervision-workflow/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/power-apps/developer/data-platform/webapi/web-api-service-documents",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with the Advanced Compliance add-on for scoped users",
+      "Power Apps Premium",
+      "Power Automate Premium"
+    ],
+    "roles": [
+      "Communication Compliance Analysts (least-privileged reviewer)",
+      "Global Reader for read-only tenant verification",
+      "Dataverse environment user with read-only table and metadata access"
+    ],
+    "features": [
+      "A Microsoft Purview Communication Compliance policy that detects Microsoft 365 Copilot interactions",
+      "A Dataverse environment with the supervision queue, log, and config tables"
+    ],
+    "capacityRequirements": [
+      "One disposable Microsoft 365 US commercial test tenant or environment for representative validation"
+    ],
+    "dataRequirements": [
+      "Representative sample records only; no production supervisory data, reviewer identities, or Copilot content"
+    ],
+    "tenantCount": 1,
+    "notes": "The first lab cycle is read-only and detect-only. No policy, case, review, Dataverse row, flow, retention, or role is changed."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant identity, licensing, and least-privileged reviewer roles",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before any Communication Compliance or Dataverse read.",
+            "expected": "The organization id and displayName match the separately maintained sanctioned-lab authorization record.",
+            "operatorNote": "Compare the response with the out-of-band lab authorization record and stop on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Graph organization response and sanctioned-lab record",
+              "expectation": "Tenant identity matches the separately maintained sanctioned-lab record."
+            }
+          },
+          {
+            "id": "step-confirm-licensing-and-roles",
+            "mode": "ui",
+            "intent": "Confirm eligible Communication Compliance licensing and that reviewers hold the least-privileged Communication Compliance Analysts role group in the Microsoft Purview portal.",
+            "expected": "Eligible licensing is assigned and reviewers appear in the Communication Compliance Analysts role group without configuration or advanced remediation permissions.",
+            "locator": "Microsoft Purview portal > Settings > Roles and groups > Role groups",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Role groups list and license assignment",
+              "expectation": "Reviewers are members of Communication Compliance Analysts and no role assignment was changed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run documentation-first scripts and flow contract offline",
+        "steps": [
+          {
+            "id": "step-run-documentation-first-export",
+            "mode": "powershell",
+            "intent": "Run the documentation-first evidence export to confirm it emits representative sample data with package-relative artifact paths.",
+            "expected": "The export completes with evidenceMode documentation-first, overallStatus partial, and package-relative artifact paths.",
+            "command": "pwsh -File solutions/04-finra-supervision-workflow/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath lab-evidence/04-finra-supervision-workflow/export -PeriodStart 2026-01-01 -PeriodEnd 2026-01-31",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence package metadata and artifact list",
+              "expectation": "Package metadata reports documentation-first mode and artifacts use bare file names."
+            }
+          },
+          {
+            "id": "step-run-monitor-offline",
+            "mode": "powershell",
+            "intent": "Run the compliance monitor without live checks to confirm configuration posture stays below implemented in documentation-first mode.",
+            "expected": "Monitor output reports runtimeMode documentation-first and overallStatus partial with no implemented controls.",
+            "command": "pwsh -File solutions/04-finra-supervision-workflow/scripts/Monitor-Compliance.ps1 -ConfigurationTier regulated -OutputPath lab-evidence/04-finra-supervision-workflow/monitor",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance status output",
+              "expectation": "Output shows documentation-first runtime mode and partial overall status."
+            }
+          },
+          {
+            "id": "step-validate-flow-contract",
+            "mode": "powershell",
+            "intent": "Validate the representative supervision review flow contract offline with repository tooling.",
+            "expected": "Flow contract validation passes for the sample contract.",
+            "command": "python scripts/validate-flow-contract.py solutions/04-finra-supervision-workflow/flows/supervision-review.flow.json",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "validate-flow-contract output",
+              "expectation": "Validation reports the sample flow contract passed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Inspect Communication Compliance policy and Dataverse metadata read-only",
+        "steps": [
+          {
+            "id": "step-inspect-cc-policy",
+            "mode": "ui",
+            "intent": "Inspect the existing Communication Compliance policy read-only to confirm it detects Microsoft 365 Copilot interactions and names reviewers.",
+            "expected": "The policy includes the Microsoft Copilot experiences location and lists reviewers; no policy setting is changed.",
+            "locator": "Microsoft Purview portal > Communication Compliance > Policies",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Policy locations and reviewers panel",
+              "expectation": "Policy shows the Microsoft Copilot experiences location and reviewers, unchanged."
+            }
+          },
+          {
+            "id": "step-read-entityset-metadata",
+            "mode": "powershell",
+            "intent": "Read each supervision table's EntitySetName from Dataverse metadata read-only to confirm the config values instead of assuming the default plural collection name.",
+            "expected": "Returned EntitySetName values are compared with config/default-config.json; any mismatch is recorded as PARTIAL follow-up and is not changed during this read-only cycle.",
+            "operatorNote": "Set FSW_LAB_ENVIRONMENT_URL and FSW_LAB_DATAVERSE_TOKEN outside Git. The command rejects missing, non-HTTPS, or placeholder environment URLs.",
+            "command": "$environmentUrl = $env:FSW_LAB_ENVIRONMENT_URL; $token = $env:FSW_LAB_DATAVERSE_TOKEN; if ([string]::IsNullOrWhiteSpace($environmentUrl) -or $environmentUrl -match 'REPLACE-ME') { throw 'FSW_LAB_ENVIRONMENT_URL is required and must not be a placeholder.' }; $uri = $null; if (-not [uri]::TryCreate($environmentUrl, [UriKind]::Absolute, [ref]$uri) -or $uri.Scheme -ne 'https') { throw 'FSW_LAB_ENVIRONMENT_URL must be an absolute HTTPS URL.' }; if ([string]::IsNullOrWhiteSpace($token)) { throw 'FSW_LAB_DATAVERSE_TOKEN is required.' }; $headers = @{ Authorization = 'Bearer ' + $token; Accept = 'application/json' }; foreach ($logicalName in @('fsi_cg_fsw_queue','fsi_cg_fsw_log','fsi_cg_fsw_config')) { $requestUri = '{0}/api/data/v9.2/EntityDefinitions(LogicalName=''{1}'')?$select=LogicalName,EntitySetName' -f $environmentUrl.TrimEnd('/'), $logicalName; Invoke-RestMethod -Method GET -Uri $requestUri -Headers $headers }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "EntityDefinitions EntitySetName response",
+              "expectation": "Metadata EntitySetName values are captured and compared with config/default-config.json; mismatches are recorded without modifying config or Dataverse."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Remove local staging and record no-mutation attestation",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove local ignored staging after the lab result packager captures required evidence.",
+            "expected": "The Solution 04 lab-evidence staging directory no longer exists.",
+            "command": "$path = 'lab-evidence/04-finra-supervision-workflow'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 04 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/04-finra-supervision-workflow no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-mutations",
+            "mode": "manual",
+            "intent": "Capture operator attestation that this read-only cycle changed no tenant state.",
+            "expected": "Attestation confirms no policy, case, review, Dataverse row, flow, retention, or role was changed.",
+            "operatorNote": "No policy, case, review, Dataverse row, flow, retention, or role was changed during this read-only, detect-only validation cycle.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms zero mutations were executed."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "3.4"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Microsoft Learn source citations for the Communication Compliance, licensing, role, Power Automate handoff, and Dataverse Web API claims.",
+        "requiredForControls": [
+          "3.4",
+          "3.5",
+          "3.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-script-transcript",
+        "type": "powershell-transcript",
+        "description": "Transcript of the documentation-first export, monitor, and flow contract validation runs with read-back output.",
+        "requiredForControls": [
+          "3.4",
+          "3.5",
+          "3.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL"
+        ]
+      },
+      {
+        "id": "artifact-cc-policy-evidence",
+        "type": "screenshot",
+        "description": "Read-only screenshot of the Communication Compliance policy locations and reviewers.",
+        "requiredForControls": [
+          "3.4"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-entityset-metadata",
+        "type": "api-response",
+        "description": "Read-only EntityDefinitions EntitySetName response for the queue, log, and config tables.",
+        "requiredForControls": [
+          "3.4"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL"
+        ]
+      },
+      {
+        "id": "artifact-cleanup-attestation",
+        "type": "manual-attestation",
+        "description": "Operator attestation that the read-only cycle executed zero mutations.",
+        "requiredForControls": [
+          "3.4",
+          "3.5",
+          "3.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-source-citations",
+      "artifact-script-transcript",
+      "artifact-cleanup-attestation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

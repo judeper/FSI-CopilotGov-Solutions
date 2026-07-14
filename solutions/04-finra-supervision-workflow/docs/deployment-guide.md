@@ -11,7 +11,7 @@ This guide describes how to deploy the FINRA Supervision Workflow for Copilot in
    - Supervisory principals by zone
    - Escalation recipients
    - Governance administrators
-5. Record the Microsoft Purview Communication Compliance policy ID that captures Copilot prompts and responses.
+5. Record the Microsoft Purview Communication Compliance policy ID for the policy that detects Microsoft 365 Copilot and Microsoft 365 Copilot Chat interactions. Use the **Detect Microsoft Copilot interactions** template, or a custom policy that includes the **Microsoft Copilot experiences** location, and confirm reviewers are named on the policy.
 
 ## 2. Deploy Dataverse schema
 
@@ -42,10 +42,10 @@ Create table `fsi_cg_fsw_log` with at least these columns:
 | Column | Suggested type | Notes |
 | --- | --- | --- |
 | fsi_lognumber | Text | Alternate key or duplicate detection candidate. |
-| fsi_queueitem | Lookup to fsi_cg_fsw_queue | Required for traceability. |
+| fsi_queueitem | Lookup to fsi_cg_fsw_queue, or Text | Required for traceability. If implemented as a lookup, its Web API value is exposed as `_fsi_queueitem_value`; align the live-export `$select` accordingly. |
 | fsi_action | Text | Example: ingested, assigned, review-complete, sla-breached. |
 | fsi_actor | Text | User principal name, service account, or flow name. |
-| fsi_timestamp | Date and time | UTC timestamp for immutable log ordering. |
+| fsi_timestamp | Date and time | UTC timestamp for append-only governance ordering; not a platform immutability guarantee. |
 
 ### 2.3 SupervisionConfig
 
@@ -64,11 +64,21 @@ Create table `fsi_cg_fsw_config` with at least these columns:
 - Restrict write access to SupervisionConfig to governance administrators.
 - Restrict update access to SupervisionLog so reviewers and flows can append but not change prior entries.
 
+### 2.5 Confirm Web API entity set names
+
+Before configuring live evidence export or any raw Dataverse Web API call, read each table's `EntitySetName` from tenant metadata rather than assuming the default plural collection name:
+
+```http
+GET {environmentUrl}/api/data/v9.2/EntityDefinitions(LogicalName='fsi_cg_fsw_queue')?$select=EntitySetName
+```
+
+Repeat for `fsi_cg_fsw_log` and `fsi_cg_fsw_config`, then align the `entitySetName` values in `config\default-config.json`. The Microsoft Dataverse connector actions ("Add a row", "List rows") resolve the entity set from the table's logical name, but any HTTP-with-Entra actions in the flows must target the metadata-confirmed entity set name.
+
 ## 3. Create Power Automate flows
 
 ### 3.1 Ingest Flagged Items
 
-1. Validate the Communication Compliance handoff with compliance operations before building the flow. Supported patterns include report exports, audit-log review, or a Power Automate flow launched from a Communication Compliance alert.
+1. Validate the Communication Compliance handoff with compliance operations before building the flow. Supported patterns include report exports, audit-log review, or a Power Automate flow created from a recommended default template through the **Automate** menu on a Communication Compliance alert.
 2. Use `fsi_cr_fsw_handoff` only for the validated handoff source and `fsi_cr_fsw_dataverse` for Dataverse actions.
 3. Receive exported or alert-context Copilot communication metadata; do not configure unsupported scheduled polling of policy matches.
 4. Map source metadata into `fsi_cg_fsw_queue`.
@@ -131,6 +141,28 @@ Validation objectives:
 - Queue items are created and assigned correctly.
 - SLA values match supervisory policy.
 - Escalation notifications fire for breached items.
-- Review completion writes immutable log entries.
+- Review completion writes append-only governance log entries under restricted update permissions.
 - Evidence export produces all required artifacts and hash files.
 
+## 7. Lab validation handoff
+
+A machine-readable lab validation contract is provided at
+`lab\04-finra-supervision-workflow.lab.json`. It defines a **read-only, detect-only**
+first cycle (`mutations: []`) for validating this solution against a US commercial-cloud
+Microsoft 365 tenant without changing any policy, case, review, Dataverse row, flow,
+retention, or role. The contract records the Microsoft source claims behind the
+Communication Compliance, licensing, role, Power Automate handoff, and Dataverse Web API
+statements in this solution.
+
+- Validate the contract with `python scripts\validate-lab-contracts.py solutions\04-finra-supervision-workflow\lab\04-finra-supervision-workflow.lab.json`.
+- The contract's execution phases cover confirming licensing and reviewer roles, running the
+  documentation-first scripts and flow contract offline, inspecting the existing
+  Communication Compliance policy and Copilot interaction scope read-only, and reading each
+  Dataverse table's `EntitySetName` from metadata read-only.
+- Tenant identity must match a separately maintained sanctioned-lab record. Dataverse metadata
+  reads use runtime environment URL/token variables and fail closed on missing or placeholder
+  values; any EntitySetName mismatch is recorded as follow-up rather than changed in this cycle.
+- Offline artifacts use ignored `lab-evidence/04-finra-supervision-workflow` staging, which is
+  removed fail-closed after the lab result packager captures required evidence.
+- Runtime execution and evidence capture happen in the separate studio executor lane; this
+  repository stores only the contract and its validators.

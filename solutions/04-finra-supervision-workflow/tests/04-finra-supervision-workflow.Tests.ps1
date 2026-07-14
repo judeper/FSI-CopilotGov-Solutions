@@ -89,8 +89,40 @@
         $package.summary.overallStatus | Should -Be 'partial'
     }
 
+    It 'Export-Evidence.ps1 records package-relative artifact paths and stays portable with a relative OutputPath' {
+        Push-Location $TestDrive
+        try {
+            $exportResult = & (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1') -ConfigurationTier regulated -OutputPath '.\evidence-rel' -PeriodStart '2026-01-01' -PeriodEnd '2026-01-31'
+            $package = Get-Content -Path $exportResult.PackagePath -Raw | ConvertFrom-Json -Depth 20
+
+            foreach ($artifact in $package.artifacts) {
+                # Package-relative: a bare file name with no directory segment or drive root.
+                $artifact.path | Should -Not -Match '[\\/]'
+                [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeFalse
+            }
+            foreach ($artifact in $exportResult.Artifacts) {
+                [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeTrue
+            }
+
+            $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
+            Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+            $relocatedPath = Join-Path $TestDrive 'evidence-relocated'
+            Move-Item -Path (Join-Path $TestDrive 'evidence-rel') -Destination $relocatedPath
+            $validation = Test-CopilotGovEvidencePackage -Path (Join-Path $relocatedPath '04-finra-supervision-workflow-evidence.json') -ExpectedArtifacts @('supervision-queue-snapshot', 'review-disposition-log', 'sampling-summary')
+            $validation.IsValid | Should -BeTrue
+        }
+        finally {
+            Pop-Location
+        }
+    }
+
     It 'Export-Evidence.ps1 rejects PeriodEnd before PeriodStart' {
         { & (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath (Join-Path $TestDrive 'evidence-bad-dates') -PeriodStart '2026-03-15' -PeriodEnd '2026-01-01' } | Should -Throw '*PeriodEnd*'
+    }
+
+    It 'Export-Evidence.ps1 refuses live supervisory output inside the repository' {
+        { & (Join-Path $solutionRoot 'scripts\Export-Evidence.ps1') -ConfigurationTier baseline -LiveExport -OutputPath (Join-Path $solutionRoot 'artifacts\evidence-live-test') -PeriodStart '2026-01-01' -PeriodEnd '2026-01-31' } |
+            Should -Throw '*outside the repository*'
     }
 
     It 'scripts fail gracefully when a tier config file is missing' {

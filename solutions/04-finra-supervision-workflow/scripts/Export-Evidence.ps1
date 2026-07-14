@@ -84,14 +84,18 @@ function Write-JsonArtifact {
     )
 
     $null = New-Item -ItemType Directory -Path $DestinationPath -Force
-    $path = Join-Path $DestinationPath ("{0}.json" -f $FileName)
+    $fileLeaf = "{0}.json" -f $FileName
+    $path = Join-Path $DestinationPath $fileLeaf
     $Payload | ConvertTo-Json -Depth 12 | Set-Content -Path $path -Encoding utf8
     $hashInfo = Write-CopilotGovSha256File -Path $path
 
+    # Record the artifact as a package-relative name so the evidence package validates
+    # regardless of caller OutputPath (absolute or relative) and remains portable when relocated.
     return [ordered]@{
         name = $FileName
         type = $ArtifactType
-        path = $path
+        path = (Resolve-Path -LiteralPath $path).Path
+        packagePath = $fileLeaf
         hash = $hashInfo.Hash
     }
 }
@@ -479,13 +483,16 @@ if ($endDate -lt $startDate) {
 
 $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $configuration = Get-EffectiveConfiguration -SolutionRoot $solutionRoot -Tier $ConfigurationTier
+$resolvedRequestedOutput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
 if ($LiveExport) {
-    $defaultEvidencePath = (Resolve-Path (Join-Path $PSScriptRoot '..\artifacts\evidence') -ErrorAction SilentlyContinue).Path
-    $resolvedOutput = (Resolve-Path $OutputPath -ErrorAction SilentlyContinue).Path
-    if ($resolvedOutput -and $defaultEvidencePath -and $resolvedOutput -eq $defaultEvidencePath) {
-        Write-Warning 'Live export writes sensitive supervisory data (reviewer identities, review notes) to the default in-repository path. Use -OutputPath to write to a directory outside the repository, or add artifacts/evidence-live/ to .gitignore.'
+    $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path.TrimEnd('\', '/')
+    $repoPrefix = $repoRoot + [IO.Path]::DirectorySeparatorChar
+    if ($resolvedRequestedOutput.Equals($repoRoot, [StringComparison]::OrdinalIgnoreCase) -or $resolvedRequestedOutput.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Live export can contain supervisory identities and review notes. Choose an OutputPath outside the repository before using -LiveExport.'
     }
 }
+$null = New-Item -ItemType Directory -Path $resolvedRequestedOutput -Force
+$OutputPath = (Resolve-Path -LiteralPath $resolvedRequestedOutput).Path
 $data = if ($LiveExport) {
     Get-LiveEvidenceData -Configuration $configuration -Tier $ConfigurationTier -StartDate $startDate -EndDate $endDate
 }
@@ -500,7 +507,7 @@ $samplingArtifact = Write-JsonArtifact -FileName 'sampling-summary' -ArtifactTyp
 $controls = @(
     [pscustomobject]@{
         controlId = '3.4'
-        status = if ($LiveExport) { if (@($data['queueSnapshot']['records']).Count -eq 0) { 'partial' } else { 'implemented' } } else { 'partial' }
+        status = 'partial'
         notes = if ($LiveExport) {
             'Supports compliance with supervisory coverage by capturing queue intake, zone assignment, sampling configuration, and SLA targets.'
         }
@@ -510,7 +517,7 @@ $controls = @(
     }
     [pscustomobject]@{
         controlId = '3.5'
-        status = if ($LiveExport) { if (@($data['reviewDispositionLog']['records']).Count -eq 0) { 'partial' } else { 'implemented' } } else { 'partial' }
+        status = 'partial'
         notes = if ($LiveExport) {
             'Supports compliance with review disposition accountability through reviewer actions, timestamps, and recorded outcomes.'
         }
@@ -520,7 +527,7 @@ $controls = @(
     }
     [pscustomobject]@{
         controlId = '3.6'
-        status = if ($LiveExport -and $configuration['exceptionTracking']['enabled']) { 'implemented' } else { 'partial' }
+        status = 'partial'
         notes = if ($LiveExport -and $configuration['exceptionTracking']['enabled']) {
             'Supports compliance with exception tracking through escalation settings, breach logging, and review notes retained for audit.'
         }
@@ -530,13 +537,24 @@ $controls = @(
     }
 )
 
-$overallStatus = if ($LiveExport -and @($controls | Where-Object { $_.status -ne 'implemented' }).Count -eq 0) { 'implemented' } else { 'partial' }
+$overallStatus = 'partial'
 $summary = [ordered]@{
     overallStatus = $overallStatus
     recordCount = [int]$data['recordCount']
     findingCount = [int](@($controls | Where-Object { $_.status -ne 'implemented' }).Count)
     exceptionCount = [int]$data['exceptionCount']
 }
+
+$packageArtifacts = @(
+    foreach ($artifact in @($queueArtifact, $logArtifact, $samplingArtifact)) {
+        [ordered]@{
+            name = $artifact.name
+            type = $artifact.type
+            path = $artifact.packagePath
+            hash = $artifact.hash
+        }
+    }
+)
 
 $package = Export-SolutionEvidencePackage `
     -Solution '04-finra-supervision-workflow' `
@@ -545,7 +563,7 @@ $package = Export-SolutionEvidencePackage `
     -OutputPath $OutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts @($queueArtifact, $logArtifact, $samplingArtifact) `
+    -Artifacts $packageArtifacts `
     -ExpectedArtifacts @($configuration['evidenceOutputs']) `
     -AdditionalMetadata @{
         periodStart = $PeriodStart
@@ -564,7 +582,4 @@ $package = Export-SolutionEvidencePackage `
     PackageHash = $package.Hash
     Artifacts = @($queueArtifact, $logArtifact, $samplingArtifact)
 }
-
-
-
 

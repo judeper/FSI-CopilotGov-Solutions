@@ -26,6 +26,12 @@ $env:DATAVERSE_ACCESS_TOKEN = '<access-token>'
   -LiveExport
 ```
 
+Live export builds each table's Web API collection path from the `entitySetName` values in
+`config\default-config.json`. Before the first live export, confirm those values against tenant
+metadata (`GET {environmentUrl}/api/data/v9.2/EntityDefinitions(LogicalName='fsi_cg_fsw_queue')?$select=EntitySetName`)
+rather than assuming the default plural collection name. `Export-Evidence.ps1` fails fast if an
+`entitySetName` is missing or looks like a URL instead of a collection resource name.
+
 ## Evidence package structure
 
 ```text
@@ -94,14 +100,4 @@ Live export (`-LiveExport`) queries Dataverse for actual supervisory records inc
   -LiveExport
 ```
 
-**Prevent accidental commits of live evidence:**
-
-Add the live export output directory to `.gitignore` if it falls within the repository tree:
-
-```text
-# Live evidence exports (contains sensitive supervisory data)
-artifacts/evidence-live/
-```
-
-Alternatively, always specify `-OutputPath` pointing to a directory outside the repository so that live supervisory records are never committed to source control.
-
+The script fails closed when `-LiveExport` resolves anywhere inside the repository. Always specify an approved `-OutputPath` outside the repository so live supervisory records cannot be committed to source control.
