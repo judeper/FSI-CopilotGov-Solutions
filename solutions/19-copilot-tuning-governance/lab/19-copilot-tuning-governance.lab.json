@@ -1,0 +1,336 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:19-copilot-tuning-governance:2026-07-readonly-zero-mutations",
+  "solution": {
+    "id": "19-copilot-tuning-governance",
+    "name": "Copilot Tuning Governance",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.16",
+    "3.8"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-preview-state",
+      "claimText": "Microsoft 365 Copilot Tuning is an early access preview capability available to a limited set of customers; access through the Frontier program is planned for April 2026 and features and requirements are subject to change.",
+      "affectedFiles": [
+        "solutions/19-copilot-tuning-governance/README.md",
+        "solutions/19-copilot-tuning-governance/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-eligibility-threshold",
+      "claimText": "During public preview, only tenants with at least 5,000 Microsoft 365 Copilot licenses are eligible; when the threshold is met Copilot Tuning appears in the admin center and is enabled by default, and when it is not met the settings are not available.",
+      "affectedFiles": [
+        "solutions/19-copilot-tuning-governance/README.md",
+        "solutions/19-copilot-tuning-governance/docs/prerequisites.md",
+        "solutions/19-copilot-tuning-governance/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-admin-availability-controls",
+      "claimText": "AI admins manage Copilot Tuning through the Copilot control system in the Microsoft 365 admin center with three tenant availability settings (enable for all users, enable for specific users or groups, or disable), plus an in-product request-access flow that requires admin approval.",
+      "affectedFiles": [
+        "solutions/19-copilot-tuning-governance/docs/architecture.md",
+        "solutions/19-copilot-tuning-governance/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent365-registry",
+      "claimText": "Fine-tuned agents appear as tuned agents in the Agent 365 portal, which provides a centralized inventory of all tuned agents; from there admins can view, block or disable, and delete a tuned agent, and deleting an agent also deletes the associated fine-tuned model and snapshot data.",
+      "affectedFiles": [
+        "solutions/19-copilot-tuning-governance/docs/architecture.md",
+        "solutions/19-copilot-tuning-governance/docs/evidence-export.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-snapshot-data-boundaries",
+      "claimText": "For tuning, the system creates a tenant-isolated snapshot of the explicitly selected SharePoint content; snapshot permissions reflect ACLs at tuning time and are not auto-updated, source DLP and retention policies do not apply to snapshot data, tuning data has a maximum retention period of two years, and Copilot Tuning is not enabled by default for Advanced Data Residency tenants during public preview.",
+      "affectedFiles": [
+        "solutions/19-copilot-tuning-governance/docs/architecture.md",
+        "solutions/19-copilot-tuning-governance/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/copilot-tuning-admin-guide",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "At least 5,000 Microsoft 365 Copilot licenses assigned in the tenant during public preview",
+      "Microsoft 365 Copilot license assigned to the lab operator"
+    ],
+    "roles": [
+      "AI Reader (read-only Copilot control system access)",
+      "Global Reader"
+    ],
+    "features": [
+      "Microsoft 365 Copilot Tuning visible in the Copilot control system for an eligible tenant",
+      "Agent 365 portal access for read-only review of the tuned-agent inventory"
+    ],
+    "capacityRequirements": [
+      "One disposable early access or Frontier preview tenant with Copilot Tuning eligibility"
+    ],
+    "dataRequirements": [
+      "Representative sample governance records only; no real tuning source data, datasets, or personal data"
+    ],
+    "tenantCount": 1,
+    "notes": "Read-only, detect-only validation. The lab confirms eligibility visibility, the tuned-agent registry surface, and documentation-first script output without enabling tuning, uploading datasets, running tuning jobs, or publishing tuned agents or models."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm Copilot Tuning eligibility and visibility",
+        "steps": [
+          {
+            "id": "step-confirm-tuning-visibility",
+            "mode": "ui",
+            "intent": "Review the Copilot Tuning availability settings in the Copilot control system of the Microsoft 365 admin center using a read-only role.",
+            "expected": "The Copilot Tuning availability control is visible for an eligible tenant, or is absent when the tenant does not meet the 5,000-license public-preview threshold.",
+            "locator": "Microsoft 365 admin center > Copilot > Settings > Copilot control system > Copilot Tuning",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Copilot Tuning availability settings panel",
+              "expectation": "Operator captures whether Copilot Tuning settings are present (eligible) or absent (ineligible) without changing any setting."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run documentation-first governance scripts and review registry",
+        "steps": [
+          {
+            "id": "step-run-monitor",
+            "mode": "powershell",
+            "intent": "Execute the tuning governance monitoring script in documentation-first mode with representative sample data.",
+            "expected": "The script emits representative compliance findings and writes a compliance-status.json summary without connecting to live services.",
+            "command": "pwsh -File solutions/19-copilot-tuning-governance/scripts/Monitor-Compliance.ps1 -ConfigurationTier recommended -TenantId lab-tenant -ExportPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance script output and compliance-status.json",
+              "expectation": "Output lists representative tuned-model compliance statuses and the sample-data marker is present."
+            }
+          },
+          {
+            "id": "step-run-export",
+            "mode": "powershell",
+            "intent": "Execute the evidence export script and confirm the package validates and uses package-relative artifact paths.",
+            "expected": "A schema-aligned evidence package plus SHA-256 companion files are written; artifact paths inside the package are package-relative so the package is relocatable.",
+            "command": "pwsh -File solutions/19-copilot-tuning-governance/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -TenantId lab-tenant -OutputPath lab-output/evidence",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Evidence package and .sha256 companions",
+              "expectation": "Package validation succeeds and the package artifacts use relative paths that resolve after relocation."
+            }
+          },
+          {
+            "id": "step-review-agent365-inventory",
+            "mode": "manual",
+            "intent": "Review the tuned-agent inventory in the Agent 365 portal in read-only mode to confirm the authoritative registry surface exists in the tenant.",
+            "expected": "The Agent 365 portal lists any tuned agents (or shows an empty inventory) without the operator blocking, disabling, deleting, or publishing an agent.",
+            "operatorNote": "Read-only inspection only. Do not block, disable, delete, or publish any tuned agent or fine-tuned model. If the tenant has no tuned agents, record the empty-inventory state.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Agent 365 portal tuned-agent inventory",
+              "expectation": "Operator attests the tuned-agent registry was viewed read-only and no lifecycle action was taken."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify Microsoft source currency and capture negative state",
+        "steps": [
+          {
+            "id": "step-verify-source-currency",
+            "mode": "manual",
+            "intent": "Confirm the Microsoft Learn Copilot Tuning admin guide and overview still describe the capability as early access preview with the 5,000-license public-preview eligibility threshold.",
+            "expected": "The cited Microsoft Learn pages continue to state early access preview and the 5,000 Microsoft 365 Copilot license threshold.",
+            "operatorNote": "Open the admin guide and overview source URLs, capture the relevant excerpt, and record any drift toward general availability or a changed threshold as a BLOCKED disposition with the cited text.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Microsoft Learn source URLs in microsoftSourceClaims",
+              "expectation": "Source excerpt confirms the preview lifecycle state and eligibility threshold, or a drift is recorded with the citation."
+            }
+          },
+          {
+            "id": "step-capture-unavailable-state",
+            "mode": "manual",
+            "intent": "Capture the negative state where Copilot Tuning is unavailable so the lab records an honest BLOCKED or NOT-APPLICABLE disposition instead of assuming availability.",
+            "expected": "If Copilot Tuning settings are absent or the tenant is not enrolled, the operator records the unavailable state with a screenshot and the eligibility citation.",
+            "operatorNote": "When Copilot Tuning is not visible (ineligible tenant, not enrolled, or Advanced Data Residency commitment not waived), capture the negative UI and disposition the run BLOCKED or NOT-APPLICABLE with source evidence. Never fabricate an available state.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Negative-state screenshot and eligibility citation",
+              "expectation": "Operator confirms the unavailable state was captured with source evidence when applicable."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record cleanup decision",
+        "steps": [
+          {
+            "id": "step-confirm-no-cleanup-needed",
+            "mode": "manual",
+            "intent": "Capture operator attestation that the run was read-only and detect-only with no tenant mutation.",
+            "expected": "The operator note confirms no tuning was enabled, no dataset was uploaded, no tuning job ran, and no agent or model was published or deleted, so cleanup is not required.",
+            "operatorNote": "No mutation was executed in this documentation-first validation run; cleanup is not required.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no mutable changes occurred and cleanup is not required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-monitor-transcript",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript from Monitor-Compliance and Export-Evidence read-backs showing representative findings and package validation.",
+        "requiredForControls": [
+          "1.16",
+          "3.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-evidence-package",
+        "type": "json",
+        "description": "Schema-aligned evidence package with tuning-requests, model-inventory, and risk-assessments artifacts and SHA-256 companions.",
+        "requiredForControls": [
+          "1.16",
+          "3.8"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-admin-center-screenshot",
+        "type": "screenshot",
+        "description": "Screenshot of the Copilot Tuning availability settings (present for eligible tenants or absent for ineligible tenants) captured read-only.",
+        "requiredForControls": [
+          "1.16"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-agent365-inventory",
+        "type": "screenshot",
+        "description": "Read-only screenshot of the Agent 365 portal tuned-agent inventory surface (populated or empty).",
+        "requiredForControls": [
+          "1.16"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Microsoft Learn excerpt confirming the early access preview lifecycle state and the 5,000-license eligibility threshold, or documenting drift.",
+        "requiredForControls": [
+          "1.16",
+          "3.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-monitor-transcript",
+      "artifact-admin-center-screenshot",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

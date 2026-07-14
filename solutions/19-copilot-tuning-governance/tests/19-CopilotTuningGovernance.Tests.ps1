@@ -151,3 +151,121 @@ Describe 'Evidence types' {
         $evidenceDoc | Should -Match 'risk-assessments'
     }
 }
+
+Describe 'Evidence export portability' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:repoRoot = (Resolve-Path (Join-Path $script:solutionRoot '..\..')).Path
+        Import-Module (Join-Path $script:repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+        $script:exportScript = Join-Path $script:solutionRoot 'scripts\Export-Evidence.ps1'
+        $script:exportDir = Join-Path $TestDrive 'evidence'
+        $script:exportResult = & $script:exportScript -ConfigurationTier regulated -TenantId 'lab-tenant' -OutputPath $script:exportDir
+        $script:packagePath = Join-Path $script:exportDir '19-copilot-tuning-governance-evidence-package.json'
+        $script:package = Get-Content $script:packagePath -Raw | ConvertFrom-Json -Depth 30
+        $script:expectedArtifacts = @('tuning-requests', 'model-inventory', 'risk-assessments')
+    }
+
+    It 'records package-relative (non-rooted) artifact paths' {
+        @($script:package.artifacts).Count | Should -BeGreaterThan 0
+        foreach ($artifact in @($script:package.artifacts)) {
+            [System.IO.Path]::IsPathRooted([string]$artifact.path) | Should -BeFalse -Because "artifact $($artifact.name) must use a package-relative path for relocation safety"
+        }
+    }
+
+    It 'returns rooted artifact paths for callers' {
+        @($script:exportResult.ArtifactPaths).Count | Should -BeGreaterThan 0
+        foreach ($artifact in @($script:exportResult.ArtifactPaths)) {
+            [System.IO.Path]::IsPathRooted([string]$artifact.path) | Should -BeTrue -Because "caller path for $($artifact.name) must remain directly usable"
+            Test-Path -Path $artifact.path -PathType Leaf | Should -BeTrue
+        }
+    }
+
+    It 'resolves relative OutputPath from the active PowerShell location instead of Environment.CurrentDirectory' {
+        $originalLocation = (Get-Location).Path
+        $originalCurrentDirectory = [System.Environment]::CurrentDirectory
+        $psLocationRoot = Join-Path $TestDrive ("ps-location-{0}" -f [guid]::NewGuid().ToString('N'))
+        $envCurrentDirectoryRoot = Join-Path $TestDrive ("env-cwd-{0}" -f [guid]::NewGuid().ToString('N'))
+        $relativeOutputPath = "evidence-{0}" -f [guid]::NewGuid().ToString('N')
+        $expectedOutputDirectory = Join-Path $psLocationRoot $relativeOutputPath
+        $wrongOutputDirectory = Join-Path $envCurrentDirectoryRoot $relativeOutputPath
+
+        $null = New-Item -Path $psLocationRoot -ItemType Directory -Force
+        $null = New-Item -Path $envCurrentDirectoryRoot -ItemType Directory -Force
+
+        try {
+            Set-Location -LiteralPath $psLocationRoot
+            [System.Environment]::CurrentDirectory = $envCurrentDirectoryRoot
+
+            $result = & $script:exportScript -ConfigurationTier regulated -TenantId 'lab-tenant' -OutputPath $relativeOutputPath
+            $resolvedExpectedOutput = (Resolve-Path -LiteralPath $expectedOutputDirectory).Path
+
+            $result.EvidenceDirectory | Should -Be $resolvedExpectedOutput
+            Test-Path -LiteralPath (Join-Path $expectedOutputDirectory '19-copilot-tuning-governance-evidence-package.json') | Should -BeTrue
+            Test-Path -LiteralPath $wrongOutputDirectory | Should -BeFalse
+        }
+        finally {
+            Set-Location -LiteralPath $originalLocation
+            [System.Environment]::CurrentDirectory = $originalCurrentDirectory
+
+            if (Test-Path -LiteralPath $expectedOutputDirectory) {
+                Remove-Item -LiteralPath $expectedOutputDirectory -Recurse -Force
+            }
+            if (Test-Path -LiteralPath $wrongOutputDirectory) {
+                Remove-Item -LiteralPath $wrongOutputDirectory -Recurse -Force
+            }
+            if (Test-Path -LiteralPath $psLocationRoot) {
+                Remove-Item -LiteralPath $psLocationRoot -Recurse -Force
+            }
+            if (Test-Path -LiteralPath $envCurrentDirectoryRoot) {
+                Remove-Item -LiteralPath $envCurrentDirectoryRoot -Recurse -Force
+            }
+        }
+    }
+
+    It 'remains valid after the evidence package is relocated' {
+        $relocated = Join-Path $TestDrive 'relocated'
+        Move-Item -Path $script:exportDir -Destination $relocated
+        $relocatedPackage = Join-Path $relocated '19-copilot-tuning-governance-evidence-package.json'
+        $result = Test-CopilotGovEvidencePackage -Path $relocatedPackage -ExpectedArtifacts $script:expectedArtifacts
+        $result.IsValid | Should -BeTrue -Because ($result.Errors -join '; ')
+    }
+}
+
+Describe 'Lab validation contract' {
+    BeforeAll {
+        $script:labContractPath = Join-Path (Join-Path $PSScriptRoot '..') 'lab\19-copilot-tuning-governance.lab.json'
+        $script:labContract = if (Test-Path $script:labContractPath) {
+            Get-Content -Path $script:labContractPath -Raw | ConvertFrom-Json -Depth 30
+        }
+        else {
+            $null
+        }
+    }
+
+    It 'ships a lab contract file for the solution' {
+        Test-Path -Path $script:labContractPath | Should -BeTrue
+    }
+
+    It 'is read-only and detect-only (no mutations declared)' {
+        @($script:labContract.mutations).Count | Should -Be 0
+        foreach ($phase in @($script:labContract.execution.phases)) {
+            foreach ($step in @($phase.steps)) {
+                $step.mutationRef | Should -BeNullOrEmpty -Because "read-only lab steps must not reference a mutation"
+            }
+        }
+    }
+
+    It 'is scoped to US commercial-cloud Microsoft 365' {
+        $script:labContract.scope.cloud | Should -Be 'm365-us-commercial'
+        $script:labContract.scope.usCommercialOnly | Should -BeTrue
+    }
+
+    It 'covers the solution controls and required execution phases' {
+        @($script:labContract.controls) | Should -Contain '1.16'
+        @($script:labContract.controls) | Should -Contain '3.8'
+        $phaseIds = @($script:labContract.execution.phases | ForEach-Object { $_.id })
+        foreach ($required in @('setup', 'exercise', 'verify', 'cleanup')) {
+            $phaseIds | Should -Contain $required
+        }
+    }
+}

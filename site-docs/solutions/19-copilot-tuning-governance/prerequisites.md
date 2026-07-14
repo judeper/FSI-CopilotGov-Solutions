@@ -16,6 +16,18 @@ At least one of the following roles should be assigned to the operator, dependin
 
 For tuning governance management, AI Administrator is the recommended least-privilege role for Copilot and agent administration. Global Administrator should be reserved for scenarios that still require high-privilege tenant administration.
 
+For read-only review, evidence verification, and lab validation tasks, use a read-only role such as **AI Reader** (read-only access to the Copilot control system) or **Global Reader** so operators can inspect Copilot Tuning availability settings and the Agent 365 tuned-agent inventory without changing tenant state.
+
+## Cloud Availability and Data Residency
+
+Per current Microsoft Learn guidance for the early access preview, evaluate the following before planning tuning governance:
+
+- This solution covers Copilot Tuning during public preview only within its documented commercial-cloud availability.
+- Copilot Tuning is **not enabled by default for tenants with Advanced Data Residency (ADR)** commitments during public preview. ADR tenants that want to use Copilot Tuning must formally waive ADR requirements through their Microsoft account team.
+- Copilot Tuning follows Microsoft 365 data residency at the **macro region** level and respects EU Data Boundary commitments for EU-based tenants during public preview.
+- **Multi-Geo** data residency commitments do not apply to Copilot Tuning during public preview.
+- The authoritative inventory and lifecycle controls for tuned agents are provided in the **Agent 365 portal**; confirm read-only access for governance reviewers.
+
 ## Model Risk Management Stakeholders
 
 The following stakeholders should be identified before deploying tuning governance:

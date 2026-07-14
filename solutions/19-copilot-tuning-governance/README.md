@@ -1,6 +1,6 @@
 # Copilot Tuning Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.1.4 | **Priority:** P1 | **Track:** A
+> **Status:** Documentation-first scaffold | **Version:** v0.1.4 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-07-14
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -103,3 +103,5 @@ Each JSON artifact is written with a companion `.sha256` file so control evidenc
 - Model risk assessment patterns are documented but do not replace institutional model validation programs required by SR 11-7.
 - Tuning approval workflow patterns are documented but require Power Automate or equivalent implementation for production use.
 - The open-source / external base-model admin control (allow or block non-Microsoft base models for tuning) is a real Copilot Tuning governance lever not yet covered by this solution's monitoring or approval patterns.
+- The Agent 365 portal provides Microsoft's authoritative, tenant-wide inventory and lifecycle controls (view, block or disable, and delete) for tuned agents, and deleting a tuned agent also deletes its fine-tuned model and snapshot data. This solution's model-inventory and lifecycle patterns are a governance overlay that helps document oversight; they do not connect to or replace that portal.
+- Per current Microsoft Learn guidance, Copilot Tuning applies a maximum two-year retention to tuning source-data snapshots (retained while the tuned agent is active), does not apply source SharePoint DLP or retention policies to snapshot data, is not enabled by default for Advanced Data Residency tenants during public preview, and does not apply Multi-Geo residency commitments during public preview. These boundaries are distinct from the governance-evidence retention configured by this solution's tiers.
