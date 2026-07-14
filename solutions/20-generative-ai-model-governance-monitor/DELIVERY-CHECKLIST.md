@@ -61,6 +61,17 @@
 - [x] NIST AI RMF 1.0 and ISO/IEC 42001 references included
 - [x] framework_ids align with the catalog: sr-26-2, occ-2026-13, occ-2011-12, sr-11-7, nist-ai-rmf, iso-iec-42001
 
+## Lab Validation
+
+- [x] lab/20-generative-ai-model-governance-monitor.lab.json present and passes `scripts/validate-lab-contracts.py`
+- [x] First lab cycle is read-only/detect-only (`mutations: []`; no step references a mutation)
+- [x] Negative validation covers no subscription, no Foundry resource/project, no read-only role, unavailable region/feature, and no deployments
+- [x] Setup identity proof requires authenticated Azure CLI (`az`) and secure expected values (`EXPECTED_AZURE_SUBSCRIPTION_ID`, `EXPECTED_TENANT_ID`)
+- [x] Setup identity output is sanitized to boolean/state metadata only (no subscription ID, tenant ID, UPN, endpoint, token, or expected variable value retention)
+- [x] Evidence hash verification uses existing JSON + `.sha256` files with non-mutating `Test-EvidencePackageHash` checks and fails nonzero on missing/mismatch
+- [x] Separate read-only evidence-minimization review step records only attestation (never prohibited content) for keys/tokens, raw subscription/tenant/user IDs, endpoint hostnames, prompts/completions, and dataset/model input-output content
+- [ ] Attended studio-lane execution and lab-result capture (deferred — runs outside this repository)
+
 ## Customer Handover
 
 - [ ] README reviewed with customer model risk officer and compliance stakeholders

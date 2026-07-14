@@ -28,10 +28,15 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
-    def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+    def test_contract_validator_accepts_repository_contracts(self) -> None:
+        """Default discovery validates committed contracts and includes Solution 20 registration."""
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+        self.assertNotIn("0 file(s) checked", result.stdout)
+        self.assertIn(
+            "20-generative-ai-model-governance-monitor.lab.json", result.stdout
+        )
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"

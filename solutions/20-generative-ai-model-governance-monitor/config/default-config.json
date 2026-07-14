@@ -94,7 +94,7 @@
         "owner": "gmg-foundry-owner@example.com (sample value)",
         "materialityTier": "high",
         "attestationFreshnessDays": 180,
-        "contentSafetyProfile": "azure-ai-content-safety-required"
+        "contentSafetyProfile": "azure-openai-default-guardrails"
       },
       {
         "sourceId": "foundry-partner-community",
@@ -109,11 +109,11 @@
         "owner": "gmg-provider-owner@example.com (sample value)",
         "materialityTier": "high",
         "attestationFreshnessDays": 90,
-        "contentSafetyProfile": "azure-ai-content-safety-required"
+        "contentSafetyProfile": "provider-native-guardrails-documented-where-visible"
       }
     ],
     "contentSafetyDefaults": {
-      "contentSafetyResourceStatus": "required-for-foundry-and-azure-openai-scope",
+      "contentSafetyResourceStatus": "azure-ai-content-safety-standalone-optional",
       "promptShields": "record-enabled-disabled-and-policy-id",
       "groundednessDetection": "record-where-supported",
       "protectedMaterialDetection": "record-where-supported",

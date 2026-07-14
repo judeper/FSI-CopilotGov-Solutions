@@ -1,5 +1,19 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Read-only, detect-only lab validation contract (`lab/20-generative-ai-model-governance-monitor.lab.json`) with `mutations: []`, honest negative-validation paths (no subscription, no Foundry resource/project, no read-only role, unavailable region/feature, no deployments), and least-privilege read-only prerequisites with evidence minimization.
+- Lab validation handoff guidance in the deployment guide and delivery checklist, and registration of the contract in `scripts/test_lab_validation_contracts.py`.
+
+### Changed
+- Replaced the legacy Foundry classic content-filter citation with the canonical Azure OpenAI-in-Microsoft-Foundry default Guardrail source and narrowed wording to Azure OpenAI default Guardrails plus provider/deployment-native guardrails for non-Azure-OpenAI deployments only where documentation and read-only portal evidence confirm them (README, prerequisites, architecture, evidence-export, deployment guide, and representative config values).
+- Separated evidence-integrity and evidence-minimization assertions in the lab contract: `step-verify-evidence-integrity` now attests SHA-256 sidecar verification only, and `step-review-evidence-minimization` adds a read-only prohibited-content review attestation required for PASS evidence.
+- Added Scope Boundaries stating the solution does not govern or independently validate the Microsoft-hosted foundation models behind Microsoft 365 Copilot or Copilot Chat, and does not equate Microsoft 365 Copilot governance with Azure or Microsoft Foundry model governance.
+
+### Verified
+- Confirmed against first-party Microsoft sources as of 2026-07-14: Microsoft Foundry branding (Azure AI Studio / Azure AI Foundry are prior names; earlier portal is Foundry (classic); current model is a Foundry resource with projects), the model-catalog provider set, Microsoft Entra AI Administrator and AI Reader roles, the Cognitive Services User Azure built-in role, and the generally available Microsoft Graph `auditLogQuery` API.
+
 ## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
 
 ### Fixed

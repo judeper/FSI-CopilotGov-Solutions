@@ -13,7 +13,7 @@ The Generative AI Model Governance Monitor (GMG) provides a documentation-first 
 - Generative AI model inventory entries across Microsoft 365 Copilot, Copilot Chat, Copilot agents, Microsoft Foundry projects, Azure OpenAI or Foundry model deployments, and approved Foundry partner or community providers — provider, model family, model name/version, deployment type, region or cloud, lifecycle status, materiality tier, owner, and attestation freshness
 - Validation scope adapted for vendor-supplied and platform-hosted generative AI models (conceptual soundness review, output testing, limitations log, and independent challenge where required)
 - Ongoing monitoring observations — output sampling, user feedback signals, drift indicators, incident references, and escalation thresholds
-- Content safety and guardrail posture — Azure AI Content Safety resource status, Prompt Shields, groundedness detection, protected-material detection, filter thresholds, exceptions, and review cadence where applicable
+- Content safety and guardrail posture — Azure OpenAI deployments in Microsoft Foundry default configurable Guardrail policies (hate/fairness, sexual, violence, self-harm, and other supported controls where enabled), provider/deployment-native guardrails for non-Azure-OpenAI Foundry or partner/community deployments only where Microsoft/provider documentation and read-only portal surfaces confirm them, plus separate Azure AI Content Safety resource status only where the standalone moderation service is used, exceptions, and review cadence where applicable
 - Third-party due diligence on Microsoft and other approved model providers — documented controls, attestations, responsible AI or transparency references, and review cadence
 
 ## Features
@@ -23,7 +23,7 @@ The Generative AI Model Governance Monitor (GMG) provides a documentation-first 
 | Generative AI model inventory pattern | Documents how to register Copilot, Foundry, Azure OpenAI, and approved partner/community model sources in the firm's model inventory; the script emits representative sample inventory records |
 | Validation scope guidance | Provides an SR 11-7 / OCC 2011-12 validation scope adapted for vendor-supplied and platform-hosted generative models with limited transparency |
 | Ongoing monitoring log | Records sampling cadence, escalation thresholds, and drift indicators for output review |
-| Content safety and guardrails | Records Azure AI Content Safety, Prompt Shields, groundedness, protected-material, filter-threshold, exception, and review-cadence evidence where applicable |
+| Content safety and guardrails | Records Azure OpenAI-in-Microsoft-Foundry default Guardrail policies (hate/fairness, sexual, violence, self-harm, and other supported controls where enabled), and for non-Azure-OpenAI Foundry/provider deployments records provider/deployment-native guardrails only where documentation and read-only portal evidence confirm them; records separate Azure AI Content Safety status only where the standalone service is used |
 | Third-party due diligence | Records vendor governance evidence reviewed from Microsoft and other approved providers (SOC reports, Responsible AI documentation, transparency notes, and provider attestations) on a periodic cadence |
 | Tier-aware deployment | Applies baseline, recommended, or regulated cadence and rigor for inventory review, validation, guardrail review, and monitoring |
 | Documentation-first automation | Describes manual workflow patterns for model risk committee review without requiring tenant-side automation in v0.1.3 |
@@ -39,12 +39,14 @@ The Generative AI Model Governance Monitor (GMG) provides a documentation-first 
 - ❌ Does not submit validation reports to the model risk committee automatically
 - ❌ Does not retrieve Microsoft or partner attestations, SOC reports, Responsible AI documentation, transparency notes, or content safety configuration directly
 - ❌ Does not constitute an independent model validation by itself; firms must perform their own validation work
+- ❌ Does not govern, validate, or modify the Microsoft-hosted foundation models behind Microsoft 365 Copilot or Copilot Chat; Microsoft operates those models, so the firm's treatment is limited to vendor due diligence and attestation rather than independent model validation
+- ❌ Does not equate Microsoft 365 Copilot governance with Azure or Microsoft Foundry model governance, and does not treat the representative sample telemetry as tenant evidence
 
 > **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
 
 ## Prerequisites
 
-Review [docs/prerequisites.md](prerequisites.md) for the required admin roles, Azure and Microsoft 365 prerequisites, model inventory sources, PowerShell modules, and content safety prerequisites before deploying this solution.
+Review [docs/prerequisites.md](prerequisites.md) for the required admin roles, Azure and Microsoft 365 prerequisites, model inventory sources, authenticated Azure CLI (`az`) setup for lab identity verification, required `EXPECTED_AZURE_SUBSCRIPTION_ID` / `EXPECTED_TENANT_ID` environment variables, PowerShell modules, and content safety prerequisites before deploying this solution.
 
 ## Architecture
 
@@ -73,7 +75,7 @@ The solution exports five evidence artifacts (JSON + SHA-256 companion files):
 - `copilot-model-inventory` — in-scope generative AI model entries, provider, model family/name/version, deployment type, region or cloud, lifecycle status, materiality, owners, intended use, attestation freshness, and validation status
 - `validation-summary` — validation scope, methods, findings, and limitations for vendor-supplied or platform-hosted models
 - `ongoing-monitoring-log` — monitoring observations, sampling cadence, drift indicators, and escalations
-- `content-safety-and-guardrails` — Azure AI Content Safety, Prompt Shields, groundedness, protected-material, threshold, exception, and review-cadence evidence where applicable
+- `content-safety-and-guardrails` — Azure OpenAI-in-Microsoft-Foundry default Guardrail policy evidence, provider/deployment-native guardrail evidence for non-Azure-OpenAI deployments where documented and visible, plus separate Azure AI Content Safety status where the standalone service is used
 - `third-party-due-diligence` — Microsoft and approved provider governance evidence and review cadence
 
 ## Related Controls
@@ -102,7 +104,8 @@ GMG does not on its own satisfy any regulatory obligation. Use of this solution 
 ## Microsoft Learn References
 
 - [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry) — Microsoft Learn, last updated 2026-04-29; notes that Foundry provides access to Microsoft, OpenAI, Anthropic, Mistral, xAI, Meta, DeepSeek, Hugging Face, and other models.
-- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; describes Azure AI Content Safety and its prompt protection capabilities.
+- [Default Guardrail policies for Azure OpenAI - Microsoft Foundry](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/default-safety-policies) — Microsoft Learn (verified 2026-07-14); documents default configurable Guardrail policies for Azure OpenAI in Microsoft Foundry, including hate/fairness, sexual, violence, self-harm, and other supported controls.
+- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; describes the separate standalone Azure AI Content Safety service and its moderation APIs.
 
 ## Roadmap
 
