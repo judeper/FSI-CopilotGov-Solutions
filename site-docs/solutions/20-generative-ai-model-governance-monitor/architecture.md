@@ -62,7 +62,7 @@ Records sampling cadence, output review observations, user feedback signals, dri
 
 ### Content Safety and Guardrails
 
-Records the expected Azure AI Content Safety and guardrail evidence for in-scope Foundry and Azure OpenAI deployments, including Prompt Shields, groundedness detection, protected-material detection, filter thresholds, exception status, review cadence, and last validation timestamp where applicable.
+Records Azure OpenAI-in-Microsoft-Foundry default configurable Guardrail policies — hate/fairness, sexual, violence, self-harm, and other supported controls where enabled — plus separate Azure AI Content Safety resource status only where the standalone moderation service is used. For non-Azure-OpenAI Foundry/provider deployments, the solution records provider/deployment-native guardrails only where Microsoft/provider documentation and read-only portal surfaces confirm them, alongside exception status, review cadence, and last validation timestamp where applicable.
 
 ### Third-Party Due Diligence
 
@@ -73,7 +73,7 @@ Records the cadence and content of vendor governance review for Microsoft and ot
 These integrations are documented but not implemented in v0.1.3:
 
 - **Microsoft Foundry / Azure Resource Manager inventory metadata** — project, deployment, model family, deployment type, region or cloud, lifecycle, and owner attributes for Foundry and Azure OpenAI resources
-- **Azure AI Content Safety** — resource status, Prompt Shields, groundedness, protected-material, and filter-threshold configuration evidence for model deployments where applicable
+- **Azure OpenAI-in-Microsoft-Foundry Guardrails and Azure AI Content Safety** — Azure OpenAI default Guardrail policy configuration and, only where the standalone service is used, Azure AI Content Safety resource status; for non-Azure-OpenAI Foundry/provider deployments, provider/deployment-native guardrails are recorded only where documentation and read-only portal evidence confirm them
 - **Microsoft Purview Audit / unified audit log** — Copilot and AI interaction audit events to support sampling and investigation; future implementations may use Microsoft Purview Audit search and the Microsoft Graph `auditLogQuery` API where available
 - **Microsoft Purview** — AI interaction auditing, data classification for prompts/responses, sensitivity-label context for source or cited content, eDiscovery, and DLP review
 - **Microsoft Sentinel** — alert correlation for AI incident response (control 3.12)
@@ -100,4 +100,5 @@ GMG is designed to support compliance with SR 11-7 / OCC Bulletin 2011-12 model-
 
 - [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry) — Microsoft Learn, last updated 2026-04-29; describes Foundry as unifying agents, models, tools, tracing, monitoring, evaluations, RBAC, networking, and policies.
 - [Use Microsoft Purview to manage data security and compliance for Microsoft 365 Copilot and Microsoft 365 Copilot Chat](https://learn.microsoft.com/purview/ai-m365-copilot) — Microsoft Learn, last updated 2026-05-01; documents unified audit log capture and Purview data classification for prompts and responses.
-- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; describes content safety, Prompt Shields, groundedness detection, and protected-material detection capabilities.
+- [Default Guardrail policies for Azure OpenAI - Microsoft Foundry](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/default-safety-policies) — Microsoft Learn (verified 2026-07-14); documents default configurable Guardrail policies for Azure OpenAI in Microsoft Foundry, including hate/fairness, sexual, violence, self-harm, and other supported controls.
+- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; describes the separate standalone Azure AI Content Safety service and moderation APIs.

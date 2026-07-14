@@ -10,6 +10,7 @@
 
 BeforeAll {
     $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+    $script:repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
     $script:scriptsPath = Join-Path $solutionRoot 'scripts'
     $script:configPath = Join-Path $solutionRoot 'config'
     $script:docsPath = Join-Path $solutionRoot 'docs'
@@ -143,5 +144,200 @@ Describe 'GMG - Documentation Validation' {
         $script:evidenceExport | Should -Match 'ongoing-monitoring-log'
         $script:evidenceExport | Should -Match 'content-safety-and-guardrails'
         $script:evidenceExport | Should -Match 'third-party-due-diligence'
+    }
+}
+
+Describe 'GMG - Microsoft Currency and Scope Accuracy' {
+    BeforeAll {
+        $script:readme        = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
+        $script:prerequisites = Get-Content -Path (Join-Path $script:docsPath 'prerequisites.md') -Raw
+        $script:architecture  = Get-Content -Path (Join-Path $script:docsPath 'architecture.md') -Raw
+        $script:evidenceExport = Get-Content -Path (Join-Path $script:docsPath 'evidence-export.md') -Raw
+        $script:defaultConfig = Get-JsonContent -Path (Join-Path $script:configPath 'default-config.json')
+    }
+
+    It 'Scope Boundaries state the solution does not govern Microsoft-hosted Copilot foundation models' {
+        $script:readme | Should -Match 'does not govern.*foundation models|foundation models behind Microsoft 365 Copilot'
+    }
+
+    It 'README does not equate Microsoft 365 Copilot governance with Foundry governance' {
+        $script:readme | Should -Match 'does not equate Microsoft 365 Copilot governance'
+    }
+
+    It 'Solution docs use the canonical Azure OpenAI default Guardrail source and remove the classic source URL' {
+        foreach ($doc in @($script:readme, $script:prerequisites, $script:architecture, $script:evidenceExport)) {
+            $doc | Should -Match 'default-safety-policies'
+            $doc | Should -Not -Match 'foundry-classic/foundry-models/concepts/content-filter'
+        }
+    }
+
+    It 'README and architecture narrow built-in guardrail claims to Azure OpenAI and avoid uniform provider claims' {
+        $script:readme | Should -Match 'Azure OpenAI deployments in Microsoft Foundry default configurable Guardrail policies'
+        $script:readme | Should -Match 'non-Azure-OpenAI'
+        $script:readme | Should -Match 'provider/deployment-native guardrails.*only where'
+        $script:architecture | Should -Match 'non-Azure-OpenAI Foundry/provider deployments'
+        $script:architecture | Should -Match 'documentation and read-only portal'
+    }
+
+    It 'prerequisites clarify Azure OpenAI default Guardrails and separate optional standalone Content Safety' {
+        $script:prerequisites | Should -Match 'Azure OpenAI deployments in Microsoft Foundry default configurable Guardrail policies'
+        $script:prerequisites | Should -Match 'Azure AI Content Safety remains a separate optional standalone service'
+    }
+
+    It 'architecture avoids blanket enablement claims for optional guardrail controls' {
+        $script:architecture | Should -Match 'other supported controls where enabled'
+    }
+
+    It 'config sample values align to Azure OpenAI default guardrails and provider-native coverage' {
+        $foundryAzureOpenAi = @($script:defaultConfig.defaults.trackedModelSources | Where-Object { $_.sourceId -eq 'foundry-azure-openai' })[0]
+        $foundryPartner = @($script:defaultConfig.defaults.trackedModelSources | Where-Object { $_.sourceId -eq 'foundry-partner-community' })[0]
+
+        $foundryAzureOpenAi.contentSafetyProfile | Should -Be 'azure-openai-default-guardrails'
+        $foundryPartner.contentSafetyProfile | Should -Be 'provider-native-guardrails-documented-where-visible'
+        $script:defaultConfig.defaults.contentSafetyDefaults.contentSafetyResourceStatus | Should -Be 'azure-ai-content-safety-standalone-optional'
+    }
+
+    It 'uses current Microsoft Foundry branding and no legacy Azure AI Foundry / Studio names in forward-facing docs' {
+        $script:readme        | Should -Not -Match 'Azure AI Foundry|Azure AI Studio'
+        $script:prerequisites | Should -Not -Match 'Azure AI Foundry|Azure AI Studio'
+        $script:architecture  | Should -Not -Match 'Azure AI Foundry|Azure AI Studio'
+        $script:readme        | Should -Match 'Microsoft Foundry'
+    }
+}
+
+Describe 'GMG - Lab Validation Contract' {
+    BeforeAll {
+        $script:labPath = Join-Path $solutionRoot 'lab/20-generative-ai-model-governance-monitor.lab.json'
+        $script:lab = Get-JsonContent -Path $script:labPath
+    }
+
+    It 'lab contract file exists' {
+        Test-Path $script:labPath | Should -BeTrue
+    }
+
+    It 'first cycle is read-only with an empty mutations array' {
+        @($script:lab.mutations).Count | Should -Be 0
+    }
+
+    It 'no execution step references a mutation' {
+        foreach ($phase in $script:lab.execution.phases) {
+            foreach ($step in $phase.steps) {
+                $step.mutationRef | Should -BeNullOrEmpty
+            }
+        }
+    }
+
+    It 'includes the four required execution phases' {
+        $phaseIds = @($script:lab.execution.phases.id)
+        foreach ($required in @('setup', 'exercise', 'verify', 'cleanup')) {
+            $phaseIds | Should -Contain $required
+        }
+    }
+
+    It 'accepts negative BLOCKED and NOT-APPLICABLE dispositions' {
+        @($script:lab.dispositionRules.acceptedDispositions) | Should -Contain 'BLOCKED'
+        @($script:lab.dispositionRules.acceptedDispositions) | Should -Contain 'NOT-APPLICABLE'
+    }
+
+    It 'records a negative-validation step for absent preconditions' {
+        $stepIds = @($script:lab.execution.phases.steps.id)
+        $stepIds | Should -Contain 'step-record-negative-validation'
+    }
+
+    It 'uses explicit Azure CLI identity verification with expected environment values, sanitized output, and fail-closed behavior' {
+        $setupPhase = @($script:lab.execution.phases | Where-Object { $_.id -eq 'setup' })[0]
+        $identityStep = @($setupPhase.steps | Where-Object { $_.id -eq 'step-confirm-subscription-identity' })[0]
+
+        $identityStep.command | Should -Match 'EXPECTED_AZURE_SUBSCRIPTION_ID'
+        $identityStep.command | Should -Match 'EXPECTED_TENANT_ID'
+        $identityStep.command | Should -Match 'id:id,tenantId:tenantId,state:state,isDefault:isDefault,environmentName:environmentName'
+        $identityStep.command | Should -Match 'Missing required EXPECTED_AZURE_SUBSCRIPTION_ID or EXPECTED_TENANT_ID'
+        $identityStep.command | Should -Match 'did not match expected subscription/tenant'
+        $identityStep.command | Should -Not -Match 'user.name|upn|accessToken|refreshToken'
+        $identityStep.readBack.expectation | Should -Match 'without exposing identifiers'
+    }
+
+    It 'uses canonical Azure OpenAI guardrail source and narrowed provider wording' {
+        $builtInClaim = @($script:lab.microsoftSourceClaims | Where-Object { $_.id -eq 'claim-content-filter-guardrails' })[0]
+        $standaloneClaim = @($script:lab.microsoftSourceClaims | Where-Object { $_.id -eq 'claim-content-safety-standalone-service' })[0]
+        $exercisePhase = @($script:lab.execution.phases | Where-Object { $_.id -eq 'exercise' })[0]
+        $guardrailStep = @($exercisePhase.steps | Where-Object { $_.id -eq 'step-inspect-content-filter-guardrails' })[0]
+
+        $builtInClaim.sourceUrl | Should -Be 'https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/default-safety-policies'
+        $builtInClaim.claimText | Should -Match 'Azure OpenAI deployments in Microsoft Foundry have default configurable Guardrail policies'
+        $builtInClaim.claimText | Should -Match 'hate/fairness'
+        $builtInClaim.claimText | Should -Match 'sexual'
+        $builtInClaim.claimText | Should -Match 'violence'
+        $builtInClaim.claimText | Should -Match 'self-harm'
+        $standaloneClaim.claimText | Should -Match 'separate optional standalone service'
+
+        $guardrailStep.expected | Should -Match 'non-Azure-OpenAI Foundry/provider deployments'
+        $guardrailStep.expected | Should -Match 'only provider/deployment-native guardrails that are documented and visible'
+        $guardrailStep.operatorNote | Should -Match 'do not assume built-in Guardrails across every Foundry model/provider deployment'
+    }
+
+    It 'verifies existing evidence hashes with Test-EvidencePackageHash and does not claim sensitive-content inspection' {
+        $verifyPhase = @($script:lab.execution.phases | Where-Object { $_.id -eq 'verify' })[0]
+        $hashStep = @($verifyPhase.steps | Where-Object { $_.id -eq 'step-verify-evidence-integrity' })[0]
+
+        $hashStep.command | Should -Match 'scripts/common/EvidenceExport.psm1'
+        $hashStep.command | Should -Match 'Test-EvidencePackageHash'
+        $hashStep.command | Should -Not -Match 'Export-Evidence.ps1'
+        $hashStep.expected | Should -Match 'artifact/sidecar pair'
+        $hashStep.readBack.expectation | Should -Match 'hash'
+        $hashStep.readBack.expectation | Should -Not -Match 'sensitive content'
+    }
+
+    It 'defines a separate read-only minimization review step and PASS attestation artifact' {
+        $verifyPhase = @($script:lab.execution.phases | Where-Object { $_.id -eq 'verify' })[0]
+        $minStep = @($verifyPhase.steps | Where-Object { $_.id -eq 'step-review-evidence-minimization' })[0]
+        $artifact = @($script:lab.evidence.requiredArtifacts | Where-Object { $_.id -eq 'artifact-evidence-minimization-attestation' })[0]
+
+        $minStep.mode | Should -Be 'manual'
+        $minStep.expected | Should -Match 'keys/tokens'
+        $minStep.expected | Should -Match 'raw subscription/tenant/user IDs'
+        $minStep.expected | Should -Match 'endpoint hostnames'
+        $minStep.expected | Should -Match 'prompts/completions'
+        $minStep.expected | Should -Match 'dataset or model input/output content'
+        $minStep.operatorNote | Should -Match 'Do not copy prohibited content'
+
+        @($artifact.requiredForDispositions) | Should -Contain 'PASS'
+        @($artifact.requiredForDispositions) | Should -Not -Contain 'BLOCKED'
+        @($artifact.requiredForDispositions) | Should -Not -Contain 'NOT-APPLICABLE'
+        $artifact.description | Should -Match 'Read-only attestation'
+    }
+
+    It 'is US commercial cloud scoped as a documentation-first template' {
+        $script:lab.scope.cloud | Should -Be 'm365-us-commercial'
+        $script:lab.solution.binding | Should -Be 'template'
+    }
+}
+
+Describe 'GMG - Hash Verification Regression' {
+    BeforeAll {
+        Import-Module (Join-Path $script:repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+    }
+
+    It 'passes untouched artifact hash and fails after tampering without regenerating sidecars' {
+        $fixtureDir = Join-Path $script:repoRoot 'scripts\tests\fixtures\lab-package\artifacts'
+        $artifactName = 'lab-summary.json'
+        $fixtureArtifact = Join-Path $fixtureDir $artifactName
+        $fixtureSidecar = "$fixtureArtifact.sha256"
+
+        Test-Path $fixtureArtifact | Should -BeTrue
+        Test-Path $fixtureSidecar | Should -BeTrue
+
+        $testArtifact = Join-Path $TestDrive $artifactName
+        Copy-Item -Path $fixtureArtifact -Destination $testArtifact
+        Copy-Item -Path $fixtureSidecar -Destination "$testArtifact.sha256"
+
+        $passResult = Test-EvidencePackageHash -Path $testArtifact
+        $passResult.IsValid | Should -BeTrue
+
+        $tamperedContent = (Get-Content -Path $testArtifact -Raw -Encoding utf8) + "`n "
+        Set-Content -Path $testArtifact -Value $tamperedContent -Encoding utf8
+
+        $failResult = Test-EvidencePackageHash -Path $testArtifact
+        $failResult.IsValid | Should -BeFalse
     }
 }

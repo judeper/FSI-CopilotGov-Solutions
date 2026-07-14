@@ -60,7 +60,7 @@ Records ongoing monitoring observations.
 
 ### content-safety-and-guardrails
 
-Records content safety and guardrail evidence for in-scope Foundry, Azure OpenAI, and other model deployments where applicable.
+Records content safety and guardrail evidence for in-scope model deployments. Azure OpenAI deployments in Microsoft Foundry use default configurable Guardrail policies (hate/fairness, sexual, violence, self-harm, and other supported controls where enabled). For non-Azure-OpenAI Foundry/provider deployments, record provider/deployment-native guardrails only where Microsoft/provider documentation and read-only portal surfaces confirm them. Azure AI Content Safety is a separate optional standalone service; the `contentSafetyResourceStatus` field is recorded only where that standalone service is used.
 
 **Schema fields**
 
@@ -111,8 +111,9 @@ Each artifact is written as a JSON file with a SHA-256 companion file (`.sha256`
 
 ## Microsoft Learn References
 
-- [Foundry Models sold directly by Azure](https://learn.microsoft.com/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure) — Microsoft Learn, last updated 2026-04-17; states that models sold directly by Azure include Azure OpenAI models and selected models from top providers.
-- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; documents Content Safety APIs for moderation, Prompt Shields, groundedness detection, and protected-material detection.
+- [Foundry Models sold by Azure](https://learn.microsoft.com/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure) — Microsoft Learn (verified 2026-07-14); states that Foundry Models sold by Azure include all Azure OpenAI models and selected models from top providers, alongside the separate Foundry Models from partners and community category.
+- [Default Guardrail policies for Azure OpenAI - Microsoft Foundry](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/default-safety-policies) — Microsoft Learn (verified 2026-07-14); documents default configurable Guardrail policies for Azure OpenAI in Microsoft Foundry, including hate/fairness, sexual, violence, self-harm, and other supported controls.
+- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; documents the separate standalone Azure AI Content Safety service and moderation APIs.
 
 ## Examiner Notes
 

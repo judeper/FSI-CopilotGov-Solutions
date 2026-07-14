@@ -1,0 +1,488 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:20-generative-ai-model-governance-monitor:2026-07-readonly-detect",
+  "solution": {
+    "id": "20-generative-ai-model-governance-monitor",
+    "name": "Generative AI Model Governance Monitor",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "3.8",
+    "3.1",
+    "3.11",
+    "3.12"
+  ],
+  "portals": [
+    "microsoft-entra-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-foundry-brand",
+      "claimText": "Microsoft Foundry is the current unified Azure platform brand; Azure AI Studio and Azure AI Foundry are previous names, and the earlier portal is now referred to as Foundry (classic). The current resource model is a Foundry resource with projects, while the hub-plus-project model is classic.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/README.md",
+        "solutions/20-generative-ai-model-governance-monitor/docs/architecture.md",
+        "solutions/20-generative-ai-model-governance-monitor/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/foundry/what-is-foundry",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-model-catalog-providers",
+      "claimText": "The Microsoft Foundry model catalog spans models from Microsoft, OpenAI, Anthropic, Mistral, xAI, Meta, DeepSeek, Hugging Face, and others, organized into Foundry Models sold by Azure and Foundry Models from partners and community categories.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/README.md",
+        "solutions/20-generative-ai-model-governance-monitor/config/default-config.json",
+        "solutions/20-generative-ai-model-governance-monitor/docs/evidence-export.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-content-filter-guardrails",
+      "claimText": "Azure OpenAI deployments in Microsoft Foundry have default configurable Guardrail policies that cover hate/fairness, sexual, violence, and self-harm categories, with other supported controls available where enabled.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/README.md",
+        "solutions/20-generative-ai-model-governance-monitor/docs/prerequisites.md",
+        "solutions/20-generative-ai-model-governance-monitor/docs/architecture.md",
+        "solutions/20-generative-ai-model-governance-monitor/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/default-safety-policies",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-content-safety-standalone-service",
+      "claimText": "Azure AI Content Safety is a separate optional standalone service that provides moderation APIs and can be used independently from deployment guardrails.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/README.md",
+        "solutions/20-generative-ai-model-governance-monitor/docs/prerequisites.md",
+        "solutions/20-generative-ai-model-governance-monitor/docs/architecture.md",
+        "solutions/20-generative-ai-model-governance-monitor/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/ai-services/content-safety/overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-groundedness-preview",
+      "claimText": "Groundedness detection in Azure AI Content Safety is a preview capability, so the solution records it only where supported rather than asserting general availability.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/config/default-config.json",
+        "solutions/20-generative-ai-model-governance-monitor/docs/evidence-export.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/ai-services/content-safety/overview",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-entra-ai-roles",
+      "claimText": "AI Administrator and AI Reader are Microsoft Entra built-in roles used for Microsoft 365 Copilot and AI-related enterprise service administration and read-only review.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/identity/role-based-access-control/permissions-reference",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cognitive-services-user-role",
+      "claimText": "Cognitive Services User is a current Azure built-in role in the AI and machine learning category, and Foundry resources also introduce dedicated roles such as Foundry User that grant reader access to Foundry projects and accounts.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/role-based-access-control/built-in-roles",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-graph-auditlogquery",
+      "claimText": "The Microsoft Graph auditLogQuery API is generally available on the v1.0 endpoint and is the documented interface for querying unified audit log activity, including Copilot and AI interaction records.",
+      "affectedFiles": [
+        "solutions/20-generative-ai-model-governance-monitor/docs/architecture.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/security-auditcoreroot-post-auditlogqueries?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E3 or E5 with a Microsoft 365 Copilot license for in-scope Copilot inventory entries (optional for Foundry-only lab runs)",
+      "Azure subscription that already contains the Microsoft Foundry, Azure OpenAI, or Azure AI Content Safety resources to be inventoried"
+    ],
+    "roles": [
+      "Reader (Azure RBAC) on the subscription or resource group that holds the Foundry, Azure OpenAI, or Content Safety resources (read-only)",
+      "Foundry User or a resource-specific reader role for read-only Foundry project and deployment metadata",
+      "AI Reader (Microsoft Entra) for read-only Microsoft 365 Copilot and AI service configuration review",
+      "Global Reader (Microsoft Entra) for read-only tenant and directory identity confirmation"
+    ],
+    "features": [
+      "An existing Microsoft Foundry resource and project available for read-only inventory review",
+      "Model deployments present on the Foundry or Azure OpenAI resource (optional; the absence path is validated rather than created)",
+      "Azure OpenAI deployments in Microsoft Foundry expose default configurable Guardrail policies; for non-Azure-OpenAI Foundry/provider deployments, record provider/deployment-native guardrails only where Microsoft/provider documentation and read-only portal surfaces confirm them; use a separate Azure AI Content Safety resource only where the standalone service is already in use"
+    ],
+    "capacityRequirements": [
+      "No additional Azure capacity or quota is provisioned; the lab inspects existing resources only",
+      "One reviewer workstation with authenticated Azure CLI (az) for read-only queries"
+    ],
+    "dataRequirements": [
+      "Representative sample data only; no customer prompts, completions, datasets, or model inputs or outputs are collected",
+      "Identity read-back evidence stores only boolean match results and environment/state metadata",
+      "Retained evidence excludes API keys, bearer credentials, raw subscription/tenant/user identifiers, endpoint hostnames, prompts, completions, and dataset/model input-output content"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No Foundry resource, hub, project, deployment, endpoint, role assignment, monitoring configuration, or content filter is created, invoked, changed, or deleted."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm read-only identity and access",
+        "steps": [
+          {
+            "id": "step-confirm-subscription-identity",
+            "mode": "powershell",
+            "intent": "Confirm Azure CLI account context matches the expected subscription and tenant in read-only mode before any inspection.",
+            "expected": "Identity verification succeeds only when EXPECTED_AZURE_SUBSCRIPTION_ID and EXPECTED_TENANT_ID are set and match the current az account context; output is limited to non-identifying booleans/state metadata.",
+            "command": "pwsh -NoProfile -Command '& { $ErrorActionPreference = \"Stop\"; $expectedSubscription = $env:EXPECTED_AZURE_SUBSCRIPTION_ID; $expectedTenant = $env:EXPECTED_TENANT_ID; if ([string]::IsNullOrWhiteSpace($expectedSubscription) -or [string]::IsNullOrWhiteSpace($expectedTenant)) { throw \"Missing required EXPECTED_AZURE_SUBSCRIPTION_ID or EXPECTED_TENANT_ID environment variables.\" }; $accountJson = az account show --query \"{id:id,tenantId:tenantId,state:state,isDefault:isDefault,environmentName:environmentName}\" --output json; if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($accountJson)) { throw \"Azure CLI account context is unavailable. Run az login and select the expected subscription before continuing.\" }; $account = $accountJson | ConvertFrom-Json; $subscriptionMatch = ([string]$account.id -eq $expectedSubscription); $tenantMatch = ([string]$account.tenantId -eq $expectedTenant); if (-not $subscriptionMatch -or -not $tenantMatch) { throw \"Azure CLI account context did not match expected subscription/tenant.\" }; [pscustomobject]@{ identityVerified = $true; subscriptionMatch = $subscriptionMatch; tenantMatch = $tenantMatch; accountState = [string]$account.state; isDefaultSubscription = [bool]$account.isDefault; environmentName = [string]$account.environmentName } | ConvertTo-Json -Compress }'",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Sanitized identity verification command output",
+              "expectation": "Output confirms identityVerified, subscriptionMatch, and tenantMatch are true without exposing identifiers or expected environment-variable values."
+            }
+          },
+          {
+            "id": "step-confirm-entra-tenant",
+            "mode": "ui",
+            "intent": "Confirm tenant and directory identity in the Microsoft Entra admin center in read-only mode.",
+            "expected": "Tenant overview information is visible for identity confirmation without any configuration change.",
+            "locator": "Microsoft Entra admin center > Overview > Tenant information",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Entra admin center Overview page",
+              "expectation": "Overview page confirms the expected tenant without exposing tenant identifiers in retained evidence."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Inspect Foundry resource, catalog, deployments, and content filters (read-only)",
+        "steps": [
+          {
+            "id": "step-inspect-foundry-resource",
+            "mode": "manual",
+            "intent": "Inspect an existing Microsoft Foundry resource and project, or an equivalent current resource surface, in read-only mode.",
+            "expected": "Foundry resource and project metadata (name, region, project list) is recorded. If the classic hub-based model is present it is recorded as classic. If no Foundry resource or project exists, record BLOCKED or NOT-APPLICABLE with source evidence.",
+            "operatorNote": "Do not create, modify, or delete any Foundry resource, hub, project, or deployment. Record resource and project metadata only, and redact resource IDs and endpoint hostnames from retained evidence.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Read-only Foundry resource and project view",
+              "expectation": "Recorded metadata matches the inspected resource and contains no keys, endpoint hostnames, or tenant identifiers."
+            }
+          },
+          {
+            "id": "step-inspect-model-catalog-deployments",
+            "mode": "manual",
+            "intent": "Review model catalog, deployment, and provider metadata for in-scope deployments in read-only mode.",
+            "expected": "Provider, model family, deployment type, region, and lifecycle status are recorded, including any deprecated or retired lifecycle states. If no deployments exist, record NOT-APPLICABLE with source evidence rather than deploying a model.",
+            "operatorNote": "Enumerate deployment and provider metadata only. Do not deploy, invoke, fine-tune, or delete any model, and do not submit prompts.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Read-only model catalog and deployment listing",
+              "expectation": "Recorded deployment metadata matches the catalog and excludes model inputs, outputs, and endpoint secrets."
+            }
+          },
+          {
+            "id": "step-inspect-content-filter-guardrails",
+            "mode": "manual",
+            "intent": "Inspect Azure OpenAI default Guardrail policies and, for non-Azure-OpenAI Foundry/provider deployments, inspect only documented provider/deployment-native guardrails visible in read-only surfaces; capture separate Azure AI Content Safety status only where present.",
+            "expected": "Azure OpenAI-in-Microsoft-Foundry default Guardrail categories and thresholds are recorded (hate/fairness, sexual, violence, self-harm, and other supported controls where enabled). For non-Azure-OpenAI Foundry/provider deployments, only provider/deployment-native guardrails that are documented and visible in read-only surfaces are recorded. Separate Content Safety resource status is recorded only where the standalone service is used. If guardrails cannot be read, record BLOCKED with source evidence.",
+            "operatorNote": "Record only guardrail categories, thresholds, and applicable Prompt Shields/protected-material status. Do not change guardrails or thresholds, do not enable/disable controls, and do not assume built-in Guardrails across every Foundry model/provider deployment.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Read-only content-filter and Content Safety view",
+              "expectation": "Recorded guardrail evidence distinguishes Azure OpenAI default Guardrails from provider/deployment-native guardrails and from the separate Azure AI Content Safety service."
+            }
+          },
+          {
+            "id": "step-inspect-evaluation-monitoring",
+            "mode": "manual",
+            "intent": "Record evaluation, observability, and monitoring visibility for deployments or agents where present, in read-only mode.",
+            "expected": "Evaluation and monitoring visibility is recorded where available, or its absence is noted as NOT-APPLICABLE. Preview monitoring surfaces are labelled as preview.",
+            "operatorNote": "Do not enable monitoring, create evaluations, submit prompts or datasets, or start any evaluation run.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Read-only observability and evaluation view",
+              "expectation": "Recorded monitoring visibility matches the portal and no evaluation run or monitoring configuration is created."
+            }
+          },
+          {
+            "id": "step-run-sample-scripts",
+            "mode": "powershell",
+            "intent": "Run the documentation-first sample scripts to produce representative sample evidence artifacts.",
+            "expected": "Scripts emit representative sample artifacts marked runtimeMode local-stub with no live-service calls, and each JSON artifact has a matching SHA-256 sidecar.",
+            "command": "pwsh -File solutions/20-generative-ai-model-governance-monitor/scripts/Export-Evidence.ps1 -ConfigurationTier baseline -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence.ps1 output and artifacts",
+              "expectation": "Artifacts carry the local-stub runtime marker and representative-sample warning, confirming sample output is not treated as tenant evidence."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify sources, evidence integrity, and negative paths",
+        "steps": [
+          {
+            "id": "step-verify-source-currency",
+            "mode": "manual",
+            "intent": "Confirm the Microsoft first-party source citations for Foundry naming, providers, Azure OpenAI default Guardrail policies, roles, and the audit API remain published and current.",
+            "expected": "Every microsoftSourceClaims entry resolves to its cited Microsoft Learn or Microsoft Graph page and matches the recorded lifecycle state.",
+            "operatorNote": "Compare each source claim against the live Microsoft source and note any drift as pending-review rather than editing the contract during execution.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims source URLs",
+              "expectation": "All cited sources resolve and match the documented lifecycle state, or drift is recorded for follow-up."
+            }
+          },
+          {
+            "id": "step-verify-evidence-integrity",
+            "mode": "powershell",
+            "intent": "Verify already-generated representative sample evidence artifacts against existing SHA-256 sidecars.",
+            "expected": "Test-EvidencePackageHash validates each existing artifact/sidecar pair without regenerating files; any missing file, missing sidecar, or hash mismatch fails nonzero.",
+            "command": "pwsh -NoProfile -Command '& { $ErrorActionPreference = \"Stop\"; Import-Module (Resolve-Path \"scripts/common/EvidenceExport.psm1\") -Force; $artifactNames = @(\"copilot-model-inventory-baseline.json\",\"validation-summary-baseline.json\",\"ongoing-monitoring-log-baseline.json\",\"content-safety-and-guardrails-baseline.json\",\"third-party-due-diligence-baseline.json\",\"20-generative-ai-model-governance-monitor-evidence-baseline.json\"); $outputRoot = Resolve-Path \"lab-output\"; foreach ($name in $artifactNames) { $path = Join-Path $outputRoot $name; $result = Test-EvidencePackageHash -Path $path; if (-not $result.IsValid) { throw (\"Hash verification failed for {0}.\" -f $name) } }; [pscustomobject]@{ hashVerificationPassed = $true; verifiedArtifactCount = $artifactNames.Count } | ConvertTo-Json -Compress }'",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Evidence JSON files and .sha256 sidecars",
+              "expectation": "Each artifact hash matches its sidecar and verification output is limited to hash-integrity results."
+            }
+          },
+          {
+            "id": "step-review-evidence-minimization",
+            "mode": "manual",
+            "intent": "Perform a separate read-only review of generated evidence to confirm prohibited retained content is not present.",
+            "expected": "Reviewer checks generated evidence for prohibited retained content (keys/tokens, raw subscription/tenant/user IDs, endpoint hostnames, prompts/completions, dataset or model input/output content) and records only a minimization attestation without copying prohibited content into evidence.",
+            "operatorNote": "Review evidence files in place. Do not copy prohibited content into notes, screenshots, or transcripts; record only pass/fail attestation and remediation reference if needed.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Evidence minimization attestation",
+              "expectation": "Attestation confirms prohibited content review was completed and retained evidence contains no prohibited content excerpts."
+            }
+          },
+          {
+            "id": "step-record-negative-validation",
+            "mode": "manual",
+            "intent": "Record negative validation outcomes for absent preconditions so BLOCKED and NOT-APPLICABLE results are evidence-backed.",
+            "expected": "Each absent precondition \u2014 no Azure subscription, no Foundry resource or project, insufficient read-only role, unavailable region or feature, or no model deployments \u2014 maps to a BLOCKED or NOT-APPLICABLE disposition with a Microsoft source citation.",
+            "operatorNote": "For each absent precondition, record BLOCKED or NOT-APPLICABLE with source evidence. Never create a resource, deploy a model, assign a role, or enable a feature to force a positive result.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Negative-path attestation notes",
+              "expectation": "Every absent precondition is recorded with source evidence and zero mutations."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record cleanup decision (no mutations)",
+        "steps": [
+          {
+            "id": "step-confirm-no-mutations",
+            "mode": "manual",
+            "intent": "Record operator attestation that no tenant, subscription, or Foundry state was created, modified, or deleted during the lab cycle.",
+            "expected": "Attestation confirms zero mutations, so cleanup is not required for this read-only detect-only cycle.",
+            "operatorNote": "First lab cycle is read-only and detect-only; the mutations array is empty and no cleanup action is required. Confirm sample artifacts were written only to the local lab-output path.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no mutable changes occurred and no cleanup is required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-model-risk-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass-approvers",
+    "cleanupOwner": "fsi-model-risk-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-identity-readback",
+        "type": "powershell-transcript",
+        "description": "Sanitized identity verification output proving expected subscription/tenant match using booleans and non-identifying state metadata only.",
+        "requiredForControls": [
+          "3.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-foundry-inventory",
+        "type": "json",
+        "description": "Redacted Foundry resource, project, model, deployment, and provider metadata with no keys/tokens, raw subscription/tenant/user IDs, endpoint hostnames, prompts/completions, or dataset/model input-output content.",
+        "requiredForControls": [
+          "3.8",
+          "3.1"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-content-filter-config",
+        "type": "screenshot",
+        "description": "Read-only capture of Azure OpenAI default Guardrail categories/thresholds and any documented provider/deployment-native guardrails, plus separate Content Safety resource status where used.",
+        "requiredForControls": [
+          "3.8",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-sample-evidence-package",
+        "type": "json",
+        "description": "Representative sample evidence package from Export-Evidence.ps1 with SHA-256 sidecars and runtimeMode local-stub markers.",
+        "requiredForControls": [
+          "3.8",
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-evidence-minimization-attestation",
+        "type": "manual-attestation",
+        "description": "Read-only attestation that prohibited retained content review was completed and no keys/tokens, raw subscription/tenant/user IDs, endpoint hostnames, prompts/completions, or dataset/model input-output content was copied into retained evidence.",
+        "requiredForControls": [
+          "3.8",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Microsoft Learn and Microsoft Graph source citations confirming Foundry naming, providers, content filters, roles, and the audit API currency.",
+        "requiredForControls": [
+          "3.8",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-negative-validation",
+        "type": "manual-attestation",
+        "description": "Operator attestation of negative-path outcomes for absent preconditions and confirmation of zero mutations.",
+        "requiredForControls": [
+          "3.8",
+          "3.1",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-identity-readback",
+      "artifact-source-citations",
+      "artifact-negative-validation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

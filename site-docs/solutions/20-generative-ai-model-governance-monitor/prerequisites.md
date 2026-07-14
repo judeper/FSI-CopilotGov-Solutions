@@ -9,17 +9,19 @@
 ## Azure, Foundry, and Content Safety Requirements
 
 - Azure account and subscription identified for Microsoft Foundry, Azure OpenAI, or Azure AI Content Safety resources in scope
+- Authenticated Azure CLI (`az`) context on the reviewer workstation for read-only lab identity verification
+- Securely supplied expected values for `EXPECTED_AZURE_SUBSCRIPTION_ID` and `EXPECTED_TENANT_ID` environment variables before running the setup identity proof step
 - Microsoft Foundry access for the projects, agents, model deployments, and model catalog entries that must be represented in the model inventory
 - Read-only inventory source for Azure OpenAI or Foundry model deployments, including provider, model family, deployment type, region or cloud, lifecycle or preview status, owner, and attestation review dates
-- Azure AI Content Safety resource in a supported region when Foundry or Azure OpenAI deployments require content safety evidence
-- Documented guardrail configuration source for Prompt Shields, groundedness detection, protected-material detection, filter thresholds, exceptions, and review cadence where applicable
+- Azure OpenAI deployments in Microsoft Foundry default configurable Guardrail policies (hate/fairness, sexual, violence, self-harm, and other supported controls where enabled); for non-Azure-OpenAI Foundry/provider deployments, capture provider/deployment-native guardrails only where Microsoft/provider documentation and read-only portal surfaces confirm them
+- Documented guardrail configuration source for Prompt Shields, groundedness detection, protected-material detection, filter thresholds, exceptions, and review cadence where applicable; Azure AI Content Safety remains a separate optional standalone service
 
 ## PowerShell Requirements
 
 - PowerShell 7.2 or later
 - Pester 5.x for running the included smoke tests
 
-The repository scripts are documentation-first and do not require Microsoft Graph SDK, Azure PowerShell, or Azure CLI modules in v0.1.3.
+The repository scripts are documentation-first and do not require Microsoft Graph SDK or Azure PowerShell modules in v0.1.3. The read-only lab identity verification step does require an authenticated Azure CLI (`az`) session.
 
 ## Operating Model Requirements
 
@@ -58,5 +60,6 @@ Operators are recommended to gather the following before completing tier-specifi
 ## Microsoft Learn References
 
 - [What is Microsoft Foundry?](https://learn.microsoft.com/azure/foundry/what-is-foundry) — Microsoft Learn, last updated 2026-04-29; states that operators need an Azure account and then sign in to Microsoft Foundry.
-- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; lists Azure subscription and Content Safety resource prerequisites.
+- [Default Guardrail policies for Azure OpenAI - Microsoft Foundry](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/default-safety-policies) — Microsoft Learn (verified 2026-07-14); documents default configurable Guardrail policies for Azure OpenAI in Microsoft Foundry, including hate/fairness, sexual, violence, self-harm, and other supported controls.
+- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — Microsoft Learn, last updated 2025-09-16; lists prerequisites for the separate standalone Azure AI Content Safety resource and APIs.
 - [Microsoft Entra built-in roles](https://learn.microsoft.com/entra/identity/role-based-access-control/permissions-reference) — Microsoft Learn, last updated 2026-04-29; documents AI Administrator and AI Reader roles for Microsoft 365 Copilot and AI-related enterprise services.
