@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Lab-validation contract `lab/11-risk-tiered-rollout.lab.json` for the external lab executor. The first cycle is read-only/detect-only (`mutations: []`): verifies tenant identity, discovers the Microsoft 365 Copilot SKU from `GET /subscribedSkus` by `skuPartNumber`, reads test cohort group metadata and current `assignedLicenses`, and confirms documentation source claims. Disposable license assignment is deferred until safe prior-state capture and ownership can be enforced.
+- `Deploy-Solution.ps1` `-ConfirmAssignmentIntentStaging` switch and `-ReadinessArtifactPath` override. `-TriggerLicenseAssignment` previews only; staged intents always require explicit confirmation. Regression tests added.
+- Portable evidence export now stores package-relative artifact paths, preserves absolute caller paths, and resolves relative output from the current PowerShell provider location.
+
+### Changed
+
+- Documented tenant Microsoft 365 Copilot SKU discovery via `GET /subscribedSkus` (match `skuPartNumber` `Microsoft_365_Copilot`; legacy `M365_Copilot`), distinguishing product display name, `skuPartNumber`, and tenant `skuId`; no SKU GUID is hardcoded. Added least-privileged `LicenseAssignment.Read.All` for SKU/assignment reads.
+- Tightened rollback guidance: capture prior direct-vs-inherited assignment state and ownership before removal; inherited (group) licenses are removed only at the group scope; documented group-based licensing error classes and the nested-group limitation.
+- Emitted wave manifest now records the dry-run posture and `skuIdSource: tenant-subscribedSkus-discovery` with a resolution note.
+- Scoped lab group/user reads to the approved disposable cohort, removed the write-capable License Administrator role from the read-only cycle, and treated tenant-wide `consumedUnits` only as corroborating evidence because concurrent licensing activity can change it.
+
 ## v0.1.3 — 2026-06-05 — Documentation/branding corrections
 
 ### Fixed

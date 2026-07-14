@@ -32,9 +32,18 @@
 
 - [ ] `python scripts\validate-contracts.py`
 - [ ] `python scripts\validate-solutions.py`
+- [ ] `python scripts\validate-lab-contracts.py solutions\11-risk-tiered-rollout\lab\11-risk-tiered-rollout.lab.json`
 - [ ] PowerShell syntax validation completed for all scripts in `solutions\11-risk-tiered-rollout\scripts\`
 - [ ] `Invoke-Pester` completed for `tests\11-risk-tiered-rollout.Tests.ps1`
 - [ ] Exported evidence package verified with companion `.sha256` file
+
+## Lab Validation Handoff
+
+- [ ] Lab contract `lab\11-risk-tiered-rollout.lab.json` validated (`python scripts\validate-lab-contracts.py`)
+- [ ] First lab cycle is read-only/detect-only (`mutations: []`); no live license assignment or removal is performed
+- [ ] Read-only checks confirmed: tenant identity, `GET /subscribedSkus` Copilot SKU discovery, test cohort group metadata, current `assignedLicenses`
+- [ ] Disposable license assignment remains deferred until exact prior-state capture and ownership are enforceable
+- [ ] Committed lab evidence contains no real tenant IDs, secrets, or user PII
 
 ## Dependency Validation
 

@@ -33,13 +33,16 @@
 - Reserved license pool is smaller than the selected wave
 - Assignment groups include more users than the approved cohort
 - Manual revocation from a prior rollback did not release all seats
+- Group-based licensing reported an assignment error (for example insufficient licenses/`CountViolation`, conflicting service plans/`MutuallyExclusiveViolation`, missing dependencies/`DependencyViolation`, proxy-address, or usage-location problems)
+- Users were added to a nested group (group-based licensing does not process nested groups; only direct members of the licensed group receive licenses)
 
 **Remediation**
 
-1. Compare configured wave size to the available Copilot seat count.
+1. Compare configured wave size to the available Copilot seat count (`prepaidUnits.enabled` minus `consumedUnits` from `GET /subscribedSkus`).
 2. Reduce the wave size or acquire additional seats before retrying.
-3. Validate the assignment group contains only approved users from the manifest.
-4. Reconcile any previously revoked or failed assignments before the next run.
+3. Validate the assignment group contains only approved users from the manifest, added as direct members.
+4. Review group-based licensing errors on the product details page in the Microsoft 365 admin center and resolve the specific violation before retrying.
+5. Reconcile any previously revoked or failed assignments before the next run.
 
 ## Gate approval flow not triggering
 
@@ -92,11 +95,12 @@
 
 **Remediation**
 
-1. Disable or pause `License-Assignment-Trigger`.
-2. Export evidence immediately to preserve the state before rollback.
-3. Remove affected users from the wave-based assignment group or revoke licenses through the approved admin method.
-4. Log rollback findings in `fsi_cg_rtr_finding` and capture the decision in approval history.
-5. Re-run `Monitor-Compliance.ps1` to verify the wave shows as blocked or pending remediation.
+1. Record the rollback owner and approver, and capture each affected user's prior assignment state (directly assigned vs inherited from a group) before making any change.
+2. Disable or pause `License-Assignment-Trigger`.
+3. Export evidence immediately to preserve the state before rollback.
+4. Remove affected users from the wave-based assignment group for group-inherited licenses (an inherited license cannot be removed directly from the user), or revoke directly assigned licenses through the approved admin method using the tenant `skuId`. Only reverse assignments this rollout added.
+5. Log rollback findings in `fsi_cg_rtr_finding` and capture the decision in approval history.
+6. Re-run `Monitor-Compliance.ps1` to verify the wave shows as blocked or pending remediation.
 
 ## Stale readiness data from solution 01
 

@@ -1,0 +1,382 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:11-risk-tiered-rollout:2026-07-readonly-detect",
+  "solution": {
+    "id": "11-risk-tiered-rollout",
+    "name": "Risk-Tiered Rollout Automation",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.9",
+    "1.11",
+    "1.12",
+    "4.12"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-entra-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-copilot-sku-discovery",
+      "claimText": "The Microsoft 365 Copilot SKU must be discovered per tenant with GET /subscribedSkus; the tenant skuId, skuPartNumber, prepaidUnits, and consumedUnits are read from that response rather than hardcoded.",
+      "affectedFiles": [
+        "solutions/11-risk-tiered-rollout/config/default-config.json",
+        "solutions/11-risk-tiered-rollout/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/subscribedsku-list",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-product-identifiers",
+      "claimText": "In the Microsoft licensing reference the string ID Microsoft_365_Copilot identifies the current Microsoft 365 Copilot product; some tenants present the legacy string ID M365_Copilot. Product display name, skuPartNumber, and skuId are distinct values.",
+      "affectedFiles": [
+        "solutions/11-risk-tiered-rollout/config/default-config.json",
+        "solutions/11-risk-tiered-rollout/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/identity/users/licensing-service-plan-reference",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-assign-license-permissions",
+      "claimText": "LicenseAssignment.ReadWrite.All is the least-privileged Microsoft Graph permission for both group assignLicense (POST /groups/{id}/assignLicense) and user assignLicense (POST /users/{id}/assignLicense); usageLocation must be set before assignment and removeLicenses accepts skuId GUIDs.",
+      "affectedFiles": [
+        "solutions/11-risk-tiered-rollout/docs/prerequisites.md",
+        "solutions/11-risk-tiered-rollout/README.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/group-assignlicense",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-sku-read-permission",
+      "claimText": "LicenseAssignment.Read.All is the least-privileged Microsoft Graph permission for read-only subscribed-SKU and license discovery, enabling capture of the tenant skuId and current assignment state before any change.",
+      "affectedFiles": [
+        "solutions/11-risk-tiered-rollout/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/subscribedsku-list",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-group-based-licensing",
+      "claimText": "Group-based licensing reports assignment errors such as insufficient licenses, conflicting service plans, missing dependencies, and usage-location problems, does not process nested groups, and inherited licenses cannot be removed by a direct user removeLicenses call.",
+      "affectedFiles": [
+        "solutions/11-risk-tiered-rollout/docs/deployment-guide.md",
+        "solutions/11-risk-tiered-rollout/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/fundamentals/licensing-groups-resolve-problems",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-control-system",
+      "claimText": "The Copilot Control System in the Microsoft 365 admin center manages Copilot license assignment, agents, usage reporting, and licensing recommendations; app and feature behaviors are governed separately by Cloud Policy, so this solution complements rather than replaces those built-in controls.",
+      "affectedFiles": [
+        "solutions/11-risk-tiered-rollout/README.md",
+        "solutions/11-risk-tiered-rollout/docs/architecture.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/copilot-control-system/management-controls",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot licenses available in the tenant for a disposable test cohort; none are assigned during this read-only cycle",
+      "Qualifying Microsoft 365 base license (E3/E5, Business Standard/Premium, or Office 365 E3/E5) for the representative test cohort"
+    ],
+    "roles": [
+      "Global Reader for read-only directory, subscribed-SKU, and assignment inspection",
+      "Microsoft Graph LicenseAssignment.Read.All delegated permission for read-only SKU and assignment discovery"
+    ],
+    "features": [
+      "Microsoft 365 Copilot provisioned in the tenant",
+      "Microsoft Entra usage location populated for the representative test cohort"
+    ],
+    "capacityRequirements": [
+      "One disposable test cohort group with representative sample members for read-only metadata inspection"
+    ],
+    "dataRequirements": [
+      "Representative sample records only; no user PII persisted to committed lab evidence"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No license assignment, removal, or group membership change is performed. Disposable license assignment is deferred until exact prior-state capture and ownership can be enforced for a safe, reversible mutation."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant identity and read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before performing any read so the discovery runs against the expected organization.",
+            "expected": "The organization identity returned matches the approved lab tenant.",
+            "operatorNote": "Compare the returned id and displayName with the separately maintained sanctioned-lab authorization record. Do not proceed on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "organization[].displayName",
+              "expectation": "The returned organization identity matches the separately maintained sanctioned-lab authorization record and is recorded before any further read."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Read-only Copilot SKU, cohort, and assignment discovery",
+        "steps": [
+          {
+            "id": "step-discover-copilot-sku",
+            "mode": "api",
+            "intent": "Discover the Microsoft 365 Copilot SKU from the tenant catalog and capture its tenant skuId and seat counts.",
+            "expected": "A subscribedSku with skuPartNumber Microsoft_365_Copilot (or legacy M365_Copilot) is present and its tenant skuId and seat counts are captured.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/subscribedSkus",
+              "requestTemplate": "GET /subscribedSkus - match skuPartNumber 'Microsoft_365_Copilot' (legacy 'M365_Copilot'); capture the tenant skuId, prepaidUnits.enabled and consumedUnits. Do not hardcode a SKU GUID."
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "subscribedSkus[].skuPartNumber",
+              "expectation": "The Copilot subscribedSku is located by skuPartNumber and its tenant skuId and available-seat count (prepaidUnits.enabled minus consumedUnits) are captured."
+            }
+          },
+          {
+            "id": "step-read-cohort-group",
+            "mode": "powershell",
+            "intent": "Read the disposable test cohort group metadata and any existing license assignments without modifying them.",
+            "expected": "The test cohort group metadata and any existing group assignedLicenses are read without modification.",
+            "command": "$cohortGroupId = $env:RTR_LAB_COHORT_GROUP_ID; if ([string]::IsNullOrWhiteSpace($cohortGroupId)) { throw 'RTR_LAB_COHORT_GROUP_ID is required.' }; try { [void]([guid]$cohortGroupId) } catch { throw 'RTR_LAB_COHORT_GROUP_ID must be a GUID.' }; $uri = 'https://graph.microsoft.com/v1.0/groups/{0}?$select=id,displayName,assignedLicenses,membershipRule' -f $cohortGroupId; Invoke-MgGraphRequest -Method GET -Uri $uri",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "groups[].assignedLicenses",
+              "expectation": "The test cohort group metadata and any current group-level assignedLicenses are captured read-only."
+            }
+          },
+          {
+            "id": "step-read-current-assignments",
+            "mode": "powershell",
+            "intent": "Record per-user usage location and whether Copilot is directly assigned or inherited from a group for the representative cohort.",
+            "expected": "Current per-user assignment state (direct vs inherited) and usageLocation are captured read-only.",
+            "command": "$cohortGroupId = $env:RTR_LAB_COHORT_GROUP_ID; if ([string]::IsNullOrWhiteSpace($cohortGroupId)) { throw 'RTR_LAB_COHORT_GROUP_ID is required.' }; try { [void]([guid]$cohortGroupId) } catch { throw 'RTR_LAB_COHORT_GROUP_ID must be a GUID.' }; $uri = 'https://graph.microsoft.com/v1.0/groups/{0}/members/microsoft.graph.user?$select=id,usageLocation,assignedLicenses,licenseAssignmentStates' -f $cohortGroupId; Invoke-MgGraphRequest -Method GET -Uri $uri",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "users[].licenseAssignmentStates",
+              "expectation": "For each representative user, prior assignment state (direct vs inherited) and usageLocation are captured to support safe future rollback decisions."
+            }
+          },
+          {
+            "id": "step-preview-wave-manifest",
+            "mode": "powershell",
+            "intent": "Generate a dry-run wave manifest to confirm the solution stages cohorts without assigning any license.",
+            "expected": "The manifest records licenseAssignment.mode 'preview' and cohort assignmentState 'manifest-only'; no license is assigned.",
+            "command": "pwsh -File solutions/11-risk-tiered-rollout/scripts/Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId <approved-lab-tenant> -WaveNumber 0 -TriggerLicenseAssignment -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "RTR-wave-0-manifest.json licenseAssignment.mode",
+              "expectation": "licenseAssignment.mode is 'preview', skuIdSource is 'tenant-subscribedSkus-discovery', and no SKU GUID appears in the manifest."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify no seat change and confirm source currency",
+        "steps": [
+          {
+            "id": "step-verify-no-seat-change",
+            "mode": "api",
+            "intent": "Re-read the Copilot SKU seat counts as corroborating evidence that the read-only cycle did not consume a license seat.",
+            "expected": "consumedUnits for the Copilot SKU is compared with the earlier capture; any difference is investigated as possible concurrent tenant activity rather than attributed automatically to this read-only run.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/subscribedSkus",
+              "requestTemplate": "GET /subscribedSkus - compare consumedUnits for the Copilot SKU against the value captured during exercise."
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "subscribedSkus[].consumedUnits",
+              "expectation": "The comparison records whether consumedUnits changed and notes that the preview-only manifest and absence of write calls are the authoritative no-mutation evidence."
+            }
+          },
+          {
+            "id": "step-verify-source-claims",
+            "mode": "manual",
+            "intent": "Confirm each cited Microsoft Learn source remains published and matches the recorded lifecycle state.",
+            "expected": "All cited Microsoft Learn sources resolve and remain generally available.",
+            "operatorNote": "Open each microsoftSourceClaims.sourceUrl and confirm the Microsoft Learn page is still published and its lifecycle state remains generally-available.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims[].sourceUrl",
+              "expectation": "Every cited Microsoft Learn source resolves and its lifecycle state still matches the contract."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Attest that no mutable change occurred so cleanup is not required for this read-only cycle.",
+            "expected": "Operator note confirms mutations were empty and no cleanup is required.",
+            "operatorNote": "Attest that mutations were empty: no license assignment, no license removal, and no group membership change occurred during this read-only cycle.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "cleanup attestation note",
+              "expectation": "Operator attests no mutable change occurred and no cleanup is required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "4.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-subscribedskus-readback",
+        "type": "api-response",
+        "description": "Redacted /subscribedSkus read showing the Copilot skuPartNumber, tenant skuId, and prepaidUnits/consumedUnits used to confirm seat availability.",
+        "requiredForControls": [
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-cohort-assignment-state",
+        "type": "json",
+        "description": "Test cohort group metadata and per-user direct-vs-inherited assignment state and usageLocation, with user identifiers redacted.",
+        "requiredForControls": [
+          "1.11",
+          "4.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-wave-manifest-preview",
+        "type": "json",
+        "description": "Dry-run wave manifest showing licenseAssignment.mode 'preview' and skuIdSource 'tenant-subscribedSkus-discovery' with no SKU GUID.",
+        "requiredForControls": [
+          "1.9",
+          "1.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "List of verified Microsoft Learn source URLs and lifecycle states supporting the reviewed rollout, licensing, and permission claims.",
+        "requiredForControls": [
+          "1.9",
+          "1.11",
+          "1.12",
+          "4.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-subscribedskus-readback",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

@@ -24,17 +24,33 @@ Wave to prepare. Valid values are 0 through 3.
 .PARAMETER Environment
 Friendly environment label such as Sandbox, Pilot, UAT, or Production.
 
+.PARAMETER ReadinessArtifactPath
+Optional override for the 01-copilot-readiness-scanner evidence artifact path. When omitted, the
+path from configuration (dependencies.readinessScanner.requiredArtifactPath) is used. Relative
+paths are resolved against the repository root.
+
 .PARAMETER TriggerLicenseAssignment
-Stages license-assignment actions in the manifest for the selected cohort. Use -WhatIf to preview.
+Builds license-assignment intents in the manifest for the selected cohort. Honors the configured
+dryRunByDefault safety default: on its own this switch produces a dry-run preview only. To stage
+assignment intents for customer-run execution, also pass -ConfirmAssignmentIntentStaging. Use -WhatIf
+to preview without staging.
+
+.PARAMETER ConfirmAssignmentIntentStaging
+Explicit confirmation of local assignment-intent staging. Required, in addition to
+-TriggerLicenseAssignment, before assignment intents are staged (mode 'staged') rather than
+previewed (mode 'preview'). No license is ever assigned by this script; staging only records the
+intended action set for downstream customer-run execution.
 
 .EXAMPLE
 pwsh -File .\Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId "contoso.onmicrosoft.com" -WaveNumber 0 -Environment "Pilot" -WhatIf
 
 .EXAMPLE
-pwsh -File .\Deploy-Solution.ps1 -ConfigurationTier regulated -TenantId "contoso.onmicrosoft.com" -WaveNumber 3 -Environment "Production" -TriggerLicenseAssignment
+pwsh -File .\Deploy-Solution.ps1 -ConfigurationTier regulated -TenantId "contoso.onmicrosoft.com" -WaveNumber 3 -Environment "Production" -TriggerLicenseAssignment -ConfirmAssignmentIntentStaging
 
 .NOTES
 This script supports WhatIf and is intended to be extended with tenant-specific API integrations.
+The Microsoft 365 Copilot skuId must be resolved per tenant from GET /subscribedSkus by matching
+skuPartNumber; the manifest never records a hardcoded SKU GUID.
 #>
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
 param(
@@ -56,7 +72,13 @@ param(
     [string]$Environment = 'Sandbox',
 
     [Parameter()]
-    [switch]$TriggerLicenseAssignment
+    [string]$ReadinessArtifactPath,
+
+    [Parameter()]
+    [switch]$TriggerLicenseAssignment,
+
+    [Parameter()]
+    [switch]$ConfirmAssignmentIntentStaging
 )
 
 Set-StrictMode -Version Latest
@@ -86,11 +108,20 @@ function Test-ReadinessScannerDependency {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [System.Collections.IDictionary]$Configuration
+        [System.Collections.IDictionary]$Configuration,
+
+        [Parameter()]
+        [string]$OverrideArtifactPath
     )
 
     $dependencyConfig = $Configuration.dependencies.readinessScanner
-    $artifactPath = Resolve-DependencyArtifactPath -ArtifactPath $dependencyConfig.requiredArtifactPath
+    $configuredPath = if (-not [string]::IsNullOrWhiteSpace($OverrideArtifactPath)) {
+        $OverrideArtifactPath
+    }
+    else {
+        $dependencyConfig.requiredArtifactPath
+    }
+    $artifactPath = Resolve-DependencyArtifactPath -ArtifactPath $configuredPath
 
     if (-not (Test-Path -Path $artifactPath)) {
         throw "Required readiness scanner evidence file was not found: $artifactPath"
@@ -310,7 +341,10 @@ function New-WaveManifest {
         [object[]]$LicenseAssignmentActions,
 
         [Parameter(Mandatory)]
-        [string]$LicenseAssignmentMode
+        [string]$LicenseAssignmentMode,
+
+        [Parameter(Mandatory)]
+        [bool]$DryRunByDefault
     )
 
     return [pscustomobject]@{
@@ -388,7 +422,10 @@ function New-WaveManifest {
         licenseAssignment = [pscustomobject]@{
             requested = ($LicenseAssignmentMode -ne 'not-requested')
             mode = $LicenseAssignmentMode
+            dryRunByDefault = $DryRunByDefault
             skuPartNumber = $Configuration.licenseAssignment.skuPartNumber
+            skuIdSource = 'tenant-subscribedSkus-discovery'
+            skuIdResolutionNote = 'Resolve the tenant skuId from GET /subscribedSkus by matching skuPartNumber before any assignment; do not hardcode a SKU GUID.'
             groupMode = $Configuration.licenseAssignment.groupMode
             actions = $LicenseAssignmentActions
         }
@@ -403,7 +440,7 @@ try {
         throw "Wave $WaveNumber is not configured for tier '$ConfigurationTier'."
     }
 
-    $dependencyStatus = Test-ReadinessScannerDependency -Configuration $configuration
+    $dependencyStatus = Test-ReadinessScannerDependency -Configuration $configuration -OverrideArtifactPath $ReadinessArtifactPath
     $candidateUsers = @()
 
     foreach ($user in (Get-SeedUserPopulation -TenantIdentifier $TenantId)) {
@@ -425,6 +462,12 @@ try {
     $readinessResult = Invoke-WaveReadinessCheck -CandidateUsers $candidateUsers -WaveDefinition $waveDefinition[0] -Configuration $configuration
     $licenseAssignmentActions = @()
     $licenseAssignmentMode = 'not-requested'
+    $dryRunByDefault = if (($configuration.licenseAssignment -is [System.Collections.IDictionary]) -and $configuration.licenseAssignment.Contains('dryRunByDefault')) {
+        [bool]$configuration.licenseAssignment.dryRunByDefault
+    }
+    else {
+        $true
+    }
 
     if ($TriggerLicenseAssignment -and $readinessResult.CohortUsers.Count -gt 0) {
         $licenseAssignmentActions = @(
@@ -434,12 +477,15 @@ try {
                     waveNumber = $WaveNumber
                     riskTier = $_.RiskTier
                     skuPartNumber = $configuration.licenseAssignment.skuPartNumber
+                    skuIdSource = 'tenant-subscribedSkus-discovery'
                     requestedAt = (Get-Date).ToString('o')
                 }
             }
         )
 
-        if ($PSCmdlet.ShouldProcess("Wave $WaveNumber", "Stage Copilot license assignments for $($licenseAssignmentActions.Count) users")) {
+        $stagingConfirmed = $ConfirmAssignmentIntentStaging.IsPresent
+
+        if ($stagingConfirmed -and $PSCmdlet.ShouldProcess("Wave $WaveNumber", "Stage Copilot license-assignment intents for $($licenseAssignmentActions.Count) users")) {
             $licenseAssignmentMode = 'staged'
         }
         else {
@@ -456,7 +502,8 @@ try {
         -TargetEnvironment $Environment `
         -SelectedTier $ConfigurationTier `
         -LicenseAssignmentActions $licenseAssignmentActions `
-        -LicenseAssignmentMode $licenseAssignmentMode
+        -LicenseAssignmentMode $licenseAssignmentMode `
+        -DryRunByDefault $dryRunByDefault
 
     $null = New-Item -ItemType Directory -Path $OutputPath -Force
     $manifestPath = Join-Path $OutputPath ("RTR-wave-{0}-manifest.json" -f $WaveNumber)
