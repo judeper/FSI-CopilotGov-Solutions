@@ -59,6 +59,14 @@ If export fails because the output path is invalid:
 - Use a local or approved network path with stable write access.
 - Avoid output paths that are redirected or automatically synchronized during active export.
 
+### Stale or missing freshness
+
+If the monitoring run reports a freshness warning:
+
+- `freshness.status = stale` means the source last-modified time is older than the staleness threshold (default: three polling cycles, minimum 60 minutes; override with `DRM_FRESHNESS_THRESHOLD_MINUTES`). Confirm the source feed is updating and re-run.
+- `freshness.status = unknown` with `hasTimestampGap = true` means the source did not supply a valid last-modified timestamp. This is an explicit gap, not a current reading; enrich the source data or record the gap before treating the evidence as current.
+- `freshness.status = not-applicable` indicates synthetic local-stub output; wire live Microsoft Graph polling before relying on freshness.
+
 ## DORA Reporting Gaps
 
 ### Missing incident fields

@@ -65,6 +65,15 @@
 - [ ] Evidence retention and storage responsibilities are confirmed.
 - [ ] Customer acknowledges dependency on external Microsoft Sentinel provisioning where control 4.11 is required.
 
+## Lab Validation
+
+- [ ] `lab/13-dora-resilience-monitor.lab.json` reviewed; first cycle confirmed read-only and detect-only (`mutations: []`).
+- [ ] Contract validates: `python scripts/validate-lab-contracts.py solutions/13-dora-resilience-monitor/lab/13-dora-resilience-monitor.lab.json`.
+- [ ] Read-only paths agreed: prove tenant identity without retaining raw IDs, inspect Microsoft 365 admin center Service health, optionally query Graph service health with least-privilege read-only access, and inspect existing Sentinel/Defender portal state only where present.
+- [ ] Prohibited actions confirmed out of scope: no connector, Content Hub solution, workbook, analytics rule, Logic App, diagnostic setting, or Sentinel onboarding; no support-ticket creation, incident mutation, alert closure, role assignment, or retention change.
+- [ ] Evidence-backed `BLOCKED` / `NOT-APPLICABLE` handling agreed for no-current-incident, no-Sentinel-workspace/connector, missing-role/license, unavailable-feature, and stale-source outcomes.
+- [ ] Freshness and evidence-hash verification steps confirmed (collection time vs source last-modified time, staleness, and SHA-256 companions).
+
 ## Sign-Off
 
 - [ ] Delivery engineer sign-off completed.

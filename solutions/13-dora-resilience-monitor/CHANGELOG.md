@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Microsoft currency review (2026-07-14)
+
+- Verified Microsoft Graph `serviceAnnouncement` `healthOverviews` (v1.0) and `ServiceHealth.Read.All` (delegated work/school and application) remain current on Microsoft Learn.
+- Clarified that this solution monitors **Microsoft 365 Service Health** (Microsoft 365 admin center Service health page and Graph service communications), distinct from **Azure Service Health**, in the README and architecture docs.
+- Corrected the control 4.11 Sentinel claim: removed the unsupported "data connector (currently preview)" wording. Microsoft publishes no native Sentinel data connector for Microsoft 365 service health or Copilot interaction events; documented the Microsoft 365 (Office 365) connector scope and the Office 365 Management API custom-ingestion path.
+- Noted the Microsoft Sentinel transition to the Microsoft Defender portal and the 31 March 2027 retirement of the standalone Azure portal experience.
+- Added the 31 August 2026 retirement note for the legacy Microsoft Graph `/security/alerts` API in prerequisites.
+
+### DORA reporting-timeline accuracy
+
+- Documented the DORA application date (17 January 2025) and the major-incident reporting time limits per Commission Delegated Regulation (EU) 2025/301 Art. 5 (initial ≤4h from classification / ≤24h from awareness; intermediate ≤72h from the initial notification; final ≤1 month from the intermediate report), with templates in Implementing Regulation (EU) 2025/302 and thresholds in Delegated Regulation (EU) 2024/1772.
+- Corrected `Export-Evidence.ps1` due-date anchoring so the intermediate report chains from the initial notification and the final report chains from the intermediate report, instead of anchoring every stage to detection. Added the 24-hour-from-awareness bound (`initialNotificationLatestFromAwarenessHours`) to the regulated tier and recorded regulatory source, anchor semantics, and a not-legal-advice disclaimer in the incident register.
+
+### Evidence freshness
+
+- Added first-class freshness evaluation to `Monitor-Compliance.ps1` and `Export-Evidence.ps1`: records now distinguish collection time from source last-modified time, evaluate age/staleness against a threshold (default three polling cycles, minimum 60 minutes; override with `DRM_FRESHNESS_THRESHOLD_MINUTES`), and expose runtime mode and reporting period. All freshness timestamps use UTC ISO 8601.
+- Missing or invalid source timestamps now surface an explicit gap (`status = unknown`, `hasTimestampGap = true`) and roll up to an overall `gap` status with a warning, instead of silently defaulting to the collection time. Synthetic local-stub records report `not-applicable` rather than appearing current.
+
+### Lab validation
+
+- Added `lab/13-dora-resilience-monitor.lab.json` — a read-only, detect-only first cycle (`mutations: []`) covering tenant-identity proof without raw-ID retention, Microsoft 365 admin center service-health inspection, optional least-privilege Graph read, read-only Sentinel/Defender portal inspection, sample-script execution, and freshness/evidence-hash verification, with evidence-backed `BLOCKED`/`NOT-APPLICABLE` paths.
+- Registered the contract in `scripts/test_lab_validation_contracts.py` and added lab handoff notes to the deployment guide and delivery checklist.
+
+### Tests
+
+- Added regression tests for freshness (stale, gap, synthetic-stub, and UTC timestamp handling) and DORA reporting-timeline anchoring and citations.
+
 ## v0.1.3 — 2026-06-05 — Microsoft Learn accuracy fixes
 
 ### Fixed

@@ -80,6 +80,26 @@ function New-DrmArtifactFile {
     }
 }
 
+function Get-DrmPackageArtifactPath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$ArtifactPath,
+
+        [Parameter(Mandatory)]
+        [string]$PackageRoot
+    )
+
+    $resolvedArtifact = Resolve-Path -Path $ArtifactPath -ErrorAction Stop
+    $resolvedPackageRoot = Resolve-Path -Path $PackageRoot -ErrorAction Stop
+
+    if ($resolvedArtifact.Provider.Name -eq 'FileSystem' -and $resolvedPackageRoot.Provider.Name -eq 'FileSystem') {
+        return ([IO.Path]::GetRelativePath($resolvedPackageRoot.Path, $resolvedArtifact.Path) -replace '\\', '/')
+    }
+
+    return [IO.Path]::GetFileName($resolvedArtifact.Path)
+}
+
 function ConvertTo-DrmNullableDateTime {
     [CmdletBinding()]
     param(
@@ -97,7 +117,7 @@ function ConvertTo-DrmNullableDateTime {
         return $null
     }
 
-    return [datetime]$timestampText
+    return ([datetime]$timestampText).ToUniversalTime()
 }
 
 function Test-DrmSeverityAtOrAbove {
@@ -145,7 +165,11 @@ $serviceHealthRecords = @(
         [pscustomobject]@{
             service = $entry.Service
             status = $entry.Status
-            checkedAt = $entry.LastUpdated
+            collectedAt = $entry.CollectionTime
+            checkedAt = $entry.CollectionTime
+            sourceLastModified = $entry.SourceLastModified
+            timestampProvenance = $entry.TimestampProvenance
+            freshness = $entry.Freshness
             pollingIntervalMinutes = $configuration.serviceHealthPollingIntervalMinutes
             retentionDays = $configuration.evidenceRetentionDays
             sourceEndpoint = $entry.Source
@@ -158,9 +182,15 @@ $serviceHealthRecords = @(
 $serviceHealthArtifact = [ordered]@{
     solution = $configuration.solution
     tier = $ConfigurationTier
-    periodStart = $PeriodStart.ToString('o')
-    periodEnd = $PeriodEnd.ToString('o')
-    generatedAt = (Get-Date).ToString('o')
+    reportingPeriod = [ordered]@{
+        periodStart = $PeriodStart.ToUniversalTime().ToString('o')
+        periodEnd = $PeriodEnd.ToUniversalTime().ToString('o')
+    }
+    periodStart = $PeriodStart.ToUniversalTime().ToString('o')
+    periodEnd = $PeriodEnd.ToUniversalTime().ToString('o')
+    collectionTime = $complianceStatus.CollectionTime
+    generatedAt = (Get-Date).ToUniversalTime().ToString('o')
+    freshness = $complianceStatus.Freshness
     pollingIntervalMinutes = $configuration.serviceHealthPollingIntervalMinutes
     retentionDays = $configuration.evidenceRetentionDays
     runtimeMode = $complianceStatus.RuntimeMode
@@ -176,6 +206,7 @@ $regulatoryNotificationThreshold = if ($configuration.incidentClassification.Con
     'major'
 }
 $notificationWindowHours = if ($configuration.incidentClassification.Contains('notificationWindowHours')) { [int]$configuration.incidentClassification.notificationWindowHours } else { $null }
+$awarenessBoundHours = if ($configuration.incidentClassification.Contains('initialNotificationLatestFromAwarenessHours')) { [int]$configuration.incidentClassification.initialNotificationLatestFromAwarenessHours } else { $null }
 $intermediateReportWindowHours = if ($configuration.incidentClassification.Contains('intermediateReportWindowHours')) { [int]$configuration.incidentClassification.intermediateReportWindowHours } else { $null }
 $finalReportWindowDays = if ($configuration.incidentClassification.Contains('finalReportWindowDays')) { [int]$configuration.incidentClassification.finalReportWindowDays } else { $null }
 $requiresRootCauseAnalysis = if ($configuration.incidentClassification.Contains('requireRootCauseAnalysis')) { [bool]$configuration.incidentClassification.requireRootCauseAnalysis } else { $false }
@@ -183,10 +214,20 @@ $rcaWindowDays = if ($configuration.incidentClassification.Contains('rcaWindowDa
 $incidentRecords = @(
     foreach ($incident in @($complianceStatus.IncidentFindings)) {
         $detectedAt = ConvertTo-DrmNullableDateTime -Value $incident.detectedAt
-        $initialNotificationDueAt = if ($null -ne $detectedAt -and $null -ne $notificationWindowHours) { $detectedAt.AddHours($notificationWindowHours).ToString('o') } else { $null }
-        $intermediateReportDueAt = if ($null -ne $detectedAt -and $null -ne $intermediateReportWindowHours) { $detectedAt.AddHours($intermediateReportWindowHours).ToString('o') } else { $null }
-        $finalReportDueAt = if ($null -ne $detectedAt -and $null -ne $finalReportWindowDays) { $detectedAt.AddDays($finalReportWindowDays).ToString('o') } else { $null }
-        $rootCauseAnalysisDueAt = if ($null -ne $detectedAt -and $null -ne $rcaWindowDays) { $detectedAt.AddDays($rcaWindowDays).ToString('o') } else { $null }
+        # DORA (Commission Delegated Regulation (EU) 2025/301, Art. 5) anchors each stage to a distinct
+        # event: the initial notification to classification-as-major, the intermediate report to the
+        # initial notification, and the final report to the intermediate report. This scaffold uses the
+        # detection timestamp as a representative-sample proxy and chains subsequent stages from the prior
+        # stage's due date so the arithmetic honors the official anchor order. Operators must recompute
+        # against actual classification and submission timestamps.
+        $initialNotificationDue = if ($null -ne $detectedAt -and $null -ne $notificationWindowHours) { $detectedAt.AddHours($notificationWindowHours) } else { $null }
+        $initialNotificationLatest = if ($null -ne $detectedAt -and $null -ne $awarenessBoundHours) { $detectedAt.AddHours($awarenessBoundHours) } else { $null }
+        $intermediateAnchor = if ($null -ne $initialNotificationDue) { $initialNotificationDue } else { $detectedAt }
+        $intermediateReportDue = if ($null -ne $intermediateAnchor -and $null -ne $intermediateReportWindowHours) { $intermediateAnchor.AddHours($intermediateReportWindowHours) } else { $null }
+        $finalAnchor = if ($null -ne $intermediateReportDue) { $intermediateReportDue } else { $detectedAt }
+        $finalReportDue = if ($null -ne $finalAnchor -and $null -ne $finalReportWindowDays) { $finalAnchor.AddDays($finalReportWindowDays) } else { $null }
+        $rootCauseAnalysisDue = if ($null -ne $detectedAt -and $null -ne $rcaWindowDays) { $detectedAt.AddDays($rcaWindowDays) } else { $null }
+        $timelineGap = ($null -eq $detectedAt)
 
         [pscustomobject]@{
             incidentId = $incident.incidentId
@@ -202,14 +243,17 @@ $incidentRecords = @(
             regulatoryNotificationThreshold = $regulatoryNotificationThreshold
             regulatoryNotificationRequired = Test-DrmSeverityAtOrAbove -Severity ([string]$incident.severity) -Threshold $regulatoryNotificationThreshold
             notificationWindowHours = $notificationWindowHours
-            initialNotificationDueAt = $initialNotificationDueAt
+            initialNotificationDueAt = if ($null -ne $initialNotificationDue) { $initialNotificationDue.ToString('o') } else { $null }
+            initialNotificationLatestFromAwarenessHours = $awarenessBoundHours
+            initialNotificationLatestFromAwarenessAt = if ($null -ne $initialNotificationLatest) { $initialNotificationLatest.ToString('o') } else { $null }
             intermediateReportWindowHours = $intermediateReportWindowHours
-            intermediateReportDueAt = $intermediateReportDueAt
+            intermediateReportDueAt = if ($null -ne $intermediateReportDue) { $intermediateReportDue.ToString('o') } else { $null }
             finalReportWindowDays = $finalReportWindowDays
-            finalReportDueAt = $finalReportDueAt
+            finalReportDueAt = if ($null -ne $finalReportDue) { $finalReportDue.ToString('o') } else { $null }
+            reportingTimelineGap = $timelineGap
             rootCauseAnalysisStatus = if ($requiresRootCauseAnalysis) { 'pending' } else { 'not-required' }
             rcaWindowDays = $rcaWindowDays
-            rootCauseAnalysisDueAt = $rootCauseAnalysisDueAt
+            rootCauseAnalysisDueAt = if ($null -ne $rootCauseAnalysisDue) { $rootCauseAnalysisDue.ToString('o') } else { $null }
             notes = $incident.classificationNote
         }
     }
@@ -217,17 +261,27 @@ $incidentRecords = @(
 $incidentRegisterArtifact = [ordered]@{
     solution = $configuration.solution
     tier = $ConfigurationTier
-    periodStart = $PeriodStart.ToString('o')
-    periodEnd = $PeriodEnd.ToString('o')
-    generatedAt = (Get-Date).ToString('o')
+    reportingPeriod = [ordered]@{
+        periodStart = $PeriodStart.ToUniversalTime().ToString('o')
+        periodEnd = $PeriodEnd.ToUniversalTime().ToString('o')
+    }
+    periodStart = $PeriodStart.ToUniversalTime().ToString('o')
+    periodEnd = $PeriodEnd.ToUniversalTime().ToString('o')
+    collectionTime = $complianceStatus.CollectionTime
+    generatedAt = (Get-Date).ToUniversalTime().ToString('o')
+    freshness = $complianceStatus.Freshness
     runtimeMode = $complianceStatus.RuntimeMode
     warning = $complianceStatus.StatusWarning
     reportingTimeline = [ordered]@{
         initialNotificationWindowHours = $notificationWindowHours
+        initialNotificationLatestFromAwarenessHours = $awarenessBoundHours
         intermediateReportWindowHours = $intermediateReportWindowHours
         finalReportWindowDays = $finalReportWindowDays
         rootCauseAnalysisWindowDays = $rcaWindowDays
-        automationScope = 'Reference due-date metadata only; this scaffold does not submit regulatory notices automatically.'
+        regulatorySource = 'Regulation (EU) 2022/2554 (DORA), Art. 19; Commission Delegated Regulation (EU) 2025/301, Art. 5 (reporting time limits); Commission Implementing Regulation (EU) 2025/302 (reporting templates); Commission Delegated Regulation (EU) 2024/1772 (major-incident classification thresholds).'
+        anchorSemantics = 'Official DORA time limits anchor the initial notification to classification as a major incident (no later than 24 hours from awareness), the intermediate report to submission of the initial notification, and the final report (one month) to submission of the intermediate report. This scaffold derives indicative due dates from the detection timestamp as a representative-sample simplification and chains later stages from the prior stage due date.'
+        automationScope = 'Reference due-date metadata only; this scaffold does not classify incidents as major for regulatory purposes and does not submit regulatory notices automatically.'
+        disclaimer = 'Indicative reference values only. Not legal advice and not proof of DORA compliance. Confirm obligations and exact timings with EU legal counsel and the competent authority.'
     }
     records = $incidentRecords
 }
@@ -266,9 +320,15 @@ $resilienceRecords = @(
 $resilienceArtifact = [ordered]@{
     solution = $configuration.solution
     tier = $ConfigurationTier
-    periodStart = $PeriodStart.ToString('o')
-    periodEnd = $PeriodEnd.ToString('o')
-    generatedAt = (Get-Date).ToString('o')
+    reportingPeriod = [ordered]@{
+        periodStart = $PeriodStart.ToUniversalTime().ToString('o')
+        periodEnd = $PeriodEnd.ToUniversalTime().ToString('o')
+    }
+    periodStart = $PeriodStart.ToUniversalTime().ToString('o')
+    periodEnd = $PeriodEnd.ToUniversalTime().ToString('o')
+    collectionTime = $complianceStatus.CollectionTime
+    generatedAt = (Get-Date).ToUniversalTime().ToString('o')
+    freshness = $complianceStatus.Freshness
     runtimeMode = $complianceStatus.RuntimeMode
     warning = $complianceStatus.StatusWarning
     records = $resilienceRecords
@@ -294,7 +354,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '4.11'
         status = 'monitor-only'
-        notes = 'Sentinel integration requires separate workspace provisioning, data connectors, and alert rules outside this solution.'
+        notes = 'Sentinel enrichment requires a separately provisioned workspace and customer-defined analytics rules. Microsoft does not publish a native Sentinel data connector for Microsoft 365 service health or Copilot interaction events; ingestion relies on the Microsoft 365 (Office 365) connector for supported audit workloads and/or a customer-built path from the Office 365 Management API. Sentinel is managed in the Microsoft Defender portal.'
     }
 )
 
@@ -305,10 +365,31 @@ if ($complianceStatus.ResilienceTestStatus.Status -in @('missing', 'overdue')) {
 }
 $exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
 
-$artifacts = @(
+$resultArtifacts = @(
     [pscustomobject]@{ name = 'service-health-log'; type = 'json'; path = $serviceHealthFile.Path; hash = $serviceHealthFile.Hash },
     [pscustomobject]@{ name = 'incident-register'; type = 'json'; path = $incidentRegisterFile.Path; hash = $incidentRegisterFile.Hash },
     [pscustomobject]@{ name = 'resilience-test-results'; type = 'json'; path = $resilienceFile.Path; hash = $resilienceFile.Hash }
+)
+
+$packageArtifacts = @(
+    [pscustomobject]@{
+        name = 'service-health-log'
+        type = 'json'
+        path = Get-DrmPackageArtifactPath -ArtifactPath $serviceHealthFile.Path -PackageRoot $resolvedOutputPath
+        hash = $serviceHealthFile.Hash
+    },
+    [pscustomobject]@{
+        name = 'incident-register'
+        type = 'json'
+        path = Get-DrmPackageArtifactPath -ArtifactPath $incidentRegisterFile.Path -PackageRoot $resolvedOutputPath
+        hash = $incidentRegisterFile.Hash
+    },
+    [pscustomobject]@{
+        name = 'resilience-test-results'
+        type = 'json'
+        path = Get-DrmPackageArtifactPath -ArtifactPath $resilienceFile.Path -PackageRoot $resolvedOutputPath
+        hash = $resilienceFile.Hash
+    }
 )
 
 $summary = @{
@@ -326,18 +407,20 @@ $package = Export-SolutionEvidencePackage `
     -OutputPath $resolvedOutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts $artifacts `
+    -Artifacts $packageArtifacts `
     -ExpectedArtifacts @($configuration.evidenceOutputs) `
     -AdditionalMetadata @{
         runtimeMode = $complianceStatus.RuntimeMode
         warning = $complianceStatus.StatusWarning
         dataSourceMode = $complianceStatus.DataSourceMode
+        collectionTime = $complianceStatus.CollectionTime
+        freshness = $complianceStatus.Freshness
     }
 
 $result = [pscustomobject]@{
     Summary = $summary
     Controls = $controls
-    Artifacts = $artifacts
+    Artifacts = $resultArtifacts
     Package = $package
     RuntimeMode = $complianceStatus.RuntimeMode
 }

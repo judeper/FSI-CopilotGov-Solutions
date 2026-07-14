@@ -116,6 +116,12 @@ If the deployment needs to be rolled back:
 4. Remove any downstream dashboard ingestion references in 12-regulatory-compliance-dashboard.
 5. Archive prior evidence exports according to the customer retention policy before deleting current working files.
 
+## Lab Validation Handoff
+
+A machine-readable lab-validation contract is provided at `lab/13-dora-resilience-monitor.lab.json`. The first cycle is intentionally **read-only and detect-only** (`mutations: []`): it proves tenant identity without retaining raw identifiers, inspects the Microsoft 365 admin center Service health page, optionally queries Microsoft Graph service health with least-privilege read-only access when preauthorized, inspects any existing Microsoft Sentinel or Microsoft Defender portal state read-only, runs the representative sample scripts, and verifies freshness metadata and evidence hashes.
+
+The lab must not create connectors, Content Hub solutions, workbooks, analytics rules, Logic Apps, diagnostic settings, or Sentinel onboarding, and must not create support tickets, mutate incidents, close alerts, assign roles, or change retention. No raw tenant identifiers, user identities, support-ticket content, full incident narratives, tokens, or secrets are retained. Honest no-current-incident, no-Sentinel-workspace/connector, missing-role/license, unavailable-feature, and stale-source outcomes are captured as evidence-backed `BLOCKED` or `NOT-APPLICABLE` dispositions. Validate the contract with `python scripts/validate-lab-contracts.py solutions/13-dora-resilience-monitor/lab/13-dora-resilience-monitor.lab.json`.
+
 ## Dependencies on 12-regulatory-compliance-dashboard
 
 DRM produces operational-risk data that can be consumed by solution 12-regulatory-compliance-dashboard. Deploy solution 12 first when a centralized reporting surface is required, then point the dashboard ingestion process to the DRM evidence output path. If solution 12 is not deployed, DRM still operates as a standalone monitoring and evidence solution.

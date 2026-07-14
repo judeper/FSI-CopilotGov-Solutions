@@ -1,0 +1,404 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:13-dora-resilience-monitor:2026-07-readonly-cycle-1",
+  "solution": {
+    "id": "13-dora-resilience-monitor",
+    "name": "DORA Operational Resilience Monitor",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.7",
+    "4.9",
+    "4.10",
+    "4.11"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-entra-admin-center",
+    "microsoft-defender-portal",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-graph-service-health",
+      "claimText": "Microsoft Graph exposes Microsoft 365 service health through the serviceAnnouncement healthOverviews resource, readable with the ServiceHealth.Read.All permission (delegated work or school, and application).",
+      "affectedFiles": [
+        "solutions/13-dora-resilience-monitor/docs/architecture.md",
+        "solutions/13-dora-resilience-monitor/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/serviceannouncement-list-healthoverviews",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-m365-service-health-page",
+      "claimText": "Microsoft 365 service health is viewed on the Service health page in the Microsoft 365 admin center and is distinct from Azure Service Health, which reports on Azure resources.",
+      "affectedFiles": [
+        "solutions/13-dora-resilience-monitor/README.md",
+        "solutions/13-dora-resilience-monitor/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/enterprise/view-service-health",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-sentinel-defender-portal",
+      "claimText": "Microsoft Sentinel is generally available in the Microsoft Defender portal for unified security operations; the standalone Azure portal experience is scheduled for retirement on 31 March 2027.",
+      "affectedFiles": [
+        "solutions/13-dora-resilience-monitor/CHANGELOG.md",
+        "solutions/13-dora-resilience-monitor/README.md",
+        "solutions/13-dora-resilience-monitor/docs/architecture.md",
+        "solutions/13-dora-resilience-monitor/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/sentinel/microsoft-sentinel-defender-portal",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-no-native-sentinel-connector",
+      "claimText": "The Microsoft 365 (Office 365) Sentinel data connector ingests Exchange, SharePoint, and Teams audit logs; there is no native connector for Microsoft 365 service health or Copilot interaction events, which are available through the Office 365 Management API.",
+      "affectedFiles": [
+        "solutions/13-dora-resilience-monitor/docs/architecture.md",
+        "solutions/13-dora-resilience-monitor/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/sentinel/connect-office-365",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-legacy-security-alerts-retirement",
+      "claimText": "The legacy Microsoft Graph security alerts API at /security/alerts is deprecated and is scheduled for retirement on 31 August 2026; implementations should use /security/alerts_v2 with SecurityAlert.Read.All.",
+      "affectedFiles": [
+        "solutions/13-dora-resilience-monitor/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/graph/alertsv1-alertsv2-migration",
+      "lifecycleState": "deprecated",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E3 or E5 test tenant with Copilot-enabled workloads",
+      "Microsoft 365 Copilot license assigned to the lab operator where Copilot dependency checks are exercised"
+    ],
+    "roles": [
+      "Global Reader or Service Support Administrator for read-only Microsoft 365 service health access",
+      "Security Reader for read-only inspection of Microsoft Defender portal and any existing Microsoft Sentinel workspace state"
+    ],
+    "features": [
+      "Microsoft 365 service health page available in the Microsoft 365 admin center",
+      "Microsoft Graph serviceAnnouncement read access preauthorized with ServiceHealth.Read.All when the optional Graph query is exercised"
+    ],
+    "capacityRequirements": [
+      "One disposable test workspace directory for representative sample evidence output"
+    ],
+    "dataRequirements": [
+      "Representative sample service-health records only; no production incident narratives"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No connectors, analytics rules, workbooks, Logic Apps, diagnostic settings, support tickets, role assignments, or retention changes are created. No raw tenant identifiers, user identities, support-ticket content, full incident narratives, tokens, or secrets are retained."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm scope, identity, and least-privilege access",
+        "steps": [
+          {
+            "id": "step-prove-tenant-identity",
+            "mode": "ui",
+            "intent": "Positively prove the target tenant identity read-only by viewing the organization profile, and record only a non-identifying attestation (for example, an initialed confirmation) rather than the raw tenant identifier.",
+            "expected": "The organization profile confirms the expected tenant without the operator recording the raw tenant ID, domain, or directory GUID.",
+            "locator": "Microsoft 365 admin center > Settings > Org settings > Organization profile",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Organization profile panel",
+              "expectation": "Operator attests the correct tenant is in scope without capturing raw identifiers."
+            }
+          },
+          {
+            "id": "step-confirm-least-privilege-role",
+            "mode": "ui",
+            "intent": "Confirm the lab operator holds only read-only roles (Global Reader or Service Support Administrator) needed for service-health inspection.",
+            "expected": "Assigned roles are read-only; no elevation is performed. Missing roles are captured as an evidence-backed BLOCKED path.",
+            "locator": "Microsoft Entra admin center > Roles and administrators",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Role assignment view",
+              "expectation": "Read-only role membership is confirmed or a missing-role BLOCKED disposition is recorded with source evidence."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Inspect service health and run representative sample scripts",
+        "steps": [
+          {
+            "id": "step-inspect-service-health",
+            "mode": "ui",
+            "intent": "Inspect the Microsoft 365 admin center Service health page read-only to observe current advisories and incidents for Copilot-dependent workloads.",
+            "expected": "Service health status is observed. A no-current-incident state is captured as evidence rather than treated as a failure.",
+            "locator": "Microsoft 365 admin center > Health > Service health",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Service health page",
+              "expectation": "Current workload health is recorded, including an explicit no-current-incident note when applicable."
+            }
+          },
+          {
+            "id": "step-query-graph-service-health",
+            "mode": "api",
+            "intent": "Optionally query Microsoft Graph service health read-only with least-privilege access, only when preauthorized with ServiceHealth.Read.All.",
+            "expected": "Health overviews are returned read-only, or a missing-permission BLOCKED path is recorded when consent is not present.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "healthOverviews response",
+              "expectation": "Response is read-only and no raw tenant identifiers are retained, or a missing-permission BLOCKED disposition is recorded."
+            }
+          },
+          {
+            "id": "step-run-monitor-sample",
+            "mode": "powershell",
+            "intent": "Run the representative Monitor-Compliance script against the local stub or sample payload to produce a documentation-first monitoring snapshot.",
+            "expected": "The snapshot includes runtime-mode markers, DORA severity classification, and a freshness summary; overall status is not reported as implemented for stub or sample input.",
+            "command": "pwsh -File solutions/13-dora-resilience-monitor/scripts/Monitor-Compliance.ps1 -ConfigurationTier regulated -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance snapshot",
+              "expectation": "Snapshot contains runtimeMode, DataSourceMode, and Freshness fields with an honest non-implemented status."
+            }
+          },
+          {
+            "id": "step-run-export-evidence",
+            "mode": "powershell",
+            "intent": "Run the representative Export-Evidence script to produce service-health-log, incident-register, and resilience-test-results artifacts with SHA-256 companion files.",
+            "expected": "Three artifacts and matching .sha256 files are written, each carrying collection time, source last-modified time, and freshness metadata.",
+            "command": "pwsh -File solutions/13-dora-resilience-monitor/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Evidence package and artifacts",
+              "expectation": "Artifacts and hash files exist and the package validates against data/evidence-schema.json."
+            }
+          },
+          {
+            "id": "step-inspect-sentinel-state",
+            "mode": "ui",
+            "intent": "Inspect any existing Microsoft Sentinel or Microsoft Defender portal integration state read-only, only where a workspace already exists. Do not onboard Sentinel or enable connectors, content, or rules.",
+            "expected": "Existing workspace or connector state is observed read-only, or a no-Sentinel-workspace NOT-APPLICABLE path is recorded because this solution requires customer-built ingestion.",
+            "locator": "Microsoft Defender portal > System > Settings > Microsoft Sentinel",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Microsoft Sentinel settings view",
+              "expectation": "Read-only observation is recorded, or a no-workspace/no-connector NOT-APPLICABLE disposition is captured with source evidence."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify freshness, evidence integrity, and source currency",
+        "steps": [
+          {
+            "id": "step-verify-freshness",
+            "mode": "powershell",
+            "intent": "Verify that exported artifacts distinguish collection time from source last-modified time, evaluate staleness, and surface missing timestamps as explicit gaps rather than appearing current.",
+            "expected": "Freshness objects report status of current, stale, gap, or not-applicable with UTC ISO 8601 timestamps; stale or gap states surface a warning.",
+            "command": "pwsh -Command \"(Get-Content lab-output/service-health-log-regulated.json -Raw | ConvertFrom-Json).freshness\"",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Artifact freshness block",
+              "expectation": "Freshness distinguishes collection time and source last-modified time and flags gaps or staleness explicitly."
+            }
+          },
+          {
+            "id": "step-verify-evidence-hashes",
+            "mode": "powershell",
+            "intent": "Verify the already-generated evidence package and artifact files without regenerating output by validating package schema, artifact existence, and SHA-256 sidecars read-only.",
+            "expected": "Validation exits nonzero for missing artifacts, missing sidecars, hash mismatches, or invalid package schema; no evidence files are regenerated.",
+            "command": "pwsh -Command \"`$pkg=(Resolve-Path 'lab-output/13-dora-resilience-monitor-evidence.json' -ErrorAction Stop).Path; & 'scripts/validate-lab-package.ps1' -Path `$pkg\"",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "SHA-256 companion files",
+              "expectation": "Hash validation passes for the evidence package and all artifacts."
+            }
+          },
+          {
+            "id": "step-verify-source-currency",
+            "mode": "manual",
+            "intent": "Manually verify read-only source currency for every microsoftSourceClaims URL and the official DORA timeline sources used by evidence and reporting guidance.",
+            "expected": "All cited sources are rechecked for scope and lifecycle accuracy, including the Sentinel retirement date of 31 March 2027; any stale or conflicting claim is recorded as BLOCKED with follow-up source-citation evidence.",
+            "operatorNote": "Review each URL read-only and capture disposition evidence: https://learn.microsoft.com/graph/api/serviceannouncement-list-healthoverviews ; https://learn.microsoft.com/microsoft-365/enterprise/view-service-health ; https://learn.microsoft.com/azure/sentinel/microsoft-sentinel-defender-portal ; https://learn.microsoft.com/azure/sentinel/connect-office-365 ; https://learn.microsoft.com/graph/alertsv1-alertsv2-migration ; https://eur-lex.europa.eu/eli/reg/2022/2554/oj ; https://eur-lex.europa.eu/eli/reg_del/2025/301/oj ; https://eur-lex.europa.eu/eli/reg_impl/2025/302/oj ; https://eur-lex.europa.eu/eli/reg_del/2024/1772/oj . Explicitly flag Sentinel retirement-date drift as BLOCKED and include follow-up evidence references. No network writes are permitted.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source verification checklist",
+              "expectation": "Each cited URL is reviewed read-only and mapped to a PASS, BLOCKED, or NOT-APPLICABLE note with source evidence and follow-up actions for stale claims."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Attest read-only, detect-only completion",
+        "steps": [
+          {
+            "id": "step-attest-no-mutation",
+            "mode": "manual",
+            "intent": "Capture operator attestation that the first cycle was read-only and detect-only, with no tenant mutations and no retention of sensitive identifiers.",
+            "expected": "Attestation confirms no connectors, content-hub solutions, workbooks, analytics rules, Logic Apps, diagnostic settings, or Sentinel onboarding were created, and no support tickets, incident mutations, alert closures, role assignments, or retention changes were made.",
+            "operatorNote": "Confirm no raw tenant identifiers, user identities, support-ticket content, full incident narratives, tokens, or secrets were retained. Only representative sample evidence and non-identifying attestations are kept.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Read-only completion attestation",
+              "expectation": "Attestation confirms zero tenant mutations and no retention of sensitive identifiers."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-service-health-readback",
+        "type": "screenshot",
+        "description": "Read-only capture of the Microsoft 365 admin center Service health page, including any no-current-incident state.",
+        "requiredForControls": [
+          "4.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-evidence-package",
+        "type": "json",
+        "description": "Exported DRM evidence package and artifacts with SHA-256 companion files and freshness metadata.",
+        "requiredForControls": [
+          "2.7",
+          "4.9",
+          "4.10",
+          "4.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-freshness-transcript",
+        "type": "powershell-transcript",
+        "description": "Transcript showing collection time, source last-modified time, staleness evaluation, and explicit gap handling.",
+        "requiredForControls": [
+          "4.9",
+          "4.10"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Microsoft Learn source citation confirming lifecycle state and scope for a BLOCKED or NOT-APPLICABLE disposition.",
+        "requiredForControls": [
+          "4.11"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-readonly-attestation",
+        "type": "manual-attestation",
+        "description": "Operator attestation of read-only, detect-only completion with no tenant mutation and no retention of sensitive identifiers.",
+        "requiredForControls": [
+          "2.7",
+          "4.9",
+          "4.10",
+          "4.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-evidence-package",
+      "artifact-readonly-attestation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

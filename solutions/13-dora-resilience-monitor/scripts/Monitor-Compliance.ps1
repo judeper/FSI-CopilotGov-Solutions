@@ -69,6 +69,132 @@ Import-Module (Join-Path $PSScriptRoot 'DrmConfig.psm1') -Force
 $script:StubWarning = 'Service health output came from the local Graph stub and does not confirm live Microsoft 365 polling.'
 $script:SampleWarning = 'Service health output came from DRM_SERVICE_HEALTH_SAMPLE_JSON and does not confirm live Microsoft Graph polling.'
 
+function Get-DrmUtcTimestamp {
+    [CmdletBinding()]
+    param()
+
+    return [datetime]::UtcNow.ToString('o')
+}
+
+function Resolve-DrmStalenessThreshold {
+    [CmdletBinding()]
+    [OutputType([int])]
+    param(
+        [Parameter(Mandatory)]
+        [int]$PollingIntervalMinutes
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($env:DRM_FRESHNESS_THRESHOLD_MINUTES)) {
+        $parsed = 0
+        if ([int]::TryParse($env:DRM_FRESHNESS_THRESHOLD_MINUTES, [ref]$parsed) -and $parsed -gt 0) {
+            return $parsed
+        }
+    }
+
+    # Default: a source record is stale when older than three polling cycles, with a 60-minute floor.
+    return [math]::Max(($PollingIntervalMinutes * 3), 60)
+}
+
+function Get-DrmFreshness {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$CollectionTime,
+
+        [Parameter()]
+        [AllowNull()]
+        [string]$SourceLastModified,
+
+        [Parameter(Mandatory)]
+        [int]$StalenessThresholdMinutes,
+
+        [Parameter(Mandatory)]
+        [string]$RuntimeMode,
+
+        [Parameter()]
+        [ValidateSet('source-provided', 'detected-only', 'missing', 'synthetic-stub')]
+        [string]$Provenance = 'source-provided'
+    )
+
+    $collectionDt = $null
+    try {
+        $collectionDt = [datetime]::Parse($CollectionTime, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)
+    }
+    catch {
+        $collectionDt = $null
+    }
+
+    $base = [ordered]@{
+        collectionTime = $CollectionTime
+        sourceLastModified = $null
+        ageMinutes = $null
+        stalenessThresholdMinutes = $StalenessThresholdMinutes
+        status = 'unknown'
+        isStale = $false
+        hasTimestampGap = $true
+        provenance = $Provenance
+        runtimeMode = $RuntimeMode
+        note = 'Source last-modified timestamp is missing or invalid; freshness could not be evaluated and is surfaced as an explicit gap.'
+    }
+
+    if ($Provenance -eq 'synthetic-stub') {
+        $base.status = 'not-applicable'
+        $base.hasTimestampGap = $false
+        $base.note = 'Synthetic local-stub record; no external source last-modified time exists, so freshness is not applicable.'
+        return [pscustomobject]$base
+    }
+
+    if ([string]::IsNullOrWhiteSpace($SourceLastModified)) {
+        return [pscustomobject]$base
+    }
+
+    $sourceDt = $null
+    try {
+        $sourceDt = [datetime]::Parse($SourceLastModified, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)
+    }
+    catch {
+        $base.note = 'Source last-modified timestamp is not a valid ISO 8601 value; freshness is surfaced as an explicit gap.'
+        return [pscustomobject]$base
+    }
+
+    if ($null -eq $collectionDt) {
+        $base.sourceLastModified = $SourceLastModified
+        $base.note = 'Collection timestamp is missing or invalid; freshness could not be evaluated.'
+        return [pscustomobject]$base
+    }
+
+    $ageMinutes = [math]::Round((($collectionDt.ToUniversalTime()) - ($sourceDt.ToUniversalTime())).TotalMinutes, 2)
+    $status = if ($ageMinutes -lt 0) {
+        'invalid-future'
+    }
+    elseif ($ageMinutes -gt $StalenessThresholdMinutes) {
+        'stale'
+    }
+    else {
+        'current'
+    }
+
+    $note = switch ($status) {
+        'current' { 'Source last-modified time is within the staleness threshold.' }
+        'stale' { 'Source last-modified time exceeds the staleness threshold; downstream evidence must not be treated as current.' }
+        'invalid-future' { 'Source last-modified time is after the collection time; timestamp is invalid and must be reviewed.' }
+        default { 'Freshness evaluated.' }
+    }
+
+    return [pscustomobject]@{
+        collectionTime = $CollectionTime
+        sourceLastModified = $SourceLastModified
+        ageMinutes = $ageMinutes
+        stalenessThresholdMinutes = $StalenessThresholdMinutes
+        status = $status
+        isStale = ($status -ne 'current')
+        hasTimestampGap = $false
+        provenance = $Provenance
+        runtimeMode = $RuntimeMode
+        note = $note
+    }
+}
+
 function Resolve-DrmClientSecret {
     [CmdletBinding()]
     param(
@@ -157,7 +283,10 @@ function Get-ServiceHealthStatus {
         [string]$ClientId,
 
         [Parameter()]
-        [System.Security.SecureString]$ClientSecret
+        [System.Security.SecureString]$ClientSecret,
+
+        [Parameter(Mandatory)]
+        [int]$StalenessThresholdMinutes
     )
 
     $criticalServices = @('Exchange Online', 'SharePoint Online', 'Microsoft Teams', 'Microsoft Graph', 'Microsoft 365 Copilot')
@@ -169,9 +298,23 @@ function Get-ServiceHealthStatus {
 
         return @(
             foreach ($entry in $sampleEntries) {
+                $collectionTime = Get-DrmUtcTimestamp
                 $serviceName = if ($entry.Contains('service')) { [string]$entry.service } else { 'Unknown Service' }
-                $detectedAt = if ($entry.Contains('detectedAt')) { ([datetime]$entry.detectedAt).ToString('o') } else { (Get-Date).ToString('o') }
-                $lastUpdated = if ($entry.Contains('lastUpdated')) { ([datetime]$entry.lastUpdated).ToString('o') } else { $detectedAt }
+                $detectedProvided = $entry.Contains('detectedAt') -and -not [string]::IsNullOrWhiteSpace([string]$entry.detectedAt)
+                $lastUpdatedProvided = $entry.Contains('lastUpdated') -and -not [string]::IsNullOrWhiteSpace([string]$entry.lastUpdated)
+                # Source timestamps are only trusted when supplied; missing values become an explicit
+                # null so freshness surfaces a gap instead of silently defaulting to the collection time.
+                $detectedAt = if ($detectedProvided) { ([datetime]$entry.detectedAt).ToUniversalTime().ToString('o') } else { $null }
+                $sourceLastModified = if ($lastUpdatedProvided) {
+                    ([datetime]$entry.lastUpdated).ToUniversalTime().ToString('o')
+                }
+                elseif ($detectedProvided) {
+                    $detectedAt
+                }
+                else {
+                    $null
+                }
+                $provenance = if ($lastUpdatedProvided) { 'source-provided' } elseif ($detectedProvided) { 'detected-only' } else { 'missing' }
                 $downtimeMinutes = if ($entry.Contains('downtimeMinutes')) { [double]$entry.downtimeMinutes } else { 0 }
                 $affectedUserPct = if ($entry.Contains('affectedUserPct')) { [double]$entry.affectedUserPct } else { 0 }
                 $impactDescription = if ($entry.Contains('impactDescription')) { [string]$entry.impactDescription } else { 'Sample service-health event.' }
@@ -186,12 +329,18 @@ function Get-ServiceHealthStatus {
                     'Degraded'
                 }
 
+                $freshness = Get-DrmFreshness -CollectionTime $collectionTime -SourceLastModified $sourceLastModified -StalenessThresholdMinutes $StalenessThresholdMinutes -RuntimeMode 'sample-json' -Provenance $provenance
+
                 [pscustomobject]@{
                     Service = $serviceName
                     Status = $status
                     IncidentId = if ($entry.Contains('incidentId')) { [string]$entry.incidentId } else { $null }
                     DetectedAt = $detectedAt
-                    LastUpdated = $lastUpdated
+                    LastUpdated = $sourceLastModified
+                    CollectionTime = $collectionTime
+                    SourceLastModified = $sourceLastModified
+                    TimestampProvenance = $provenance
+                    Freshness = $freshness
                     DowntimeMinutes = $downtimeMinutes
                     AffectedUserPct = $affectedUserPct
                     ImpactDescription = $impactDescription
@@ -218,18 +367,23 @@ function Get-ServiceHealthStatus {
         Write-Verbose 'Client credentials supplied. Insert the authenticated Graph GET call to /admin/serviceAnnouncement/healthOverviews here when enabling live monitoring.'
     }
 
-    $timestamp = (Get-Date).ToString('o')
+    $timestamp = Get-DrmUtcTimestamp
     return @(
         foreach ($service in $MonitoredServices) {
             # Production implementation note:
             # Invoke Microsoft Graph GET https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews
             # and map the workload-specific response into the object below.
+            $stubFreshness = Get-DrmFreshness -CollectionTime $timestamp -SourceLastModified $null -StalenessThresholdMinutes $StalenessThresholdMinutes -RuntimeMode 'local-stub' -Provenance 'synthetic-stub'
             [pscustomobject]@{
                 Service = $service
                 Status = 'Healthy'
                 IncidentId = $null
                 DetectedAt = $timestamp
                 LastUpdated = $timestamp
+                CollectionTime = $timestamp
+                SourceLastModified = $null
+                TimestampProvenance = 'synthetic-stub'
+                Freshness = $stubFreshness
                 DowntimeMinutes = 0
                 AffectedUserPct = 0
                 ImpactDescription = 'No active service advisories captured by the local Graph stub.'
@@ -401,8 +555,11 @@ Test-DrmConfiguration -Configuration $configuration
 $resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
 $resolvedClientSecret = Resolve-DrmClientSecret -Secret $ClientSecret
 
+$collectionTime = Get-DrmUtcTimestamp
+$stalenessThresholdMinutes = Resolve-DrmStalenessThreshold -PollingIntervalMinutes ([int]$configuration.serviceHealthPollingIntervalMinutes)
+
 Write-Verbose 'Collecting service-health snapshots.'
-$serviceHealthSummary = @(Get-ServiceHealthStatus -MonitoredServices $configuration.defaults.monitoredServices -TenantId $TenantId -ClientId $ClientId -ClientSecret $resolvedClientSecret)
+$serviceHealthSummary = @(Get-ServiceHealthStatus -MonitoredServices $configuration.defaults.monitoredServices -TenantId $TenantId -ClientId $ClientId -ClientSecret $resolvedClientSecret -StalenessThresholdMinutes $stalenessThresholdMinutes)
 $runtimeModes = @($serviceHealthSummary | Select-Object -ExpandProperty RuntimeMode -Unique)
 $runtimeMode = if ($runtimeModes.Count -eq 1) { [string]$runtimeModes[0] } else { 'mixed-nonlive' }
 $statusWarning = if ($runtimeMode -eq 'sample-json') {
@@ -428,6 +585,35 @@ $incidentFindings = @(
 Write-Verbose 'Checking resilience-test schedule.'
 $resilienceTestStatus = Get-ResilienceTestDue -ResilienceConfiguration $configuration.resilienceTestTracking -Tier $ConfigurationTier
 
+Write-Verbose 'Evaluating evidence freshness across collected records.'
+$recordFreshness = @($serviceHealthSummary | ForEach-Object { $_.Freshness })
+$staleRecordCount = @($recordFreshness | Where-Object { $_.status -in @('stale', 'invalid-future') }).Count
+$gapRecordCount = @($recordFreshness | Where-Object { [bool]$_.hasTimestampGap }).Count
+$evaluatedRecordCount = @($recordFreshness | Where-Object { $_.status -in @('current', 'stale', 'invalid-future') }).Count
+$overallFreshnessStatus = if ($gapRecordCount -gt 0) {
+    'gap'
+}
+elseif ($staleRecordCount -gt 0) {
+    'stale'
+}
+elseif ($evaluatedRecordCount -gt 0) {
+    'current'
+}
+else {
+    'not-applicable'
+}
+$freshnessSummary = [pscustomobject]@{
+    CollectionTime = $collectionTime
+    StalenessThresholdMinutes = $stalenessThresholdMinutes
+    RuntimeMode = $runtimeMode
+    OverallStatus = $overallFreshnessStatus
+    RecordCount = $serviceHealthSummary.Count
+    EvaluatedRecordCount = $evaluatedRecordCount
+    StaleRecordCount = $staleRecordCount
+    TimestampGapCount = $gapRecordCount
+    Note = 'Freshness distinguishes collection time from source last-modified time. Records with missing or invalid source timestamps are reported as explicit gaps rather than treated as current.'
+}
+
 $candidateOverallStatus = 'implemented'
 if ($incidentFindings.Count -gt 0) {
     $candidateOverallStatus = 'monitor-only'
@@ -438,6 +624,9 @@ elseif ($ConfigurationTier -eq 'regulated' -and $resilienceTestStatus.Status -in
 $overallStatus = Resolve-DrmReportedStatus -CandidateStatus $candidateOverallStatus -RuntimeMode $runtimeMode
 
 Write-Warning $statusWarning
+if ($overallFreshnessStatus -in @('gap', 'stale')) {
+    Write-Warning ("Evidence freshness is [{0}]: {1} record(s) stale, {2} record(s) with timestamp gaps. Do not treat monitoring output as current." -f $overallFreshnessStatus, $staleRecordCount, $gapRecordCount)
+}
 $complianceStatus = [pscustomobject]@{
     Solution = $configuration.displayName
     Tier = $ConfigurationTier
@@ -448,7 +637,9 @@ $complianceStatus = [pscustomobject]@{
     ServiceHealthSummary = $serviceHealthSummary
     IncidentFindings = $incidentFindings
     ResilienceTestStatus = $resilienceTestStatus
-    LastCheckedAt = (Get-Date).ToString('o')
+    Freshness = $freshnessSummary
+    CollectionTime = $collectionTime
+    LastCheckedAt = $collectionTime
 }
 
 $statusPath = Join-Path $resolvedOutputPath ("13-dora-resilience-monitor-status-{0}.json" -f $ConfigurationTier)
