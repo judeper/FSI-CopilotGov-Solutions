@@ -485,7 +485,7 @@ Describe 'DORA Operational Resilience Monitor - DORA reporting timeline metadata
             $absoluteOutputPath = Join-Path $TestDrive 'absolute-output\nested'
             $exportResult = & (Join-Path $script:scriptsPath 'Export-Evidence.ps1') -ConfigurationTier regulated -OutputPath $absoluteOutputPath -PassThru 3>$null
             $packagePath = $exportResult.Package.Path
-            $packagePath | Should -Match '^[A-Za-z]:\\'
+            [IO.Path]::IsPathRooted([string]$packagePath) | Should -BeTrue
 
             $package = Get-Content -Path $packagePath -Raw | ConvertFrom-Json -Depth 20
             foreach ($artifact in @($package.artifacts)) {
