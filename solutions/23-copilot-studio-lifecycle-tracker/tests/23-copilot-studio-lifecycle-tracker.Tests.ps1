@@ -106,3 +106,75 @@ Describe 'CSLT - Script Validation' {
         Get-ScriptParameterName -Path (Join-Path $script:scriptsPath 'Export-Evidence.ps1') | Should -Contain 'PeriodStart'
     }
 }
+
+Describe 'CSLT - Lab Contract' {
+    BeforeAll {
+        $script:labPath = Join-Path $solutionRoot 'lab\23-copilot-studio-lifecycle-tracker.lab.json'
+        if (Test-Path $script:labPath) { $script:lab = Get-JsonContent -Path $script:labPath }
+    }
+    It 'has a lab contract file' { Test-Path $script:labPath | Should -BeTrue }
+    It 'declares the matching solution id' { $script:lab.solution.id | Should -Be '23-copilot-studio-lifecycle-tracker' }
+    It 'is read-only with an empty mutations array' { @($script:lab.mutations).Count | Should -Be 0 }
+    It 'sets US commercial scope' {
+        $script:lab.scope.cloud | Should -Be 'm365-us-commercial'
+        $script:lab.scope.usCommercialOnly | Should -BeTrue
+    }
+    It 'uses only null mutation references in every step' {
+        $rawContract = Get-Content -Path $script:labPath -Raw
+        $withoutNullMutationRefs = [regex]::Replace($rawContract, '"mutationRef"\s*:\s*null', '')
+        $withoutNullMutationRefs | Should -Not -Match '"mutationRef"'
+    }
+    It 'declares only controls present in the framework control set' {
+        $allowedControls = @('4.13','1.10','1.16','4.5','4.12')
+        @($script:lab.controls | Where-Object { $_ -notin $allowedControls }) | Should -BeNullOrEmpty
+    }
+}
+
+Describe 'CSLT - Evidence portability and provider paths' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:repoRoot = (Resolve-Path (Join-Path $script:solutionRoot '..\..')).Path
+        $script:deployScript = Join-Path $script:solutionRoot 'scripts\Deploy-Solution.ps1'
+        $script:monitorScript = Join-Path $script:solutionRoot 'scripts\Monitor-Compliance.ps1'
+        $script:exportScript = Join-Path $script:solutionRoot 'scripts\Export-Evidence.ps1'
+        Import-Module (Join-Path $script:repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+    }
+
+    It 'stores package-relative paths, returns absolute paths, and validates after relocation' {
+        $outputPath = Join-Path $TestDrive 'portable-evidence'
+        $result = & $script:exportScript -ConfigurationTier baseline -OutputPath $outputPath -PassThru
+        [System.IO.Path]::IsPathRooted($result.PackagePath) | Should -BeTrue
+        foreach ($artifact in @($result.Artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeTrue
+        }
+
+        foreach ($artifact in @($result.Package.artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeFalse
+        }
+
+        $relocatedPath = Join-Path $TestDrive 'portable-evidence-relocated'
+        Move-Item -Path $outputPath -Destination $relocatedPath
+        $validation = Test-CopilotGovEvidencePackage `
+            -Path (Join-Path $relocatedPath '23-copilot-studio-lifecycle-tracker-evidence.json') `
+            -ExpectedArtifacts @('agent-lifecycle-inventory', 'publishing-approval-log', 'version-history', 'deprecation-evidence')
+        $validation.IsValid | Should -BeTrue -Because ($validation.Errors -join '; ')
+    }
+
+    It 'resolves relative output from the PowerShell provider location' {
+        $originalProcessDirectory = [System.Environment]::CurrentDirectory
+        Push-Location $TestDrive
+        try {
+            [System.Environment]::CurrentDirectory = $script:solutionRoot
+            $deploy = & $script:deployScript -ConfigurationTier baseline -OutputPath '.\provider-deploy'
+            $monitor = & $script:monitorScript -ConfigurationTier baseline -OutputPath '.\provider-monitor' -PassThru
+            $export = & $script:exportScript -ConfigurationTier baseline -OutputPath '.\provider-export' -PassThru
+            $deploy.outputPath | Should -Be (Join-Path $TestDrive 'provider-deploy')
+            (Split-Path -Parent $monitor.outputPath) | Should -Be (Join-Path $TestDrive 'provider-monitor')
+            (Split-Path -Parent $export.PackagePath) | Should -Be (Join-Path $TestDrive 'provider-export')
+        }
+        finally {
+            [System.Environment]::CurrentDirectory = $originalProcessDirectory
+            Pop-Location
+        }
+    }
+}

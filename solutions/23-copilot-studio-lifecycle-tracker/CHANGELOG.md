@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### Added
+
+- Read-only lab validation contract `lab/23-copilot-studio-lifecycle-tracker.lab.json` (`mutations: []`) with the handoff consolidated into the existing deployment guide and delivery checklist. The contract cites verified generally-available Microsoft Learn sources and validates with `scripts/validate-lab-contracts.py`. Control 4.14 is intentionally excluded from the contract's `controls` array because it is not yet present in `data/controls-master.json`.
+- `## Application Lifecycle Management (ALM)` section in `docs/architecture.md` describing Power Platform solution export/import, managed vs. unmanaged behavior, environment variables and connection references, pipelines, and the publish/republish requirement. Citations: https://learn.microsoft.com/microsoft-copilot-studio/guidance/alm, https://learn.microsoft.com/microsoft-copilot-studio/authoring-solutions-import-export, https://learn.microsoft.com/microsoft-copilot-studio/authoring-solutions-overview, https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables-about, https://learn.microsoft.com/microsoft-copilot-studio/publication-fundamentals-publish-channels
+- Cross-platform Microsoft Power Platform CLI (`pac`) noted as a supported alternative to the legacy admin module in `docs/prerequisites.md` and `docs/deployment-guide.md`. Citation: https://learn.microsoft.com/power-platform/developer/cli/introduction
+- Pester coverage for the lab contract (presence, read-only `mutations: []`, US commercial scope, null mutation references, framework-known controls).
+
+### Fixed
+
+- Fixed a runtime failure in `Monitor-Compliance.ps1` where an empty lifecycle-review result set unrolled to `$null`, causing `The property 'Count' cannot be found on this object.` under `Set-StrictMode -Version Latest`. Inventory, approval, and finding collections are now normalized with `@(...)` so the monitor runs cleanly on all tiers.
+- Aligned the `.NOTES` version in `Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, and `Export-Evidence.ps1` from `v0.1.3` to the current `v0.1.4` to remove stale in-script version references.
+- Made Deploy/Monitor/Export output paths PowerShell-provider aware, made evidence packages relocatable while returning absolute caller paths, and added fail-closed ignored lab staging cleanup.
+- Replaced evidence-immutability overstatement with an external storage requirement and clarified that `version-history`/rollback fields are customer-supplied solution/change evidence, not Copilot Studio product telemetry.
+
+### Verified
+
+- 2026-07-14 accuracy review against first-party Microsoft Learn sources. Confirmed accurate: Microsoft Agent 365 GA "As of May 1, 2026 ... for the Commercial segment on a per user basis" and the "works best when using Microsoft E5 as a pre-requisite" guidance (https://learn.microsoft.com/microsoft-agent-365/overview); agent registry navigation "Agents > All Agents > Registry" (https://learn.microsoft.com/microsoft-365/admin/manage/agent-registry); Copilot Studio draft/publish/republish model with no canonical rollback API (https://learn.microsoft.com/microsoft-copilot-studio/publication-fundamentals-publish-channels); `Microsoft.PowerApps.Administration.PowerShell` requires Windows PowerShell 5.x and uses .NET Framework, incompatible with PowerShell 6.0 and later (https://learn.microsoft.com/power-platform/admin/powerapps-powershell); and Power Platform API "delegated permissions only at this time" with RBAC roles for service principals (https://learn.microsoft.com/power-platform/admin/programmability-authentication-v2).
+
 ## [v0.1.4] — 2026-06-06 — Agent 365 prerequisites and architecture enhancements
 
 ### Changed

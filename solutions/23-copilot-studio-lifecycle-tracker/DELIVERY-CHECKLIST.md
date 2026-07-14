@@ -45,6 +45,15 @@
 - [ ] Each JSON evidence file has a matching `.sha256` companion file.
 - [ ] Control status entries are populated for 4.14, 4.13, 1.10, 1.16, 4.5, and 4.12.
 
+## Lab Validation (read-only)
+
+- [ ] `lab/23-copilot-studio-lifecycle-tracker.lab.json` passes `python scripts/validate-lab-contracts.py`.
+- [ ] Lab contract declares no mutations (`mutations: []`); every step uses `mutationRef: null`.
+- [ ] Tenant identity matches the separate sanctioned-lab record; Agent 365 registry, Copilot Studio publish state, Power Apps solution metadata, roles, and DLP are inspected read-only.
+- [ ] Ignored `lab-evidence/23-copilot-studio-lifecycle-tracker` staging is removed after evidence capture.
+- [ ] Steps that cannot run because Copilot Studio, the Agent 365 registry, or a qualifying license is unavailable are recorded as `BLOCKED` or `NOT-APPLICABLE` with negative and source evidence.
+- [ ] Source-citation record confirms each cited Microsoft Learn URL resolves and matches its documented lifecycle state.
+
 ## Customer Handover
 
 - [ ] README reviewed with the customer Copilot Studio admin and compliance stakeholders.

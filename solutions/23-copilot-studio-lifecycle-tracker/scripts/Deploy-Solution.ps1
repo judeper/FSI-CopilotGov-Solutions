@@ -34,7 +34,7 @@
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
     Primary Controls: 4.14, 4.13
     Supporting Controls: 1.10, 1.16, 4.5, 4.12
-    Version: v0.1.3
+    Version: v0.1.4
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -58,7 +58,7 @@ Write-Verbose ("Loading CSLT configuration for tier [{0}]." -f $ConfigurationTie
 $configuration = Get-CsltConfiguration -Tier $ConfigurationTier
 Test-CsltConfiguration -Configuration $configuration
 
-$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
+$resolvedOutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
 
 $connectionReferences = @(
     'fsi_cr_copilot_studio_lifecycle_powerplatform',

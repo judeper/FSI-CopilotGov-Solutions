@@ -100,9 +100,35 @@ The solution reserves the following Dataverse table names for structured persist
 - `fsi_cg_copilot_studio_lifecycle_version`
 - `fsi_cg_copilot_studio_lifecycle_deprecation`
 
+## Application Lifecycle Management (ALM)
+
+Copilot Studio agents and their supporting Dataverse components are packaged and moved
+between environments using Power Platform solutions. This solution documents the ALM
+pattern; it does not export, import, or publish agents in the customer tenant.
+
+- **Solutions and export/import:** Agents are added to a Power Platform solution and exported
+  from the development environment, then imported into test and production environments. See
+  [Export and import agents using solutions](https://learn.microsoft.com/microsoft-copilot-studio/authoring-solutions-import-export)
+  and [Establish an application lifecycle management strategy](https://learn.microsoft.com/microsoft-copilot-studio/guidance/alm).
+- **Managed vs. unmanaged:** Development uses unmanaged solutions; downstream environments
+  receive managed solutions so components are not customized directly. See
+  [Create and manage solutions in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/authoring-solutions-overview).
+- **Environment variables and connection references:** The `fsi_ev_*` environment variables
+  and `fsi_cr_*` connection references in the deployment manifest are the recommended pattern
+  for parameterizing per-environment values so that no secrets or environment-specific
+  identifiers are stored in the solution. See
+  [Variables overview](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables-about#environment-variables).
+- **Pipelines:** Power Platform solution pipelines can automate deployment of the solution
+  across environments as part of a supported CI/CD approach.
+- **Publishing requirement:** A Copilot Studio agent must be published in the target
+  environment before changes become available to users. Microsoft also documents that agents
+  must be republished after administrators update environment variables, except for secret-type
+  environment variables. See [Publish and deploy your agent](https://learn.microsoft.com/microsoft-copilot-studio/publication-fundamentals-publish-channels)
+  and [Variables overview](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables-about#environment-variables).
+
 ## Security Considerations
 
 - Use least-privilege Microsoft Agent 365, Power Platform, Entra ID, and Purview permissions for the monitoring identity.
 - Store client secrets or certificates in an approved secret-management platform rather than in repository files.
 - Restrict access to publishing approval and deprecation evidence because change records may contain reviewer identities and sensitive operational details.
-- Preserve evidence immutability for regulated deployments using the immutable storage settings defined in `config/regulated.json`.
+- Treat the regulated `evidenceImmutability` block as an external storage requirement. The scaffold does not provision WORM storage or prove evidence immutability.

@@ -23,7 +23,7 @@
 
 .NOTES
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
-    Version: v0.1.3
+    Version: v0.1.4
 #>
 [CmdletBinding()]
 param(
@@ -125,14 +125,14 @@ Write-Verbose ("Loading CSLT configuration for tier [{0}]." -f $ConfigurationTie
 $configuration = Get-CsltConfiguration -Tier $ConfigurationTier
 Test-CsltConfiguration -Configuration $configuration
 
-$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
+$resolvedOutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
 $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
 
 Write-Warning $script:StubWarning
 
-$inventory = Get-AgentInventoryStub -Environments @($configuration.defaults.monitoredEnvironments)
-$approvals = Get-PublishingApprovalStub -Configuration $configuration
-$findings = Get-LifecycleReviewFinding -Inventory $inventory -CadenceDays $configuration.lifecycleReviewCadenceDays
+$inventory = @(Get-AgentInventoryStub -Environments @($configuration.defaults.monitoredEnvironments))
+$approvals = @(Get-PublishingApprovalStub -Configuration $configuration)
+$findings = @(Get-LifecycleReviewFinding -Inventory $inventory -CadenceDays $configuration.lifecycleReviewCadenceDays)
 
 $status = [pscustomobject]@{
     solution = $configuration.solution
@@ -142,6 +142,7 @@ $status = [pscustomobject]@{
     inventoryCount = $inventory.Count
     approvalCount = $approvals.Count
     overdueReviewCount = $findings.Count
+    outputPath = (Join-Path $resolvedOutputPath ("23-copilot-studio-lifecycle-tracker-monitor-{0}.json" -f $ConfigurationTier))
     publishingApprovalRequired = $configuration.publishingApprovalRequired
     dualApproverRequired = $configuration.dualApproverRequired
     inventory = $inventory
@@ -149,7 +150,7 @@ $status = [pscustomobject]@{
     findings = $findings
 }
 
-$snapshotPath = Join-Path $resolvedOutputPath ("23-copilot-studio-lifecycle-tracker-monitor-{0}.json" -f $ConfigurationTier)
+$snapshotPath = $status.outputPath
 $status | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding utf8
 Write-Verbose ("Monitoring snapshot written to {0}." -f $snapshotPath)
 

@@ -28,10 +28,13 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
-    def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+    def test_contract_validator_default_discovery_passes(self) -> None:
+        # Default (no-arg) discovery scans solutions/*/lab. It must exit 0 whether the
+        # repository contains zero contracts (shim path) or one or more real solution
+        # contracts. Both success messages include "file(s) checked".
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertIn("file(s) checked", result.stdout)
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
