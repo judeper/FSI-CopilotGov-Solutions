@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added
+- Read-only lab validation contract at `lab/22-pages-notebooks-retention-tracker.lab.json` (template binding, `mutations: []`) with verified Microsoft source claims for the shared SharePoint Embedded container model, retention policy/label behavior, eDiscovery and legal hold, the no-recycle-bin/no-recovery limitation for Copilot Notebooks, and the rollout-sensitive eDiscovery review-set indexing/HTML export enhancements (Microsoft 365 Roadmap 561492).
+- Lab Validation Handoff guidance in `docs/deployment-guide.md` and a lab-handoff item in `DELIVERY-CHECKLIST.md`.
+- Platform lifecycle and rollout notes in `docs/architecture.md`, a non-recoverable Copilot Notebook troubleshooting entry, and an eDiscovery rollout note in `docs/evidence-export.md`, aligned to current Microsoft Learn guidance (`cpcn-storage`, `cpcn-compliance-summary`, verified 2026-07-13).
+- Pester regression tests covering read-only `-WhatIf` execution, evidence-package portability after relocation, and lab-contract shape.
+
+### Changed
+- `Monitor-Compliance.ps1` and `Export-Evidence.ps1` now support `SupportsShouldProcess`/`-WhatIf`, so lab validation can run them read-only (no snapshot, artifacts, or package files written) while still returning the sample inventory and evidence plan via `-PassThru`.
+
+### Fixed
+- Evidence package now records package-relative artifact paths so the package continues to validate after the evidence directory is relocated, while `Export-Evidence.ps1` still returns usable absolute artifact and package paths to callers.
+
 ## [v0.1.3] - 2026-06-05 — Copilot Notebooks accuracy correction
 
 ### Fixed

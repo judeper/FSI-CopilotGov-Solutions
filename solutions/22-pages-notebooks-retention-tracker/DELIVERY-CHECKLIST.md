@@ -53,6 +53,7 @@
 
 - [ ] README reviewed with the customer records-management, compliance, and supervision stakeholders.
 - [ ] Documented SharePoint Embedded, Microsoft Graph DriveItem/export where supported, Purview audit/retention, and Cloud Policy/SharePoint admin insertion points are documented for future development.
+- [ ] Lab validation contract (`lab/22-pages-notebooks-retention-tracker.lab.json`) is reviewed and scheduled for read-only tenant validation, with BLOCKED conditions (licensing, roles, retention-policy coverage, and eDiscovery/legal-hold rollout per Microsoft 365 Roadmap 561492) recorded with source evidence.
 - [ ] Evidence retention and storage responsibilities are confirmed.
 - [ ] Customer acknowledges that PNRT does not on its own satisfy SEC Rule 17a-4 or FINRA Rule 4511(a).
 

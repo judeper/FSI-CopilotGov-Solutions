@@ -276,6 +276,89 @@ Describe 'PNRT - Script Smoke Tests' {
     }
 }
 
+Describe 'PNRT - Read-Only WhatIf and Evidence Portability' {
+    It 'Monitor-Compliance.ps1 -WhatIf returns sample data without writing a snapshot' {
+        $whatIfOutputPath = Join-Path $smokeOutputPath 'monitor-whatif'
+        $snapshot = & (Join-Path $script:scriptsPath 'Monitor-Compliance.ps1') -ConfigurationTier baseline -OutputPath $whatIfOutputPath -PassThru -WhatIf
+
+        $snapshot.RuntimeMode | Should -Be 'sample-data'
+        @($snapshot.Pages).Count | Should -BeGreaterThan 0
+        Test-Path -Path (Join-Path $whatIfOutputPath 'monitor-snapshot-baseline.json') | Should -BeFalse
+    }
+
+    It 'Export-Evidence.ps1 -WhatIf returns a plan without writing artifacts or a package' {
+        $whatIfOutputPath = Join-Path $smokeOutputPath 'export-whatif'
+        $result = & (Join-Path $script:scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath $whatIfOutputPath -PassThru -WhatIf
+
+        @($result.Artifacts).Count | Should -Be 4
+        $result.PackagePath | Should -BeNullOrEmpty
+        foreach ($artifact in @($result.Artifacts)) {
+            $artifact.hash | Should -BeNullOrEmpty
+        }
+        Test-Path -Path $whatIfOutputPath | Should -BeFalse
+    }
+
+    It 'Export-Evidence.ps1 records package-relative artifact paths and usable absolute return paths' {
+        $exportOutputPath = Join-Path $smokeOutputPath 'export-portable'
+        $result = & (Join-Path $script:scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath $exportOutputPath -PassThru
+
+        [System.IO.Path]::IsPathRooted($result.PackagePath) | Should -BeTrue
+        foreach ($artifact in @($result.Artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeTrue
+        }
+
+        $package = Get-Content -Path $result.PackagePath -Raw | ConvertFrom-Json
+        foreach ($artifact in @($package.artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeFalse
+            $artifact.path | Should -Be ([System.IO.Path]::GetFileName($artifact.path))
+        }
+    }
+
+    It 'evidence package validates after the output directory is relocated' {
+        $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
+        Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+
+        $exportOutputPath = Join-Path $smokeOutputPath 'export-relocate'
+        $result = & (Join-Path $script:scriptsPath 'Export-Evidence.ps1') -ConfigurationTier baseline -OutputPath $exportOutputPath -PassThru
+        $packageName = [System.IO.Path]::GetFileName($result.PackagePath)
+
+        $relocatedPath = Join-Path $smokeOutputPath 'export-relocated'
+        if (Test-Path -Path $relocatedPath) { Remove-Item -Path $relocatedPath -Recurse -Force }
+        Copy-Item -Path $exportOutputPath -Destination $relocatedPath -Recurse
+        Remove-Item -Path $exportOutputPath -Recurse -Force
+
+        $validation = Test-CopilotGovEvidencePackage -Path (Join-Path $relocatedPath $packageName) -ExpectedArtifacts @('pages-retention-inventory', 'notebook-retention-log', 'loop-component-lineage', 'branching-event-log')
+        $validation.IsValid | Should -BeTrue
+    }
+}
+
+Describe 'PNRT - Lab Validation Contract' {
+    BeforeAll {
+        $script:labContractPath = Join-Path $solutionRoot 'lab\22-pages-notebooks-retention-tracker.lab.json'
+    }
+
+    It 'has a lab contract file' {
+        Test-Path -Path $script:labContractPath -PathType Leaf | Should -BeTrue
+    }
+
+    It 'declares a read-only template contract with no mutations' {
+        $contract = Get-JsonContent -Path $script:labContractPath
+        $contract.solution.id | Should -Be '22-pages-notebooks-retention-tracker'
+        $contract.solution.binding | Should -Be 'template'
+        $contract.scope.cloud | Should -Be 'm365-us-commercial'
+        @($contract.mutations).Count | Should -Be 0
+    }
+
+    It 'only lists controls present in controls-master.json' {
+        $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
+        $masterControls = @((Get-JsonContent -Path (Join-Path $repoRoot 'data\controls-master.json')).control_id)
+        $contract = Get-JsonContent -Path $script:labContractPath
+        foreach ($controlId in @($contract.controls)) {
+            $masterControls | Should -Contain $controlId
+        }
+    }
+}
+
 Describe 'PNRT - Documentation Validation' {
     BeforeAll {
         $script:readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw

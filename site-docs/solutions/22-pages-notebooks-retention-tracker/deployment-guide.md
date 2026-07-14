@@ -76,6 +76,22 @@ Verify the following files exist:
 - `loop-component-lineage-<tier>.json` and matching `.sha256`
 - `branching-event-log-<tier>.json` and matching `.sha256`
 
+## Lab Validation Handoff
+
+A read-only lab validation contract is provided at `lab/22-pages-notebooks-retention-tracker.lab.json` for tenant-bound verification against current Microsoft guidance. It is a template-binding, read-only contract (`mutations: []`) that:
+
+1. Runs `Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, and `Export-Evidence.ps1` in `-WhatIf` mode so no tenant state and no local artifacts are written.
+2. Verifies, in Microsoft Purview and the SharePoint admin center, All SharePoint Sites retention-policy coverage, the limited retention-label application path through the Loop app, and the rollout-sensitive eDiscovery and legal-hold capabilities (Microsoft 365 Roadmap 561492 and the custodian container data-source picker).
+3. Confirms the cited Microsoft Learn and roadmap sources remain aligned with the documented storage, retention, eDiscovery, legal-hold, and recycle-bin behavior.
+
+Validate the contract locally with:
+
+```powershell
+python scripts/validate-lab-contracts.py solutions/22-pages-notebooks-retention-tracker/lab/22-pages-notebooks-retention-tracker.lab.json
+```
+
+Record BLOCKED dispositions with source evidence when required licenses, roles, retention policies, or rollout features are not yet available in the validation tenant. Primary control 3.14 is not yet represented in `data/controls-master.json`, so it is tracked outside the contract's machine-checked controls until the canonical metadata includes it; the same read-only evidence still substantiates Copilot artifact retention coverage.
+
 ## Rollback Instructions
 
 1. Remove the generated deployment manifest and evidence artifacts from the designated `artifacts/` path.

@@ -30,14 +30,21 @@
 .PARAMETER PassThru
     Returns the compliance status object after writing the snapshot file.
 
+.PARAMETER WhatIf
+    Generate the sample inventory in memory and return it (with -PassThru) without writing the
+    snapshot file. Useful for read-only lab validation that must leave no local artifacts.
+
 .EXAMPLE
     .\Monitor-Compliance.ps1 -ConfigurationTier recommended -Verbose
+
+.EXAMPLE
+    .\Monitor-Compliance.ps1 -ConfigurationTier regulated -PassThru -WhatIf
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
     Version: v0.1.3
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -199,7 +206,7 @@ else {
     Write-Verbose 'Client credentials are incomplete. Returning sample inventory records for local validation.'
 }
 
-$resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
+$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
 
 $pages = New-PnrtSamplePage -Count ([int]$configuration.defaults.samplePageCount) -RetentionDays ([int]$configuration.pagesRetentionDays)
 $notebooks = New-PnrtSampleNotebook -Count ([int]$configuration.defaults.sampleNotebookCount) -RetentionDays ([int]$configuration.notebookRetentionDays)
@@ -230,8 +237,14 @@ $status = [pscustomobject]@{
 }
 
 $snapshotPath = Join-Path $resolvedOutputPath ("monitor-snapshot-{0}.json" -f $ConfigurationTier)
-$status | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding utf8
-Write-Verbose ("Monitor snapshot written to {0}." -f $snapshotPath)
+if ($PSCmdlet.ShouldProcess($snapshotPath, 'Write PNRT monitor snapshot')) {
+    $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
+    $status | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding utf8
+    Write-Verbose ("Monitor snapshot written to {0}." -f $snapshotPath)
+}
+else {
+    Write-Verbose ("WhatIf enabled. Monitor snapshot would be written to {0}." -f $snapshotPath)
+}
 
 Write-Host (
     "Monitor summary: PNRT tier [{0}] inventoried {1} Pages, {2} Copilot Notebooks, {3} Loop components, {4} internal sample lineage rows. Coverage gaps: {5}." -f

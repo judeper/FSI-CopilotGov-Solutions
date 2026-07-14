@@ -39,6 +39,12 @@ If expected Copilot Pages are not in the inventory:
 - Confirm Purview read access for the executing identity.
 - Re-run inventory after policy changes are published.
 
+### Copilot Notebook was deleted and cannot be recovered
+
+- There is no end-user recycle bin for Copilot Notebooks; neither administrators nor end users can recover an individually deleted Copilot Notebook.
+- Prevent loss by publishing a Purview retention policy that covers the SharePoint Embedded container, or by exporting content through Purview or the Graph API before deletion.
+- For a departing user, preserve content before the account is removed because the container follows the OneDrive deletion lifecycle with a manual handoff step.
+
 ## Loop Component Issues
 
 ### Component lineage is empty
