@@ -122,8 +122,8 @@ Safe rollback requires captured prior state and clear ownership **before** any l
 ## Lab Validation Handoff
 
 A machine-readable lab-validation contract is provided at
-[`lab/11-risk-tiered-rollout.lab.json`](../lab/11-risk-tiered-rollout.lab.json) for the external
-Playwright/API lab executor. The first validation cycle is **read-only / detect-only**
+`lab/11-risk-tiered-rollout.lab.json` for the external Playwright/API lab executor.
+The first validation cycle is **read-only / detect-only**
 (`mutations: []`): it verifies tenant identity, discovers the Microsoft 365 Copilot SKU from
 `GET /subscribedSkus` by `skuPartNumber`, reads the test cohort group metadata and current
 `assignedLicenses`, and confirms documentation source claims — without assigning or removing any
