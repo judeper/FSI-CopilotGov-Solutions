@@ -3,7 +3,7 @@
   "displayName": "Conditional Access Policy Automation for Copilot",
   "solutionCode": "CAA",
   "version": "v0.2.5",
-  "last_verified": "2026-06-11",
+  "last_verified": "2026-07-14",
   "track": "B",
   "priority": "P1",
   "status": "Documentation-first scaffold",
@@ -67,6 +67,8 @@
       }
     },
     "driftDetectionEnabled": true,
+    "emergencyAccessExclusionGroupIds": [],
+    "emergencyAccessGuidance": "Record tenant break-glass/emergency-access group object IDs before enabling Conditional Access policies. Microsoft recommends excluding at least one emergency-access account from every Conditional Access policy so that a misconfigured policy cannot lock every administrator out of the tenant.",
     "exceptionRegisterPath": ".\\artifacts\\access-exception-register.json",
     "baselineStoragePath": ".\\artifacts\\current-policy-baseline.json",
     "policyNamingConvention": "FSI-CAA-Copilot-{Tier}-{Purpose}",

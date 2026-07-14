@@ -1,0 +1,377 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:07-conditional-access-automation:2026-07",
+  "solution": {
+    "id": "07-conditional-access-automation",
+    "name": "Conditional Access Policy Automation for Copilot",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.3",
+    "2.6",
+    "2.9"
+  ],
+  "portals": [
+    "microsoft-entra-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-office365-app-suite",
+      "claimText": "The Microsoft Graph Office365 Conditional Access app-suite value lists Enterprise Copilot Platform (Microsoft 365 Copilot), and Microsoft recommends targeting the suite grouping instead of individual cloud apps to avoid service dependencies.",
+      "affectedFiles": [
+        "solutions/07-conditional-access-automation/README.md",
+        "solutions/07-conditional-access-automation/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/reference-office-365-application-contents",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-ca-policy-state",
+      "claimText": "The Microsoft Graph conditionalAccessPolicy resource state property accepts the values enabled, disabled, and enabledForReportingButNotEnforced; this solution generates request bodies in report-only state by default.",
+      "affectedFiles": [
+        "solutions/07-conditional-access-automation/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-managed-policies",
+      "claimText": "Microsoft-managed and Baseline security mode Conditional Access policies are owned by Microsoft and appear with Microsoft in the Created by column; administrators can edit only their state and exclusions or duplicate them, so this scaffold does not attempt to own them.",
+      "affectedFiles": [
+        "solutions/07-conditional-access-automation/README.md",
+        "solutions/07-conditional-access-automation/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/managed-policies",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-emergency-access-exclusion",
+      "claimText": "Microsoft recommends excluding at least one emergency-access (break-glass) account from every Conditional Access policy so a misconfigured policy cannot lock every administrator out of the tenant; this solution models an excludeGroups slot and blocks live execution until it is populated.",
+      "affectedFiles": [
+        "solutions/07-conditional-access-automation/scripts/Deploy-Solution.ps1",
+        "solutions/07-conditional-access-automation/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-emergency-access",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-named-locations",
+      "claimText": "Microsoft Entra Conditional Access named locations can represent IP ranges or countries and regions, and Microsoft Graph exposes read-only named-location inventory through identity/conditionalAccess/namedLocations with Policy.Read.All.",
+      "affectedFiles": [
+        "solutions/07-conditional-access-automation/docs/architecture.md",
+        "solutions/07-conditional-access-automation/lab/07-conditional-access-automation.lab.json"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/en-us/graph/api/conditionalaccessroot-list-namedlocations",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft Entra ID P1 for Conditional Access creation and enforcement",
+      "Microsoft Entra ID P2 only when risk-based Conditional Access signals are added to a later tenant design",
+      "Microsoft 365 Copilot entitlement assigned to a disposable lab user"
+    ],
+    "roles": [
+      "Security Reader for read-only Conditional Access, sign-in, and audit-log review",
+      "Microsoft Graph Policy.Read.All delegated permission for read-only policy and named-location inventory"
+    ],
+    "features": [
+      "Conditional Access enabled in the sanctioned disposable lab tenant",
+      "Sign-in and audit logs available for read-back evidence"
+    ],
+    "capacityRequirements": [
+      "One sanctioned disposable lab tenant with no production users",
+      "A designated disposable lab group reserved for future policy-targeting cycles"
+    ],
+    "dataRequirements": [
+      "Representative sample configuration and templates only",
+      "No production Conditional Access policies are created, modified, or deleted in this cycle"
+    ],
+    "tenantCount": 1,
+    "notes": "READ-ONLY FIRST CYCLE. mutations is intentionally empty and the live mutation is deferred. The intended later mutation is to create a single narrowly scoped, disposable, report-only (state=enabledForReportingButNotEnforced) Conditional Access policy and then delete it. It is deferred until the executing adapter can structurally enforce every one of these preconditions: independent positive tenant-ID proof captured before any write; a designated disposable user or group as the only include target; explicit exclusion of emergency-access and automation identities; a unique run-ownership marker in the policy displayName; no tenant-wide (All users) targeting; no enabled enforcement; post-create read-back; bounded propagation polling; cleanup limited to the current run-owned object; deletion read-back; and fail-on-orphan. Because this template-bound FSI contract schema cannot encode those guarantees as enforceable fields, this cycle stays read-only and never executes a live mutation."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm preconditions and independent tenant proof",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-proof",
+            "mode": "api",
+            "intent": "Capture positive tenant identity from Microsoft Graph and compare it with the sanctioned tenant record before any Conditional Access inspection.",
+            "expected": "The organization id and displayName returned by Microsoft Graph match the separately maintained sanctioned disposable-lab tenant record.",
+            "operatorNote": "Compare the Graph organization response with the out-of-band lab authorization record. Do not proceed if either the directory identifier or organization name differs.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Graph organization response and out-of-band lab authorization record",
+              "expectation": "Graph tenant identity matches the separately maintained sanctioned lab record."
+            }
+          },
+          {
+            "id": "step-confirm-licensing-roles",
+            "mode": "ui",
+            "intent": "Confirm Entra ID P1 licensing and the Security Reader access required for this cycle, and classify P2 only if later risk-based signals are in scope.",
+            "expected": "P1 and Security Reader are present; P2 is recorded as optional unless risk-based policy conditions are explicitly in scope.",
+            "locator": "Microsoft Entra admin center > Identity > Billing/Licenses and Roles & administrators",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Licenses and Roles blades",
+              "expectation": "P1 and Security Reader are confirmed; P2 applicability is recorded without blocking this non-risk-based cycle."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Inspect Copilot Conditional Access posture (read-only)",
+        "steps": [
+          {
+            "id": "step-inspect-ca-policies",
+            "mode": "ui",
+            "intent": "Review existing Conditional Access policies that target the Office365 app suite and identify which are Microsoft-managed versus solution-owned.",
+            "expected": "Policies targeting the Office365 app suite are visible, and the Created by column distinguishes Microsoft-managed policies that this solution must not own.",
+            "locator": "Microsoft Entra admin center > Protection > Conditional Access > Policies",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Conditional Access policy list",
+              "expectation": "Operator confirms the policy list and the Created by column without changing any policy."
+            }
+          },
+          {
+            "id": "step-inspect-named-locations",
+            "mode": "powershell",
+            "intent": "Read the named-location inventory needed to assess recommended and regulated policy templates without exposing configured IP ranges in contract evidence.",
+            "expected": "The response identifies configured named locations and metadata needed for policy review; no named location is created, modified, or deleted.",
+            "operatorNote": "Retain only id, displayName, type, timestamps, trust flag, and country metadata in evidence. Do not retain configured IP ranges.",
+            "command": "$response = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations'; $response.value | ForEach-Object { [pscustomobject]@{ id = $_.id; displayName = $_.displayName; type = $_.'@odata.type'; createdDateTime = $_.createdDateTime; modifiedDateTime = $_.modifiedDateTime; isTrusted = $_.isTrusted; countryLookupMethod = $_.countryLookupMethod; includeUnknownCountriesAndRegions = $_.includeUnknownCountriesAndRegions } } | ConvertTo-Json -Depth 5",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "conditionalAccess/namedLocations metadata response",
+              "expectation": "Named-location metadata is available for review and contains no retained IP-range values."
+            }
+          },
+          {
+            "id": "step-run-monitor",
+            "mode": "powershell",
+            "intent": "Run the compliance monitor in documentation-first mode to emit representative drift and compliance artifacts.",
+            "expected": "Representative compliance-status.json and drift-alert-summary.json are produced from sample data without connecting to the tenant.",
+            "command": "pwsh -File solutions/07-conditional-access-automation/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance output artifacts",
+              "expectation": "Output includes representative compliance and drift findings with documentation-first markers."
+            }
+          },
+          {
+            "id": "step-generate-report-only-templates",
+            "mode": "powershell",
+            "intent": "Generate report-only policy templates and confirm the break-glass excludeGroups slot and requiresBreakGlassExclusion flag are present.",
+            "expected": "ca-policy-templates.json shows report-only request bodies with an excludeGroups slot, and policies are flagged requiresBreakGlassExclusion when no exclusion group is configured.",
+            "command": "pwsh -File solutions/07-conditional-access-automation/scripts/Deploy-Solution.ps1 -ConfigurationTier baseline -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "ca-policy-templates.json and graph-api-commands.ps1",
+              "expectation": "Templates are report-only, include the excludeGroups slot, and the Graph command header warns about excluding emergency-access accounts."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify Microsoft source currency and read-back",
+        "steps": [
+          {
+            "id": "step-verify-source-currency",
+            "mode": "manual",
+            "intent": "Confirm the Microsoft Learn sources recorded in microsoftSourceClaims remain published and match their recorded lifecycle state.",
+            "expected": "Each cited Microsoft Learn source resolves and still supports its claim, including the Office365 app-suite contents and Microsoft-managed policy ownership.",
+            "operatorNote": "Open each microsoftSourceClaims sourceUrl and confirm the page still supports the claim and lifecycle state; record any drift as a BLOCKED disposition with source evidence.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims sourceUrl set",
+              "expectation": "All cited sources remain published and consistent with the recorded lifecycle state."
+            }
+          },
+          {
+            "id": "step-readback-policy-state",
+            "mode": "api",
+            "intent": "Perform a read-only Microsoft Graph query to confirm Conditional Access policy read access and that returned state values match the documented enum.",
+            "expected": "The read-only request returns policies whose state values fall within enabled, disabled, or enabledForReportingButNotEnforced.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "conditionalAccess/policies GET response",
+              "expectation": "Response is read-only and state values match the documented enum; no policy is created or changed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only disposition (no mutation)",
+        "steps": [
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Capture operator attestation that no Conditional Access object was created, modified, or deleted during this read-only cycle.",
+            "expected": "The operator confirms no tenant mutation occurred, so no cleanup is required for this cycle.",
+            "operatorNote": "Attest that this cycle was read-only: no Conditional Access policy, named location, or group was created, modified, or deleted. The live mutation remains deferred per prerequisites.notes.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Read-only attestation note",
+              "expectation": "Attestation confirms no mutable change occurred and cleanup is not required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-proof",
+        "type": "manual-attestation",
+        "description": "Independent positive tenant-identity proof captured before inspection.",
+        "requiredForControls": [
+          "2.3"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-monitor-transcript",
+        "type": "powershell-transcript",
+        "description": "Read-only Monitor-Compliance and Deploy-Solution output showing representative drift, compliance, and break-glass slot findings.",
+        "requiredForControls": [
+          "2.3",
+          "2.6",
+          "2.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-ca-policy-screenshot",
+        "type": "screenshot",
+        "description": "Entra admin center Conditional Access policy list showing the Created by column and Office365 app-suite targeting.",
+        "requiredForControls": [
+          "2.3",
+          "2.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-named-location-inventory",
+        "type": "api-response",
+        "description": "Read-only named-location metadata inventory with configured IP ranges omitted from retained evidence.",
+        "requiredForControls": [
+          "2.3",
+          "2.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Microsoft Learn source citations confirming app-suite contents, policy state enum, managed-policy ownership, and emergency-access exclusion guidance.",
+        "requiredForControls": [
+          "2.3"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-proof",
+      "artifact-monitor-transcript",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

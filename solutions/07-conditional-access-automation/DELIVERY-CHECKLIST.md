@@ -30,6 +30,9 @@ Use this checklist before promoting the solution into an operational tenant.
 - [ ] `scripts\Export-Evidence.ps1` exports `ca-policy-state.json`, `drift-alert-summary.json`, and `access-exception-register.json`.
 - [ ] Evidence files include SHA-256 companions and align to `data\evidence-schema.json`.
 - [ ] Regulatory notes and control mappings are reviewed for OCC 2011-12, FINRA 3110, and DORA.
+- [ ] Lab contract `lab\07-conditional-access-automation.lab.json` passes `scripts\validate-lab-contracts.py`; the first cycle is read-only and the live mutation stays deferred until its preconditions are enforceable.
+- [ ] Microsoft Graph organization identity is matched to the separately maintained sanctioned-lab record before Conditional Access inspection.
+- [ ] Named-location metadata is reviewed without retaining configured IP ranges in lab evidence.
 
 ## Sign-Off
 
