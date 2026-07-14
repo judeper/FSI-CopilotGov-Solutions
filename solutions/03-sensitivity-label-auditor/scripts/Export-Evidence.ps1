@@ -191,10 +191,14 @@ $monitorScriptPath = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
 $monitorResult = & $monitorScriptPath -ConfigurationTier $ConfigurationTier -TenantId $TenantId -OutputPath $stagingPath
 
 $exportedAt = (Get-Date).ToString('o')
-$coveragePath = Join-Path $resolvedOutputPath 'label-coverage-report.json'
-$gapFindingsPath = Join-Path $resolvedOutputPath 'label-gap-findings.json'
-$remediationManifestPath = Join-Path $resolvedOutputPath 'remediation-manifest.json'
-$packagePath = Join-Path $resolvedOutputPath 'evidence-package.json'
+$coverageFileName = 'label-coverage-report.json'
+$gapFindingsFileName = 'label-gap-findings.json'
+$remediationManifestFileName = 'remediation-manifest.json'
+$packageFileName = 'evidence-package.json'
+$coveragePath = Join-Path $resolvedOutputPath $coverageFileName
+$gapFindingsPath = Join-Path $resolvedOutputPath $gapFindingsFileName
+$remediationManifestPath = Join-Path $resolvedOutputPath $remediationManifestFileName
+$packagePath = Join-Path $resolvedOutputPath $packageFileName
 
 $coverageArtifact = [pscustomobject]@{
     metadata = [pscustomobject]@{
@@ -255,7 +259,13 @@ $gapHash = Write-Sha256CompanionFile -Path $gapFindingsPath
 Write-JsonFile -Path $remediationManifestPath -Content $remediationManifestArtifact
 $manifestHash = Write-Sha256CompanionFile -Path $remediationManifestPath
 
-$artifacts = @(
+# Package paths remain relative for relocation; caller paths remain absolute for compatibility.
+$packageArtifacts = @(
+    New-ArtifactRecord -Name 'label-coverage-report' -Type 'json' -Path $coverageFileName -Hash $coverageHash.Hash
+    New-ArtifactRecord -Name 'label-gap-findings' -Type 'json' -Path $gapFindingsFileName -Hash $gapHash.Hash
+    New-ArtifactRecord -Name 'remediation-manifest' -Type 'json' -Path $remediationManifestFileName -Hash $manifestHash.Hash
+)
+$resultArtifacts = @(
     New-ArtifactRecord -Name 'label-coverage-report' -Type 'json' -Path $coveragePath -Hash $coverageHash.Hash
     New-ArtifactRecord -Name 'label-gap-findings' -Type 'json' -Path $gapFindingsPath -Hash $gapHash.Hash
     New-ArtifactRecord -Name 'remediation-manifest' -Type 'json' -Path $remediationManifestPath -Hash $manifestHash.Hash
@@ -278,7 +288,7 @@ $package = [pscustomobject]@{
     }
     summary = $summary
     controls = Get-ControlStatus
-    artifacts = $artifacts
+    artifacts = $packageArtifacts
 }
 
 Write-JsonFile -Path $packagePath -Content $package
@@ -297,7 +307,8 @@ if (-not $validation.IsValid) {
     periodStart = $PeriodStart.ToString('s')
     periodEnd = $PeriodEnd.ToString('s')
     packagePath = $packagePath
-    artifactPaths = $artifacts
+    evidenceDirectory = $resolvedOutputPath
+    artifactPaths = $resultArtifacts
     hashFiles = @($coverageHash.HashPath, $gapHash.HashPath, $manifestHash.HashPath, $packageHash.HashPath)
     summary = $summary
 }

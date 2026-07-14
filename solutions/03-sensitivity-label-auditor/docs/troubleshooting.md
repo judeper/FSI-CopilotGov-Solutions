@@ -27,7 +27,7 @@ The tenant, workload, or calling identity does not meet the required licensing, 
 
 **Resolution**
 
-- Confirm Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing is assigned where sensitivity labeling features are used.
+- Confirm Microsoft 365 E5/A5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing is assigned where sensitivity labeling features are used.
 - Confirm protected API validation is complete for the SharePoint and OneDrive `assignSensitivityLabel` API before attempting bulk assignment. Note that `assignSensitivityLabel` is a metered Graph API; metered APIs must be enabled and charges may apply for bulk usage.
 - Confirm the calling identity has the least-privileged `Files.ReadWrite.All` permission, or `Sites.ReadWrite.All` only when the tenant-approved design requires the broader permission.
 - Confirm the target cloud is supported for the API; Microsoft Learn documents the API as available in the Global service. Verify current API availability on Microsoft Learn before attempting bulk assignment.

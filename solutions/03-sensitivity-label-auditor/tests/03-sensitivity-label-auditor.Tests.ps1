@@ -109,3 +109,37 @@ Describe 'Regulatory content' {
         $prerequisites | Should -Match 'Microsoft Purview'
     }
 }
+
+Describe 'Evidence export portability' {
+    BeforeAll {
+        $script:repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
+        Import-Module (Join-Path $script:repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+        $script:exportScript = Join-Path $solutionRoot 'scripts\Export-Evidence.ps1'
+        $script:exportDir = Join-Path $TestDrive 'evidence'
+        $script:exportResult = & $script:exportScript -ConfigurationTier baseline -TenantId 'lab-tenant' -OutputPath $script:exportDir
+        $script:packagePath = Join-Path $script:exportDir 'evidence-package.json'
+        $script:package = Get-Content $script:packagePath -Raw | ConvertFrom-Json -Depth 30
+    }
+
+    It 'records package-relative (non-rooted) artifact paths' {
+        @($script:package.artifacts).Count | Should -BeGreaterThan 0
+        foreach ($artifact in @($script:package.artifacts)) {
+            [System.IO.Path]::IsPathRooted([string]$artifact.path) | Should -BeFalse -Because "artifact $($artifact.name) must use a package-relative path for relocation safety"
+        }
+    }
+
+    It 'returns rooted artifact paths for callers' {
+        foreach ($artifact in @($script:exportResult.artifactPaths)) {
+            [System.IO.Path]::IsPathRooted([string]$artifact.path) | Should -BeTrue -Because "caller path for $($artifact.name) must remain directly usable"
+            Test-Path -Path $artifact.path -PathType Leaf | Should -BeTrue
+        }
+    }
+
+    It 'remains valid after the evidence package is relocated' {
+        $relocated = Join-Path $TestDrive 'relocated'
+        Move-Item -Path $script:exportDir -Destination $relocated
+        $relocatedPackage = Join-Path $relocated 'evidence-package.json'
+        $result = Test-CopilotGovEvidencePackage -Path $relocatedPackage -ExpectedArtifacts @('label-coverage-report', 'label-gap-findings', 'remediation-manifest')
+        $result.IsValid | Should -BeTrue -Because ($result.Errors -join '; ')
+    }
+}

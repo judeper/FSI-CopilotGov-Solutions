@@ -113,3 +113,13 @@ Review the resulting package for:
 ## Rollback
 
 This solution is monitor-only during the initial deployment path and does not make destructive configuration changes by default. If a rollout must be paused, stop scheduled executions, archive the deployment manifest, and review the current gap findings before enabling any bulk labeling activity.
+
+## Lab Validation Handoff
+
+Lab validation for this solution follows the machine-readable contract at `lab\03-sensitivity-label-auditor.lab.json`.
+
+- The first lab cycle is **read-only and detect-only**. The contract declares `mutations: []`, so the lab must not assign, remove, or overwrite any sensitivity label in the tenant. Assignment and removal through the metered `assignSensitivityLabel` API stay documentation-only.
+- Run the lab against a disposable tenant that holds representative sample content only, using the read-only roles listed in the contract (Sensitivity Label Reader, Information Protection Readers, Global Reader).
+- Execution phases are `setup`, `exercise`, `verify`, and `cleanup`. The `verify` phase includes an evidence-portability check that relocates the evidence package and confirms the artifact paths still resolve, and a Microsoft Learn source-currency check for the Graph API, metered, licensing, and label-group claims.
+- Accepted dispositions are `PASS`, `BLOCKED`, and `NOT-APPLICABLE`; `BLOCKED` and `NOT-APPLICABLE` require Microsoft source evidence. Record any source drift as `BLOCKED` with the cited excerpt rather than forcing a pass.
+- Validate the contract with `python scripts\validate-lab-contracts.py solutions\03-sensitivity-label-auditor\lab\03-sensitivity-label-auditor.lab.json`.

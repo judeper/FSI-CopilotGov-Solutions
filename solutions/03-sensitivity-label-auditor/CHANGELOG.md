@@ -1,5 +1,23 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Lab validation contract `lab/03-sensitivity-label-auditor.lab.json` for lab-ready validation. The contract is read-only and detect-only (`mutations: []`), scoped to US commercial-cloud Microsoft 365, and defines setup/exercise/verify/cleanup phases, read-backs, required evidence, and Microsoft Learn source claims.
+- Lab validation handoff sections in `docs/deployment-guide.md` and `DELIVERY-CHECKLIST.md`.
+- Regression tests that assert the evidence package uses package-relative artifact paths and stays valid after relocation.
+
+### Fixed
+
+- `Export-Evidence.ps1` now records package-relative artifact paths so an exported evidence package still validates after it is moved to an archive or WORM store, while preserving absolute artifact paths in the caller result.
+- Removed the government-only `G5` SKU from Solution 03 licensing guidance so forward-facing prerequisites match the repository's US commercial-cloud scope.
+
+### Changed
+
+- Registered the solution 03 lab contract in the shared `scripts/test_lab_validation_contracts.py` default-discovery test.
+- Re-verified Microsoft currency against Microsoft Learn as of 2026-07-13: `driveItem: extractSensitivityLabels` and `assignSensitivityLabel` remain v1.0 GA (assign is protected and metered, Global service only), organization label-definition enumeration via `/security/informationProtection/sensitivityLabels` remains beta, the service-side auto-labeling cap of 100,000 files/day per organization and lower-priority override behavior are current, and Purview roles/role groups and label-group migration guidance are unchanged. Updated the README "Last Verified" date.
+
 ## [v0.2.4] — 2026-06-05 — MS Learn accuracy pass-2 correction
 
 ### Fixed

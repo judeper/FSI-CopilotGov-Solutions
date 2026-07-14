@@ -1,0 +1,348 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:03-sensitivity-label-auditor:2026-07-readonly-detect",
+  "solution": {
+    "id": "03-sensitivity-label-auditor",
+    "name": "Sensitivity Label Coverage Auditor",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.5",
+    "2.2",
+    "3.11",
+    "3.12"
+  ],
+  "portals": [
+    "microsoft-purview-compliance-portal",
+    "microsoft-365-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-extract-api",
+      "claimText": "The SharePoint and OneDrive driveItem: extractSensitivityLabels action is generally available in Microsoft Graph v1.0, takes Files.Read.All as the least-privileged permission, and returns an extractSensitivityLabelsResult object, so the auditor can read assigned labels without changing tenant state.",
+      "affectedFiles": [
+        "solutions/03-sensitivity-label-auditor/README.md",
+        "solutions/03-sensitivity-label-auditor/docs/architecture.md",
+        "solutions/03-sensitivity-label-auditor/docs/prerequisites.md",
+        "solutions/03-sensitivity-label-auditor/scripts/Monitor-Compliance.ps1"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/driveitem-extractsensitivitylabels?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-assign-api",
+      "claimText": "The driveItem: assignSensitivityLabel action is generally available in Microsoft Graph v1.0 but is a protected and metered API that needs Files.ReadWrite.All (or Sites.ReadWrite.All), returns 202 Accepted with a Location long-running operation, and is documented only for the Global service, so the lab keeps bulk assignment out of scope for the first read-only cycle.",
+      "affectedFiles": [
+        "solutions/03-sensitivity-label-auditor/README.md",
+        "solutions/03-sensitivity-label-auditor/docs/prerequisites.md",
+        "solutions/03-sensitivity-label-auditor/docs/troubleshooting.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/driveitem-assignsensitivitylabel?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-metered-billing",
+      "claimText": "Microsoft Graph documents assignSensitivityLabel as a metered API that requires an associated Azure subscription and metered API enablement before use, and states that charges may apply, which supports the cautious cost-planning language used for bulk remediation.",
+      "affectedFiles": [
+        "solutions/03-sensitivity-label-auditor/README.md",
+        "solutions/03-sensitivity-label-auditor/docs/troubleshooting.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/metered-api-overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-label-definitions-beta",
+      "claimText": "Organization sensitivity label definition enumeration through the security namespace endpoint /security/informationProtection/sensitivityLabels is only available in Microsoft Graph beta and uses InformationProtectionPolicy.Read (delegated) or InformationProtectionPolicy.Read.All (application), so tier mapping should follow tenant beta API governance.",
+      "affectedFiles": [
+        "solutions/03-sensitivity-label-auditor/README.md",
+        "solutions/03-sensitivity-label-auditor/docs/prerequisites.md",
+        "solutions/03-sensitivity-label-auditor/docs/architecture.md",
+        "solutions/03-sensitivity-label-auditor/config/default-config.json"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/security-informationprotection-list-sensitivitylabels?view=graph-rest-beta",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-autolabel-cap",
+      "claimText": "Microsoft Purview service-side auto-labeling for files at rest supports labeling up to 100,000 files per day for the organization and can override an existing lower-priority label, so large tenants need staged remediation waves and remediation manifests should account for override behavior.",
+      "affectedFiles": [
+        "solutions/03-sensitivity-label-auditor/README.md",
+        "solutions/03-sensitivity-label-auditor/docs/architecture.md",
+        "solutions/03-sensitivity-label-auditor/docs/deployment-guide.md",
+        "solutions/03-sensitivity-label-auditor/DELIVERY-CHECKLIST.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/apply-sensitivity-label-automatically",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-label-groups-migration",
+      "claimText": "Microsoft Purview is replacing parent labels with label groups; migration is irreversible, is automatic for qualifying new tenants, and otherwise rolls out gradually through a portal banner, so the taxonomy snapshot should record label group membership once a tenant migrates.",
+      "affectedFiles": [
+        "solutions/03-sensitivity-label-auditor/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/migrate-sensitivity-label-scheme",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E5 or A5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing assigned in the lab tenant"
+    ],
+    "roles": [
+      "Sensitivity Label Reader for read-only label review",
+      "Information Protection Readers role group in the Microsoft Purview portal",
+      "Global Reader for read-only tenant verification"
+    ],
+    "features": [
+      "Sensitivity labels published from the Microsoft Purview portal",
+      "Sensitivity labels enabled for Office files in SharePoint and OneDrive"
+    ],
+    "capacityRequirements": [
+      "One disposable lab workspace that holds representative sample content only"
+    ],
+    "dataRequirements": [
+      "Representative sample data only; no production, customer, or regulated records"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No sensitivity label is assigned, removed, or overwritten in the tenant; assignment and removal remain documented-only through the metered assignSensitivityLabel API."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-labels-published",
+            "mode": "ui",
+            "intent": "Confirm the FSI sensitivity label taxonomy is published in the Microsoft Purview portal before the audit runs.",
+            "expected": "Published sensitivity labels (Public through Restricted, or their label group equivalents) are visible on the Sensitivity labels page.",
+            "locator": "Microsoft Purview portal > Solutions > Information Protection > Sensitivity labels",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Sensitivity labels page",
+              "expectation": "The label list reflects the expected published taxonomy or its migrated label groups."
+            }
+          },
+          {
+            "id": "step-confirm-readonly-role",
+            "mode": "manual",
+            "intent": "Confirm the lab operator holds only read-only label roles so the run cannot mutate tenant state.",
+            "expected": "Operator is assigned Sensitivity Label Reader or Information Protection Readers, and no label write role is active for the run.",
+            "operatorNote": "Record the assigned read-only roles. Do not proceed if any label write role (for example Sensitivity Label Administrator) is active for this operator.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Role assignment attestation",
+              "expectation": "Attestation lists only read-only label roles for the operator."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run the documentation-first detect flow",
+        "steps": [
+          {
+            "id": "step-run-monitor",
+            "mode": "powershell",
+            "intent": "Run the coverage monitor in documentation-first mode against representative sample data.",
+            "expected": "Monitor-Compliance.ps1 emits workload coverage metrics, gap findings, and a remediation manifest built from representative sample data.",
+            "command": "pwsh -File solutions/03-sensitivity-label-auditor/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -TenantId lab-tenant -OutputPath lab-output/monitoring",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance console output and monitoring artifacts",
+              "expectation": "Coverage report, gap findings, and remediation manifest are produced with representative sample values and no tenant calls."
+            }
+          },
+          {
+            "id": "step-run-export",
+            "mode": "powershell",
+            "intent": "Export the evidence package and confirm SHA-256 companion files are written.",
+            "expected": "Export-Evidence.ps1 writes the coverage report, gap findings, remediation manifest, evidence package, and one .sha256 companion per JSON file.",
+            "command": "pwsh -File solutions/03-sensitivity-label-auditor/scripts/Export-Evidence.ps1 -ConfigurationTier baseline -TenantId lab-tenant -OutputPath lab-output/evidence",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Evidence package and .sha256 companion files",
+              "expectation": "Evidence package validates and every JSON artifact has a matching .sha256 companion file."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify portability and Microsoft source currency",
+        "steps": [
+          {
+            "id": "step-verify-evidence-portability",
+            "mode": "powershell",
+            "intent": "Prove the evidence package uses package-relative artifact paths that survive relocation to an archive or WORM store.",
+            "expected": "Artifact paths in the package are not rooted, and Test-CopilotGovEvidencePackage returns IsValid after the evidence folder is moved.",
+            "command": "pwsh -Command \"Import-Module scripts/common/EvidenceExport.psm1 -Force; Move-Item lab-output/evidence lab-output/evidence-archived; (Test-CopilotGovEvidencePackage -Path lab-output/evidence-archived/evidence-package.json -ExpectedArtifacts @('label-coverage-report','label-gap-findings','remediation-manifest')).IsValid\"",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Test-CopilotGovEvidencePackage result on the relocated package",
+              "expectation": "IsValid is True after relocation and every artifact path is package-relative."
+            }
+          },
+          {
+            "id": "step-verify-graph-source",
+            "mode": "manual",
+            "intent": "Confirm the extract, assign, metered, and beta label-definition claims still match current Microsoft Learn guidance.",
+            "expected": "Microsoft Learn confirms extractSensitivityLabels and assignSensitivityLabel v1.0 state, the metered/protected status of assignSensitivityLabel, and the beta status of the security namespace label-definition endpoint.",
+            "operatorNote": "Open the cited Microsoft Learn pages for extractSensitivityLabels, assignSensitivityLabel, the metered API overview, and the beta security label-definition list, and record any drift as a BLOCKED disposition with the source excerpt.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Microsoft Learn source citations",
+              "expectation": "Cited pages remain published and continue to support the documented API, permission, and lifecycle claims."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup",
+        "steps": [
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Attest that the run applied no sensitivity label change to any tenant object.",
+            "expected": "Operator attests the run was read-only and detect-only, with no label assigned, removed, or overwritten.",
+            "operatorNote": "Confirm no assignSensitivityLabel call was made and no tenant label state changed during the run.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "No-mutation attestation note",
+              "expectation": "Attestation confirms no tenant label state was changed."
+            }
+          },
+          {
+            "id": "step-remove-local-sample-artifacts",
+            "mode": "powershell",
+            "intent": "Remove the local sample evidence output so no representative data is retained after the run.",
+            "expected": "The local lab-output directory holding sample artifacts is deleted; no tenant object is affected.",
+            "command": "pwsh -Command \"if (Test-Path lab-output) { Remove-Item -Recurse -Force lab-output }; if (Test-Path lab-output) { throw 'Failed to remove local lab-output directory.' }\"",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem check",
+              "expectation": "The lab-output directory no longer exists and no tenant state was touched."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-monitor-transcript",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript and console output from Monitor-Compliance.ps1 and Export-Evidence.ps1 in documentation-first mode.",
+        "requiredForControls": [
+          "1.5",
+          "2.2",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-evidence-package",
+        "type": "json",
+        "description": "Exported evidence package with package-relative artifact paths and the relocation validation result.",
+        "requiredForControls": [
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Microsoft Learn citations that confirm the Graph API, metered, licensing, and label-group claims remain current.",
+        "requiredForControls": [
+          "1.5",
+          "2.2"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-monitor-transcript",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

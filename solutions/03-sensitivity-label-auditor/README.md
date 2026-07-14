@@ -1,6 +1,6 @@
 # Sensitivity Label Coverage Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-07-13
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -37,7 +37,7 @@ See `docs\architecture.md` for the component diagram, Graph data flow, workload 
 ## Prerequisites
 
 - Sensitivity label taxonomy is finalized in Microsoft Purview.
-- Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing is confirmed for the target tenant where sensitivity labeling features are used.
+- Microsoft 365 E5/A5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing is confirmed for the target tenant where sensitivity labeling features are used.
 - Microsoft Graph permissions distinguish delegated label enumeration (`InformationProtectionPolicy.Read`) from application label enumeration (`InformationProtectionPolicy.Read.All`), and tenant plans note that organization label definition enumeration currently uses Microsoft Graph beta.
 - SharePoint and OneDrive label extraction uses approved `Files.Read.All`; any approved bulk assignment scenario also needs protected API validation plus `Files.ReadWrite.All` or `Sites.ReadWrite.All`.
 - `01-copilot-readiness-scanner` baseline outputs are complete.

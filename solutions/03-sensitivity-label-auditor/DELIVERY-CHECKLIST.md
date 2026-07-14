@@ -57,6 +57,14 @@
 - [ ] README, deployment guide, evidence guide, and troubleshooting content reviewed by the solution owner.
 - [ ] Delivery handoff includes remediation assumptions, limitations, and Power Automate documentation-first notes.
 
+## Lab Validation Handoff
+
+- [ ] Confirm the lab contract `lab\03-sensitivity-label-auditor.lab.json` validates with `python scripts\validate-lab-contracts.py`.
+- [ ] Confirm the first lab cycle stays read-only and detect-only (`mutations: []`); no sensitivity label is assigned, removed, or overwritten.
+- [ ] Confirm the lab operator holds only read-only label roles (Sensitivity Label Reader, Information Protection Readers, Global Reader).
+- [ ] Run the `setup`, `exercise`, `verify`, and `cleanup` phases against a disposable tenant with representative sample data only.
+- [ ] Capture the required evidence artifacts (monitor transcript, evidence package, Microsoft source citations) and record any Microsoft source drift as a `BLOCKED` disposition with the cited excerpt.
+
 ## Sign-Off
 
 | Role | Name | Date | Signature |
