@@ -19,6 +19,8 @@ The `gap-findings` artifact records each supported-but-validate item or document
 | `status` | `open`, `validation-required`, `mitigated`, or `closed` |
 | `platformUpdateRequired` | Boolean indicating whether a Microsoft platform update is needed before the limitation can be closed |
 
+`validation-required` is used for rollout-sensitive items that are released or rolling out but still require tenant confirmation before control owners close the item.
+
 ## compensating-control-log
 
 The `compensating-control-log` artifact records the interim control assigned to each open limitation or validation item.
@@ -64,6 +66,7 @@ The combined evidence package uses the shared repository contract:
 - `summary.recordCount`
 - `summary.findingCount`
 - `summary.exceptionCount`
+- `metadata.dependencyStatus` for upstream solution scaffold presence checks
 - `controls[]` with `controlId`, `status`, and `notes`
 - `artifacts[]` with `name`, `type`, `path`, and `hash`
 

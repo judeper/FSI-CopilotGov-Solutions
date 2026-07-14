@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Validation sweep — 2026-07-13
+
+- Revalidated Copilot Pages/Notebooks compliance posture against Microsoft Learn pages updated 2026-07-06 and M365 Roadmap item 561492 modified 2026-07-13.
+- Reframed review-set indexing and legal-hold container picker items as rollout-sensitive `validation-required` gaps rather than permanent core platform gaps.
+- Updated monitor/export/deploy scripts to include dependency-state checks for upstream `06-audit-trail-manager` scaffold presence.
+- Updated control-status aggregation to use mapped gap state plus compensating-control state instead of a single global flag.
+- Added source-verification and handoff guidance across README, deployment guide, prerequisites, evidence export, and delivery checklist.
+- Added read-only lab validation contract at `lab/15-pages-notebooks-gap-monitor.lab.json` for commercial-cloud contract validation.
+
 ### Validation sweep — 2026-05-25
 
 - Verified Copilot Pages file extension (`.page`) and Copilot Notebooks file extension (`.pod`) against Microsoft Learn compliance summary.

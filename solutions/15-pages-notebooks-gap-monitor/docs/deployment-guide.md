@@ -19,7 +19,7 @@ Run the monitoring script with the baseline tier to create an initial gap snapsh
 pwsh -File .\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath .\artifacts\baseline -PassThru
 ```
 
-Review the output for supported-but-validate items and documented limitations related to Pages and Notebooks retention policy scope, Purview eDiscovery review-set search, SharePoint Embedded legal hold, retention labels, Information Barriers, notebook preservation verification, and sharing controls.
+Review the output for supported-but-validate items and documented limitations related to Pages and Notebooks retention policy scope, Purview eDiscovery rollout validation, SharePoint Embedded legal hold rollout state, retention labels, Information Barriers, notebook recovery limitations, and sharing controls.
 
 ## Step 2: Review discovered items and classify severity
 
@@ -40,6 +40,7 @@ For every open limitation or validation item, assign the control that will reduc
 - enhanced audit logging through `06-audit-trail-manager`
 - quarterly notebook storage, retention label, and export validation
 - legal-hold container inclusion review for SharePoint Embedded content
+- rollout validation evidence for review-set indexing and legal-hold container picker updates
 
 Document the owner, approval date, and review due date for each compensating control.
 
@@ -71,6 +72,7 @@ Configure the documentation-first Power Automate flow or equivalent review workf
 - approval routing for preservation exceptions
 - assignment of gap owners and reviewers
 - follow-up review when Microsoft publishes relevant Message Center updates
+- source-verification handoff notes for Learn and roadmap checks
 
 Connection references and environment variables should follow the shared naming contract for this solution.
 
@@ -99,6 +101,15 @@ Add the solution to the compliance calendar with a recurring quarterly review. T
 - the current status of compensating controls
 - the approval state of preservation exceptions
 - any changes required to the evidence narrative for internal audit or examiner discussions
+
+## Step 9: Complete review handoff package
+
+Before declaring the cycle complete, hand off:
+
+- the latest dependency-state output confirming `06-audit-trail-manager` scaffold availability
+- source verification notes (Learn + roadmap checks) for the current review date
+- updated gap dispositions showing whether rollout-sensitive items remain `validation-required` or can be downgraded by tenant evidence
+- the read-only lab contract location for controlled reruns: `lab/15-pages-notebooks-gap-monitor.lab.json`
 
 ## Operational Notes
 

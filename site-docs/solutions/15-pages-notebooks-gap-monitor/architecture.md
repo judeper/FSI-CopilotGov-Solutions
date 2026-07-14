@@ -2,7 +2,7 @@
 
 ## Solution Overview
 
-Copilot Pages and Notebooks Compliance Gap Monitor uses a gap-monitor pattern rather than a remediation pattern. The goal is to identify documented platform limitations and tenant validation items for Copilot Pages, Copilot Notebooks, Loop content, and SharePoint Embedded containers, then document the manual and administrative controls used to reduce residual risk. The pattern recognizes that Microsoft Purview retention policies and eDiscovery are supported for Pages, Notebooks, and Loop, while tracking limitations such as review-set full-text search, legal-hold container scoping, retention-label behavior, and Information Barriers for SharePoint Embedded.
+Copilot Pages and Notebooks Compliance Gap Monitor uses a gap-monitor pattern rather than a remediation pattern. The goal is to identify documented platform limitations and tenant validation items for Copilot Pages, Copilot Notebooks, Loop content, and SharePoint Embedded containers, then document the manual and administrative controls used to reduce residual risk. The pattern recognizes that Microsoft Purview retention policies and eDiscovery are supported for Pages, Notebooks, and Loop, while tracking rollout-sensitive and persistent limitations such as review-set indexing rollout validation, legal-hold container picker rollout, retention-label manual behavior, app-level Conditional Access boundaries, and Information Barriers for SharePoint Embedded.
 
 The solution supports compliance with SEC 17a-4, FINRA 4511, and SOX 404 by creating an auditable chain from gap discovery to exception review and evidence export. It does not directly change tenant retention policies or Microsoft Purview eDiscovery settings.
 
@@ -94,15 +94,17 @@ The Power Automate flow is documentation-first. It routes review reminders, exce
 
 ## Current Platform Support and Limitations
 
-> **Implementation note:** `Get-PngmConfiguration` is defined in the shared module `scripts/PngmShared.psm1` and imported by all three scripts (`Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, `Export-Evidence.ps1`). The module includes file-existence validation for both the default and tier-specific configuration files.
+> **Implementation note:** `Get-PngmConfiguration`, `Get-PngmDependencyStatus`, and `Get-PngmControlState` are defined in `scripts/PngmShared.psm1` and imported by all three scripts (`Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, `Export-Evidence.ps1`). The module centralizes tier-aware status aggregation and dependency checks for upstream solution `06-audit-trail-manager`.
 
 - Copilot Pages create `.page` files and Copilot Notebooks create `.pod` files in user-owned SharePoint Embedded containers that can also be used by Loop My workspace.
 - Purview retention policies configured for all SharePoint sites are enforced for Copilot Pages and Copilot Notebooks; regulated tenants should still validate policy scope and evidence before relying on the sample register.
-- Purview eDiscovery supports search/collection, review, and export for Pages, Notebooks, and Loop, but full-text search within `.page` files in review sets is not available.
-- Legal hold is supported, but the SharePoint Embedded container must be added per user; users placed on Litigation Hold do not automatically include Copilot Pages, Copilot Notebooks, or Loop My workspace containers.
+- Purview eDiscovery supports search/collection, review, and export for Pages, Notebooks, and Loop. M365 Roadmap item 561492 (GA June 2026) is launched and rolling out for review-set indexing and HTML export improvements, so tenant verification is required before retiring workaround procedures.
+- Legal hold is supported, and Microsoft Learn indicates user-owned SharePoint Embedded container selection in the Purview custodian picker is rolling out (expected early August 2026). Until rollout is confirmed per tenant, manually add the container as a data source.
 - Retention labels have limited manual support, and Information Barriers are not supported for content stored in SharePoint Embedded containers.
+- Conditional Access applies at Microsoft 365 Copilot app-level scope and should be validated with Pages/Notebooks creation policies and sharing controls.
 - Sensitivity labels are available for Copilot Pages only; Copilot Notebooks do not support container sensitivity labels because they share a container with all Copilot Pages.
 - Data Loss Prevention (DLP) rules are enforced with end-user policy tip support for Copilot Pages.
+- Audit logs are available for Pages and Notebooks events; Purview searches can use `.page` extension filters and notebook workflows should include `.pod` activity evidence checks.
 - There is no end-user recycle bin for Copilot Notebooks; neither administrators nor end users can recover individually deleted Copilot Notebooks.
 
 ## Dataverse and Configuration Artifacts

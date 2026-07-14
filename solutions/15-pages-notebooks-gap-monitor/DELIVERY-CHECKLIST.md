@@ -26,6 +26,7 @@
 - [ ] Preservation exception register approvers identified
 - [ ] Platform update review cadence confirmed with Microsoft 365 operations team
 - [ ] Sharing restriction procedures verified for Pages, Loop workspaces, and SharePoint-backed notebooks
+- [ ] Rollout validation checkpoints confirmed for review-set indexing (Roadmap 561492) and legal-hold container picker behavior
 
 ## Deployment Steps
 
@@ -46,6 +47,7 @@
 - [ ] Output artifacts written to the expected output path
 - [ ] Quarterly review cycle entered into the compliance calendar
 - [ ] Microsoft Message Center monitoring assigned to an accountable owner
+- [ ] Dependency-state output confirms `06-audit-trail-manager` scaffold is present and reviewed
 
 ## Evidence Review
 
@@ -63,6 +65,7 @@
 - [ ] Legal reviewers understand the preservation exception register workflow
 - [ ] Audit stakeholders know how to locate the evidence package and supporting records
 - [ ] Support contacts recorded for quarterly review and escalation
+- [ ] Read-only lab contract handoff completed (`lab/15-pages-notebooks-gap-monitor.lab.json`)
 
 ## Sign-off
 

@@ -33,13 +33,11 @@
     "06-audit-trail-manager"
   ],
   "knownGapCategories": [
-    "pages-sharing-controls",
     "pages-retention-policy-validation",
-    "ediscovery-review-set-full-text-limitation",
-    "notebooks-preservation-verification",
-    "legal-hold-container-scope",
-    "retention-label-manual-limitation",
-    "sharepoint-embedded-information-barriers-limitation",
+    "ediscovery-review-set-rollout-validation",
+    "notebooks-audit-and-recovery-limitation",
+    "pages-access-boundary-limitation",
+    "legal-hold-and-retention-label-rollout",
     "books-and-records-exceptions"
   ],
   "gapReviewFrequencyDays": 30,

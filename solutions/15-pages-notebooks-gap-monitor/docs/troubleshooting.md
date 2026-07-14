@@ -30,15 +30,26 @@
 
 **Possible causes**
 - The case scope does not include the correct SharePoint Embedded container, site, or workspace location.
-- Full-text search within `.page` files in Purview review sets is not available.
+- The tenant has not yet received the review-set indexing rollout documented in M365 Roadmap item 561492.
 - Review/export licensing or Premium case setup is not in place for the workflow being used.
-- Legal hold procedures were designed around Exchange or Teams content and did not account for per-user SharePoint Embedded container inclusion.
+- Legal hold container picker rollout has not reached the tenant, so per-user SharePoint Embedded container inclusion is still manual.
 
 **Recommended actions**
 - Confirm the case scope, collection, review, and export settings with the Microsoft Purview eDiscovery team.
-- Add the required SharePoint Embedded container URL manually for legal hold or case scope where applicable.
-- Use supported export options and document the review-set full-text limitation if the investigation requires text search inside `.page` files.
+- Validate whether review-set keyword search and HTML export are available in your tenant, then capture evidence in the case file.
+- Add the required SharePoint Embedded container URL manually for legal hold or case scope until tenant rollout confirms picker support.
+- Use supported export options and document any remaining review-set indexing gaps if tenant behavior differs from released guidance.
 - Update the gap status only after the tenant has been retested against the documented platform behavior.
+
+## Dependency Status Shows Missing Upstream Solution
+
+**Possible causes**
+- `06-audit-trail-manager` folder or export script is missing from the current repository snapshot.
+- The dependency solution exists, but current retention/audit evidence has not been reviewed by compliance owners.
+
+**Recommended actions**
+- Restore or sync `06-audit-trail-manager` scaffold content in the repository.
+- Re-run dependency checks via `Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, or `Export-Evidence.ps1` and confirm `dependencyStatus.hasMissingDependencies` is `false` before regulated export sign-off.
 
 ## Compensating Control Not Accepted by Examiner
 
