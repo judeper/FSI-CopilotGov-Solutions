@@ -19,8 +19,8 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 ## Microsoft Purview eDiscovery readiness
 
 - [ ] Microsoft Purview eDiscovery cases are created or referenced for the selected tier.
-- [ ] Holds are configured for required custodians or record locations.
-- [ ] Preservation status, hold counts, and custodian counts are documented.
+- [ ] Holds are configured for required People/custodians or record locations.
+- [ ] Preservation status, hold counts, and People/custodian counts are documented.
 - [ ] Legal hold owners and examination response contacts are recorded.
 
 ## Reporting and alerting readiness
@@ -36,6 +36,7 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 - [ ] `ediscovery-readiness-package.json` is generated and reviewed.
 - [ ] SHA-256 companion files validate successfully.
 - [ ] The full evidence package is archived with the deployment record.
+- [ ] `lab/06-audit-trail-manager.lab.json` is validated and attached to the handoff bundle.
 
 ## Sign-Off
 

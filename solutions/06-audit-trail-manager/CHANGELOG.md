@@ -4,6 +4,17 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog, and this project follows semantic versioning.
 
+## [Unreleased]
+
+### Added
+- Added read-only lab validation contract at `lab/06-audit-trail-manager.lab.json` for controls 3.1, 3.2, 3.3, 3.11, and 3.12, including explicit blocked-condition evidence requirements (licensing, role access, and no-audit-data scenarios).
+- Added regression and behavioral test coverage for portable evidence-package artifact paths and overall-status aggregation in `tests/06-audit-trail-manager.Tests.ps1`.
+
+### Changed
+- Updated documentation to align with current Microsoft source terminology for Purview Audit and unified eDiscovery, including People (portal) and custodian (Graph API) distinctions.
+- Added lab-contract validation handoff steps in README, deployment guide, evidence export guidance, and delivery checklist.
+- Updated `Export-Evidence.ps1` to emit package-relative artifact paths while keeping returned `PackagePath` absolute.
+
 ## [v0.2.3] — 2026-06-05 — MS Learn accuracy fix
 
 ### Fixed

@@ -1,6 +1,6 @@
 # Copilot Interaction Audit Trail Manager
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-07-13
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -22,7 +22,8 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 
 - Supports validation of Microsoft 365 Unified Audit Log configuration by checking tier-specific audit level expectations and confirming that `CopilotInteraction` events are included in validation scope.
 - Documents Purview retention policy and retention label requirements for Copilot interaction artifacts.
-- Validates Microsoft Purview eDiscovery readiness against tier requirements including preservation status, hold counts, case coverage, and custodian scope.
+- Distinguishes service-default audit retention (for example, Audit Standard defaults) from this solution's policy-defined regulatory retention schedule.
+- Validates Microsoft Purview eDiscovery readiness against tier requirements including preservation status, hold counts, case coverage, and People/custodian scope alignment.
 - Packages JSON evidence with SHA-256 companion files for examination support.
 - Defines Power BI dashboard metrics for audit completeness, retention coverage, and Microsoft Purview eDiscovery readiness (requires customer implementation in their tenant).
 - Defines Power Automate exception alert expectations for retention and evidence gaps (requires customer implementation in their tenant).
@@ -51,9 +52,10 @@ This solution supports compliance with those obligations by organizing audit val
 
 ## Prerequisites
 
-- Microsoft 365 E5, Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), or Microsoft 365 E5 eDiscovery and Audit add-on licensing for Purview features used by audit, retention, and Microsoft Purview eDiscovery operations.
+- Microsoft 365 E5, Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), or Microsoft 365 E5 eDiscovery and Audit add-on licensing for Purview Audit (Standard/Premium), retention, and Microsoft Purview eDiscovery operations.
+- If custom or third-party AI app interaction audit records (`ConnectedAIAppInteraction` / `AIAppInteraction`) are required, document Purview pay-as-you-go billing enablement for those records.
 - Power BI Pro for dashboard publication and refresh management.
-- Roles: Compliance Administrator, eDiscovery Manager, Audit Reader for audit search/export access, Audit Manager for audit administration as required, and Global Reader.
+- Roles: Compliance Administrator, eDiscovery Manager, Audit Reader (View-Only Audit Logs permission) for audit search/export access, Audit Manager (Audit Logs permission) for audit configuration tasks as required, and Global Reader.
 - PowerShell 7.0 or later with modules: ExchangeOnlineManagement and Microsoft.Graph.
 - Graph permissions for Microsoft Purview Audit Search API workflows: `AuditLogsQuery.Read.All` or the least-privileged service-specific `AuditLogsQuery-*` scope required for the selected workload.
 - Unified Audit Log enabled in the tenant.
@@ -67,30 +69,32 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
 ## Audit configuration steps
 
 1. Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
-2. Manually verify that `CopilotInteraction` events appear in the Unified Audit Log through the Microsoft Purview portal or PowerShell; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
+2. Manually verify that `CopilotInteraction` events are searchable in the Unified Audit Log through the Microsoft Purview portal, `Search-UnifiedAuditLog`, or Microsoft Graph `security/auditLog/queries`; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
 3. Confirm the expected Microsoft Purview Audit tier for the selected tier:
-   - baseline: Audit (Standard)
-   - recommended: Audit (Premium)
-   - regulated: Audit (Premium)
+   - baseline: Audit (Standard) with service-default retention (currently 180 days)
+   - recommended: Audit (Premium) with policy-defined retention schedule
+   - regulated: Audit (Premium) with policy-defined retention schedule
 4. Record sample event counts for the target validation window and retain the results in `audit-log-completeness.json`.
-5. Re-run the validation after major Microsoft 365 audit configuration changes.
+5. Re-run validation after major Microsoft 365 audit configuration changes and allow for nondeterministic audit ingestion latency.
 
 ## Retention policy setup
 
 1. Use `scripts\Deploy-Solution.ps1` to generate `retention-policy-manifest.json`.
 2. Apply the manifest through the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as `New-RetentionCompliancePolicy`, `Set-RetentionCompliancePolicy`, and `New-RetentionComplianceRule`/`Set-RetentionComplianceRule`.
-3. Assign retention labels to Copilot interaction artifacts, transcripts, shared files, and related investigation records where firm policy requires label coverage.
-4. Document the final retention schedule by regulation:
+3. Scope policies to locations that include Microsoft Copilot experiences and supporting workloads required by firm policy.
+4. Assign retention labels to Copilot interaction artifacts, transcripts, shared files, and related investigation records where firm policy requires label coverage.
+5. Document the final retention schedule by regulation:
    - SEC 17a-4 minimum reference: 2190 days
    - FINRA 4511 minimum reference: 1095 days
    - CFTC 1.31 minimum reference: 1825 days
    - SOX 404 supervisory evidence reference: 2555 days
-5. For regulated deployments, document WORM-capable storage or equivalent immutable storage attestations separately.
+6. For regulated deployments, document WORM-capable storage or equivalent immutable storage attestations separately.
 
 ## Microsoft Purview eDiscovery readiness
 
+- Confirm the unified Microsoft Purview eDiscovery experience is in use for the selected tier (classic eDiscovery experiences are retired in commercial cloud).
 - Confirm that at least one Microsoft Purview eDiscovery case template exists for the selected tier.
-- Validate preservation status, hold counts, and custodian coverage before evidence export.
+- Validate preservation status, hold counts, and People coverage before evidence export; map portal "People" terminology to Graph API custodian resources where APIs are used.
 - Confirm legal hold owners, escalation contacts, and export responsibilities are documented.
 - Use `scripts\Monitor-Compliance.ps1` to record readiness status before examination support exports.
 - Use `scripts\Export-Evidence.ps1` to package the readiness snapshot.
@@ -140,12 +144,18 @@ The Power Automate flow is documentation-first in this repository. The expected 
 
 The evidence package supports compliance with recordkeeping examinations by preserving configuration state, control notes, and artifact integrity hashes.
 
+Lab validation contract handoff:
+
+- Contract path: `solutions/06-audit-trail-manager/lab/06-audit-trail-manager.lab.json`
+- Validate contract before handoff: `python scripts/validate-lab-contracts.py solutions/06-audit-trail-manager/lab/06-audit-trail-manager.lab.json`
+- Execute in tenant only after customer approval; this repository keeps the contract in read-only template mode (`mutations: []`).
+
 ## Regulatory Alignment
 
 | Regulation | Retention expectation | Solution support | Notes |
 |------------|-----------------------|------------------|-------|
 | SEC 17a-3 | Preserve required records and supporting supervisory evidence | Audit evidence package and retention manifest | Use exported evidence to support books-and-records reviews |
-| SEC 17a-4 | 3-6 year preservation, plus non-rewriteable and non-erasable retention where applicable | Retention manifest, WORM documentation note, immutable storage attestation tracking | WORM enforcement requires a third-party archive or Azure Immutable Storage design outside this repository |
+| SEC 17a-4 | 3-6 year preservation, plus non-rewriteable and non-erasable retention where applicable | Retention manifest, WORM documentation note, immutable storage attestation tracking | Non-rewriteable/non-erasable enforcement requires customer-selected immutable storage configuration outside this repository |
 | FINRA 4511 | 3-year minimum retention and prompt production | Baseline retention schedule and evidence package | Baseline tier aligns to the minimum 1095-day schedule |
 | CFTC 1.31 | 5-year preservation and prompt production readiness | Recommended tier retention schedule and Microsoft Purview eDiscovery readiness checks | Recommended tier aligns to 1825-day retention |
 | SOX 404 | Reliable audit trail and control evidence | Audit completeness monitoring and exported control notes | Regulated tier extends evidence retention to support supervisory review |
@@ -154,10 +164,9 @@ The evidence package supports compliance with recordkeeping examinations by pres
 
 - Microsoft doesn't guarantee a specific time for audit records to be returned; core services typically appear within 60-90 minutes, while other services can take longer.
 - Copilot interaction detail depends on the Microsoft 365 audit level available in the tenant.
-- WORM retention under SEC 17a-4 requires a third-party archive, Azure Immutable Storage, or another approved immutable storage pattern outside this repository.
+- WORM/non-rewriteable retention support under SEC 17a-4 requires customer-selected immutable storage controls outside this repository's sample scripts.
 - The repository provides documentation-first definitions for Power BI and Power Automate; deployment teams must implement tenant-specific assets.
 - Evidence exports describe expected control state and support compliance with validation workflows, but they do not replace legal or regulatory review.
-- The SEC's 2022 amendment to Rule 17a-4 now permits an audit-trail alternative to WORM storage, provided firms maintain detailed audit logs that prevent alteration or deletion. Organizations should evaluate both WORM and audit-trail options when planning immutable evidence storage.
 
 ## Additional documentation
 

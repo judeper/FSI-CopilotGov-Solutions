@@ -17,6 +17,7 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
         $script:deployScriptPath = Join-Path $scriptsRoot 'Deploy-Solution.ps1'
         $script:monitorScriptPath = Join-Path $scriptsRoot 'Monitor-Compliance.ps1'
         $script:exportScriptPath = Join-Path $scriptsRoot 'Export-Evidence.ps1'
+        $script:labContractPath = Join-Path $solutionRoot 'lab\06-audit-trail-manager.lab.json'
     }
 
     It 'has required configuration files' {
@@ -50,6 +51,10 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
         ) | ForEach-Object {
             Test-Path $_ | Should -BeTrue
         }
+    }
+
+    It 'has the lab validation contract file' {
+        Test-Path $script:labContractPath | Should -BeTrue
     }
 
     It 'default-config.json has required fields' {
@@ -102,5 +107,93 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
     It 'Deploy-Solution.ps1 mentions retention' {
         $content = Get-Content -Path $script:deployScriptPath -Raw
         $content | Should -Match '(?i)retention'
+    }
+
+    It 'Export-Evidence.ps1 supports WhatIf without writing artifacts' {
+        $outputPath = Join-Path $solutionRoot ("artifacts\test-output\whatif-{0}" -f ([guid]::NewGuid().ToString('N')))
+
+        try {
+            $result = & $script:exportScriptPath `
+                -ConfigurationTier baseline `
+                -OutputPath $outputPath `
+                -PeriodStart ([datetime]'2026-06-01') `
+                -PeriodEnd ([datetime]'2026-06-30') `
+                -TenantId 'not-specified' `
+                -WhatIf
+
+            $result | Should -BeNullOrEmpty
+            Test-Path $outputPath | Should -BeFalse
+        }
+        finally {
+            if (Test-Path $outputPath) {
+                Remove-Item -Path $outputPath -Recurse -Force
+            }
+        }
+    }
+
+    It 'writes package-relative artifact paths while returning absolute package metadata' {
+        $outputPath = Join-Path $solutionRoot ("artifacts\test-output\portable-{0}" -f ([guid]::NewGuid().ToString('N')))
+
+        try {
+            $result = & $script:exportScriptPath `
+                -ConfigurationTier baseline `
+                -OutputPath $outputPath `
+                -PeriodStart ([datetime]'2026-06-01') `
+                -PeriodEnd ([datetime]'2026-06-30') `
+                -TenantId 'not-specified'
+
+            [System.IO.Path]::IsPathRooted([string]$result.PackagePath) | Should -BeTrue
+            @($result.ArtifactPaths) | Should -Not -BeNullOrEmpty
+            foreach ($artifactPath in @($result.ArtifactPaths)) {
+                [System.IO.Path]::IsPathRooted([string]$artifactPath) | Should -BeTrue
+            }
+
+            $package = Get-Content -Path $result.PackagePath -Raw | ConvertFrom-Json -Depth 20
+            @($package.artifacts) | Should -Not -BeNullOrEmpty
+            $packageDirectory = Split-Path -Path $result.PackagePath -Parent
+
+            foreach ($artifact in @($package.artifacts)) {
+                [System.IO.Path]::IsPathRooted([string]$artifact.path) | Should -BeFalse
+                [string]$artifact.path | Should -Not -Match '[\\/]'
+                Test-Path (Join-Path $packageDirectory ([string]$artifact.path)) | Should -BeTrue
+            }
+        }
+        finally {
+            if (Test-Path $outputPath) {
+                Remove-Item -Path $outputPath -Recurse -Force
+            }
+        }
+    }
+
+    It 'derives overall status from control statuses and not retention gap count only' {
+        $outputPath = Join-Path $solutionRoot ("artifacts\test-output\status-{0}" -f ([guid]::NewGuid().ToString('N')))
+        $originalConfig = Get-Content -Path $script:regulatedConfigPath -Raw
+
+        try {
+            $config = $originalConfig | ConvertFrom-Json -Depth 20
+            $config.powerAutomate.exceptionAlertsEnabled = $false
+            $updatedConfig = $config | ConvertTo-Json -Depth 20
+            [System.IO.File]::WriteAllText($script:regulatedConfigPath, $updatedConfig, [System.Text.UTF8Encoding]::new($false))
+
+            $result = & $script:exportScriptPath `
+                -ConfigurationTier regulated `
+                -OutputPath $outputPath `
+                -PeriodStart ([datetime]'2026-06-01') `
+                -PeriodEnd ([datetime]'2026-06-30') `
+                -TenantId 'not-specified'
+
+            $package = Get-Content -Path $result.PackagePath -Raw | ConvertFrom-Json -Depth 20
+            $control312 = @($package.controls | Where-Object { $_.controlId -eq '3.12' })[0]
+
+            $control312.status | Should -Be 'monitor-only'
+            $package.summary.overallStatus | Should -Be 'monitor-only'
+            $package.summary.findingCount | Should -Be 0
+        }
+        finally {
+            [System.IO.File]::WriteAllText($script:regulatedConfigPath, $originalConfig, [System.Text.UTF8Encoding]::new($false))
+            if (Test-Path $outputPath) {
+                Remove-Item -Path $outputPath -Recurse -Force
+            }
+        }
     }
 }

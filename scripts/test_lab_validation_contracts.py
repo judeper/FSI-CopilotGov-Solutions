@@ -28,10 +28,13 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
-    def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+    def test_contract_validator_accepts_repository_contracts(self) -> None:
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertRegex(
+            result.stdout,
+            r"Lab contract validation passed: [1-9]\d* file\(s\) checked\.",
+        )
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
@@ -77,6 +80,18 @@ class LabValidationTests(unittest.TestCase):
             / "01-copilot-readiness-scanner"
             / "lab"
             / "01-copilot-readiness-scanner.lab.json"
+        )
+        result = run_validator(CONTRACT_VALIDATOR, contract_path)
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+
+    def test_contract_validator_accepts_solution_06_contract(self) -> None:
+        contract_path = (
+            ROOT
+            / "solutions"
+            / "06-audit-trail-manager"
+            / "lab"
+            / "06-audit-trail-manager.lab.json"
         )
         result = run_validator(CONTRACT_VALIDATOR, contract_path)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)

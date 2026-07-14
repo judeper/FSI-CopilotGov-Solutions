@@ -1,0 +1,425 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:06-audit-trail-manager:2026-07-13-readonly-template",
+  "solution": {
+    "id": "06-audit-trail-manager",
+    "name": "Copilot Interaction Audit Trail Manager",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.11",
+    "3.12"
+  ],
+  "portals": [
+    "microsoft-purview-compliance-portal",
+    "microsoft-365-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-audit-standard-retention-default",
+      "claimText": "Microsoft Purview Audit (Standard) retains audit records for 180 days by default in commercial tenants.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/audit-get-started",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-audit-record-types",
+      "claimText": "Copilot audit records use CopilotInteraction for Microsoft-developed Copilot experiences, and ConnectedAIAppInteraction or AIAppInteraction for custom or third-party AI app interactions.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/audit-copilot",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-connected-ai-payg-requirement",
+      "claimText": "ConnectedAIAppInteraction and AIAppInteraction records require Purview pay-as-you-go billing when organizations audit custom or third-party AI applications.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/audit-copilot",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-auditlogsquery-graph-permissions",
+      "claimText": "Microsoft Graph AuditLogsQuery APIs use workload-scoped AuditLogsQuery permissions or AuditLogsQuery.Read.All for least-privileged audit query access.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/security-auditcoreroot-list-auditlogqueries",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-ediscovery-classic-retired",
+      "claimText": "Classic eDiscovery experiences are retired for commercial cloud tenants, and the unified Microsoft Purview eDiscovery experience is the supported path.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/ediscovery",
+      "lifecycleState": "retired",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-ediscovery-hold-latency",
+      "claimText": "Microsoft Purview eDiscovery hold propagation can take up to 24 hours, so readiness checks should allow that synchronization window.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/edisc",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-m365-immutability-support",
+      "claimText": "Microsoft 365 provides immutable data and preservation capabilities, but organizations still need tenant-specific controls and legal review for regulatory attestation.",
+      "affectedFiles": [
+        "solutions/06-audit-trail-manager/README.md",
+        "solutions/06-audit-trail-manager/docs/evidence-export.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/compliance/assurance/assurance-data-immutability",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E5, Microsoft Purview Suite, or Microsoft 365 E5 eDiscovery and Audit add-on",
+      "Purview pay-as-you-go enabled when custom or third-party AI app interaction auditing is required"
+    ],
+    "roles": [
+      "Audit Reader (View-Only Audit Logs) or equivalent role group",
+      "Audit Manager (Audit Logs) when changing audit configuration",
+      "eDiscovery Manager",
+      "Compliance Administrator or approved equivalent"
+    ],
+    "features": [
+      "Unified Audit Log enabled",
+      "Microsoft Purview Audit access",
+      "Unified Microsoft Purview eDiscovery experience enabled",
+      "Purview retention policies and labels available"
+    ],
+    "capacityRequirements": [
+      "One lab tenant with representative sample records",
+      "Operator access to Purview and Microsoft 365 admin portals"
+    ],
+    "dataRequirements": [
+      "Representative sample audit records only",
+      "No production secrets or customer identifiers in exported artifacts"
+    ],
+    "tenantCount": 1,
+    "notes": "This contract is read-only template guidance and does not authorize tenant mutations."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm licensing and role preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-audit-licensing-and-tier",
+            "mode": "ui",
+            "intent": "Confirm Purview Audit tier prerequisites and billing model alignment for selected workloads.",
+            "expected": "Audit (Standard or Premium) prerequisites are documented, and pay-as-you-go is documented when ConnectedAIAppInteraction or AIAppInteraction is in scope.",
+            "locator": "Microsoft Purview portal > Audit > Search and Microsoft 365 admin center > Billing",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Audit tier and billing screenshots",
+              "expectation": "Evidence shows licensing state or a blocker that prevents audit validation."
+            }
+          },
+          {
+            "id": "step-confirm-role-access",
+            "mode": "manual",
+            "intent": "Verify role assignments for audit and eDiscovery operators before validation.",
+            "expected": "Required roles are documented; missing role assignment is recorded as a blocking condition.",
+            "operatorNote": "Record role assignment confirmation and attach screenshot or access-denied proof.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Role verification note",
+              "expectation": "Operator attestation includes PASS or BLOCKED rationale."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run read-only audit and readiness checks",
+        "steps": [
+          {
+            "id": "step-verify-audit-search-route",
+            "mode": "ui",
+            "intent": "Validate that Purview Audit search route is available for Copilot record types.",
+            "expected": "Search route allows filtering for CopilotInteraction and returns a query-capable interface even when result counts are zero.",
+            "locator": "Microsoft Purview portal > Audit > Search",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Audit search screen capture",
+              "expectation": "Screenshot proves route and record type filter availability."
+            }
+          },
+          {
+            "id": "step-run-monitor-script-readonly",
+            "mode": "powershell",
+            "intent": "Run the solution monitoring script in documentation-first mode to produce representative control status output.",
+            "expected": "Script output includes controls 3.1, 3.2, 3.3, 3.11, and 3.12 with no tenant mutation.",
+            "command": "pwsh -File solutions/06-audit-trail-manager/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath solutions/06-audit-trail-manager/artifacts/lab-monitor -TenantId not-specified -CheckRetention $true -CheckAuditLevel $true -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance output",
+              "expectation": "Output confirms control statuses and findings for representative validation."
+            }
+          },
+          {
+            "id": "step-verify-ediscovery-route",
+            "mode": "ui",
+            "intent": "Validate unified eDiscovery case and hold workflow availability for investigation readiness.",
+            "expected": "Portal exposes case and hold workflow with People/data source terminology, and operator notes map People checks to custodian API terminology when applicable.",
+            "locator": "Microsoft Purview portal > eDiscovery > Cases",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "eDiscovery case and hold screenshots",
+              "expectation": "Evidence confirms case/hold workflow availability or documents a blocker."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Validate evidence package and disposition rules",
+        "steps": [
+          {
+            "id": "step-run-evidence-export",
+            "mode": "powershell",
+            "intent": "Generate representative evidence artifacts and package metadata for schema and integrity checks.",
+            "expected": "Export-Evidence writes JSON artifacts and SHA-256 companions with package-relative artifact paths.",
+            "command": "pwsh -File solutions/06-audit-trail-manager/scripts/Export-Evidence.ps1 -ConfigurationTier baseline -OutputPath solutions/06-audit-trail-manager/artifacts/lab-evidence -PeriodStart 2026-06-01 -PeriodEnd 2026-06-30 -TenantId not-specified",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence output and generated package files",
+              "expectation": "Package includes audit, retention, and eDiscovery artifacts plus SHA-256 files."
+            }
+          },
+          {
+            "id": "step-classify-blocked-conditions",
+            "mode": "manual",
+            "intent": "Apply disposition rules when licensing, role access, or no-audit-data conditions prevent PASS.",
+            "expected": "Disposition is BLOCKED with explicit source evidence for licensing gap, role gap, or no-audit-data state.",
+            "operatorNote": "If no Copilot audit data appears, document query window, latency allowance, and blocker rationale instead of asserting failure.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Disposition worksheet",
+              "expectation": "Disposition decision references source evidence and read-back artifacts."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Confirm no tenant mutation cleanup is required",
+        "steps": [
+          {
+            "id": "step-attest-readonly-cleanup",
+            "mode": "manual",
+            "intent": "Record cleanup attestation for read-only execution.",
+            "expected": "Operator confirms no tenant mutation occurred and no rollback action is required.",
+            "operatorNote": "This contract has no mutable actions; cleanup is documentation-only.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms read-only execution with mutations array empty."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-copilotgov-compliance-ops",
+    "breakGlassApprover": "fsi-copilotgov-breakglass-approvers",
+    "cleanupOwner": "fsi-copilotgov-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-audit-route-proof",
+        "type": "screenshot",
+        "description": "Purview Audit search route screenshot showing CopilotInteraction search capability.",
+        "requiredForControls": [
+          "3.1",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL"
+        ]
+      },
+      {
+        "id": "artifact-retention-state-json",
+        "type": "json",
+        "description": "Representative retention-policy-state artifact generated by Export-Evidence.",
+        "requiredForControls": [
+          "3.2",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL"
+        ]
+      },
+      {
+        "id": "artifact-ediscovery-route-proof",
+        "type": "screenshot",
+        "description": "Unified eDiscovery case and hold workflow screenshot with People/data source context.",
+        "requiredForControls": [
+          "3.3",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL"
+        ]
+      },
+      {
+        "id": "artifact-monitor-output",
+        "type": "json",
+        "description": "Monitor-Compliance output for controls 3.1, 3.2, 3.3, 3.11, and 3.12.",
+        "requiredForControls": [
+          "3.1",
+          "3.2",
+          "3.3",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL"
+        ]
+      },
+      {
+        "id": "artifact-blocked-condition-proof",
+        "type": "log",
+        "description": "Blocking evidence for licensing, role access, or no-audit-data conditions with query window notes.",
+        "requiredForControls": [
+          "3.1",
+          "3.2",
+          "3.3",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Microsoft source citation bundle mapped to each accepted disposition decision.",
+        "requiredForControls": [
+          "3.1",
+          "3.2",
+          "3.3",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-readback-attestation",
+        "type": "manual-attestation",
+        "description": "Operator read-back and disposition attestation signed for the validation run.",
+        "requiredForControls": [
+          "3.1",
+          "3.2",
+          "3.3",
+          "3.11",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-source-citations",
+      "artifact-readback-attestation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}
