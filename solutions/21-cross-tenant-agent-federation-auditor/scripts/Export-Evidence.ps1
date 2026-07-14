@@ -23,15 +23,23 @@
 .PARAMETER PassThru
     Returns the evidence summary object after writing artifacts.
 
+.PARAMETER WhatIf
+    Builds the evidence plan in memory and returns it without writing any JSON artifacts, SHA-256
+    companions, or the evidence package. Useful for read-only lab validation that must leave no
+    local artifacts. Planned artifact paths are returned with null hashes and a null package path.
+
 .EXAMPLE
     .\Export-Evidence.ps1 -ConfigurationTier recommended -Verbose
+
+.EXAMPLE
+    .\Export-Evidence.ps1 -ConfigurationTier regulated -PassThru -WhatIf
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
     Version:  v0.1.3
     Status:   Documentation-first scaffold (sample data only)
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -82,7 +90,7 @@ Write-Verbose ("Loading CTAF configuration for tier [{0}]." -f $ConfigurationTie
 $configuration = Get-CtafConfiguration -Tier $ConfigurationTier
 Test-CtafConfiguration -Configuration $configuration
 
-$resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
+$resolvedOutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
 $monitorScript = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
 
 Write-Verbose 'Collecting monitoring snapshot for evidence export.'
@@ -103,15 +111,12 @@ $envelope = {
     }
 }
 
-$inventoryArtifact = & $envelope @($snapshot.FederationInventory)
-$trustArtifact = & $envelope @($snapshot.CrossTenantTrust)
-$mcpArtifact = & $envelope @($snapshot.McpAttestations)
-$agentIdArtifact = & $envelope @($snapshot.AgentIdAttestations)
-
-$inventoryFile = New-CtafArtifactFile -Path (Join-Path $resolvedOutputPath ("agent-federation-inventory-{0}.json" -f $ConfigurationTier)) -Content $inventoryArtifact
-$trustFile = New-CtafArtifactFile -Path (Join-Path $resolvedOutputPath ("cross-tenant-trust-assessment-{0}.json" -f $ConfigurationTier)) -Content $trustArtifact
-$mcpFile = New-CtafArtifactFile -Path (Join-Path $resolvedOutputPath ("mcp-trust-relationship-log-{0}.json" -f $ConfigurationTier)) -Content $mcpArtifact
-$agentIdFile = New-CtafArtifactFile -Path (Join-Path $resolvedOutputPath ("agent-id-attestation-evidence-{0}.json" -f $ConfigurationTier)) -Content $agentIdArtifact
+$artifactPlans = @(
+    [pscustomobject]@{ name = 'agent-federation-inventory'; fileName = ("agent-federation-inventory-{0}.json" -f $ConfigurationTier); content = (& $envelope @($snapshot.FederationInventory)) }
+    [pscustomobject]@{ name = 'cross-tenant-trust-assessment'; fileName = ("cross-tenant-trust-assessment-{0}.json" -f $ConfigurationTier); content = (& $envelope @($snapshot.CrossTenantTrust)) }
+    [pscustomobject]@{ name = 'mcp-trust-relationship-log'; fileName = ("mcp-trust-relationship-log-{0}.json" -f $ConfigurationTier); content = (& $envelope @($snapshot.McpAttestations)) }
+    [pscustomobject]@{ name = 'agent-id-attestation-evidence'; fileName = ("agent-id-attestation-evidence-{0}.json" -f $ConfigurationTier); content = (& $envelope @($snapshot.AgentIdAttestations)) }
+)
 
 $controls = @(
     [pscustomobject]@{
@@ -146,12 +151,8 @@ $controls = @(
     }
 )
 
-$artifacts = @(
-    [pscustomobject]@{ name = 'agent-federation-inventory'; type = 'json'; path = $inventoryFile.Path; hash = $inventoryFile.Hash },
-    [pscustomobject]@{ name = 'cross-tenant-trust-assessment'; type = 'json'; path = $trustFile.Path; hash = $trustFile.Hash },
-    [pscustomobject]@{ name = 'mcp-trust-relationship-log'; type = 'json'; path = $mcpFile.Path; hash = $mcpFile.Hash },
-    [pscustomobject]@{ name = 'agent-id-attestation-evidence'; type = 'json'; path = $agentIdFile.Path; hash = $agentIdFile.Hash }
-)
+# Artifact files and their package/result entries are produced in the ShouldProcess block below so
+# that -WhatIf can return a read-only evidence plan without writing any files.
 
 $recordCount = @($snapshot.FederationInventory).Count + @($snapshot.CrossTenantTrust).Count + @($snapshot.McpAttestations).Count + @($snapshot.AgentIdAttestations).Count
 $findingCount = (@($snapshot.CrossTenantTrust) | Where-Object { $_.reviewStatus -ne 'current' }).Count +
@@ -179,22 +180,50 @@ $expectedArtifacts = @(
     'agent-id-attestation-evidence'
 )
 
-$package = Export-SolutionEvidencePackage `
-    -Solution $configuration.solution `
-    -SolutionCode $configuration.solutionCode `
-    -Tier $ConfigurationTier `
-    -OutputPath $resolvedOutputPath `
-    -PackageFileName ("ctaf-evidence-package-{0}.json" -f $ConfigurationTier) `
-    -Summary $packageSummary `
-    -Controls $controls `
-    -Artifacts $artifacts `
-    -ExpectedArtifacts $expectedArtifacts `
-    -AdditionalMetadata $packageMetadata
+$resultArtifacts = @()
+$package = [pscustomobject]@{ Path = $null; Hash = $null; HashPath = $null }
+
+if ($PSCmdlet.ShouldProcess($resolvedOutputPath, ("Export CTAF evidence package for tier {0}" -f $ConfigurationTier))) {
+    $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
+
+    # Package artifact entries use package-relative file names so the exported package stays valid
+    # when the evidence directory is relocated (the shared validator resolves relative paths against
+    # the package directory). Returned artifact entries use absolute paths so callers can locate them.
+    $packageArtifacts = @()
+    foreach ($plan in $artifactPlans) {
+        $file = New-CtafArtifactFile -Path (Join-Path $resolvedOutputPath $plan.fileName) -Content $plan.content
+        $packageArtifacts += [pscustomobject]@{ name = $plan.name; type = 'json'; path = $plan.fileName; hash = $file.Hash }
+        $resultArtifacts += [pscustomobject]@{ name = $plan.name; type = 'json'; path = $file.Path; hash = $file.Hash }
+    }
+
+    $package = Export-SolutionEvidencePackage `
+        -Solution $configuration.solution `
+        -SolutionCode $configuration.solutionCode `
+        -Tier $ConfigurationTier `
+        -OutputPath $resolvedOutputPath `
+        -PackageFileName ("ctaf-evidence-package-{0}.json" -f $ConfigurationTier) `
+        -Summary $packageSummary `
+        -Controls $controls `
+        -Artifacts $packageArtifacts `
+        -ExpectedArtifacts $expectedArtifacts `
+        -AdditionalMetadata $packageMetadata
+}
+else {
+    Write-Verbose 'WhatIf enabled. Returning evidence plan without writing artifacts or package.'
+    foreach ($plan in $artifactPlans) {
+        $resultArtifacts += [pscustomobject]@{
+            name = $plan.name
+            type = 'json'
+            path = (Join-Path $resolvedOutputPath $plan.fileName)
+            hash = $null
+        }
+    }
+}
 
 $result = [pscustomobject]@{
     Summary = $packageSummary
     Controls = $controls
-    Artifacts = $artifacts
+    Artifacts = $resultArtifacts
     Package = $package
     PackagePath = $package.Path
     PackageHash = $package.Hash

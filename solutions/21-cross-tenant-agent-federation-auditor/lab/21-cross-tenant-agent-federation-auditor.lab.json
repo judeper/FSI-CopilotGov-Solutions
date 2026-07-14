@@ -1,0 +1,426 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:21-cross-tenant-agent-federation-auditor:2026-07-14-accuracy-review",
+  "solution": {
+    "id": "21-cross-tenant-agent-federation-auditor",
+    "name": "Cross-Tenant Agent Federation Auditor",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.16",
+    "1.10",
+    "2.13",
+    "2.14",
+    "4.13"
+  ],
+  "portals": [
+    "microsoft-entra-admin-center",
+    "microsoft-365-admin-center",
+    "power-platform-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-no-native-agent-federation",
+      "claimText": "Microsoft does not document a distinct 'cross-tenant agent federation' product. Cross-tenant agent availability is governed by Microsoft Entra External ID cross-tenant access settings (B2B collaboration, B2B direct connect, tenant restrictions, trust settings, and multitenant-organization membership) together with Copilot Studio multitenant mode; CTAF therefore audits cross-tenant trust and dependencies rather than a native federation capability.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/README.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/external-id/cross-tenant-access-overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cross-tenant-access-graph",
+      "claimText": "Cross-tenant access settings are exposed through the Microsoft Graph crossTenantAccessPolicy resource; partner-specific configurations are read with GET /policies/crossTenantAccessPolicy/partners using the least-privileged Policy.Read.All scope, and partner records expose b2bCollaboration/b2bDirectConnect inbound and outbound settings, inboundTrust, isServiceProvider, and isInMultiTenantOrganization.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/architecture.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/resources/crosstenantaccesspolicy-overview?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-entra-agent-id-preview",
+      "claimText": "Microsoft Entra Agent ID is in preview and models agents as agent blueprints, blueprint principals (service principals), agent identities, and agentic users governed with Conditional Access (Entra ID P1) and ID Protection (Entra ID P2 during preview); its governance surface is owner/sponsor, permission, Conditional Access, and audit-log review, and it exposes no signing-key or key-rotation control.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/README.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/evidence-export.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/agent-id/what-is-microsoft-entra-agent-id",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent365-registry-package-api",
+      "claimText": "Microsoft Agent 365 is generally available (May 1, 2026) and its converged agent registry in the Microsoft 365 admin center inventories Microsoft, external partner-built, org-published, and creator-shared agents.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/architecture.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/prerequisites.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-agent-365/overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent365-package-api-preview",
+      "claimText": "Microsoft documents the Agent 365 Package Management Graph API for agent registry and details as preview. Read-only inventory uses GET /v1.0/copilot/admin/catalog/packages or the beta equivalent with CopilotPackages.Read.All and requires a Microsoft Agent 365 license; write operations remain outside this contract.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/architecture.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-agent-365/admin/graph-api",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-mcp-streamable-transport",
+      "claimText": "Copilot Studio supports the Model Context Protocol Streamable transport and no longer supports SSE for MCP after August 2025; MCP server connections are governed as connection reviews (server URL, transport, OAuth 2.0 or API-key authentication, scopes, allowed tools, and approval) and there is no Microsoft-defined MCP signing-key attestation.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/evidence-export.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/config/recommended.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-copilot-studio/agent-extend-action-mcp",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-studio-multitenant-mode",
+      "claimText": "Cross-tenant user access to a Copilot Studio agent is provided by Copilot Studio multitenant mode, which is in preview; it is the documented product surface for agents authenticating users from more than one tenant and must be validated per tenant before being relied upon.",
+      "affectedFiles": [
+        "solutions/21-cross-tenant-agent-federation-auditor/README.md",
+        "solutions/21-cross-tenant-agent-federation-auditor/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-copilot-studio/multi-tenant-overview",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E5 recommended as the Agent 365 base; a qualifying Microsoft Agent 365 license (GA per-user) or Microsoft 365 E7 for advanced Agent 365 governance (registry Graph/Package Management API, policy templates, observability, tenant-wide MCP tool control)",
+      "Microsoft Entra ID P1 for Conditional Access review of agent identities and P2 for ID Protection risk review (Entra Agent ID preview)"
+    ],
+    "roles": [
+      "Security Reader or Global Reader (read-only cross-tenant access policy review)",
+      "Microsoft Graph Policy.Read.All delegated permission for the scoped cross-tenant partner read",
+      "AI Reader for read-only Agent 365 registry review",
+      "AI Administrator or Global Administrator plus CopilotPackages.Read.All for the preview Package Management API read; no write permission is used",
+      "Global Reader or Security Reader for read-only Entra Agent ID owner/sponsor, permission, Conditional Access, and audit posture review"
+    ],
+    "features": [
+      "Microsoft Entra External ID cross-tenant access settings configured for the in-scope partner tenant",
+      "Microsoft Agent 365 enabled with at least one qualifying licensed user",
+      "Microsoft Entra Agent ID preview enabled for agent identity review"
+    ],
+    "capacityRequirements": [
+      "One controlled validation workspace for the read-only local script cycle using representative sample data",
+      "Read-only command-execution access for the solution scripts"
+    ],
+    "dataRequirements": [
+      "Representative sample artifacts only for the local script cycle",
+      "No real tenant identifiers, verified domains, agent IDs, app/service-principal IDs, MCP URLs, secrets, or customer content in contract evidence; pseudonymize any cross-tenant identifiers observed during two-tenant verification"
+    ],
+    "tenantCount": 2,
+    "notes": "The read-only local script cycle (Deploy/Monitor/Export -WhatIf) needs only one workspace and no tenant connectivity. The optional cross-tenant verification steps require two sanctioned disposable tenants and independent identity proof for both sides (distinct tenant IDs / verified domains, neither acting as the other's CSP). No invitation, consent, trust, policy, agent, app, MCP, role, or license change is performed. Primary control 2.17 (Microsoft Entra Agent ID Lifecycle Governance) is intentionally omitted from the machine-checked controls list because it is not yet present in data/controls-master.json; the same read-only evidence still substantiates Entra Agent ID governance review, and 2.17 should be added to this contract once the control exists in canonical metadata. Any capability that is unavailable, unlicensed, or still in preview in the validation tenants is classified NOT-APPLICABLE or BLOCKED with source evidence, never PASS."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Validate prerequisites and deployment manifest",
+        "steps": [
+          {
+            "id": "step-check-license-role-prerequisites",
+            "mode": "manual",
+            "intent": "Confirm required Microsoft Agent 365 / Microsoft 365 licensing, Entra Agent ID preview enablement, and read-only admin roles are present before running any command or tenant read.",
+            "expected": "Licensing, preview enablement, and read-only roles are documented as present; otherwise the affected checks move to BLOCKED with evidence.",
+            "operatorNote": "Record a blocked condition if Agent 365 licensing, Entra Agent ID preview, or the least-privileged read roles are missing.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Prerequisite attestation log",
+              "expectation": "Attestation explicitly captures a pass or block decision for licensing, preview enablement, and role readiness."
+            }
+          },
+          {
+            "id": "step-deploy-whatif",
+            "mode": "powershell",
+            "intent": "Run the deployment script in WhatIf mode to validate manifest generation without writing any artifact.",
+            "expected": "A deployment manifest object is returned for the selected tier and no manifest file is written to disk.",
+            "command": "pwsh -File solutions/21-cross-tenant-agent-federation-auditor/scripts/Deploy-Solution.ps1 -ConfigurationTier regulated -OutputPath solutions/21-cross-tenant-agent-federation-auditor/artifacts/lab-contract -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Deploy-Solution returned manifest object",
+              "expectation": "Manifest solution and tier are returned with runtimeMode 'sample' and no manifest file emitted under the output path."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run read-only sample-data validation commands",
+        "steps": [
+          {
+            "id": "step-run-monitor-whatif",
+            "mode": "powershell",
+            "intent": "Execute the monitor script in WhatIf mode to validate the sample federation inventory, cross-tenant trust, MCP connection review, and Entra Agent ID governance records without writing a snapshot.",
+            "expected": "Sample records and counts are returned with RuntimeMode 'sample' and no snapshot file written.",
+            "command": "pwsh -File solutions/21-cross-tenant-agent-federation-auditor/scripts/Monitor-Compliance.ps1 -ConfigurationTier regulated -OutputPath solutions/21-cross-tenant-agent-federation-auditor/artifacts/lab-contract -PassThru -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance pass-through output",
+              "expectation": "RuntimeMode is 'sample' and federation/trust/MCP/Agent ID counts are returned with no monitor-snapshot file emitted."
+            }
+          },
+          {
+            "id": "step-run-export-whatif",
+            "mode": "powershell",
+            "intent": "Execute the evidence export in WhatIf mode to validate the evidence plan, artifact naming, and package portability contract without writing files.",
+            "expected": "Four planned artifacts are returned with null hashes and a null package path, confirming package-relative artifact naming and no tenant-bound output.",
+            "command": "pwsh -File solutions/21-cross-tenant-agent-federation-auditor/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath solutions/21-cross-tenant-agent-federation-auditor/artifacts/lab-contract -PassThru -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence pass-through output",
+              "expectation": "Four planned artifacts are listed with null hashes and PackagePath is null while execution stays read-only."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify two-tenant topology and cross-tenant trust/dependency posture (read-only)",
+        "steps": [
+          {
+            "id": "step-independent-tenant-proof",
+            "mode": "manual",
+            "intent": "For each sanctioned disposable tenant, compare a current Microsoft Graph organization id/displayName/verified-domain read with its separately maintained lab authorization record, then record only tenant-A / tenant-B pseudonyms.",
+            "expected": "Both tenants are confirmed independent from separate authorization records and current organization reads; real tenant IDs/domains are not retained. If independence cannot be proven, cross-tenant checks move to BLOCKED.",
+            "operatorNote": "Authenticate to each tenant separately, read GET /organization?$select=id,displayName,verifiedDomains, compare it out of band, and retain only tenant-A / tenant-B plus the dated match decision.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Two-tenant independence worksheet",
+              "expectation": "Worksheet records a dated independence decision for both tenants with pseudonymized identifiers and no real identifiers."
+            }
+          },
+          {
+            "id": "step-read-cross-tenant-access-policy",
+            "mode": "powershell",
+            "intent": "Read the partner-specific cross-tenant access configuration for the in-scope partner tenant to record inbound/outbound B2B collaboration, B2B direct connect, trust settings, and multitenant-organization membership that govern cross-tenant agent access. Read-only.",
+            "expected": "Partner cross-tenant access settings are read successfully and summarized (direction, trust, isInMultiTenantOrganization, isServiceProvider); if the partner is not configured or the read role is unavailable, the step is classified NOT-APPLICABLE or BLOCKED with evidence.",
+            "operatorNote": "Set CTAF_PARTNER_TENANT_ID outside Git. The command validates the runtime GUID, queries only that partner, and retains no partner ID or user/group/application target identifiers.",
+            "command": "$partnerTenantId = $env:CTAF_PARTNER_TENANT_ID; if ([string]::IsNullOrWhiteSpace($partnerTenantId)) { throw 'CTAF_PARTNER_TENANT_ID is required.' }; try { [void]([guid]$partnerTenantId) } catch { throw 'CTAF_PARTNER_TENANT_ID must be a GUID.' }; $uri = 'https://graph.microsoft.com/v1.0/policies/crossTenantAccessPolicy/partners/{0}' -f $partnerTenantId; $response = Invoke-MgGraphRequest -Method GET -Uri $uri; $summary = [ordered]@{ b2bCollaborationInbound = $response.b2bCollaborationInbound.usersAndGroups.accessType; b2bCollaborationOutbound = $response.b2bCollaborationOutbound.usersAndGroups.accessType; b2bDirectConnectInbound = $response.b2bDirectConnectInbound.usersAndGroups.accessType; b2bDirectConnectOutbound = $response.b2bDirectConnectOutbound.usersAndGroups.accessType; inboundTrust = $response.inboundTrust; isServiceProvider = $response.isServiceProvider; isInMultiTenantOrganization = $response.isInMultiTenantOrganization }; $root = 'lab-evidence/21-cross-tenant-agent-federation-auditor'; $null = New-Item -ItemType Directory -Path $root -Force; $summary | ConvertTo-Json -Depth 6 | Set-Content -Path (Join-Path $root 'cross-tenant-partner-summary.json') -Encoding utf8",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "cross-tenant-partner-summary.json",
+              "expectation": "A read-only partner configuration summary is captured without the partner tenant ID or target identifiers, or a NOT-APPLICABLE/BLOCKED classification with reason."
+            }
+          },
+          {
+            "id": "step-read-agent365-registry-aggregate",
+            "mode": "powershell",
+            "intent": "Read aggregate Agent 365 registry / Package Management inventory metadata to enumerate external partner-built and cross-tenant-relevant agents. Read-only listing only; no block, unblock, or ownership change.",
+            "expected": "An aggregate count and category breakdown of registry agents is captured; if Agent 365 licensing or the CopilotPackages.Read.All scope is unavailable, the step is classified NOT-APPLICABLE or BLOCKED with source evidence.",
+            "operatorNote": "Do not persist the raw response or any package ID, display name, app ID, publisher, owner, or assignment identifier.",
+            "command": "$response = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/v1.0/copilot/admin/catalog/packages'; $items = @($response.value); $summary = [ordered]@{ totalPackages = $items.Count; byType = @($items | Group-Object type | ForEach-Object { [pscustomobject]@{ category = $_.Name; count = $_.Count } }); byPlatform = @($items | Group-Object platform | ForEach-Object { [pscustomobject]@{ category = $_.Name; count = $_.Count } }); bySupportedHost = @($items | ForEach-Object { @($_.supportedHosts) } | Group-Object | ForEach-Object { [pscustomobject]@{ category = $_.Name; count = $_.Count } }) }; $root = 'lab-evidence/21-cross-tenant-agent-federation-auditor'; $null = New-Item -ItemType Directory -Path $root -Force; $summary | ConvertTo-Json -Depth 6 | Set-Content -Path (Join-Path $root 'agent365-package-summary.json') -Encoding utf8",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "agent365-package-summary.json",
+              "expectation": "Only aggregate counts by type, platform, and supported host are captured, or a NOT-APPLICABLE/BLOCKED classification with reason and source evidence."
+            }
+          },
+          {
+            "id": "step-inspect-multitenant-apps-and-mcp",
+            "mode": "manual",
+            "intent": "Inspect multitenant application registrations / service principals consented in the resource tenant and the MCP server dependency categories referenced by in-scope agents, recording only category-level dependency posture. Correlation to Agent 365 registry entries is a documented manual review, not an automated join.",
+            "expected": "Multitenant app/service-principal and MCP dependency categories are recorded with pseudonymized identifiers; no trust conclusion is asserted beyond the read evidence, and unavailable categories are classified NOT-APPLICABLE or BLOCKED.",
+            "operatorNote": "Do not invent an API relationship between the Agent 365 registry and Entra app registrations; record correlation as a manual, documented review with pseudonymized identifiers only.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Multitenant app and MCP dependency worksheet",
+              "expectation": "Worksheet records category-level dependency posture with pseudonymized identifiers and explicit NOT-APPLICABLE/BLOCKED classifications where applicable."
+            }
+          },
+          {
+            "id": "step-verify-source-citations",
+            "mode": "manual",
+            "intent": "Confirm the cited Microsoft Learn and Microsoft Graph sources remain reachable and aligned with the documented cross-tenant access, Entra Agent ID (preview), Agent 365 registry / Package Management API, and MCP transport claims.",
+            "expected": "Every source claim is marked supported, contradicted, or pending-review with explicit dated evidence, including preview lifecycle status where applicable.",
+            "operatorNote": "Capture lifecycle status for each cited claim and flag any mismatch, including the conservative preview classification for the Agent 365 Package Management API.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source verification worksheet",
+              "expectation": "Each claim has a dated verification decision, a lifecycle status, and an evidence reference."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Remove local staging and record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove ignored local staging after required aggregate evidence has been captured by the lab result packager.",
+            "expected": "The Solution 21 lab-evidence staging directory no longer exists.",
+            "command": "$path = 'lab-evidence/21-cross-tenant-agent-federation-auditor'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 21 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/21-cross-tenant-agent-federation-auditor no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-cleanup-required",
+            "mode": "manual",
+            "intent": "Confirm no mutable tenant operation ran during this contract execution.",
+            "expected": "Cleanup note indicates a not-required state because the run was read-only across both tenants.",
+            "operatorNote": "No mutation was executed in this read-only contract; only local sample artifacts under the output path may need routine removal.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation",
+              "expectation": "Attestation confirms cleanup is not required because no mutation executed in either tenant."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-cross-tenant-agent-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-cross-tenant-agent-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-script-transcript",
+        "type": "powershell-transcript",
+        "description": "Transcript of Deploy, Monitor, and Export WhatIf command execution showing read-only sample-data behavior with null hashes and no package path.",
+        "requiredForControls": [
+          "2.16",
+          "1.10",
+          "2.13",
+          "2.14",
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-two-tenant-independence",
+        "type": "manual-attestation",
+        "description": "Attestation of independent identity proof for both disposable tenants with pseudonymized identifiers.",
+        "requiredForControls": [
+          "2.16"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-cross-tenant-read-summary",
+        "type": "api-response",
+        "description": "Read-only summary of cross-tenant access partner settings and Agent 365 registry aggregate metadata with pseudonymized identifiers.",
+        "requiredForControls": [
+          "2.16",
+          "1.10",
+          "2.14"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-verification",
+        "type": "source-citation",
+        "description": "Source verification worksheet for the cited Microsoft Learn and Microsoft Graph claims, including preview lifecycle status.",
+        "requiredForControls": [
+          "2.16",
+          "2.13",
+          "2.14"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-script-transcript",
+      "artifact-source-verification"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

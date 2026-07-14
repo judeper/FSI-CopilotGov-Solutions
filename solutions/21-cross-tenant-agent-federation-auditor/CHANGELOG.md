@@ -1,5 +1,19 @@
 # Changelog
 
+## [Unreleased] — Microsoft currency accuracy review (2026-07)
+
+### Fixed
+- **MAJOR:** Removed fabricated Microsoft Entra Agent ID and MCP "signing-key attestation" and "key-rotation" capabilities from tier configuration. Reframed `mcpTrustAttestationRequired` / `mcpAttestation.verifySigningKey` to `mcpConnectionReviewRequired` / `mcpConnectionReview.requireAuthenticationReview`, and `agentIdSigningRequired` / `agentIdKeyRotationTrackingEnabled` / `agentIdRotation` to `agentIdGovernanceReviewRequired` / `agentIdCredentialReviewEnabled` / `agentIdCredentialReview`, aligning `CtafConfig.psm1`, `Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, and `docs/troubleshooting.md`. Microsoft Entra Agent ID and MCP expose no signing-key or key-rotation surface.
+- **MAJOR:** Corrected the `data/solution-catalog.json` summary, which claimed "Microsoft Entra Agent ID federated trust" and "MCP federated server attestation" — neither is a Microsoft product capability. Clarified across the README and architecture that Microsoft does not publish a "cross-tenant agent federation" product; CTAF audits cross-tenant trust and dependencies.
+- **MINOR:** Corrected licensing currency: Microsoft Agent 365 is generally available (May 1, 2026, per user) and bundled in Microsoft 365 E7; advanced Agent 365 governance requires an Agent 365 or E7 license, with Microsoft 365 E5 as the recommended base. Marked Microsoft Entra Agent ID and Copilot Studio multitenant mode as preview, with Conditional Access (Entra ID P1) and ID Protection (Entra ID P2) prerequisites.
+- **MINOR:** Tightened cross-tenant access and Agent ID review guidance to reader roles, scoped partner reads to one runtime tenant, and documented the Agent 365 Package Management API read path as preview (`GET /v1.0/copilot/admin/catalog/packages`, least-privileged `CopilotPackages.Read.All`, Agent 365 license).
+
+### Added
+- Read-only `-WhatIf` support in `Monitor-Compliance.ps1` and `Export-Evidence.ps1`, plus package-relative (portable) evidence artifact paths so the evidence package validates after relocation.
+- Lab validation contract `lab/21-cross-tenant-agent-federation-auditor.lab.json` (read-only, `mutations: []`, two disposable-tenant topology with independent identity proof for both sides) registered in `scripts/test_lab_validation_contracts.py`.
+- Added aggregate-only Agent 365 inventory evidence, sanitized partner-policy summaries, ignored staging, fail-closed cleanup, and provider-aware relative output paths.
+- Behavioral Pester tests for the reframed configuration, read-only WhatIf execution, evidence portability, and the lab contract.
+
 ## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
 
 ### Fixed

@@ -44,21 +44,21 @@ function Get-CtafConfiguration {
         primaryControls                   = $tierConfig.primaryControls
         supportingControls                = $tierConfig.supportingControls
         federationReviewCadenceDays       = $tierConfig.federationReviewCadenceDays
-        mcpTrustAttestationRequired       = $tierConfig.mcpTrustAttestationRequired
-        mcpAttestationRevalidationRequired = if ($tierConfig.Contains('mcpAttestationRevalidationRequired')) {
-            $tierConfig.mcpAttestationRevalidationRequired
+        mcpConnectionReviewRequired       = $tierConfig.mcpConnectionReviewRequired
+        mcpConnectionRevalidationRequired = if ($tierConfig.Contains('mcpConnectionRevalidationRequired')) {
+            $tierConfig.mcpConnectionRevalidationRequired
         }
         else {
             $false
         }
-        agentIdSigningRequired            = $tierConfig.agentIdSigningRequired
-        agentIdKeyRotationTrackingEnabled = $tierConfig.agentIdKeyRotationTrackingEnabled
+        agentIdGovernanceReviewRequired   = $tierConfig.agentIdGovernanceReviewRequired
+        agentIdCredentialReviewEnabled    = $tierConfig.agentIdCredentialReviewEnabled
         crossTenantAuditLogRetentionDays  = $tierConfig.crossTenantAuditLogRetentionDays
         evidenceRetentionDays             = $tierConfig.evidenceRetentionDays
         notificationMode                  = $tierConfig.notificationMode
         copilotStudioPublishing           = $tierConfig.copilotStudioPublishing
-        mcpAttestation                    = $tierConfig.mcpAttestation
-        agentIdRotation                   = if ($tierConfig.Contains('agentIdRotation')) { $tierConfig.agentIdRotation } else { $null }
+        mcpConnectionReview               = $tierConfig.mcpConnectionReview
+        agentIdCredentialReview           = if ($tierConfig.Contains('agentIdCredentialReview')) { $tierConfig.agentIdCredentialReview } else { $null }
         auditAggregation                  = if ($tierConfig.Contains('auditAggregation')) { $tierConfig.auditAggregation } else { $null }
     }
 }
@@ -78,14 +78,14 @@ function Test-CtafConfiguration {
         'tier',
         'primaryControls',
         'federationReviewCadenceDays',
-        'mcpTrustAttestationRequired',
-        'agentIdSigningRequired',
-        'agentIdKeyRotationTrackingEnabled',
+        'mcpConnectionReviewRequired',
+        'agentIdGovernanceReviewRequired',
+        'agentIdCredentialReviewEnabled',
         'crossTenantAuditLogRetentionDays',
         'evidenceRetentionDays',
         'notificationMode',
         'copilotStudioPublishing',
-        'mcpAttestation'
+        'mcpConnectionReview'
     )
 
     $missingFields = @()

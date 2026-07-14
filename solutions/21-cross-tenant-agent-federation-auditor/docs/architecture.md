@@ -4,13 +4,17 @@
 
 The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first auditor that records federation posture for Microsoft 365 Copilot agents, Microsoft Entra Agent IDs, and MCP server connections exposed across organizational boundaries. The repository implementation produces sample inventories and review evidence so that delivery teams can model cross-tenant agent risk before live tenant integration is wired.
 
+> **Scope note.** Microsoft does not document a distinct "cross-tenant agent federation" product. CTAF audits cross-tenant trust and dependencies — Entra External ID cross-tenant access settings, multitenant app registrations and service principals, remote MCP connections, the Microsoft Agent 365 agent registry, and Microsoft Entra Agent ID governance. Copilot Studio multitenant mode and Microsoft Entra Agent ID are both in preview; verify current status with Microsoft before relying on them.
+
 ## Component Diagram
 
 ```text
 +---------------------------------------------------------------+
 | Sources reviewed by CTAF (live targets, sample data today)    |
 | - Copilot Studio channels, authentication, and sharing         |
-| - Microsoft Entra Agent ID identities and blueprints           |
+| - Copilot Studio multitenant mode (preview)                    |
+| - Microsoft Agent 365 agent registry inventory                 |
+| - Microsoft Entra Agent ID identities and blueprints (preview) |
 | - Entra External ID cross-tenant access settings               |
 | - MCP server connection and authentication settings            |
 +------------------------------+--------------------------------+
@@ -44,9 +48,13 @@ The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first audito
 
 ## Integration Points (Future)
 
-- Microsoft Graph v1.0 `/policies/crossTenantAccessPolicy/partners` endpoint for cross-tenant access policy partner enumeration.
-- Copilot Studio channel, authentication, and organization sharing review patterns.
-- MCP server URL, Streamable transport, API key/OAuth authentication, tool approval, and allow-list review.
+- Microsoft Graph v1.0 `/policies/crossTenantAccessPolicy/partners` endpoint for cross-tenant access policy partner enumeration (least-privileged `Policy.Read.All`). Partner records expose B2B collaboration and B2B direct connect inbound/outbound settings, `inboundTrust`, `isServiceProvider`, and `isInMultiTenantOrganization`.
+- Microsoft Agent 365 agent registry (Microsoft 365 admin center) and the Package Management API (documented as preview; `GET https://graph.microsoft.com/v1.0/copilot/admin/catalog/packages[/{id}]`, least-privileged `CopilotPackages.Read.All`, requires a Microsoft Agent 365 license) for read-only inventory of Microsoft, external partner-built, org-published, and creator-shared agents.
+- Copilot Studio channel, authentication, organization sharing, and multitenant mode (preview) review patterns for cross-tenant user access.
+- Microsoft Entra Agent ID (preview) blueprint, owner/sponsor, permission, Conditional Access, and audit-log review. Agent ID exposes no signing-key or key-rotation surface.
+- MCP server URL, Streamable transport, API key/OAuth authentication, tool approval, and allow-list review. MCP has no Microsoft-defined signing-key attestation.
+
+Correlating Agent 365 registry entries to Entra multitenant app registrations or service principals is a documented manual review; no single Microsoft API joins the two.
 
 ## Security Considerations
 

@@ -16,15 +16,22 @@
 .PARAMETER PassThru
     Returns the snapshot object after writing it.
 
+.PARAMETER WhatIf
+    Generates the sample snapshot in memory and returns it (with -PassThru) without writing the
+    snapshot file. Useful for read-only lab validation that must leave no local artifacts.
+
 .EXAMPLE
     .\Monitor-Compliance.ps1 -ConfigurationTier recommended -Verbose
+
+.EXAMPLE
+    .\Monitor-Compliance.ps1 -ConfigurationTier regulated -PassThru -WhatIf
 
 .NOTES
     Solution: Cross-Tenant Agent Federation Auditor (CTAF)
     Version:  v0.1.3
     Status:   Documentation-first scaffold (sample data only)
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -157,9 +164,12 @@ Write-Verbose ("Loading CTAF configuration for tier [{0}]." -f $ConfigurationTie
 $configuration = Get-CtafConfiguration -Tier $ConfigurationTier
 Test-CtafConfiguration -Configuration $configuration
 
-$maxConnectionReviewAgeDays = if ($configuration.mcpAttestation.Contains('maxAttestationAgeDays')) {
-    [int]$configuration.mcpAttestation.maxAttestationAgeDays
+$maxConnectionReviewAgeDays = if ($configuration.mcpConnectionReview.Contains('maxConnectionReviewAgeDays')) {
+    [int]$configuration.mcpConnectionReview.maxConnectionReviewAgeDays
 } else { 60 }
+
+$resolvedOutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
+$snapshotPath = Join-Path $resolvedOutputPath ("ctaf-monitoring-snapshot-{0}.json" -f $ConfigurationTier)
 
 $snapshot = [pscustomobject]@{
     Solution = $configuration.solution
@@ -167,16 +177,21 @@ $snapshot = [pscustomobject]@{
     GeneratedAt = (Get-Date).ToString('o')
     RuntimeMode = 'sample'
     Warning = $script:SampleWarning
+    OutputPath = $snapshotPath
     FederationInventory = Get-SampleFederationInventory
     CrossTenantTrust = Get-SampleCrossTenantTrust -ReviewCadenceDays $configuration.federationReviewCadenceDays
     McpAttestations = Get-SampleMcpAttestation -MaxConnectionReviewAgeDays $maxConnectionReviewAgeDays
     AgentIdAttestations = Get-SampleAgentIdAttestation -ReviewCadenceDays $configuration.federationReviewCadenceDays
 }
 
-$resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
-$snapshotPath = Join-Path $resolvedOutputPath ("ctaf-monitoring-snapshot-{0}.json" -f $ConfigurationTier)
-$snapshot | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding utf8
-$null = Write-CtafSha256File -Path $snapshotPath
+if ($PSCmdlet.ShouldProcess($snapshotPath, 'Write CTAF monitoring snapshot')) {
+    $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
+    $snapshot | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding utf8
+    $null = Write-CtafSha256File -Path $snapshotPath
+}
+else {
+    Write-Verbose ("WhatIf enabled. Monitoring snapshot would be written to {0}." -f $snapshotPath)
+}
 
 Write-Host (
     "CTAF monitoring summary: tier [{0}] | agents {1} | trust relationships {2} | MCP connection reviews {3} | Agent ID governance reviews {4}." -f

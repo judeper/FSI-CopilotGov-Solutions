@@ -1,6 +1,6 @@
 {
   "schemaVersion": "0.2.0",
-  "generatedAt": "2026-06-13T15:28:43Z",
+  "generatedAt": "2026-07-14T16:09:08Z",
   "solutions": [
     {
       "id": "01-copilot-readiness-scanner",
@@ -511,7 +511,7 @@
       "name": "Cross-Tenant Agent Federation Auditor",
       "version": "0.1.3",
       "domain": "security-compliance",
-      "summary": "Documentation-first auditor for cross-tenant Copilot agent invocation, Microsoft Entra Agent ID federated trust, MCP federated server attestation, and multi-tenant Copilot Studio publishing controls.",
+      "summary": "Documentation-first auditor for cross-tenant Copilot agent trust and dependencies: Entra External ID cross-tenant access settings, Microsoft Entra Agent ID (preview) identity governance, MCP server connection reviews, Agent 365 registry inventory, and Copilot Studio multitenant publishing controls.",
       "repoPath": "solutions/21-cross-tenant-agent-federation-auditor",
       "url": "https://github.com/judeper/FSI-CopilotGov-Solutions/tree/main/solutions/21-cross-tenant-agent-federation-auditor",
       "prerequisites": [],
