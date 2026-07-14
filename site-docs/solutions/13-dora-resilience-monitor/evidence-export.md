@@ -10,10 +10,15 @@ The `service-health-log` artifact captures the operational state of Copilot-depe
 
 - `service`: workload name
 - `status`: current service-health state
-- `checkedAt`: timestamp of the monitoring observation
+- `collectedAt`: UTC (ISO 8601) time the monitoring run collected this record
+- `checkedAt`: retained alias for `collectedAt` (collection time of the observation)
+- `sourceLastModified`: UTC (ISO 8601) last-modified time reported by the source, or `null` when the source did not supply one
+- `timestampProvenance`: `source-provided`, `detected-only`, `missing`, or `synthetic-stub`
+- `freshness`: freshness evaluation object (see "Freshness and Timestamp Semantics")
 - `pollingIntervalMinutes`: cadence defined by the selected tier
 - `retentionDays`: retention requirement applied to the evidence set
 - `sourceEndpoint`: monitoring source, such as `local-graph-stub`, `sample-json-env`, or the live Microsoft Graph service communications endpoint when implemented
+- `runtimeMode`: `local-stub`, `sample-json`, or the live mode when implemented
 - `incidentId`: related service-health incident identifier when present
 - `impactDescription`: analyst-readable description of the workload condition
 
@@ -50,7 +55,18 @@ The `incident-register` artifact records DORA-oriented ICT incident details for 
 - `impactDescription`
 - `rootCauseAnalysisStatus`
 - `regulatoryNotificationRequired`
+- `reportingTimelineGap`
 - `notes`
+
+**DORA reporting-timeline fields (indicative reference only)**
+
+- `notificationWindowHours`, `initialNotificationDueAt`
+- `initialNotificationLatestFromAwarenessHours`, `initialNotificationLatestFromAwarenessAt`
+- `intermediateReportWindowHours`, `intermediateReportDueAt`
+- `finalReportWindowDays`, `finalReportDueAt`
+- `rcaWindowDays`, `rootCauseAnalysisDueAt`
+
+The artifact's `reportingTimeline` block records the regulatory source and anchor semantics. Under Commission Delegated Regulation (EU) 2025/301, Article 5, the official clocks anchor the **initial notification** to classification as a major incident (no later than 24 hours from awareness), the **intermediate report** to submission of the initial notification, and the **final report** (one month) to submission of the intermediate report. This scaffold derives indicative due dates from the detection timestamp and chains each later stage from the prior stage's due date; when a source omits the detection time, the due dates are `null` and `reportingTimelineGap` is `true` rather than being fabricated. These values are indicative reference metadata only — not legal advice and not proof of DORA compliance.
 
 **Retention**
 
@@ -87,6 +103,20 @@ The package contract contains:
 - `controls`: control-level status entries for 2.7, 4.9, 4.10, and 4.11
 - `artifacts`: named references to the exported JSON files and hash values
 
+Each artifact and the package `metadata` also carry `collectionTime` and a `freshness` object so downstream consumers (for example, 12-regulatory-compliance-dashboard) can distinguish collection time from source last-modified time.
+
+## Freshness and Timestamp Semantics
+
+Freshness is a first-class property of every evidence export. All timestamps are recorded in UTC using ISO 8601 (a trailing `Z`). Each service-health record and the overall export distinguish the following:
+
+- **Collection time** (`collectedAt` / `collectionTime`): when the monitoring run gathered the record.
+- **Source last-modified time** (`sourceLastModified`): the last-updated time reported by the source, or `null` when none was supplied.
+- **Age and staleness evaluation** (`freshness.ageMinutes`, `freshness.status`, `freshness.isStale`): a record is `stale` when its age exceeds the staleness threshold (default: three polling cycles, minimum 60 minutes; override with `DRM_FRESHNESS_THRESHOLD_MINUTES`).
+- **Source/runtime mode** (`runtimeMode`, `freshness.provenance`): `local-stub`, `sample-json`, or the live mode, plus provenance of the timestamps.
+- **Reporting period** (`reportingPeriod.periodStart` / `reportingPeriod.periodEnd`): the evidence window.
+
+Missing or invalid source timestamps are surfaced as an **explicit gap** (`freshness.status = unknown`, `freshness.hasTimestampGap = true`) and roll up to an overall `freshness.OverallStatus` of `gap`; they are never silently defaulted to the collection time. Synthetic local-stub records report `freshness.status = not-applicable` rather than appearing current. When freshness is `gap` or `stale`, the monitoring run emits a warning so operators do not treat the output as current.
+
 ## Control Mappings
 
 | Control | Primary Evidence | How DRM Supports Compliance |
@@ -94,7 +124,7 @@ The package contract contains:
 | 2.7 | `service-health-log` | Monitors service scope and tenant-region review points for cross-border data flow oversight; additional tenant geo data is still required |
 | 4.9 | `incident-register` | Preserves DORA-style incident records, reporting timestamps, severity, and root-cause follow-up status |
 | 4.10 | `resilience-test-results` | Documents annual resilience exercises, RTO and RPO targets, and evidence gaps that still require remediation |
-| 4.11 | `service-health-log`, `incident-register` | Provides monitoring context that can be enriched by Microsoft Sentinel once workspace provisioning and alert rules are complete |
+| 4.11 | `service-health-log`, `incident-register` | Provides monitoring context that can be enriched by Microsoft Sentinel (managed in the Microsoft Defender portal) once a workspace, a customer-built ingestion path, and analytics rules are complete; no native Microsoft 365 service-health or Copilot connector exists |
 
 ## Examiner Notes for DORA Art. 19 Reporting Package
 

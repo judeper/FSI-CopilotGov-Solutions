@@ -15,7 +15,7 @@ The Entra application used by DRM should be granted only the permissions require
 - Optional Microsoft Graph Security enrichment permissions must align to the specific API in use:
   - `SecurityAlert.Read.All` for `/security/alerts_v2`
   - `SecurityIncident.Read.All` for `/security/incidents`
-  - `SecurityEvents.Read.All` only for implementations that intentionally call the deprecated legacy `/security/alerts` API
+  - `SecurityEvents.Read.All` only for implementations that intentionally call the deprecated legacy `/security/alerts` API. Microsoft has announced this legacy alerts API is deprecated and will be **retired on 31 August 2026**; new work should use `/security/alerts_v2` with `SecurityAlert.Read.All`.
 
 Admin consent is typically required before these permissions can be used in production.
 
@@ -24,7 +24,7 @@ Admin consent is typically required before these permissions can be used in prod
 - Entra ID application registration dedicated to DRM monitoring
 - Client secret or certificate for app authentication
 - Tenant ID and application ID documented for deployment
-- Optional immutable storage account and Microsoft Sentinel workspace for regulated-tier enhancements
+- Optional immutable storage account and Microsoft Sentinel workspace for regulated-tier enhancements. Microsoft Sentinel is managed in the Microsoft Defender portal (the standalone Azure portal experience is scheduled for retirement on 31 March 2027).
 
 ## PowerShell Requirements
 

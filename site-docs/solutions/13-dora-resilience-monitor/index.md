@@ -17,6 +17,8 @@ The DORA Operational Resilience Monitor (DRM) provides an operational-resilience
 - Resilience test schedules, RTO and RPO targets, and recorded outcomes for annual operational-resilience exercises
 - Operational-risk dashboard feeds used by 12-regulatory-compliance-dashboard for control rollup and evidence freshness reporting
 
+> **Scope note.** This solution targets **Microsoft 365 Service Health** — the Service health page in the Microsoft 365 admin center and the Microsoft Graph `serviceAnnouncement` (service communications) API. It is distinct from **Azure Service Health**, which reports on Azure resources, subscriptions, and regions and is not in scope here.
+
 ## Features
 
 | Capability | Description |
@@ -136,6 +138,6 @@ These roadmap capabilities are in preview or rolling out through September 2026.
 - DRM is primarily a monitoring and evidence solution. It does not perform automated service remediation or tenant failover orchestration.
 - Default monitoring output is produced from a local stub or `DRM_SERVICE_HEALTH_SAMPLE_JSON`; live Microsoft Graph polling still requires tenant authentication wiring outside the repository.
 - Control 2.7 remains monitor-only until tenant geo settings and approved-region data sources are connected.
-- Control 4.11 remains monitor-only until a Microsoft Sentinel workspace, applicable data connector (currently preview per Microsoft Learn), and customer-defined alert rules are provisioned outside this solution.
+- Control 4.11 remains monitor-only until a Microsoft Sentinel workspace, the required data-ingestion path, and customer-defined analytics rules are provisioned outside this solution. Microsoft does not publish a native Sentinel data connector for Microsoft 365 service health or Copilot interaction events; ingestion relies on the Microsoft 365 (Office 365) connector for supported Exchange, SharePoint, and Teams audit logs and/or a customer-built path that reads Copilot interaction events from the Office 365 Management API. Microsoft Sentinel is now managed in the Microsoft Defender portal; the standalone Azure portal experience is scheduled for retirement on 31 March 2027.
 - Control 4.10 is partial because resilience documentation and test tracking are included, but automated failover validation requires additional tenant-specific engineering.
 - The documented Power Automate flow is not deployed by script in this version and must be configured manually from the deployment guide.

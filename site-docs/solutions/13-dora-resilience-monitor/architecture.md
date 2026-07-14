@@ -66,6 +66,8 @@ The Service Health Poller queries the Microsoft Graph service communications sur
 
 > **Note:** The Service Health Poller described here provides the framework for Microsoft Graph service communications integration. The current repository version uses a local stub with representative sample data. Customer must configure Graph API authentication and endpoint binding for live service health polling.
 
+> **Microsoft 365 Service Health vs Azure Service Health.** This solution monitors **Microsoft 365 Service Health** — surfaced on the Service health page in the Microsoft 365 admin center and through the Microsoft Graph `serviceAnnouncement` (service communications) API. It does not monitor **Azure Service Health**, which is a separate Azure portal service that reports incidents, planned maintenance, and advisories for Azure resources scoped to subscriptions and regions.
+
 ### Incident Classifier
 
 The Incident Classifier maps health events to DORA ICT incident severity bands:
@@ -101,7 +103,9 @@ The Power Automate Flow is documentation-first in v0.1.3. The solution describes
 ### Microsoft Sentinel Workspace
 
 - Purpose: Optional enrichment of Copilot incident context and correlation with security or operational alerts
-- Expected workspace data: customer-defined Sentinel ingestion for Copilot Studio/Purview audit events. Microsoft Learn documents these events in Purview and availability through the Office 365 Management API; this scaffold does not create a default Sentinel table.
+- Portal: Microsoft Sentinel is managed in the **Microsoft Defender portal** (unified security operations). The standalone Microsoft Sentinel experience in the Azure portal is scheduled for retirement on **31 March 2027**; plan any workspace onboarding around the Defender portal.
+- Connector reality: Microsoft does **not** publish a native Sentinel data connector for Microsoft 365 service health or Microsoft 365 Copilot interaction events. The Microsoft 365 (Office 365) data connector ingests Exchange, SharePoint, and Teams audit logs only. Copilot interaction events are written to the unified audit log and are available through the Office 365 Management API; ingesting them into Sentinel requires a customer-built path (for example, a Logic App or custom connector) rather than an out-of-the-box connector.
+- Expected workspace data: customer-defined Sentinel ingestion for Copilot Studio/Purview audit events. Microsoft Learn documents these events in Purview and availability through the Office 365 Management API; this scaffold does not create a default Sentinel connector, table, or workbook.
 - Customer-defined examples: custom table `CopilotActivity_CL` and analytics rules such as `DORACopilotOutage` and `CopilotResilienceFailure`, only when the tenant implementation defines and deploys them.
 - Example KQL starting point, only after tenant-specific ingestion populates `CopilotActivity_CL`:
 
@@ -141,3 +145,13 @@ Related connection references and environment variables follow the shared contra
 ## DORA Incident and Resilience-Testing Alignment Notes
 
 DRM is designed to support compliance with DORA Art. 17 by documenting ICT incident detection and incident-management escalation records for Copilot-dependent services. It supports selected DORA Art. 18 classification criteria through scaffolded severity fields, and it prepares technical evidence for DORA Art. 19 reporting-package review without submitting regulatory notices automatically. Resilience-test readiness maps to DORA ICT resilience-testing expectations in Art. 24-26 and control 4.10 rather than Art. 17. Regulated-tier settings increase polling cadence, require richer incident metadata, and highlight missing resilience-test evidence so operations teams can close reporting gaps before an examination or supervisory review.
+
+### DORA Reporting Timeline Reference
+
+DORA (Regulation (EU) 2022/2554) applies from **17 January 2025**. For a major ICT-related incident, the reporting time limits are set by Commission Delegated Regulation (EU) 2025/301, Article 5 (with reporting templates in Commission Implementing Regulation (EU) 2025/302 and classification thresholds in Commission Delegated Regulation (EU) 2024/1772):
+
+- **Initial notification** — as early as possible, and in any case within **4 hours** of classifying the incident as major, and no later than **24 hours** from the moment the entity became aware of the incident.
+- **Intermediate report** — within **72 hours** of the initial notification (updated without undue delay, and in any case when regular activities have recovered).
+- **Final report** — no later than **one month** after the intermediate report (or the latest updated intermediate report).
+
+The regulated-tier configuration stores these windows as indicative reference values. The exported incident register derives due dates from the incident detection timestamp as a representative-sample simplification and chains each later stage from the prior stage's due date so the arithmetic honors the official anchor order; operators must recompute against actual classification and submission timestamps. These references are **not legal advice and do not on their own prove DORA compliance**. Confirm obligations and exact timings with EU legal counsel and the competent authority.

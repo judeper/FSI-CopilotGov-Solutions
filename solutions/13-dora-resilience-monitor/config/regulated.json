@@ -11,6 +11,7 @@
     "doraArticle17Reporting": true,
     "regulatoryNotificationThreshold": "major",
     "notificationWindowHours": 4,
+    "initialNotificationLatestFromAwarenessHours": 24,
     "intermediateReportWindowHours": 72,
     "finalReportWindowDays": 30,
     "severityThresholds": {
