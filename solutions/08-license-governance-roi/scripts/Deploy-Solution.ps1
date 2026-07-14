@@ -82,8 +82,8 @@ function Test-GraphConnectivity {
         endpoints = @(
             '/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled'
             '/v1.0/subscribedSkus'
-            "/beta/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
-            "/beta/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')"
+            "/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
+            "/v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')"
         )
         graphContext = $context
         notes = 'This script validates the required connectivity plan. Replace the stub with live Connect-MgGraph or equivalent tenant-auth logic during implementation.'

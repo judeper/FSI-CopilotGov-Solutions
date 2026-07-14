@@ -129,3 +129,19 @@ If the deployment must be rolled back:
 4. Remove or deactivate the LGR Dataverse tables from the customer environment if they were provisioned as part of the deployment.
 5. Revert Power BI dataset changes or restore the prior semantic model from the workspace deployment pipeline.
 6. Document the rollback rationale and any seat-assignment exceptions that were opened during the failed deployment window.
+
+## Lab Validation (Read-Only Detect Cycle)
+
+Before tenant binding, validate this solution's Microsoft-currency claims with the machine-readable lab contract at `lab\08-license-governance-roi.lab.json`. The first cycle is read-only and detect-only (`mutations: []`):
+
+- Confirm the tenant identity against an out-of-band sanctioned-lab record before any read.
+- Discover the Copilot SKU and seat counts through `GET /v1.0/subscribedSkus` without hardcoding a SKU GUID.
+- Read the generally available `GET /v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')` usage report, accepting concealed identity values as a valid response. Record `BLOCKED` only when `Reports.Read.All` consent or report availability/latency prevents a read.
+- Inspect Copilot pay-as-you-go billing policy, capacity-pack allocation, and any Azure Cost Management budget read-only, confirming budgets notify rather than cap spend.
+- Write the raw report only to ignored `lab-evidence/` staging, remove identity columns immediately, delete the raw stream fail-closed, and remove local staging after the result packager captures the redacted evidence.
+
+No license assignment, billing policy, capacity-pack, Azure budget, or Copilot policy change is performed. Validate the contract locally:
+
+```powershell
+python ..\..\scripts\validate-lab-contracts.py .\lab\08-license-governance-roi.lab.json
+```
