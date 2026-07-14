@@ -28,10 +28,37 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
-    def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+    def test_contract_validator_validates_repository_contracts(self) -> None:
+        """The default scan validates every solutions/*/lab/*.lab.json contract."""
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+
+    def test_solution_10_connector_plugin_governance_contract_is_required(self) -> None:
+        """Solution 10's lab contract is a required, repository-tracked, read-only contract."""
+        contract_path = (
+            ROOT
+            / "solutions"
+            / "10-connector-plugin-governance"
+            / "lab"
+            / "10-connector-plugin-governance.lab.json"
+        )
+        self.assertTrue(
+            contract_path.is_file(),
+            msg=f"required lab contract is missing: {contract_path}",
+        )
+
+        result = run_validator(CONTRACT_VALIDATOR, contract_path)
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+
+        document = json.loads(contract_path.read_text(encoding="utf-8"))
+        self.assertEqual(document["solution"]["id"], "10-connector-plugin-governance")
+        self.assertEqual(
+            document["mutations"],
+            [],
+            msg="first Solution 10 lab cycle must be read-only (mutations: [])",
+        )
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"

@@ -1,0 +1,517 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:10-connector-plugin-governance:2026-07-readonly-detect",
+  "solution": {
+    "id": "10-connector-plugin-governance",
+    "name": "Copilot Connector and Plugin Governance",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.13",
+    "2.13",
+    "2.14",
+    "2.16",
+    "4.13"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "power-platform-admin-center",
+    "microsoft-entra-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-synced-connectors",
+      "claimText": "Microsoft 365 Copilot connectors (formerly Microsoft Graph connectors) include synced connectors that index external content into Microsoft Graph so it is available to Microsoft 365 Copilot and Microsoft Search. Synced connectors are generally available and are deployed and managed from the Microsoft 365 admin center.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/connectors/overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-federated-connectors",
+      "claimText": "Federated Microsoft 365 Copilot connectors retrieve content in real time by using the Model Context Protocol (MCP) without indexing into Microsoft Graph. Federated connectors are read-only, enabled by default for a tenant, managed in the Microsoft 365 admin center under Copilot connectors, and are in early access preview (Frontier program).",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/connectors/federated-connectors-overview",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-connector-admin-role",
+      "claimText": "To access and manage Microsoft 365 Copilot connectors, an administrator must hold the AI Administrator role for the organization. This solution uses the AI Administrator role for connector governance and reserves Global Administrator for tasks that explicitly require it.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/connectors/manage-connector",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-registry",
+      "claimText": "The agent registry is a capability of Microsoft Agent 365 that provides a centralized inventory of all agents available to the organization, viewed in the Microsoft 365 admin center under Agents > All agents > Registry. The registry supports read-only inventory actions such as Export to CSV, filtering, sorting, and search. Pinning, blocking, deleting, or changing ownership are mutable governance actions and remain out of scope for this read-only cycle.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/docs/architecture.md",
+        "solutions/10-connector-plugin-governance/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/admin/manage/agent-registry",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-registry-least-privilege-role",
+      "claimText": "AI Reader is the recommended least-privilege role to view all agents in the Microsoft 365 admin center agent registry, and AI Administrator can also view the inventory. Viewing all agents in the Microsoft 365 admin center does not require a specific license, only the appropriate role.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/prerequisites.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/entra/agent-id/agent-registry-convergence",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-registry-graph-api",
+      "claimText": "Microsoft documents the Agent 365 Package Management Graph API for agent registry and agent details as preview. Read-only inventory uses GET /v1.0/copilot/admin/catalog/packages or the beta equivalent with CopilotPackages.Read.All, requires a Microsoft Agent 365 license, and requires AI Administrator or Global Administrator. Write operations such as update, block, unblock, and reassign remain out of scope.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/scripts/Deploy-Solution.ps1",
+        "solutions/10-connector-plugin-governance/docs/prerequisites.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-agent-365/admin/graph-api",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-mcp-governance",
+      "claimText": "Model Context Protocol (MCP) servers are added to and governed per agent in Microsoft Copilot Studio, with optional and configurable authentication. MCP servers surface as Power Platform connectors, so their governance is enforced through Power Platform data loss prevention connector policy rather than a universal MCP registry or API.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-copilot-studio/mcp-create-new-server",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-power-platform-dlp-classification",
+      "claimText": "Power Platform data loss prevention classifies prebuilt and custom connectors, including HTTP and MCP connectors, into Business, Non-Business, or Blocked groups. Data policies can be scoped at the environment or tenant level, and connector action control can allow or block individual connector actions.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/power-platform/admin/dlp-connector-classification",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-365-boundary",
+      "claimText": "Microsoft Agent 365 is Microsoft's control plane for AI agents, providing the converged agent registry, observability, governance, and security, and became generally available on May 1, 2026. Agent identity is provided by Microsoft Entra Agent ID. Agent 365 platform governance, the converged agent registry and control plane, and Entra Agent ID security controls are out of scope for this connector and plugin solution and belong to Microsoft Agent 365 and Solutions 21 and 23.",
+      "affectedFiles": [
+        "solutions/10-connector-plugin-governance/README.md",
+        "solutions/10-connector-plugin-governance/docs/architecture.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-agent-365/overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "No license is required to view the agent registry inventory in the Microsoft 365 admin center; only the appropriate role is needed and no license is assigned, removed, or changed during this read-only cycle",
+      "Microsoft Agent 365 license when the preview Package Management API read-only inventory step is exercised",
+      "A representative Microsoft 365 Copilot and Power Platform footprint so connectors, agents, and data policies exist to inspect"
+    ],
+    "roles": [
+      "AI Reader (recommended least-privilege, read-only) to view the Microsoft 365 admin center agent registry",
+      "AI Administrator for read-only inspection of Microsoft 365 Copilot connectors; this write-capable role is activated through PIM and no mutation is performed",
+      "AI Administrator or Global Administrator plus CopilotPackages.Read.All for the preview Package Management API read; write permissions are not used",
+      "Power Platform Administrator or a read-only Power Platform role for inspecting data loss prevention connector classifications; no policy mutation is performed",
+      "Directory Reader or equivalent read-only Microsoft Entra role for inspecting app registrations used by custom connectors"
+    ],
+    "features": [
+      "Microsoft 365 Copilot provisioned in the tenant",
+      "Microsoft Agent 365 agent registry available in the Microsoft 365 admin center",
+      "Power Platform environment with data loss prevention (data) policies available for review",
+      "Optional Microsoft Copilot Studio environment if MCP server metadata is inspected"
+    ],
+    "capacityRequirements": [
+      "One disposable test workspace for representative sample validation and redacted evidence staging"
+    ],
+    "dataRequirements": [
+      "Representative sample and aggregated configuration-state records only; agent/package IDs, connector names, MCP server names, app registration names, client IDs, secrets, credentials, and user or group assignment identifiers are omitted or pseudonymized before retention"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No connector, agent, plugin, MCP server, data loss prevention policy, role, or license is created, enabled, disabled, removed, or changed. The MCP inspection step is classified NOT-APPLICABLE when no MCP server is present. Any connector, agent registry, DLP, or app registration read is classified BLOCKED only when role, permission, or portal availability prevents the read, with source evidence recorded."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant identity and read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before any read so inspection runs against the expected organization.",
+            "expected": "The organization identity returned matches the approved lab tenant recorded out of band.",
+            "operatorNote": "Compare the returned id and displayName with the separately maintained sanctioned-lab authorization record. Do not proceed on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "organization[].displayName",
+              "expectation": "The returned organization identity matches the separately maintained sanctioned-lab authorization record and is recorded before any further read."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Read-only connector, agent registry, DLP, and MCP inspection",
+        "steps": [
+          {
+            "id": "step-inspect-agent-registry",
+            "mode": "ui",
+            "intent": "Inspect the Microsoft Agent 365 agent registry read-only to confirm the current inventory surface and its export capability.",
+            "expected": "The Agents > All agents > Registry list is observed read-only and it is confirmed the registry is a Microsoft Agent 365 surface with a read-only CSV export; deeper Agent 365 platform and Microsoft Entra Agent ID governance is recorded as out of scope.",
+            "locator": "Microsoft 365 admin center > Agents > All agents > Registry",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Agent registry list and Export action",
+              "expectation": "The agent registry inventory is recorded read-only, the CSV export is confirmed available, and no agent, pin, or block action is taken."
+            }
+          },
+          {
+            "id": "step-read-agent-registry-api-summary",
+            "mode": "powershell",
+            "intent": "Read the documented preview Package Management API and retain only aggregate agent inventory categories without package IDs, names, app IDs, owners, or assignment identifiers.",
+            "expected": "GET /v1.0/copilot/admin/catalog/packages succeeds with CopilotPackages.Read.All and produces an aggregate type/platform/host summary, or the step is BLOCKED/NOT-APPLICABLE with source evidence when the Agent 365 license, role, permission, or preview availability is absent.",
+            "operatorNote": "Use AI Administrator or Global Administrator under time-bound activation. Do not request CopilotPackages.ReadWrite.All and do not retain the raw response.",
+            "command": "$root = 'lab-evidence/10-connector-plugin-governance'; $null = New-Item -ItemType Directory -Path $root -Force; $response = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/v1.0/copilot/admin/catalog/packages'; $items = @($response.value); $summary = [ordered]@{ totalPackages = $items.Count; byType = @($items | Group-Object type | ForEach-Object { [pscustomobject]@{ category = $_.Name; count = $_.Count } }); byPlatform = @($items | Group-Object platform | ForEach-Object { [pscustomobject]@{ category = $_.Name; count = $_.Count } }); bySupportedHost = @($items | ForEach-Object { @($_.supportedHosts) } | Group-Object | ForEach-Object { [pscustomobject]@{ category = $_.Name; count = $_.Count } }) }; $summary | ConvertTo-Json -Depth 6 | Set-Content -Path (Join-Path $root 'agent-registry-api-summary.json') -Encoding utf8",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "agent-registry-api-summary.json aggregate categories",
+              "expectation": "Only aggregate counts by type, platform, and supported host are retained; package IDs, names, app IDs, owner/assignment data, and the raw response are absent."
+            }
+          },
+          {
+            "id": "step-inspect-copilot-connectors",
+            "mode": "ui",
+            "intent": "Inspect Microsoft 365 Copilot connectors read-only to confirm the synced and federated connector models and current lifecycle.",
+            "expected": "The Copilot connectors > Your connections list is observed read-only; synced connectors are confirmed as indexed into Microsoft Graph and federated connectors are confirmed read-only and in early access preview. No connector is enabled, disabled, or removed.",
+            "locator": "Microsoft 365 admin center > Copilot connectors > Your connections",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Copilot connectors Your connections list",
+              "expectation": "Synced and federated connector states are recorded read-only and it is confirmed that federated connectors are read-only and in early access preview."
+            }
+          },
+          {
+            "id": "step-inspect-power-platform-dlp",
+            "mode": "ui",
+            "intent": "Inspect Power Platform data loss prevention connector classifications read-only to confirm the Business, Non-Business, and Blocked model and its scope.",
+            "expected": "Data policy connector classifications, including custom, HTTP, and MCP connectors, are observed read-only as Business, Non-Business, or Blocked, and the environment versus tenant scope is recorded. No data policy is created or changed.",
+            "locator": "Power Platform admin center > Security > Data policies",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Data policy connector classification groups",
+              "expectation": "Connector classification groups and their environment or tenant scope are recorded read-only, with no data policy created or modified."
+            }
+          },
+          {
+            "id": "step-inspect-mcp-metadata",
+            "mode": "manual",
+            "intent": "Inspect supported Model Context Protocol server metadata read-only, without capturing secrets, and confirm MCP governance is per-agent and DLP-based rather than a universal registry.",
+            "expected": "Any MCP servers added to Copilot Studio agents are observed read-only for pseudonymized reference, authentication type, and DLP classification; no server name, credential, endpoint, or secret is captured. The step is classified NOT-APPLICABLE when no MCP server is present.",
+            "operatorNote": "In Copilot Studio, record only a pseudonymized MCP reference, authentication type, and DLP classification. Do not record the server name, endpoint, client ID, client secret, token, or connection string. If no MCP server exists, record NOT-APPLICABLE with the source citation.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "MCP server metadata observation",
+              "expectation": "Pseudonymized MCP references, authentication types, and DLP classifications are recorded read-only with no name, endpoint, identifier, or secret captured, or NOT-APPLICABLE is recorded with source evidence."
+            }
+          },
+          {
+            "id": "step-inspect-entra-app-registrations",
+            "mode": "ui",
+            "intent": "Inspect Microsoft Entra app registrations read-only for custom connector or API authentication dependencies.",
+            "expected": "App registrations used by custom connectors are observed read-only and retained only as pseudonymized references with API permission categories; no display name, app/client ID, secret, or permission is retained or changed. Microsoft Entra Agent ID identity governance is recorded as out of scope.",
+            "locator": "Microsoft Entra admin center > App registrations",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Pseudonymized app registration references and API permission categories",
+              "expectation": "Only pseudonymized references and permission categories are retained, and it is confirmed that no app registration, secret, or permission was created or changed."
+            }
+          },
+          {
+            "id": "step-run-sample-scripts",
+            "mode": "powershell",
+            "intent": "Run the sample Export-Evidence script offline to confirm documentation-first behavior, representative-sample control statuses, package-relative artifact paths, and no live tenant call.",
+            "expected": "The sample evidence package reports only partial control statuses, carries runtimeMode and dataSourceMode markers, uses package-relative artifact paths, and makes no live Microsoft 365, Power Platform, or Copilot call.",
+            "command": "pwsh -File solutions/10-connector-plugin-governance/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath lab-evidence/10-connector-plugin-governance/sample-export",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "10-connector-plugin-governance-evidence.json metadata and controls",
+              "expectation": "The package metadata shows runtimeMode documentation-first and dataSourceMode representative-sample, every control status is partial, artifact paths are package-relative, and no live call occurred."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify no mutation and confirm source currency",
+        "steps": [
+          {
+            "id": "step-verify-no-mutation",
+            "mode": "manual",
+            "intent": "Attest that no connector, agent, plugin, MCP, data policy, role, or license change occurred during the read-only cycle.",
+            "expected": "The operator note confirms mutations were empty and that only read-only inspection and offline sample scripts were run.",
+            "operatorNote": "Attest that no connector was enabled, disabled, or removed; no agent was pinned, blocked, or deleted; no MCP server was added or changed; no Power Platform data policy was created or changed; and no role or license was assigned or removed during this cycle.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "no-mutation attestation note",
+              "expectation": "The operator attests that mutations were empty and only read-only inspection occurred."
+            }
+          },
+          {
+            "id": "step-verify-source-claims",
+            "mode": "manual",
+            "intent": "Confirm each cited Microsoft Learn source remains published and matches the recorded lifecycle state.",
+            "expected": "All cited Microsoft Learn sources resolve and their lifecycle states match the contract.",
+            "operatorNote": "Open each microsoftSourceClaims.sourceUrl and confirm the page is still published and its lifecycle state matches the contract, in particular that federated Copilot connectors remain in early access preview, Microsoft Agent 365 remains generally available, and the Package Management Graph API remains documented with the recorded lifecycle.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims[].sourceUrl",
+              "expectation": "Every cited Microsoft Learn source resolves and its lifecycle state still matches the contract."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove the local ignored staging directory after required redacted evidence has been captured by the lab result packager.",
+            "expected": "The Solution 10 lab staging directory and any raw export output are absent after cleanup.",
+            "command": "$path = 'lab-evidence/10-connector-plugin-governance'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 10 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/10-connector-plugin-governance no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-tenant-cleanup",
+            "mode": "manual",
+            "intent": "Attest that no mutable change occurred so cleanup of tenant state is not required for this read-only cycle.",
+            "expected": "Operator note confirms mutations were empty and no tenant cleanup is required.",
+            "operatorNote": "Attest that mutations were empty, no tenant cleanup is required, and only redacted or aggregated evidence with no secrets or user or group identifiers was retained.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "cleanup attestation note",
+              "expectation": "Operator attests no mutable change occurred, no tenant cleanup is required, and no secret or user identifier was persisted to committed evidence."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus a reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-agent-registry-observation",
+        "type": "screenshot",
+        "description": "Read-only capture of the Microsoft 365 admin center agent registry (Agents > All agents > Registry) showing the inventory and the Export to CSV action.",
+        "requiredForControls": [
+          "1.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-agent-registry-api-summary",
+        "type": "json",
+        "description": "Aggregate Package Management API inventory counts by type, platform, and supported host, with no package IDs, names, app IDs, owners, assignments, or raw response retained.",
+        "requiredForControls": [
+          "1.13",
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-connector-inventory-observation",
+        "type": "screenshot",
+        "description": "Read-only capture of Microsoft 365 Copilot connectors (Your connections) distinguishing synced connectors from federated (early access preview, read-only) connectors.",
+        "requiredForControls": [
+          "1.13",
+          "2.16"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-dlp-classification-observation",
+        "type": "screenshot",
+        "description": "Read-only capture of Power Platform data policy connector classifications (Business, Non-Business, Blocked) including custom, HTTP, and MCP connectors, with the environment or tenant scope noted.",
+        "requiredForControls": [
+          "2.13",
+          "2.16"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-mcp-metadata-note",
+        "type": "manual-attestation",
+        "description": "Read-only note recording pseudonymized MCP references, authentication types, and DLP classifications with no name, endpoint, identifier, or secret captured, or a NOT-APPLICABLE disposition when no MCP server is present.",
+        "requiredForControls": [
+          "2.16"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-sample-export-package",
+        "type": "json",
+        "description": "Sample Export-Evidence.ps1 package showing partial-only control statuses, runtimeMode/dataSourceMode markers, and package-relative artifact paths from representative sample data.",
+        "requiredForControls": [
+          "2.14",
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "List of verified Microsoft Learn source URLs and lifecycle states supporting the connector, agent registry, MCP, Power Platform DLP, and Agent 365 boundary claims.",
+        "requiredForControls": [
+          "1.13",
+          "2.13",
+          "2.14",
+          "2.16",
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-agent-registry-observation",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

@@ -92,3 +92,104 @@ Describe 'Copilot Connector and Plugin Governance solution content' {
         $errors.Count | Should -Be 0
     }
 }
+
+Describe 'CPG evidence portability and honesty' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:repoRoot = (Resolve-Path (Join-Path $script:solutionRoot '..\..')).Path
+        $script:exportScriptPath = Join-Path $script:solutionRoot 'scripts\Export-Evidence.ps1'
+        Import-Module (Join-Path $script:repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+    }
+
+    It 'stores package-relative paths, returns absolute paths, reports partial-only controls, and validates after relocation' {
+        $outputPath = Join-Path $TestDrive 'portable-evidence'
+        $result = & $script:exportScriptPath -ConfigurationTier regulated -OutputPath $outputPath
+
+        [System.IO.Path]::IsPathRooted($result.Package.Path) | Should -BeTrue
+        foreach ($artifact in @($result.Artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeTrue
+        }
+
+        $package = Get-Content -Path $result.Package.Path -Raw | ConvertFrom-Json
+        foreach ($artifact in @($package.artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeFalse
+        }
+        @($package.controls | Where-Object { $_.status -eq 'implemented' }).Count | Should -Be 0
+        $package.metadata.runtimeMode | Should -Be 'documentation-first'
+        $package.metadata.dataSourceMode | Should -Be 'representative-sample'
+
+        $relocatedPath = Join-Path $TestDrive 'portable-evidence-relocated'
+        Move-Item -Path $outputPath -Destination $relocatedPath
+        $validation = Test-CopilotGovEvidencePackage `
+            -Path (Join-Path $relocatedPath '10-connector-plugin-governance-evidence.json') `
+            -ExpectedArtifacts @('connector-inventory', 'approval-register', 'data-flow-attestations')
+        $validation.IsValid | Should -BeTrue -Because ($validation.Errors -join '; ')
+    }
+
+    It 'resolves relative output from the PowerShell provider location' {
+        $originalProcessDirectory = [System.Environment]::CurrentDirectory
+        Push-Location $TestDrive
+        try {
+            [System.Environment]::CurrentDirectory = $script:solutionRoot
+            $result = & $script:exportScriptPath -ConfigurationTier baseline -OutputPath '.\provider-relative'
+            (Split-Path -Parent $result.Package.Path) | Should -Be (Join-Path $TestDrive 'provider-relative')
+        }
+        finally {
+            [System.Environment]::CurrentDirectory = $originalProcessDirectory
+            Pop-Location
+        }
+    }
+}
+
+Describe 'CPG documentation currency' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:readme = Get-Content -Path (Join-Path $script:solutionRoot 'README.md') -Raw
+        $script:architecture = Get-Content -Path (Join-Path $script:solutionRoot 'docs\architecture.md') -Raw
+        $script:prerequisites = Get-Content -Path (Join-Path $script:solutionRoot 'docs\prerequisites.md') -Raw
+        $script:defaultConfig = Get-Content -Path (Join-Path $script:solutionRoot 'config\default-config.json') -Raw | ConvertFrom-Json
+    }
+
+    It 'documents the synced and federated Copilot connector models and MCP' {
+        $script:readme | Should -Match 'synced connectors'
+        $script:readme | Should -Match 'federated connectors'
+        $script:readme | Should -Match 'Model Context Protocol'
+        $script:readme | Should -Match 'early access preview'
+    }
+
+    It 'documents the Microsoft Agent 365 registry, Entra Agent ID, and least-privilege AI Reader role' {
+        $script:readme | Should -Match 'Microsoft Agent 365'
+        $script:readme | Should -Match 'Entra Agent ID'
+        $script:readme | Should -Match 'AI Reader'
+        $script:architecture | Should -Match 'Agents > All agents > Registry'
+    }
+
+    It 'documents the Agent 365 Package Management API as preview and read-only for this lab cycle' {
+        $script:readme | Should -Match 'Package Management API'
+        $script:readme | Should -Match 'CopilotPackages\.Read\.All'
+        $script:architecture | Should -Match '/v1\.0/copilot/admin/catalog/packages'
+        $script:prerequisites | Should -Match 'Microsoft Agent 365 license'
+    }
+
+    It 'uses current sample connector IDs in the blocked list' {
+        $blocked = @($script:defaultConfig.blockedConnectorIds)
+        $blocked | Should -Contain 'shared_twitter'
+        $blocked | Should -Not -Contain 'shared_x'
+        $blocked | Should -Not -Contain 'shared_boxpersonal'
+    }
+}
+
+Describe 'CPG lab contract' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:labContractPath = Join-Path $script:solutionRoot 'lab\10-connector-plugin-governance.lab.json'
+    }
+
+    It 'ships a read-only lab validation contract' {
+        Test-Path -Path $script:labContractPath | Should -BeTrue
+        $contract = Get-Content -Path $script:labContractPath -Raw | ConvertFrom-Json
+        $contract.solution.id | Should -Be '10-connector-plugin-governance'
+        @($contract.mutations).Count | Should -Be 0
+        $contract.scope.cloud | Should -Be 'm365-us-commercial'
+    }
+}

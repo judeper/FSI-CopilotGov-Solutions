@@ -5,6 +5,8 @@ BeforeAll {
     $fixturesRoot = Join-Path $PSScriptRoot 'fixtures'
     $packagePath = Join-Path $fixturesRoot 'lab-package/portable-evidence.json'
     $resultValidatorPath = Join-Path $repoRoot 'scripts/validate-lab-result.py'
+    $contractValidatorPath = Join-Path $repoRoot 'scripts/validate-lab-contracts.py'
+    $solution10ContractPath = Join-Path $repoRoot 'solutions/10-connector-plugin-governance/lab/10-connector-plugin-governance.lab.json'
     $validResultPath = Join-Path $fixturesRoot 'lab-results/valid/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json'
     $readOnlyResultPath = Join-Path $fixturesRoot 'lab-results/valid/read-only-no-mutations/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json'
     $invalidResultPath = Join-Path $fixturesRoot 'lab-results/invalid/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab-result.json'
@@ -44,6 +46,14 @@ Describe 'validate-lab-package wrapper' {
     It 'returns a nonzero exit code for invalid result fixtures' {
         $null = & $pwshPath -NoLogo -NoProfile -File $wrapperPath -Path $packagePath -ResultPath $invalidResultPath 2>&1
         $LASTEXITCODE | Should -Not -Be 0
+    }
+}
+
+Describe 'Repository lab contract validation' {
+    It 'validates the connector and plugin governance (solution 10) lab contract' {
+        $output = & $pythonPath $contractValidatorPath $solution10ContractPath 2>&1
+        $LASTEXITCODE | Should -Be 0
+        ($output | Out-String) | Should -Match 'validation passed'
     }
 }
 
