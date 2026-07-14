@@ -10,6 +10,7 @@
 | Drift alerts keep firing after an approved feature change. | The baseline was not refreshed after the approved ring promotion or restriction. | Capture a new baseline with `Deploy-Solution.ps1`, store the approval reference, and rerun `Monitor-Compliance.ps1`. |
 | Regulated tier shows connector exposure findings for third-party plugins. | Connector and plugin inventory is broader than the approved feature scope. | Review plugin and connector approvals, move the feature to `Restricted` if necessary, and coordinate with the connector governance solution for deeper assessment. |
 | Evidence export writes JSON but no `.sha256` file is present. | The output path is not writable or the export process was interrupted after payload creation. | Re-run `Export-Evidence.ps1` with a writable output path and verify the hash file immediately after export. |
+| Web search is still used by Copilot even though a Purview DLP policy was created. | The Cloud Policy `Allow web search in Copilot` toggle and the Purview DLP `Performing Web Searches` action are different controls. | The Cloud Policy toggle (Microsoft 365 Apps admin center) turns web search on or off for users/groups. The Purview DLP action (Microsoft Purview portal) only blocks web grounding when a prompt contains sensitive information types. Verify both surfaces; the DLP surface is governed by solution 05. |
 
 ## Script-Level Checks
 

@@ -16,6 +16,8 @@ FMC evidence packages are intended to show how Copilot features are inventoried,
 
 - JSON package aligned to `..\..\data\evidence-schema.json`
 - Companion `.sha256` file for every export
+- Package `metadata` includes `runtimeMode` (`documentation-first`) and `dataSourceMode` (`representative-sample`) markers, and the summary carries a `statusSemantics` note so reviewers do not treat sample control states as proof of live enforcement
+- Artifact references in the package use package-relative file names so the package stays portable when relocated; the script returns absolute paths to the caller for immediate inspection
 - Control status entries for `2.6`, `4.1`, `4.2`, `4.3`, `4.4`, `4.12`, and `4.13`
 - Summary section that records overall status, record count, finding count, and exceptions
 
@@ -43,6 +45,8 @@ The script:
 
 ## Interpretation Notes
 
+- Every control status in the exported package is `partial` because the evidence is representative sample data derived from tier templates, not live tenant collection. Treat the package as a format and workflow demonstration; replace it with live tenant evidence before presenting it as a supervisory record.
 - A `partial` status for control `4.4` indicates drift detection logic exists, but meaningful enforcement depends on an approved tenant baseline.
-- A `partial` status for control `4.13` indicates connector and plugin risks are identified in the registry, but deeper lifecycle governance may require solution 10 or additional operational workflow.
+- A `partial` status for control `4.13` indicates connector and plugin risks are identified in the registry, but deeper lifecycle governance may require solution 10, Microsoft Agent 365, or additional operational workflow.
+- The `runtimeMode` and `dataSourceMode` package metadata markers confirm the documentation-first, representative-sample nature of the export.
 - Evidence export supports compliance with SEC Reg FD and FINRA 3110 but does not replace supervisory review or change approval documentation.

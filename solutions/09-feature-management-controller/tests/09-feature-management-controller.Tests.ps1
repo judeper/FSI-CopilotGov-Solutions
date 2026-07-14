@@ -322,3 +322,88 @@ Describe 'FMC functional tests' {
         }
     }
 }
+
+Describe 'FMC evidence portability and honesty' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:repoRoot = (Resolve-Path (Join-Path $script:solutionRoot '..\..')).Path
+        $script:exportScriptPath = Join-Path $script:solutionRoot 'scripts\Export-Evidence.ps1'
+        Import-Module (Join-Path $script:repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+    }
+
+    It 'stores package-relative paths, returns absolute paths, reports partial-only controls, and validates after relocation' {
+        $outputPath = Join-Path $TestDrive 'portable-evidence'
+        $result = & $script:exportScriptPath -ConfigurationTier regulated -OutputPath $outputPath
+
+        [System.IO.Path]::IsPathRooted($result.Package.Path) | Should -BeTrue
+        foreach ($artifact in @($result.Artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeTrue
+        }
+
+        $package = Get-Content -Path $result.Package.Path -Raw | ConvertFrom-Json
+        foreach ($artifact in @($package.artifacts)) {
+            [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeFalse
+        }
+        @($package.controls | Where-Object { $_.status -eq 'implemented' }).Count | Should -Be 0
+        $package.metadata.runtimeMode | Should -Be 'documentation-first'
+        $package.metadata.dataSourceMode | Should -Be 'representative-sample'
+
+        $relocatedPath = Join-Path $TestDrive 'portable-evidence-relocated'
+        Move-Item -Path $outputPath -Destination $relocatedPath
+        $validation = Test-CopilotGovEvidencePackage `
+            -Path (Join-Path $relocatedPath '09-feature-management-controller-evidence.json') `
+            -ExpectedArtifacts @('feature-state-baseline', 'rollout-ring-history', 'drift-findings')
+        $validation.IsValid | Should -BeTrue -Because ($validation.Errors -join '; ')
+    }
+
+    It 'resolves relative output from the PowerShell provider location' {
+        $originalProcessDirectory = [System.Environment]::CurrentDirectory
+        Push-Location $TestDrive
+        try {
+            [System.Environment]::CurrentDirectory = $script:solutionRoot
+            $result = & $script:exportScriptPath -ConfigurationTier baseline -OutputPath '.\provider-relative'
+            (Split-Path -Parent $result.Package.Path) | Should -Be (Join-Path $TestDrive 'provider-relative')
+        }
+        finally {
+            [System.Environment]::CurrentDirectory = $originalProcessDirectory
+            Pop-Location
+        }
+    }
+}
+
+Describe 'FMC documentation currency' {
+    BeforeAll {
+        $script:solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        $script:readme = Get-Content -Path (Join-Path $script:solutionRoot 'README.md') -Raw
+        $script:architecture = Get-Content -Path (Join-Path $script:solutionRoot 'docs\architecture.md') -Raw
+        $script:prerequisites = Get-Content -Path (Join-Path $script:solutionRoot 'docs\prerequisites.md') -Raw
+        $script:defaultConfig = Get-Content -Path (Join-Path $script:solutionRoot 'config\default-config.json') -Raw | ConvertFrom-Json
+    }
+
+    It 'documents the Teams meeting and calling Copilot policy cmdlets' {
+        $script:architecture | Should -Match 'Set-CsTeamsMeetingPolicy -Copilot'
+        $script:architecture | Should -Match 'Set-CsTeamsCallingPolicy -Copilot'
+        $script:prerequisites | Should -Match 'Get-CsTeamsMeetingPolicy'
+        $script:prerequisites | Should -Match 'Get-CsTeamsCallingPolicy'
+    }
+
+    It 'distinguishes the Cloud Policy web-search toggle from the Purview DLP web-search action' {
+        $script:architecture | Should -Match 'Allow web search in Copilot'
+        $script:architecture | Should -Match 'Performing Web Searches'
+        $script:defaultConfig.webGroundingGovernance.purviewDlpWebSearchBoundary.action | Should -Match 'Performing Web Searches'
+    }
+
+    It 'documents the Microsoft Agent 365 and Entra Agent ID boundary' {
+        $script:readme | Should -Match 'Microsoft Agent 365'
+        $script:readme | Should -Match 'Entra Agent ID'
+    }
+
+    It 'does not configure a Copilot feature-management Graph endpoint' {
+        $null -eq $script:defaultConfig.graph.endpoint | Should -BeTrue
+        $solutionRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+        foreach ($scriptName in @('Deploy-Solution.ps1', 'Monitor-Compliance.ps1', 'Export-Evidence.ps1')) {
+            $content = Get-Content -Path (Join-Path $solutionRoot "scripts\$scriptName") -Raw
+            $content | Should -Not -Match 'graph\.microsoft\.com/[^ ]*copilot'
+        }
+    }
+}

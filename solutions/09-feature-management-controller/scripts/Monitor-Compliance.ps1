@@ -263,8 +263,11 @@ function Measure-FeatureDrift {
         $driftScore = [int](($DriftFindings | Measure-Object -Property score -Sum).Sum)
     }
 
+    # Current-state collection is a representative stub, not a live tenant read, so a
+    # zero-drift result is reported as 'partial' rather than 'implemented'. Asserting
+    # 'implemented' from sample data would overstate the control's live coverage.
     $status = if ($driftCount -eq 0) {
-        'implemented'
+        'partial'
     }
     elseif ($driftCount -lt $AlertThreshold) {
         'partial'
@@ -330,6 +333,8 @@ try {
         Solution           = 'Copilot Feature Management Controller'
         SolutionCode       = 'FMC'
         Tier               = $ConfigurationTier
+        RuntimeMode        = 'documentation-first'
+        DataSourceMode     = 'representative-sample'
         BaselinePath       = (Resolve-Path -Path $BaselinePath).Path
         EvaluatedAt        = (Get-Date).ToString('o')
         FindingsTable      = (New-CopilotGovTableName -SolutionSlug 'fmc' -Purpose 'finding')

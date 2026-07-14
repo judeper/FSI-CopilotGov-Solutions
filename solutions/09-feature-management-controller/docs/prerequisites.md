@@ -4,7 +4,7 @@
 
 The deployment team should have access to the following roles or equivalent delegated permissions:
 
-- Microsoft 365 Global Administrator, AI Administrator, or equivalent delegated model for Microsoft 365 admin center Copilot settings
+- Microsoft 365 Global Administrator, AI Administrator, or equivalent delegated model for Microsoft 365 admin center Copilot settings. The **AI Administrator** role is the least-privilege option for managing Copilot Control System settings and reports without Global Administrator rights; it is a privileged role, so scope it with Microsoft Entra Privileged Identity Management (PIM) where possible.
 - Teams Administrator for documented Teams meeting/event and calling policy review
 - Power Platform Administrator for Power Apps Copilot settings and Power Automate tenant-level Copilot settings
 - Dataverse environment administration or maker rights in the target environment used for evidence storage
@@ -13,16 +13,18 @@ The deployment team should have access to the following roles or equivalent dele
 
 FMC does not require Microsoft Graph feature-rollout permissions for Copilot feature management. The Microsoft Graph feature rollout policy resource is scoped to Microsoft Entra staged authentication rollout and is not used as a Copilot feature inventory source.
 
+As of the last verification, Microsoft does not publish a Microsoft Graph API for managing Copilot feature or admin settings. Those controls are managed through the Microsoft 365 admin center (Copilot Control System), the Cloud Policy service (Microsoft 365 Apps admin center), Microsoft Teams PowerShell, the Microsoft Purview portal, and the Power Platform admin center. FMC does not call or document any Copilot feature-management Graph endpoint, and its default configuration leaves the Graph endpoint unset.
+
 If the implementation team separately documents Entra staged authentication rollout, keep that activity out of FMC Copilot feature governance and align its delegated permissions to current Microsoft Learn guidance.
 
 ## Supported Administrative Surfaces
 
 FMC assumes access to the following sources:
 
-- Microsoft 365 admin center feature and app policy settings
-- Cloud Policy service `Allow web search in Copilot` policy state and group scope
-- Teams admin center policy views or exports for documented Teams meeting/event and calling controls
-- Microsoft 365 Copilot app inventory or documentation-first review for Teams chat/channel Copilot exposure
+- Microsoft 365 admin center feature and app policy settings (Copilot Control System)
+- Cloud Policy service `Allow web search in Copilot` policy state and group scope (Microsoft 365 Apps admin center)
+- Teams admin center policy views or exports for documented Teams meeting/event and calling controls. Read the state with supported cmdlets — `Get-CsTeamsMeetingPolicy` (`-Copilot` values `Enabled`, `EnabledWithTranscript`, `EnabledWithTranscriptDefaultOn`, `Disabled`) and `Get-CsTeamsCallingPolicy` (`-Copilot` values `Enabled`, `EnabledWithTranscript`, `Disabled`). This solution inspects and documents policy state; it does not run the `Set-Cs*` cmdlets.
+- Microsoft 365 Copilot app inventory or documentation-first review for Teams chat/channel Copilot exposure (there is no dedicated Teams-chat Copilot on/off policy; it follows the Microsoft 365 Copilot license and app availability)
 - Power Platform admin center Copilot settings and administrative exports, with Power Automate interpreted through the documented tenant-level limitation
 
 ## Platform and Tooling Requirements

@@ -10,7 +10,7 @@ Copilot Feature Management Controller (FMC) centralizes Copilot feature inventor
 
 For regulated firms, Copilot feature activation can change how material non-public information, research notes, customer interactions, and plugin outputs are surfaced. FMC supports compliance with SEC Reg FD by documenting where high-impact Copilot features are enabled and supports compliance with FINRA 3110 by giving supervisors a repeatable baseline, monitoring cadence, and evidence trail for feature policy decisions.
 
-Microsoft now provides the **Copilot Control System** in the Microsoft 365 admin center (under **Copilot**) as a centralized governance surface for Copilot features, agents, and connectors. This solution complements the Copilot Control System by adding tier-aware configuration management, drift detection, and evidence packaging for regulated environments.
+Microsoft provides the **Copilot Control System (CCS)** in the Microsoft 365 admin center (under **Copilot**) as the centralized surface for Copilot licensing, usage reporting, and feature settings, organized under **User access**, **Data access**, **Copilot actions**, and **Other settings**. Several of these settings are shortcuts that open other admin centers — the Microsoft Teams admin center for Teams meeting Copilot, the Microsoft 365 Apps admin center (Cloud Policy service) for web search, the Microsoft Purview portal for data loss prevention, and the Power Platform admin center for Power Platform Copilot. This solution complements CCS by adding tier-aware configuration management, drift detection, and evidence packaging for these **core Copilot feature policies**. It does not govern the agent registry, Microsoft Agent 365, or Microsoft Entra Agent ID; agent governance is handled by Microsoft Agent 365 and, in this portfolio, by solutions 10, 21, and 23.
 
 The solution uses PowerShell for baseline capture, ring planning, monitoring, and evidence packaging, while Power Automate assets remain documentation-first until approved for tenant deployment.
 
@@ -34,8 +34,9 @@ The solution uses PowerShell for baseline capture, ring planning, monitoring, an
 - ❌ Does not deploy Power Automate flows (change-tracking workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
-- ❌ Does not cover Agent 365 platform governance or Entra Agent ID controls
+- ❌ Does not govern Microsoft Agent 365, the converged agent registry, or Microsoft Entra Agent ID; Agent 365 became generally available for commercial tenants on May 1, 2026 and is the agent control plane, while this solution scopes to core Copilot feature policies rather than agent identity, registry, or lifecycle governance
 - ❌ Does not configure tenant-wide Copilot web domain exclusion lists or authoritative source controls as Microsoft admin settings; those remain customer-defined planning metadata until Microsoft documents the control surface
+- ❌ Does not configure the Microsoft Purview data loss prevention **Performing Web Searches** action; that content-triggered restriction (which blocks web grounding only when a prompt contains sensitive information types) is a separate Purview surface — see solution 05 — and is distinct from the Cloud Policy **Allow web search in Copilot** on/off policy this solution inspects
 - ❌ Does not manage baseline security posture simulation or enforcement outside documented Copilot Control System settings
 - ❌ Does not govern third-party model providers (Anthropic Claude, xAI)
 
@@ -151,8 +152,8 @@ Detailed requirements are listed in [docs/prerequisites.md](prerequisites.md).
 |---------|-------------|----------------------------|
 | 2.6 | Copilot Web Search and Web Grounding Controls | Uses approved feature scope, app coverage lists, and Restricted ring definitions to keep unapproved Copilot experiences — including web search and grounding — blocked or isolated. |
 | 4.1 | Copilot Admin Settings and Feature Management | Maintains an inventory of Copilot features, source systems, and expected state across supported admin surfaces. |
-| 4.2 | Copilot in Teams Meetings Governance | Documents expected enablement by tier and highlights policy exceptions that require formal approval for Teams Meetings Copilot features. |
-| 4.3 | Copilot in Teams Phone and Queues Governance | Documents the rollout-ring pattern that can be extended to Teams Phone and Queues; the current scaffold tracks Teams chat and meetings feature records until tenant-specific Phone and Queues metadata is added. |
+| 4.2 | Copilot in Teams Meetings Governance | Documents expected enablement by tier and highlights policy exceptions that require formal approval for Teams Meetings Copilot features. The Teams meetings Copilot policy is set with `Set-CsTeamsMeetingPolicy -Copilot` (values `Enabled`, `EnabledWithTranscript`, `EnabledWithTranscriptDefaultOn`, `Disabled`); this scaffold documents and inspects intended state rather than running the cmdlet. |
+| 4.3 | Copilot in Teams Phone and Queues Governance | Documents the rollout-ring pattern that can be extended to Teams Phone and Queues; the current scaffold tracks Teams chat and meetings feature records until tenant-specific Phone and Queues metadata is added. The Teams calls Copilot surface is set with `Set-CsTeamsCallingPolicy -Copilot` (values `Enabled`, `EnabledWithTranscript`, `Disabled`). |
 | 4.4 | Copilot in Viva Suite Governance | Documents the baseline comparison and drift-finding pattern that can be extended to Viva Suite; the current tier configs do not include Viva-specific feature records until tenant binding is added. |
 | 4.12 | Change Management and Rollout Risk Tracking | Preserves rollout promotion history, change references, and notification events for supervisory review. |
 | 4.13 | Third-Party Connector and Plugin Risk Assessment | Flags connector and plugin exposure in the feature registry so separate risk review can be triggered before enablement. |
@@ -181,4 +182,4 @@ All evidence packages use the shared JSON contract and SHA-256 companion hash fr
 - Power Automate Copilot settings should be interpreted with the documented tenant-level limitation where environment-level support is unavailable.
 - Drift scoring is most meaningful after a tenant-specific baseline has been captured and approved.
 - Power Automate flow deployment remains documentation-first; the scripts record deployment intent and flow metadata rather than importing live flow packages.
-- The feature registry does not yet include Copilot agents, Copilot Studio governance, or Copilot Pages and Notebooks controls. These are recommended additions for the next version.
+- The feature registry intentionally excludes Copilot agents, the Microsoft Agent 365 agent registry, and Microsoft Entra Agent ID (agent identity, in preview); agent governance is handled by Microsoft Agent 365 and by solutions 10, 21, and 23. Copilot Studio governance and Copilot Pages and Notebooks controls are also out of scope for this feature-policy solution.
