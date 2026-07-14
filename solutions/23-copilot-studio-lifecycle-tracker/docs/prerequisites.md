@@ -37,6 +37,7 @@ Admin consent is typically required before these permissions can be used in prod
 - Repository scaffold scripts: PowerShell 7.2 or later
 - Live integrations that use `Microsoft.PowerApps.Administration.PowerShell`: Windows PowerShell 5.x; the module uses .NET Framework and is incompatible with PowerShell 6.0 and later
 - PowerShell 7+ live integrations should use Power Platform REST API/SDK patterns instead of the legacy admin module
+- The cross-platform Microsoft Power Platform CLI (`pac`) is a supported alternative for solution export/import and environment operations on Windows, Linux, and macOS. See [What is Microsoft Power Platform CLI?](https://learn.microsoft.com/power-platform/developer/cli/introduction)
 
 ## Network Requirements
 

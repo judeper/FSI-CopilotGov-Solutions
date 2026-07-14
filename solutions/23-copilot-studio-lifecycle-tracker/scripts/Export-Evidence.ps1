@@ -30,7 +30,7 @@
 
 .NOTES
     Solution: Copilot Studio Agent Lifecycle Tracker (CSLT)
-    Version: v0.1.3
+    Version: v0.1.4
 #>
 [CmdletBinding()]
 param(
@@ -84,14 +84,18 @@ function New-CsltArtifactFile {
     $null = New-Item -ItemType Directory -Path $directory -Force
     $Content | ConvertTo-Json -Depth 10 | Set-Content -Path $Path -Encoding utf8
     $hashInfo = Write-Sha256Companion -Path $Path
-    return [pscustomobject]@{ Path = $Path; Hash = $hashInfo.Hash }
+    return [pscustomobject]@{
+        Path = (Resolve-Path -LiteralPath $Path).Path
+        PackagePath = [IO.Path]::GetFileName($Path)
+        Hash = $hashInfo.Hash
+    }
 }
 
 Write-Verbose ("Loading CSLT configuration for tier [{0}]." -f $ConfigurationTier)
 $configuration = Get-CsltConfiguration -Tier $ConfigurationTier
 Test-CsltConfiguration -Configuration $configuration
 
-$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
+$resolvedOutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
 $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
 
 $now = (Get-Date).ToUniversalTime()
@@ -172,11 +176,17 @@ $approvalFile  = New-CsltArtifactFile -Path (Join-Path $resolvedOutputPath ("pub
 $versionFile   = New-CsltArtifactFile -Path (Join-Path $resolvedOutputPath ("version-history-{0}.json"           -f $ConfigurationTier)) -Content $versions
 $deprecFile    = New-CsltArtifactFile -Path (Join-Path $resolvedOutputPath ("deprecation-evidence-{0}.json"      -f $ConfigurationTier)) -Content $deprecations
 
-$artifacts = @(
+$resultArtifacts = @(
     [pscustomobject]@{ name = 'agent-lifecycle-inventory'; type = 'json'; path = $inventoryFile.Path; hash = $inventoryFile.Hash },
     [pscustomobject]@{ name = 'publishing-approval-log';   type = 'json'; path = $approvalFile.Path;  hash = $approvalFile.Hash },
     [pscustomobject]@{ name = 'version-history';           type = 'json'; path = $versionFile.Path;   hash = $versionFile.Hash },
     [pscustomobject]@{ name = 'deprecation-evidence';      type = 'json'; path = $deprecFile.Path;    hash = $deprecFile.Hash }
+)
+$packageArtifacts = @(
+    [pscustomobject]@{ name = 'agent-lifecycle-inventory'; type = 'json'; path = $inventoryFile.PackagePath; hash = $inventoryFile.Hash },
+    [pscustomobject]@{ name = 'publishing-approval-log';   type = 'json'; path = $approvalFile.PackagePath;  hash = $approvalFile.Hash },
+    [pscustomobject]@{ name = 'version-history';           type = 'json'; path = $versionFile.PackagePath;   hash = $versionFile.Hash },
+    [pscustomobject]@{ name = 'deprecation-evidence';      type = 'json'; path = $deprecFile.PackagePath;    hash = $deprecFile.Hash }
 )
 
 $summary = @{
@@ -203,7 +213,7 @@ $packageInfo = Export-SolutionEvidencePackage `
     -OutputPath $resolvedOutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts $artifacts `
+    -Artifacts $packageArtifacts `
     -PackageFileName $packageFileName `
     -ExpectedArtifacts @($configuration.evidenceOutputs) `
     -AdditionalMetadata @{ version = $configuration.version }
@@ -213,10 +223,17 @@ $package = Get-Content -Path $packageInfo.Path -Raw -Encoding utf8 | ConvertFrom
 Write-Host (
     "CSLT evidence export [{0}]: {1} artifacts written to {2}." -f
     $ConfigurationTier,
-    $artifacts.Count,
+    $resultArtifacts.Count,
     $resolvedOutputPath
 )
 
+$result = [pscustomobject]@{
+    PackagePath = $packageInfo.Path
+    PackageHash = $packageInfo.Hash
+    Package = $package
+    Artifacts = $resultArtifacts
+}
+
 if ($PassThru) {
-    return $package
+    return $result
 }

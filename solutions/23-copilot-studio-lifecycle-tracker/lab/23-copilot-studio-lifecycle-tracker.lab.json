@@ -1,0 +1,399 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:23-copilot-studio-lifecycle-tracker:2026-07-readonly-lifecycle",
+  "solution": {
+    "id": "23-copilot-studio-lifecycle-tracker",
+    "name": "Copilot Studio Agent Lifecycle Tracker",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "4.13",
+    "1.10",
+    "1.16",
+    "4.5",
+    "4.12"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "power-platform-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-agent365-ga-registry",
+      "claimText": "As of May 1, 2026, Microsoft Agent 365 is generally available for the Commercial segment on a per user basis and provides a centralized agent registry and lifecycle-governance control plane.",
+      "affectedFiles": [
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/prerequisites.md",
+        "solutions/23-copilot-studio-lifecycle-tracker/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-agent-365/overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-registry-navigation",
+      "claimText": "The agent registry is reached in the Microsoft 365 admin center by selecting Agents > All Agents > Registry, which lists the agents available to the organization.",
+      "affectedFiles": [
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/admin/manage/agent-registry",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-studio-publish-model",
+      "claimText": "A Copilot Studio agent is published from a draft; each update is published again and applies to connected channels. No documented canonical rollback event API was identified on the cited publishing and ALM surfaces as of 2026-07-14, so rollback references remain customer-supplied solution/change evidence.",
+      "affectedFiles": [
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/evidence-export.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-copilot-studio/publication-fundamentals-publish-channels",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-studio-solution-alm",
+      "claimText": "Copilot Studio agents are moved between environments through Power Platform solutions. Development commonly uses unmanaged solutions and downstream environments use managed solutions; environment variables and connection references parameterize environment-specific values, and agents must be published in the target environment before changes are available.",
+      "affectedFiles": [
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/architecture.md",
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-copilot-studio/guidance/alm",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-powershell-runtime-split",
+      "claimText": "The Power Apps and Power Automate admin modules require Windows PowerShell 5.x; they use .NET Framework, which is incompatible with PowerShell 6.0 and later.",
+      "affectedFiles": [
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/prerequisites.md",
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/power-platform/admin/powerapps-powershell",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-power-platform-api-permissions",
+      "claimText": "Power Platform API uses delegated permissions only at this time; for service principal identities, assign a scoped RBAC role such as Reader or Contributor instead of application permissions.",
+      "affectedFiles": [
+        "solutions/23-copilot-studio-lifecycle-tracker/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/power-platform/admin/programmability-authentication-v2",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft Copilot Studio license assigned to the test operator",
+      "Qualifying Microsoft Agent 365 license for at least one user where registry inspection is in scope"
+    ],
+    "roles": [
+      "Global Reader",
+      "AI Reader for read-only Agent 365 registry inspection",
+      "Power Platform environment user with a custom read-only Dataverse security role for solution and agent metadata"
+    ],
+    "features": [
+      "Copilot Studio enabled in a non-production Power Platform environment",
+      "Microsoft Agent 365 registry available where licensed"
+    ],
+    "capacityRequirements": [
+      "One non-production Power Platform environment for representative sample validation"
+    ],
+    "dataRequirements": [
+      "Representative sample records only; no real agent IDs, environment IDs, solution unique names, owner identities, connection references, secrets, or customer content are retained in committed lab evidence"
+    ],
+    "tenantCount": 1
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant and environment context",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before any Agent 365 or Power Platform inspection.",
+            "expected": "The organization id and displayName match the separately maintained sanctioned-lab authorization record.",
+            "operatorNote": "Compare the response with the out-of-band lab authorization record and stop on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Graph organization response and sanctioned-lab record",
+              "expectation": "Tenant identity matches the separately maintained sanctioned-lab record."
+            }
+          },
+          {
+            "id": "step-confirm-environment",
+            "mode": "ui",
+            "intent": "Confirm the non-production Power Platform environment and operator read scope before inspection.",
+            "expected": "The target environment is visible and the operator has read-only access.",
+            "locator": "Power Platform admin center > Environments > (target environment) > Access",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Environment access panel",
+              "expectation": "Environment details confirm read-only operator access without granting new roles."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Inspect registry, agent lifecycle metadata, and run sample scripts",
+        "steps": [
+          {
+            "id": "step-inspect-agent-registry",
+            "mode": "ui",
+            "intent": "Inspect the Microsoft Agent 365 registry aggregate to observe agent inventory context where licensed.",
+            "expected": "The registry lists agents available to the organization; no availability or installation settings are changed.",
+            "locator": "Microsoft 365 admin center > Agents > All Agents > Registry",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Agent registry summary",
+              "expectation": "Registry summary displays agent counts and inventory without any change to configuration."
+            }
+          },
+          {
+            "id": "step-inspect-agent-lifecycle-metadata",
+            "mode": "ui",
+            "intent": "Inspect a Copilot Studio agent's draft versus published state without publishing.",
+            "expected": "Draft and published state are visible; no publish or republish action is performed.",
+            "locator": "Copilot Studio (copilotstudio.microsoft.com) > target environment > Agents > (agent) > Overview / Publish",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Agent publish state and solution metadata",
+              "expectation": "Published/draft state is recorded read only, with no lifecycle mutation."
+            }
+          },
+          {
+            "id": "step-inspect-solution-alm-metadata",
+            "mode": "ui",
+            "intent": "Inspect the Power Platform solution containing the agent and record managed/unmanaged state, solution version, environment-variable definitions, and connection-reference presence without export or import.",
+            "expected": "Solution membership and ALM metadata are visible in the Power Apps maker portal; no solution export, import, upgrade, or publish occurs.",
+            "locator": "Power Apps maker portal (make.powerapps.com) > target environment > Solutions > (agent solution)",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Solution overview and Objects list",
+              "expectation": "Managed/unmanaged state, solution version, agent membership, environment-variable definitions, and connection-reference presence are recorded read-only with identifiers pseudonymized."
+            }
+          },
+          {
+            "id": "step-run-monitor-script",
+            "mode": "powershell",
+            "intent": "Run the documentation-first monitoring script to produce a representative lifecycle snapshot from the local stub.",
+            "expected": "Script emits a stub warning and writes a representative monitoring snapshot without contacting live services.",
+            "command": "pwsh -File solutions/23-copilot-studio-lifecycle-tracker/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath lab-evidence/23-copilot-studio-lifecycle-tracker/monitor -Verbose",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance snapshot output",
+              "expectation": "Output includes the local-cslt-stub source marker and representative inventory, approval, and review counts."
+            }
+          },
+          {
+            "id": "step-run-export-script",
+            "mode": "powershell",
+            "intent": "Run the documentation-first evidence export and confirm SHA-256 companions are produced.",
+            "expected": "Four JSON artifacts and matching .sha256 companion files are written for the selected tier.",
+            "command": "pwsh -File solutions/23-copilot-studio-lifecycle-tracker/scripts/Export-Evidence.ps1 -ConfigurationTier baseline -OutputPath lab-evidence/23-copilot-studio-lifecycle-tracker/export -PassThru -Verbose",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Evidence export artifacts",
+              "expectation": "Each evidence JSON file has a matching .sha256 companion and the package validates against the shared schema."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify source citations and security posture",
+        "steps": [
+          {
+            "id": "step-verify-source-citations",
+            "mode": "manual",
+            "intent": "Confirm each Microsoft source claim resolves on Microsoft Learn and matches the documented lifecycle state.",
+            "expected": "All cited Microsoft Learn URLs remain published and consistent with the documented generally-available lifecycle state.",
+            "operatorNote": "Confirmed each microsoftSourceClaims.sourceUrl resolves on Microsoft Learn and matches the documented lifecycle state as of the review date.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source citation verification note",
+              "expectation": "Attestation records that every cited source is published and consistent with its claim."
+            }
+          },
+          {
+            "id": "step-inspect-roles-and-dlp",
+            "mode": "ui",
+            "intent": "Inspect environment security roles and data loss prevention policy assignment relevant to Copilot Studio agents.",
+            "expected": "Assigned roles and DLP policy scope are visible for review; no role, license, or policy change is made.",
+            "locator": "Power Platform admin center > Policies > Data policies and (environment) > Security roles",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Roles and DLP policy view",
+              "expectation": "Least-privilege role assignments and DLP scope are observed read-only, with no change applied."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Remove local staging and record cleanup decision",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove ignored local staging after required evidence has been captured by the lab result packager.",
+            "expected": "The Solution 23 lab-evidence staging directory no longer exists.",
+            "command": "$path = 'lab-evidence/23-copilot-studio-lifecycle-tracker'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 23 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/23-copilot-studio-lifecycle-tracker no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-cleanup-needed",
+            "mode": "manual",
+            "intent": "Capture operator attestation that no mutable changes were applied during this read-only run.",
+            "expected": "Operator note confirms cleanup is not required for this run.",
+            "operatorNote": "No mutation was executed in this read-only lifecycle validation run; only local documentation-first artifacts were produced.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no tenant mutation occurred and only local sample artifacts were written."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-monitor-transcript",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript and read-back output from the documentation-first monitor and evidence-export runs.",
+        "requiredForControls": [
+          "4.13",
+          "4.5"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-registry-observation",
+        "type": "screenshot",
+        "description": "Screenshot of the Microsoft Agent 365 registry summary and Copilot Studio agent publish state captured read-only.",
+        "requiredForControls": [
+          "1.10",
+          "1.16"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Source-citation record confirming each Microsoft Learn claim resolves and matches its documented lifecycle state.",
+        "requiredForControls": [
+          "4.13",
+          "4.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-monitor-transcript",
+      "artifact-source-citations"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

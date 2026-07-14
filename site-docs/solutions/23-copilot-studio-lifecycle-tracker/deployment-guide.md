@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Review [docs/prerequisites.md](prerequisites.md) before deployment. The repository scaffold scripts run in PowerShell 7.2 or later and generate local manifests/evidence from sample data. Future live integration should distinguish the runtime: `Microsoft.PowerApps.Administration.PowerShell` requires Windows PowerShell 5.x and is incompatible with PowerShell 6.0 and later, while PowerShell 7+ implementations should use Power Platform REST API/SDK patterns with delegated permissions and RBAC role assignments.
+Review [docs/prerequisites.md](prerequisites.md) before deployment. The repository scaffold scripts run in PowerShell 7.2 or later and generate local manifests/evidence from sample data. Future live integration should distinguish the runtime: `Microsoft.PowerApps.Administration.PowerShell` requires Windows PowerShell 5.x and is incompatible with PowerShell 6.0 and later, while PowerShell 7+ implementations should use Power Platform REST API/SDK patterns with delegated permissions and RBAC role assignments. The cross-platform Microsoft Power Platform CLI (`pac`) is a supported alternative for solution export/import and environment operations on Windows, Linux, and macOS.
 
 ## Step 1: Clone and Configure
 
@@ -23,7 +23,7 @@ Choose the governance tier that matches the operating model and review `config/<
 
 - `baseline`: daily inventory, informational publishing approval recording, 180-day review cadence
 - `recommended`: 8-hour inventory, single-approver publishing requirement, 90-day review cadence
-- `regulated`: hourly inventory, dual-approver publishing requirement, 30-day review cadence, evidence immutability
+- `regulated`: hourly inventory, dual-approver publishing requirement, 30-day review cadence, and an external immutable-storage requirement that this scaffold does not provision
 
 ## Step 3: Run Deploy-Solution.ps1 with -WhatIf First
 
@@ -78,3 +78,18 @@ Verify the following files exist:
 1. Remove the generated deployment manifest and lifecycle artifacts from the designated `artifacts/` path.
 2. Revoke any monitoring identity credentials issued for the live integration when no longer required.
 3. Archive prior evidence exports per the customer retention policy before deleting current working files.
+
+These steps roll back local scaffold artifacts only. Copilot Studio does not expose a documented one-click rollback API in the cited publishing/ALM guidance. A tenant rollback requires a previously approved solution export/version, controlled import or pipeline deployment, connection/environment-variable validation, and republishing in the target environment.
+
+## Lab Validation Handoff
+
+Validate `lab\23-copilot-studio-lifecycle-tracker.lab.json` before tenant execution. The first cycle is read-only (`mutations: []`) and:
+
+- compares tenant identity with a separately maintained sanctioned-lab record
+- inspects Agent 365 registry counts with AI Reader
+- inspects draft/published state in Copilot Studio and solution membership/version/managed state in the Power Apps maker portal
+- reviews roles and DLP scope using a custom read-only environment role
+- runs sample Monitor/Export scripts under ignored `lab-evidence/23-copilot-studio-lifecycle-tracker` staging
+- removes local staging fail-closed after evidence capture
+
+No publish, republish, solution export/import, restore, pipeline deployment, role, DLP, license, environment, or agent change is performed. Control 4.14 remains outside the contract's machine-checked controls until it exists in `data/controls-master.json`.
