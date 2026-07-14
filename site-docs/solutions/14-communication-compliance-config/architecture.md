@@ -2,7 +2,7 @@
 
 ## Solution Overview
 
-Microsoft Purview Communication Compliance Configurator generates and documents Microsoft Purview Communication Compliance policy templates for Copilot-assisted financial services communications. The solution focuses on policy publication readiness, reviewer workflow setup, lexicon governance, and evidence packaging. Portal deployment remains documentation-first because Microsoft Purview Communication Compliance publication still requires manual steps.
+Microsoft Purview Communication Compliance Configurator generates and documents Microsoft Purview Communication Compliance policy templates for Copilot-assisted financial services communications. The solution focuses on policy publication readiness, reviewer workflow setup, lexicon governance, and evidence packaging. Portal deployment remains documentation-first because the Microsoft 365 Copilot detection location and its trainable classifiers are configured in the Microsoft Purview portal; the Security & Compliance PowerShell surface (`New-`/`Get-SupervisoryReviewPolicyV2`, `New-`/`Get-`/`Set-SupervisoryReviewRule`) covers only baseline policy, reviewer, sampling-percentage, and keyword or sensitive-information-type settings.
 
 The solution supports compliance with FINRA 2210, FINRA 3110, SEC Reg BI, and FCA SYSC 10 by pairing policy templates with reviewer oversight, lexicon governance, and evidence outputs.
 
@@ -101,7 +101,7 @@ Queue metrics collection captures a readiness snapshot of:
 - escalated items
 - overdue items
 
-Automated collection is currently a stub because Microsoft Purview Communication Compliance queue automation depends on a supported API or Graph beta capability.
+Automated collection is currently a stub because Microsoft Purview Communication Compliance does not expose a supported Microsoft Graph or Purview API for reviewer queue metrics; queue data is exported manually from the Microsoft Purview portal.
 
 ### Evidence Packager
 
@@ -115,7 +115,7 @@ Automated collection is currently a stub because Microsoft Purview Communication
 
 ### Power Automate Flow
 
-The Power Automate component is documentation-first. It records the intended escalation and notification process but does not publish a tenant-specific flow in this solution version.
+The Power Automate component is documentation-first. It records the intended escalation and notification process but does not publish a tenant-specific flow in this solution version. In Microsoft Purview, these flows are created from the **Manage Power Automate flows** option in the alert **Automate** menu using recommended default templates — for example, notifying a user's manager when a Communication Compliance alert is generated. Recommended default templates for Communication Compliance do not require additional Power Automate licenses. The solution does not claim any unsupported polling or bulk-export flow behavior.
 
 ## Integration Points
 

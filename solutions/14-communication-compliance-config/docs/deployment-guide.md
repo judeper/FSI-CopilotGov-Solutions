@@ -49,6 +49,10 @@ Microsoft Purview Communication Compliance publication is manual in this version
 5. Publish the policy and document the publication timestamp.
 6. Repeat for each template required by the selected tier.
 
+> **Current portal wizard reference (verify before use):** In the Microsoft Purview portal, go to **Communication Compliance** > **Policies** > **Create policy**. For Copilot supervision, the built-in **Detect Microsoft Copilot interactions** template pre-selects the **Microsoft 365 Copilot and Microsoft 365 Copilot Chat** location with the Prompt Shields and Protected material classifiers at a 100% review percentage. Select **Customize policy** to adjust the users and groups in scope, reviewers, review percentage, and conditions. Reviewers are chosen during policy creation and must be assigned in the specific policy.
+
+> **PowerShell alternative:** Baseline policy shells, reviewers, sampling (review) percentages, and keyword or sensitive-information-type conditions can also be configured with the Security & Compliance PowerShell `New-`/`Get-SupervisoryReviewPolicyV2` and `New-`/`Get-`/`Set-SupervisoryReviewRule` cmdlets. The Copilot detection location and its trainable classifiers are not exposed to those cmdlets, so complete Copilot-scoped configuration in the portal. `-WhatIf` is not honored in Security & Compliance PowerShell.
+
 ## Step 5: Configure reviewer assignments
 
 1. Review the `reviewerWorkflow` section in the deployment manifest.
@@ -95,3 +99,7 @@ Verify the output includes:
 - `04-finra-supervision-workflow` must be deployed first to provide the operating procedure for escalations.
 - Manual reviewer actions remain necessary for supervisory sign-off and exception handling.
 - Portal publication steps should be documented for each release because automation is partial.
+
+## Lab validation handoff
+
+The read-only lab validation contract at `lab\14-communication-compliance-config.lab.json` defines the first validation cycle for this solution. That cycle is **detect-only** (`mutations: []`): it compares tenant identity with a separate sanctioned-lab record, uses least-privileged role access (including Global Reader for role-group membership inspection), confirms licensing and pay-as-you-go posture, inspects the current portal route and Copilot policy wizard fields, inventories the documented PowerShell parameter surface, and runs the sample export offline — without creating, editing, publishing, or enforcing any policy, reviewer assignment, Power Automate flow, remediation action, or retention change. Use the contract to confirm the currency of the Communication Compliance claims before planning any configuration change. Offline output uses ignored `lab-evidence/14-communication-compliance-config` staging and is removed fail-closed after evidence capture. Record honest `BLOCKED` or `NOT-APPLICABLE` dispositions when a feature, license, role, policy, or rollout is absent in the target tenant.

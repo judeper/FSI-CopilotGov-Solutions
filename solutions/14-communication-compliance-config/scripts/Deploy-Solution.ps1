@@ -38,11 +38,15 @@
     Solution: Microsoft Purview Communication Compliance Configurator (CCC)
     Controls:  2.10, 3.4, 3.5, 3.6, 3.9
     Regulations: FINRA 2210, FINRA 3110, SEC Reg BI, FCA SYSC 10
-    Version: v0.2.3
+    Version: v0.2.4
 
-    IMPORTANT: Microsoft Purview Communication Compliance policy deployment requires manual steps
-    in the Microsoft Purview portal (purview.microsoft.com). This script generates the policy
-    configuration templates and validates prerequisites only.
+    IMPORTANT: This script does not connect to Microsoft Purview or call any policy cmdlets. It
+    generates policy configuration templates and a deployment manifest for review, and validates
+    the tier configuration only. Copilot-scoped policy configuration (the Microsoft 365 Copilot
+    detection location and its trainable classifiers) is completed in the Microsoft Purview portal
+    (purview.microsoft.com); baseline policy, reviewer, sampling-percentage, and keyword or
+    sensitive-information-type settings can alternatively be configured with the Security &
+    Compliance PowerShell *-SupervisoryReviewPolicyV2 and *-SupervisoryReviewRule cmdlets.
 #>
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
 param(

@@ -27,6 +27,9 @@ Describe 'Microsoft Purview Communication Compliance Configurator' {
         $script:regulatedConfig = (Get-Content -Path (Join-Path $solutionRoot 'config\regulated.json') -Raw) | ConvertFrom-Json
         $script:readmeContent = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
         $script:evidenceDocContent = Get-Content -Path (Join-Path $solutionRoot 'docs\evidence-export.md') -Raw
+        $script:prerequisitesContent = Get-Content -Path (Join-Path $solutionRoot 'docs\prerequisites.md') -Raw
+        $script:architectureContent = Get-Content -Path (Join-Path $solutionRoot 'docs\architecture.md') -Raw
+        $script:deploymentContent = Get-Content -Path (Join-Path $solutionRoot 'docs\deployment-guide.md') -Raw
         $script:scriptFiles = @(
             (Join-Path $solutionRoot 'scripts\Deploy-Solution.ps1'),
             (Join-Path $solutionRoot 'scripts\Monitor-Compliance.ps1'),
@@ -98,6 +101,26 @@ Describe 'Microsoft Purview Communication Compliance Configurator' {
 
         It 'references reviewer-queue-metrics in the evidence export guide' {
             $script:evidenceDocContent | Should -Match 'reviewer-queue-metrics'
+        }
+
+        It 'documents the Security & Compliance PowerShell SupervisoryReview surface and its Copilot limitation' {
+            $script:prerequisitesContent | Should -Match 'SupervisoryReviewPolicyV2'
+            $script:prerequisitesContent | Should -Match 'SupervisoryReviewRule'
+            $script:prerequisitesContent | Should -Match 'Copilot detection location'
+        }
+
+        It 'documents the pay-as-you-go boundary for non-Microsoft 365 AI data' {
+            $script:prerequisitesContent | Should -Match 'pay-as-you-go'
+            $script:prerequisitesContent | Should -Match 'no pay-as-you-go billing requirement'
+        }
+
+        It 'does not overstate Communication Compliance policy publication as portal-only' {
+            $script:readmeContent | Should -Not -Match 'still requires manual portal actions'
+            $script:architectureContent | Should -Not -Match 'publication still requires manual steps'
+        }
+
+        It 'references the current Detect Microsoft Copilot interactions template in the deployment guide' {
+            $script:deploymentContent | Should -Match 'Detect Microsoft Copilot interactions'
         }
     }
 
@@ -178,12 +201,37 @@ Describe 'Microsoft Purview Communication Compliance Configurator' {
 
             $result.ArtifactCount | Should -Be 3
             Test-Path -Path $result.PackagePath | Should -BeTrue
+            foreach ($artifact in @($result.Artifacts)) {
+                [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeTrue
+            }
             $lexiconLogPath = Join-Path $outputPath 'artifact-data\lexicon-update-log.json'
             $lexiconLog = Get-Content -Path $lexiconLogPath -Raw | ConvertFrom-Json
             $lexiconLog.PSObject.Properties.Name | Should -Contain 'wordAdded'
             $lexiconLog.PSObject.Properties.Name | Should -Contain 'wordRemoved'
             @($lexiconLog.wordAdded).Count | Should -BeGreaterThan 0
             @($lexiconLog.wordRemoved).Count | Should -BeGreaterThan 0
+        }
+
+        It 'writes package-relative artifact paths for relocation safety' {
+            $outputPath = Join-Path $script:testArtifactRoot 'evidence-portable'
+            $result = & $script:exportScript -ConfigurationTier recommended -OutputPath $outputPath -PassThru
+            $packageDirectory = Split-Path -Path $result.PackagePath -Parent
+            $package = Get-Content -Path $result.PackagePath -Raw | ConvertFrom-Json
+
+            foreach ($artifact in $package.artifacts) {
+                [System.IO.Path]::IsPathRooted($artifact.path) | Should -BeFalse -Because 'package artifact paths should be relative for relocation safety'
+                $artifact.path | Should -Match '^artifact-data/'
+                Test-Path -Path (Join-Path $packageDirectory $artifact.path) | Should -BeTrue
+            }
+
+            $relocatedPath = Join-Path $script:testArtifactRoot 'evidence-portable-relocated'
+            Move-Item -Path $outputPath -Destination $relocatedPath
+            $repoRoot = (Resolve-Path (Join-Path $solutionRoot '..\..')).Path
+            Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+            $validation = Test-CopilotGovEvidencePackage `
+                -Path (Join-Path $relocatedPath '14-communication-compliance-config-evidence.json') `
+                -ExpectedArtifacts @('policy-template-export', 'reviewer-queue-metrics', 'lexicon-update-log')
+            $validation.IsValid | Should -BeTrue -Because ($validation.Errors -join '; ')
         }
 
         AfterAll {

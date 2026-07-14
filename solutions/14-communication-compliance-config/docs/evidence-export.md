@@ -61,7 +61,7 @@ The packaged evidence JSON follows the shared schema fields:
 - `controls[]`: `controlId`, `status`, `notes`
 - `artifacts[]`: `name`, `type`, `path`, `hash`
 
-The solution writes the package and SHA-256 hash file into the selected output folder.
+The `artifacts[].path` values are stored relative to the evidence package directory (for example, `artifact-data/policy-template-export.json`) so the package and its artifact files can be relocated together and revalidated against the recorded hashes. The `Export-Evidence.ps1` result object returns the absolute package path for the operator. The solution writes the package and SHA-256 hash file into the selected output folder.
 
 ## Control Mappings
 

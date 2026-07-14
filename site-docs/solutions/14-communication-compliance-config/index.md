@@ -6,9 +6,9 @@
 
 ## Overview
 
-Microsoft Purview Communication Compliance Configurator configures and monitors Microsoft Purview Communication Compliance policies for Copilot-assisted communications in financial services. It publishes policy templates targeting AI-generated content, configures reviewer workflows, manages supervised communication lexicons, and tracks escalation queues to support FINRA 3110 supervision requirements.
+Microsoft Purview Communication Compliance Configurator documents and prepares Microsoft Purview Communication Compliance governance for Copilot-assisted communications in financial services. It generates representative policy templates, documents reviewer workflows and supervised keyword dictionaries, and models escalation-queue evidence to support FINRA 3110 supervision requirements.
 
-This solution depends on `04-finra-supervision-workflow` for downstream review routing and escalation operating procedures. The solution is documentation-first for portal deployment because Microsoft Purview Communication Compliance policy publication still requires manual portal actions.
+This solution depends on `04-finra-supervision-workflow` for downstream review routing and escalation operating procedures. The solution is documentation-first for portal deployment: while a Security & Compliance PowerShell surface (`New-SupervisoryReviewPolicyV2`, `New-SupervisoryReviewRule`) can create supervisory review policies, reviewers, sampling (review) percentages, and keyword or sensitive-information-type conditions, it does not expose the Microsoft 365 Copilot detection location or its trainable classifiers, so Copilot-scoped policy configuration is completed in the Microsoft Purview portal.
 
 ## Features
 
@@ -126,7 +126,7 @@ Evidence packages include shared schema metadata, summary, controls, and artifac
 
 ## Known Limitations
 
-- Microsoft Purview Communication Compliance policy deployment requires manual portal steps; automation is partial.
+- Communication Compliance exposes a Security & Compliance PowerShell surface (`New-`/`Get-SupervisoryReviewPolicyV2`, `New-`/`Get-`/`Set-SupervisoryReviewRule`) for baseline policy, reviewer, sampling-percentage, and keyword or sensitive-information-type configuration, but it does not expose the Microsoft 365 Copilot detection location or its trainable classifiers; Copilot-scoped policy configuration is completed in the Microsoft Purview portal, and `-WhatIf` is not honored in Security & Compliance PowerShell.
 - Queue metrics collection is implemented as a stub until a supported Purview or Graph endpoint is available for tenant automation.
 - Lexicon changes require compliance-team review before production publication.
 - Insider risk correlation depends on additional Microsoft Purview Insider Risk Management integration that is outside this solution package.
