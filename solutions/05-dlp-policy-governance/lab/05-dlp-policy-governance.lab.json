@@ -1,0 +1,409 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:05-dlp-policy-governance:2026-07-currency-readonly",
+  "solution": {
+    "id": "05-dlp-policy-governance",
+    "name": "DLP Policy Governance for Copilot",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.1",
+    "3.10",
+    "3.12"
+  ],
+  "portals": [
+    "microsoft-purview-compliance-portal",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-copilot-dlp-location",
+      "claimText": "Microsoft Purview DLP supports Microsoft 365 Copilot and Copilot Chat as a dedicated policy location that is available only in the Custom policy template, and selecting it disables all other locations for that policy.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/README.md",
+        "solutions/05-dlp-policy-governance/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-websearch-ga",
+      "claimText": "The external web-search grounding restriction (Content contains > Sensitive information types with the Performing Web Searches action) is generally available and is no longer marked preview in current Microsoft Learn guidance.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/config/default-config.json",
+        "solutions/05-dlp-policy-governance/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-prompts-preview",
+      "claimText": "Blocking sensitive information types in prompts (Content contains > Sensitive information types with the Processing prompts action) is in preview and is still rolling out to tenants; operators must confirm rollout has reached the target tenant.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/config/default-config.json",
+        "solutions/05-dlp-policy-governance/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-labels-ga",
+      "claimText": "Blocking files and emails with sensitivity labels from being processed is generally available; it covers stored and open files and emails sent on or after January 1, 2025, and calendar invites are not supported.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/README.md",
+        "solutions/05-dlp-policy-governance/docs/evidence-export.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-external-email-preview",
+      "claimText": "Blocking external email from being processed (Email is received from > External users) is in preview; it evaluates sender-domain metadata against tenant accepted domains only and does not inspect email body content.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/config/default-config.json",
+        "solutions/05-dlp-policy-governance/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-rule-condition-exclusivity",
+      "claimText": "A single DLP rule cannot combine a Content contains > Sensitive information types condition with a Content contains > Sensitivity labels condition; a separate rule is required for each condition within the same policy.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/README.md",
+        "solutions/05-dlp-policy-governance/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-permissions-roles",
+      "claimText": "Accounts with the Microsoft Entra AI Admin, Purview Data Security AI Admin (or the Purview Data Security AI Admins group), Purview Compliance Administrator, Purview Compliance Data Administrator, Purview Information Protection, Purview Information Protection Admin, Purview Security Administrator, or Microsoft Entra Global Admin role can create or edit a DLP policy for the Copilot location.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/docs/prerequisites.md",
+        "solutions/05-dlp-policy-governance/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-licensing",
+      "claimText": "The sensitivity-label file and email blocking capability requires Microsoft 365 E5, the Microsoft Purview suite, Microsoft 365 E5/F5 Information Protection and Governance, or Office 365 E5, while sensitive-information-type prompt and web-search protection is available to all Microsoft 365 Copilot and Copilot Chat users.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/docs/prerequisites.md",
+        "solutions/05-dlp-policy-governance/README.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-powershell-cmdlets",
+      "claimText": "DLP policy and rule metadata is read through Security & Compliance PowerShell using the Get-DlpCompliancePolicy and Get-DlpComplianceRule cmdlets after connecting with Connect-IPPSSession; Microsoft Graph does not expose DLP policy metadata.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/docs/prerequisites.md",
+        "solutions/05-dlp-policy-governance/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/powershell/module/exchangepowershell/get-dlpcompliancerule",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-powershell-copilot-scope",
+      "claimText": "Security and Compliance PowerShell exposes DLP policy scope through fields such as EnforcementPlanes and Locations; Copilot-scoped policy evidence must retain those fields so the operator can identify the CopilotExperiences enforcement plane or the Applications workload location.",
+      "affectedFiles": [
+        "solutions/05-dlp-policy-governance/docs/deployment-guide.md",
+        "solutions/05-dlp-policy-governance/lab/05-dlp-policy-governance.lab.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/powershell/module/exchangepowershell/new-dlpcompliancepolicy",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E5, Microsoft Purview suite, Microsoft 365 E5/F5 Information Protection and Governance, or Office 365 E5 for sensitivity-label file and email blocking",
+      "Microsoft 365 Copilot license for the users and Copilot experiences under review"
+    ],
+    "roles": [
+      "View-Only DLP Compliance Management for read-only Security and Compliance PowerShell inspection",
+      "Global Reader or Security Reader for read-only portal verification"
+    ],
+    "features": [
+      "Microsoft 365 Copilot and Copilot Chat DLP policy location available in the target tenant",
+      "Security & Compliance PowerShell (ExchangeOnlineManagement) connectivity"
+    ],
+    "capacityRequirements": [
+      "No tenant capacity changes; the first cycle is read-only inspection only"
+    ],
+    "dataRequirements": [
+      "Existing tenant DLP policy configuration for inspection",
+      "Representative sample data only for the documentation-first repository scripts"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is detect-only. No DLP policy is created, edited, or enforced. Use BLOCKED or NOT-APPLICABLE honestly when a preview feature, license, role, policy, or rollout is absent in the target tenant."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm read-only preconditions",
+        "steps": [
+          {
+            "id": "step-verify-licensing-and-copilot",
+            "mode": "manual",
+            "intent": "Confirm the tenant has Microsoft 365 Copilot licensing and the licensing required for the sensitivity-label blocking capability before reviewing DLP posture.",
+            "expected": "Operator attests which DLP-for-Copilot capabilities are licensed, distinguishing label blocking (E5/Purview suite) from prompt and web-search protection (all Copilot users).",
+            "operatorNote": "If the E5/Purview suite licensing is absent, record label-blocking checks as NOT-APPLICABLE with source evidence rather than reporting them as available.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Licensing attestation note",
+              "expectation": "Attestation records the licensed capability set for the target tenant."
+            }
+          },
+          {
+            "id": "step-verify-reviewer-role",
+            "mode": "ui",
+            "intent": "Confirm the operator holds view-only DLP access for PowerShell inspection and read-only portal access for the Copilot location.",
+            "expected": "The Microsoft Purview portal shows Data Loss Prevention policies are viewable and the operator has View-Only DLP Compliance Management for Get-DlpCompliancePolicy and Get-DlpComplianceRule.",
+            "locator": "Microsoft Purview portal > Data Loss Prevention > Policies",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Data Loss Prevention policies list",
+              "expectation": "Policies list renders in read-only form for the reviewer role."
+            }
+          },
+          {
+            "id": "step-connect-scc-readonly",
+            "mode": "powershell",
+            "intent": "Open a read-only Security & Compliance PowerShell session for DLP policy metadata inspection.",
+            "expected": "Connect-IPPSSession completes and DLP inspection cmdlets are available without changing any policy.",
+            "command": "Connect-IPPSSession",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Session connection banner",
+              "expectation": "Session connects and Get-DlpCompliancePolicy is available for read-only inspection."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Inspect current Copilot DLP configuration (detect-only)",
+        "steps": [
+          {
+            "id": "step-inspect-copilot-dlp-policies",
+            "mode": "powershell",
+            "intent": "List DLP compliance policies with their mode and scope fields to identify any policy scoped to the Microsoft 365 Copilot and Copilot Chat location and whether it runs in simulation or enforced mode.",
+            "expected": "Policy inventory includes Name, Mode, EnforcementPlanes, and Locations so a Copilot-scoped policy and its simulation or enforcement state can be identified.",
+            "command": "Get-DlpCompliancePolicy | Select-Object Name, Mode, Enabled, WhenChangedUtc, EnforcementPlanes, Locations | ConvertTo-Json -Depth 8",
+            "operatorNote": "Do not modify any policy. Identify Copilot scope from the CopilotExperiences enforcement plane or Applications workload location and record its current simulation or enforcement state.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Get-DlpCompliancePolicy output",
+              "expectation": "Output lists current policies with scope fields that identify the Copilot location and mode values that distinguish detect-only from enforced state."
+            }
+          },
+          {
+            "id": "step-inspect-rule-conditions",
+            "mode": "powershell",
+            "intent": "Inspect DLP rules to confirm that sensitive-information-type conditions and sensitivity-label conditions are configured in separate rules, as required by Microsoft Purview.",
+            "expected": "Rule inventory shows each rule's conditions; no single rule combines a sensitive-information-type condition with a sensitivity-label condition.",
+            "command": "Get-DlpComplianceRule | ConvertTo-Json -Depth 12",
+            "operatorNote": "Read-only inspection only. Inspect the complete nested condition payload and confirm rule-condition exclusivity rather than changing rule definitions.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Get-DlpComplianceRule output",
+              "expectation": "Rules show conditions in separate rules with no combined SIT plus sensitivity-label rule."
+            }
+          },
+          {
+            "id": "step-inspect-simulation-state",
+            "mode": "ui",
+            "intent": "Review the Copilot-scoped policy in the Microsoft Purview portal to confirm its policy mode and simulation state.",
+            "expected": "The portal shows the policy mode (for example, simulation mode versus turned on) matching the read-only PowerShell inventory.",
+            "locator": "Microsoft Purview portal > Data Loss Prevention > Policies > (Copilot-scoped policy) > Policy mode",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Policy mode panel",
+              "expectation": "Portal policy mode agrees with the PowerShell inventory for the same policy."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify Microsoft source currency and lifecycle",
+        "steps": [
+          {
+            "id": "step-verify-source-published",
+            "mode": "api",
+            "intent": "Confirm the primary Microsoft Learn source for the Copilot DLP policy location remains published and current.",
+            "expected": "The Microsoft Learn page returns successfully and still documents the location capabilities cited by this contract.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Learn DLP for Copilot source",
+              "expectation": "Source remains published and matches the lifecycle states recorded in microsoftSourceClaims."
+            }
+          },
+          {
+            "id": "step-verify-lifecycle-states",
+            "mode": "manual",
+            "intent": "Confirm current lifecycle states: external web-search restriction and sensitivity-label blocking are generally available; prompt blocking and external-email exclusion remain preview.",
+            "expected": "Operator attests that Microsoft Learn still marks web-search restriction and label blocking as generally available and prompt and external-email controls as preview.",
+            "operatorNote": "If Microsoft has changed any lifecycle state, record the change and mark affected checks BLOCKED with source evidence instead of assuming the prior state.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Lifecycle verification note",
+              "expectation": "Attestation records verified lifecycle states with the Microsoft Learn source URL."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record no-mutation cleanup decision",
+        "steps": [
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Capture operator attestation that the first lab cycle applied no mutable changes to tenant DLP policy.",
+            "expected": "Operator note confirms cleanup is not required because the cycle was read-only and detect-only.",
+            "operatorNote": "No DLP policy was created, edited, enabled, or enforced during this validation run.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no mutable changes occurred and no cleanup is required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-policy-inventory",
+        "type": "powershell-transcript",
+        "description": "Read-only Get-DlpCompliancePolicy and Get-DlpComplianceRule transcript showing Copilot policy scope, mode, and rule-condition separation.",
+        "requiredForControls": [
+          "2.1",
+          "3.10"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Microsoft Learn and service-description URLs with confirmed lifecycle states for the Copilot DLP capabilities cited in this contract.",
+        "requiredForControls": [
+          "2.1",
+          "3.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-simulation-state",
+        "type": "screenshot",
+        "description": "Microsoft Purview portal screenshot recording the Copilot-scoped policy mode and simulation or enforcement state.",
+        "requiredForControls": [
+          "3.10"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-policy-inventory",
+      "artifact-source-citations"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

@@ -1,6 +1,6 @@
 # DLP Policy Governance for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-07-13
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ DLP Policy Governance for Copilot deploys a read-only governance pattern for Mic
 
 This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Article 9 ICT security expectations, GDPR, FINRA Rule 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
-> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location. The location supports sensitive-information-type prompt blocking **(preview)**, external web-search grounding restrictions for sensitive prompts **(preview)**, and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available). Selecting this location disables all other locations for that policy.
+> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location, available only in the **Custom** DLP policy template. The location supports external web-search grounding restrictions for sensitive prompts (generally available) and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available), plus sensitive-information-type prompt blocking **(preview)** and external-email grounding exclusion **(preview)**. A single DLP rule cannot combine a sensitive-information-type condition with a sensitivity-label condition; a separate rule is required for each condition within the same policy. Selecting this location disables all other locations for that policy, and policy updates can take up to four hours to reflect in the Copilot experience.
 
 ## Related Controls
 
@@ -26,7 +26,7 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 - Compares baseline records for the Microsoft 365 Copilot and Copilot Chat policy location and its supported conditions and actions
 - Tracks separate complementary workload DLP baseline records when tenant policy design requires Exchange, SharePoint, OneDrive, Teams, devices, or endpoint locations
 - Checks policy modes such as Audit and Block for expected sensitivity label handling on supported files and emails
-- Documents prompt-text controls for sensitive information types, including prompt blocking and external web-search grounding restrictions
+- Documents prompt-text controls for sensitive information types, including prompt blocking (preview) and external web-search grounding restrictions (generally available)
 - Documents a Power Automate approval flow for policy exceptions and attestation evidence
 - Exports evidence artifacts that align to `data\evidence-schema.json`
 
@@ -43,16 +43,18 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 - ❌ Does not configure Adaptive Protection policies (Insider Risk Management integration with DLP is documented as a complementary capability)
 - ❌ Does not evaluate the contents of files uploaded directly into Copilot prompts; Microsoft Purview DLP for Copilot evaluates the prompt text itself for this scenario
 - ❌ Does not combine the Microsoft 365 Copilot and Copilot Chat policy location with Exchange, SharePoint, OneDrive, Teams, or endpoint DLP locations in the same policy
+- ❌ Does not combine a sensitive-information-type condition and a sensitivity-label condition in the same DLP rule; Microsoft Purview requires a separate rule for each condition within the same policy
 
 > **Data classification:** See [Data Classification Matrix](../../reference/data-classification.md) for residency, retention, and data-class metadata.
 
 ## Prerequisites
 
 - Dependency `03-sensitivity-label-auditor` is complete and the latest label inventory has been reviewed
-- Microsoft 365 E5 or E5 Compliance licensing is available for Purview DLP and Copilot data protection features
+- Microsoft 365 E5, the Microsoft Purview suite, Microsoft 365 E5/F5 Information Protection and Governance, or Office 365 E5 licensing is required for the sensitivity-label file and email blocking capability; sensitive-information-type prompt and web-search protection is available to all Microsoft 365 Copilot and Copilot Chat users
+- A Microsoft 365 Copilot license is required for the Copilot experiences being reviewed
 - Power Automate Premium is available if the exception approval flow is deployed
 - Policy editors use one of the current Microsoft Learn roles for Copilot DLP policy create/edit, such as Entra AI Admin, Purview Data Security AI Admin, Purview Compliance Administrator, Purview Compliance Data Administrator, Purview Information Protection Admin, Purview Security Administrator, or Entra Global Admin
-- Security Reader-style access is treated as read-only review only and is not sufficient for Copilot DLP policy create/edit
+- Use View-Only DLP Compliance Management for read-only Security and Compliance PowerShell inspection; Global Reader or Security Reader can support read-only portal verification and is not sufficient for Copilot DLP policy create/edit
 - PowerShell 7, `ExchangeOnlineManagement`, and `Microsoft.Graph` are available for read-only data collection
 
 See [docs/prerequisites.md](prerequisites.md) for details.
@@ -66,9 +68,10 @@ This solution separates two DLP governance layers:
 
 The Copilot policy-location baseline tracks:
 
-- Sensitive information types in prompt text, including prompt-blocking behavior **(preview)** and external web-search grounding restrictions **(preview)**
-- Sensitive information types in prompt text that restrict external web search as a grounding source **(preview)**
-- Sensitivity labels on supported files and emails used in Copilot response summarization
+- Sensitive information types in prompt text, including prompt-blocking behavior **(preview)**
+- Sensitive information types in prompt text that restrict external web search as a grounding source (generally available)
+- External email excluded from grounding, summarization, and citation based on sender domain **(preview)**
+- Sensitivity labels on supported files and emails used in Copilot response summarization (generally available)
 - Scope definitions for included and excluded user groups
 - Exception handling requirements by governance tier
 - Evidence retention and notification settings needed for review
@@ -145,4 +148,4 @@ See [docs/evidence-export.md](evidence-export.md) for package details.
 - Sensitivity-label protection for files and emails is limited to supported files in SharePoint Online or OneDrive for Business and emails sent on or after January 1, 2025; calendar invites are not supported.
 - The Power Automate approval flow is documentation-led in this repository and still requires tenant-specific connection setup.
 - Drift results are only as current as the latest baseline and policy snapshot available to the monitoring process.
-- The prompt-text SIT blocking and external web-search grounding restriction capabilities are currently in **preview**; only sensitivity-label file/email blocking is generally available. Check tenant rollout status before relying on preview capabilities in production governance baselines.
+- Sensitive-information-type prompt blocking and external-email grounding exclusion are currently in **preview**; external web-search grounding restriction and sensitivity-label file/email blocking are generally available. Check tenant rollout status before relying on preview capabilities in production governance baselines.

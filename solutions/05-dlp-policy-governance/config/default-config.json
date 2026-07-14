@@ -48,6 +48,10 @@
     "copilotPolicyLocation": "Microsoft 365 Copilot and Copilot Chat",
     "copilotPolicyLocationScope": {
       "locationExclusivity": "Selecting this policy location disables all other locations for that DLP policy.",
+      "ruleConditionExclusivity": "A single DLP rule cannot combine a Content contains > Sensitive information types condition with a Content contains > Sensitivity labels condition. Use a separate rule for each condition within the same policy.",
+      "policyTemplate": "Custom policy template only.",
+      "policySimulationSupported": true,
+      "policyPropagationDelay": "Policy updates can take up to four hours to reflect in the Microsoft 365 Copilot and Copilot Chat experience.",
       "adminUnitsSupported": false
     },
     "copilotCapabilities": [
@@ -61,7 +65,7 @@
       {
         "id": "externalWebSearchGroundingRestriction",
         "displayName": "Restrict external web search when prompt text contains sensitive information types",
-        "availability": "preview",
+        "availability": "generallyAvailable",
         "condition": "Content contains > Sensitive information types",
         "action": "Prevent Copilot from processing content > Performing Web Searches"
       },
@@ -71,6 +75,14 @@
         "availability": "generallyAvailable",
         "condition": "Content contains > Sensitivity labels",
         "action": "Prevent Copilot from processing content"
+      },
+      {
+        "id": "externalEmailGroundingRestriction",
+        "displayName": "Restrict Copilot from processing external email as grounding data",
+        "availability": "preview",
+        "condition": "Email is received from > External users",
+        "action": "Prevent Copilot from processing content",
+        "scopeNote": "Evaluates sender-domain metadata only against tenant accepted domains; email body content is not inspected."
       }
     ],
     "complementaryWorkloadDlpPolicyLocations": [
@@ -112,6 +124,7 @@
       "Highly Confidential",
       "NPI",
       "PII"
-    ]
+    ],
+    "sensitivityConditionsComment": "Illustrative reference list only; scripts read the per-tier config sensitivityConditions.standard and sensitivityConditions.highSensitivity objects and do not consume this field."
   }
 }
