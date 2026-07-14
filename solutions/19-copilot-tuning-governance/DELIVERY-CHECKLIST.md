@@ -146,6 +146,15 @@ Use this checklist to move solution 19 from documentation review into controlled
 - [ ] Runtime assets, secrets, and certificates that remain external to the repository are documented.
 - [ ] Remaining manual tasks or operator decisions are recorded.
 
+## Lab Validation Handoff
+
+- [ ] Confirm the lab contract `lab\19-copilot-tuning-governance.lab.json` validates with `python scripts\validate-lab-contracts.py`.
+- [ ] Confirm the first lab cycle stays read-only and detect-only (`mutations: []`); no tuning is enabled, no dataset is uploaded, no tuning job runs, and no tuned agent or fine-tuned model is published, blocked, or deleted.
+- [ ] Confirm the lab operator holds only read-only roles (AI Reader for the Copilot control system and Global Reader).
+- [ ] Run the `setup`, `exercise`, `verify`, and `cleanup` phases against a disposable, eligible early access or Frontier preview tenant with representative sample data only.
+- [ ] Capture the required evidence artifacts (monitor and export transcript, evidence package, admin center screenshot, Agent 365 tuned-agent inventory screenshot, and Microsoft source citations).
+- [ ] Record any Microsoft source drift (for example, movement from early access preview toward general availability or a changed eligibility threshold) as a `BLOCKED` disposition with the cited excerpt, and capture the negative UI when Copilot Tuning is unavailable.
+
 ## Communication Template
 
 - Summary of the delivered solution or wave:

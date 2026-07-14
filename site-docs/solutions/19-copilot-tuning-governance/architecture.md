@@ -67,7 +67,7 @@ Solution 19 provides a documentation-first governance framework for Microsoft 36
 Tuning requests are submitted by business units and must include:
 
 - **Selected SharePoint Sources**: Identification of the SharePoint content explicitly selected for tuning
-- **Snapshot Governance**: Review of ACLs at tuning time, snapshot retention expectations, and the caveat that source SharePoint DLP and retention policies do not automatically apply to snapshot data
+- **Snapshot Governance**: Review of ACLs at tuning time, snapshot retention expectations, and the caveat that source SharePoint DLP and retention policies do not automatically apply to snapshot data. Per current Microsoft Learn guidance, tuning source-data snapshots are tenant-isolated, retained while the tuned agent remains active, subject to a maximum two-year retention, and deleted when the tuned agent is deleted.
 - **Intended Use**: Description of the business problem the tuned agent addresses
 - **Target Audience**: Which users or groups will have access to the tuned agent
 - **Sensitivity Label Review**: Sensitivity labels and classification considerations for the selected source data
@@ -89,6 +89,8 @@ Active tuned models are monitored for:
 - Owner assignment and accountability
 - Periodic risk reassessment cadence
 - Evidence export compliance
+
+> **Authoritative registry:** Microsoft provides the authoritative, tenant-wide inventory of tuned agents in the **Agent 365 portal**, where admins can view, block or disable, and delete a tuned agent (deleting also removes the associated fine-tuned model and snapshot data). Native model tuning also includes an evaluation step, and evaluation results determine whether an updated model is published. The monitoring and model-inventory patterns in this solution are a governance overlay that helps document oversight; they use representative sample data and do not connect to or replace the Agent 365 portal.
 
 ### Retirement Phase
 

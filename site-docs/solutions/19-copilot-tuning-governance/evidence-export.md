@@ -80,6 +80,8 @@ For regulated deployments, this artifact helps demonstrate that model risk manag
 
 Regulated tier deployments retain evidence for 2555 days and should preserve examiner-ready exports for OCC Bulletin 2011-12 (SR 11-7) review, legal hold support, and supervisory follow-up. Institutions should align final retention with their records schedule and legal guidance.
 
+> **Distinct from Microsoft snapshot retention:** The retention values in this solution's tiers govern the *governance evidence packages* produced by `Export-Evidence.ps1`. They are separate from Microsoft's handling of Copilot Tuning *source-data snapshots*, which per current Microsoft Learn guidance are tenant-isolated, retained while the tuned agent remains active, subject to a maximum two-year retention, and deleted when the tuned agent is deleted. Do not treat the governance-evidence retention window as extending Microsoft's snapshot retention.
+
 ## Example Export
 
 ```powershell

@@ -150,6 +150,24 @@ function Get-Configuration {
     return (Merge-Hashtable -Base $defaultConfig -Override $tierConfig)
 }
 
+function Resolve-ProviderFileSystemPath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+
+        [Parameter()]
+        [switch]$ResolveExisting
+    )
+
+    $providerPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+    if ($ResolveExisting -and (Test-Path -LiteralPath $providerPath)) {
+        return (Resolve-Path -LiteralPath $providerPath).Path
+    }
+
+    return $providerPath
+}
+
 function Write-JsonWithHash {
     [CmdletBinding()]
     param(
@@ -163,22 +181,36 @@ function Write-JsonWithHash {
         [string]$ArtifactName,
 
         [Parameter(Mandatory)]
-        [string]$ArtifactType
+        [string]$ArtifactType,
+
+        [Parameter()]
+        [string]$BaseDirectory
     )
 
-    $directory = Split-Path -Path $Path -Parent
-    if (-not (Test-Path -Path $directory)) {
+    $targetPath = Resolve-ProviderFileSystemPath -Path $Path
+    $directory = Split-Path -Path $targetPath -Parent
+    if (-not (Test-Path -LiteralPath $directory)) {
         $null = New-Item -Path $directory -ItemType Directory -Force
     }
 
-    $Content | ConvertTo-Json -Depth 10 | Set-Content -Path $Path -Encoding utf8
+    $Content | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $targetPath -Encoding utf8
 
-    $hashInfo = Write-CopilotGovSha256File -Path $Path
+    $hashInfo = Write-CopilotGovSha256File -Path $targetPath
+
+    $absolutePath = Resolve-ProviderFileSystemPath -Path $targetPath -ResolveExisting
+    $relativePath = if ($PSBoundParameters.ContainsKey('BaseDirectory') -and -not [string]::IsNullOrWhiteSpace($BaseDirectory)) {
+        $absoluteBaseDirectory = Resolve-ProviderFileSystemPath -Path $BaseDirectory -ResolveExisting
+        [System.IO.Path]::GetRelativePath($absoluteBaseDirectory, $absolutePath)
+    }
+    else {
+        [System.IO.Path]::GetFileName($absolutePath)
+    }
 
     return [pscustomobject]@{
         name = $ArtifactName
         type = $ArtifactType
-        path = ([System.IO.Path]::GetFullPath($Path))
+        path = $absolutePath
+        relativePath = $relativePath
         hash = $hashInfo.Hash
     }
 }
@@ -188,8 +220,9 @@ if ($PeriodStart -gt $PeriodEnd) {
 }
 
 $configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
-$outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
+$outputRoot = Resolve-ProviderFileSystemPath -Path $OutputPath
 $null = New-Item -Path $outputRoot -ItemType Directory -Force
+$outputRoot = Resolve-ProviderFileSystemPath -Path $outputRoot -ResolveExisting
 
 $now = Get-Date
 
@@ -293,10 +326,29 @@ $riskAssessments = @(
     }
 )
 
-$artifacts = @()
-$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'tuning-requests.json') -Content @($tuningRequests) -ArtifactName 'tuning-requests' -ArtifactType 'tuning-requests'
-$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'model-inventory.json') -Content @($modelInventory) -ArtifactName 'model-inventory' -ArtifactType 'model-inventory'
-$artifacts += Write-JsonWithHash -Path (Join-Path $outputRoot 'risk-assessments.json') -Content @($riskAssessments) -ArtifactName 'risk-assessments' -ArtifactType 'risk-assessments'
+$artifactRecords = @()
+$artifactRecords += Write-JsonWithHash -Path (Join-Path $outputRoot 'tuning-requests.json') -Content @($tuningRequests) -ArtifactName 'tuning-requests' -ArtifactType 'tuning-requests' -BaseDirectory $outputRoot
+$artifactRecords += Write-JsonWithHash -Path (Join-Path $outputRoot 'model-inventory.json') -Content @($modelInventory) -ArtifactName 'model-inventory' -ArtifactType 'model-inventory' -BaseDirectory $outputRoot
+$artifactRecords += Write-JsonWithHash -Path (Join-Path $outputRoot 'risk-assessments.json') -Content @($riskAssessments) -ArtifactName 'risk-assessments' -ArtifactType 'risk-assessments' -BaseDirectory $outputRoot
+
+# Package records use package-relative artifact paths so an exported evidence package still
+# validates after it is moved to an archive or WORM store; caller records keep absolute paths.
+$packageArtifacts = @($artifactRecords | ForEach-Object {
+    [pscustomobject]@{
+        name = $_.name
+        type = $_.type
+        path = $_.relativePath
+        hash = $_.hash
+    }
+})
+$resultArtifacts = @($artifactRecords | ForEach-Object {
+    [pscustomobject]@{
+        name = $_.name
+        type = $_.type
+        path = $_.path
+        hash = $_.hash
+    }
+})
 
 $controls = @(
     [pscustomobject]@{
@@ -329,10 +381,10 @@ $package = [ordered]@{
         riskAssessmentCount = @($riskAssessments).Count
     }
     controls = $controls
-    artifacts = $artifacts
+    artifacts = $packageArtifacts
 }
 
-$packageArtifact = Write-JsonWithHash -Path (Join-Path $outputRoot '19-copilot-tuning-governance-evidence-package.json') -Content $package -ArtifactName 'ctg-evidence-package' -ArtifactType 'evidence-package'
+$packageArtifact = Write-JsonWithHash -Path (Join-Path $outputRoot '19-copilot-tuning-governance-evidence-package.json') -Content $package -ArtifactName 'ctg-evidence-package' -ArtifactType 'evidence-package' -BaseDirectory $outputRoot
 $validation = Test-CopilotGovEvidencePackage -Path $packageArtifact.path -ExpectedArtifacts @($configuration.evidenceOutputs)
 if (-not $validation.IsValid) {
     $details = ($validation.Errors | ForEach-Object { ' - {0}' -f $_ }) -join [Environment]::NewLine
@@ -342,7 +394,9 @@ if (-not $validation.IsValid) {
 [pscustomobject]@{
     PackagePath = $packageArtifact.path
     PackageHash = $packageArtifact.hash
-    ArtifactCount = @($artifacts).Count
+    EvidenceDirectory = $outputRoot
+    ArtifactCount = @($resultArtifacts).Count
+    ArtifactPaths = $resultArtifacts
     TuningRequests = @($tuningRequests).Count
     ModelInventory = @($modelInventory).Count
     RiskAssessments = @($riskAssessments).Count

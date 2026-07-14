@@ -120,3 +120,14 @@ If deployment settings need to be reversed:
 5. Document the rollback decision and rationale for compliance records.
 
 Rollback decisions should be documented whenever tuning availability, approval workflow, or model risk management settings change after approval.
+
+## 11. Lab Validation Handoff
+
+A machine-readable lab validation contract is provided at `lab\19-copilot-tuning-governance.lab.json` for a read-only, detect-only validation cycle. Use it to confirm eligibility visibility and script behavior before any tuning is enabled.
+
+- Validate the contract with `python scripts\validate-lab-contracts.py`.
+- The first lab cycle stays read-only and detect-only (`mutations: []`): do not enable tuning, upload a dataset, run a tuning job, or publish, block, or delete any tuned agent or fine-tuned model.
+- Use only read-only roles for the lab operator (AI Reader for the Copilot control system and Global Reader), scoped to US commercial-cloud Microsoft 365.
+- Run the `setup`, `exercise`, `verify`, and `cleanup` phases against a disposable, eligible early access or Frontier preview tenant using representative sample data only.
+- Capture the required evidence (monitor and export transcript, evidence package, admin center screenshot, Agent 365 inventory screenshot, and the Microsoft Learn source citation).
+- When Copilot Tuning is not visible (ineligible, not enrolled, or Advanced Data Residency not waived), record the negative UI and disposition the run `BLOCKED` or `NOT-APPLICABLE` with the cited Microsoft source excerpt rather than assuming availability.
