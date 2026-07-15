@@ -25,5 +25,5 @@
 - **User:** Jude
 - **Created:** 2026-05-23
 - **Team cast:** 2026-06-05
-- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solution 01's first read-only lab cycle is **PARTIAL / not accepted**. Current work is blocked on attended sign-in for six admin surfaces and effective `Reports.Read.All`; rerun Solution 01 before continuing the serial lab queue. See `docs/project-handoff.md`.
+- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solution 01 achieved accepted `PASS` evidence and final v0.2.4 release metadata. The serial lab queue now advances to Solution 02 / PR #319. See `docs/project-handoff.md`.
 - **Model policy:** Accuracy over cost — premium (Opus-class) models for verification and review; Haiku only for Scribe.

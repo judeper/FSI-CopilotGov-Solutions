@@ -105,7 +105,7 @@
             "expected": "Source citation remains available on Microsoft Learn.",
             "api": {
               "method": "GET",
-              "endpoint": "https://graph.microsoft.com/v1.0/reports/getMicrosoft365CopilotUsageUserDetail"
+              "endpoint": "https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D7')"
             },
             "mutationRef": null,
             "readBack": {

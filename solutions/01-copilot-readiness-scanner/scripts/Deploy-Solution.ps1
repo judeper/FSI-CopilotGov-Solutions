@@ -108,7 +108,7 @@ function Test-GraphConnectivityPlaceholder {
         [string]$TenantId
     )
 
-    Import-SharedModule -ModuleName 'GraphAuth.psm1'
+    $null = Import-SharedModule -ModuleName 'GraphAuth.psm1'
     $context = New-CopilotGovGraphContext -TenantId $TenantId -Scopes @(
         'LicenseAssignment.Read.All',
         'Organization.Read.All',
@@ -175,7 +175,25 @@ try {
     $prerequisites = Test-SolutionPrerequisite
     if (-not $prerequisites.IsReady) {
         $missingItems = @($prerequisites.MissingModules + $prerequisites.MissingSharedModules)
-        throw "Prerequisite validation failed. Missing components: $([string]::Join(', ', $missingItems))"
+        $isWhatIfPreview = [bool]$WhatIfPreference
+        $canBypassForPreview = (
+            $isWhatIfPreview -and
+            $PSVersionTable.PSVersion.Major -ge 7 -and
+            $prerequisites.MissingModules.Count -gt 0 -and
+            $prerequisites.MissingSharedModules.Count -eq 0
+        )
+
+        if ($canBypassForPreview) {
+            $prerequisites | Add-Member -NotePropertyName WhatIfPrerequisiteBypass -NotePropertyValue $true -Force
+            $warningMessage = (
+                "WhatIf preview continuing with missing Microsoft modules: {0}. " +
+                'No files will be written. Install the missing modules before running without -WhatIf.'
+            ) -f ([string]::Join(', ', $prerequisites.MissingModules))
+            Write-Warning $warningMessage
+        }
+        else {
+            throw "Prerequisite validation failed. Missing components: $([string]::Join(', ', $missingItems))"
+        }
     }
 
     Write-Verbose "Performing placeholder Graph connectivity validation for tenant [$TenantId]."

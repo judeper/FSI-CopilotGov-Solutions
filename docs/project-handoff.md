@@ -19,10 +19,10 @@ required to resume safely.
 |-------|-------|
 | Snapshot date | 2026-07-15 |
 | Repository branch | `main` — read the current commit from Git; this page records durable phase state rather than a self-staling HEAD |
-| Phase | Serial accuracy review **complete**; governance adapter **merged**; Solution 01 lab **PARTIAL / not accepted** |
-| Draft review PRs | 23 open (one per solution); all checks green; all held with `Lab status: pending` |
-| Live lab runs executed | 1 — Solution 01 read-only cycle completed; no accepted evidence yet |
-| Final versioning / merges | Not started — no review PR has been merged |
+| Phase | Serial accuracy review **complete**; Solution 01 lab **PASS / accepted**; serial queue advances to Solution 02 |
+| Draft review PRs | 22 remain open with `Lab status: pending`; Solution 01 is finalized as v0.2.4 |
+| Live lab runs executed | 2 Solution 01 cycles — initial PARTIAL, remediated PASS |
+| Final versioning / merges | Solution 01 complete; Solutions 02–23 pending |
 
 ## Merged Foundation and Handoff
 
@@ -39,10 +39,9 @@ The documentation-autonomy and lab-contract foundation is merged into `main`:
 
 All 23 solutions were reviewed **one at a time** for Microsoft product and feature
 accuracy against first-party Microsoft sources, then hardened for read-only lab
-validation. Rows are listed in the serial review sequence (PR order). The **released
-version** column is the released version retained by each draft; the review changes are
-**not merged** into `main`. Every PR is a green draft held with
-`Lab status: pending`.
+validation. Rows are listed in the serial review sequence (PR order). Solution 01 has
+completed accepted lab validation and final release; the remaining 22 PRs stay draft
+until their own accepted evidence exists.
 
 > **Solution 08 version note.** The table uses the corrected v0.1.4 carried by
 > PR #330 and the solution README/changelog. Current `main` still reports v0.1.3
@@ -51,7 +50,7 @@ version** column is the released version retained by each draft; the review chan
 
 | Sol | Solution | PR | Released version | Verified review outcome | Checks | Lab |
 |-----|----------|----|------------------|-------------------------|--------|-----|
-| 01 | Copilot Readiness Assessment Scanner | [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | v0.2.3 | Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; added the first read-only five-control lab contract. **Conflicting with `main` — deferred to post-lab finalization.** | Green | PARTIAL / not accepted |
+| 01 | Copilot Readiness Assessment Scanner | [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | v0.2.4 | Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; completed accepted read-only lab validation and final release metadata. | Merged | PASS / accepted |
 | 02 | Oversharing Risk Assessment and Remediation | [#319](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319) | v0.2.4 | Migrated go-forward guidance from Restricted SharePoint Search to Restricted Content Discovery; recorded the RSS new-enablement block (2026-07-31); updated SAM roles and the Microsoft 365 E7 entitlement path; fixed detect-only counts and portable evidence; added a six-control read-only lab contract. | Green | Pending |
 | 16 | Item-Level Oversharing Scanner | [#320](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320) | v0.1.3 | Synced item-level guidance with RSS retirement and Restricted Content Discovery; documented Graph owner/non-owner visibility limits; enforced the auto-remediation kill switch and HIGH/AnyoneLink approval gates; added ShouldProcess/-WhatIf protection; five-control read-only lab contract. | Green | Pending |
 | 17 | SharePoint Permissions Drift Detection | [#321](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321) | v0.1.4 | Fixed a StrictMode drift-scan crash and stopped failed scans from reporting `NoDriftDetected`; gated approval/reversion behind ShouldProcess/-WhatIf; calibrated config-driven scoring; portable evidence; four-control read-only lab contract. | Green | Pending |
@@ -101,39 +100,36 @@ portable, hash-verified artifacts reviewable independently of the execution host
 - [studio-video-factory PR #12](https://github.com/judep_microsoft/studio-video-factory/pull/12)
   merged attended evidence replay, the privacy-gated Solution 01 collector, and
   FSI-compatible package sidecars/versioning.
+- [studio-video-factory PR #14](https://github.com/judep_microsoft/studio-video-factory/pull/14)
+  added the current Microsoft 365 admin center host alias.
+- [studio-video-factory PR #15](https://github.com/judep_microsoft/studio-video-factory/pull/15)
+  made Solution 01 replay outcomes evidence-driven for authenticated reruns.
 
 ## Lab Execution Status
 
-Solution 01 ran against pinned FSI commit
+Solution 01 ran twice against pinned FSI commit
 `e8bae78b1036c6b55d7597d576df03b69e9418c4`.
 
-- **Result:** `PARTIAL`, `accepted: false`, `controlImplementation: partial`.
-- **Passed:** three documentation-first PowerShell checks plus the two manual
-  no-mutation/separation attestations.
-- **Blocked:** Microsoft 365/Entra portal checks, the combined Purview/Defender/
-  SharePoint/Teams portal check, and the Copilot D7 usage-report API.
-- **Observed:** Power Platform admin center was authenticated; six required admin
-  surfaces redirected to sign-in. The Graph endpoint returned 403 and no response
-  body/token was retained.
+- **Initial result:** `PARTIAL`, `accepted: false` (5 PASS / 4 BLOCKED).
+- **Remediated result:** `PASS`, `accepted: true`,
+  `controlImplementation: implemented` (9/9 PASS).
+- **Observed:** all seven required admin surfaces were authenticated through the
+  privacy-gated collector.
+- **Graph:** the D7 Copilot usage-report GET succeeded with delegated
+  `Reports.Read.All`; the report body/token were not retained.
 - **Validation:** both `validate-lab-result.py` and `validate-lab-package.ps1` pass.
 - **Evidence hashes:** result
-  `30cd35255c1f30d1382a8c510f5f5e6b9cf6293b4e40f82dcb3d315297a03548`;
+  `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`;
   package
-  `4f1bbae69490834685eac2d3753d1c6a18bbb286ce01a4aa64f773b5d3d2c9b3`.
-- **PR record:** [Solution 01 lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317#issuecomment-4983757488).
+  `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`.
+- **PR record:** [Accepted Solution 01 lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317#issuecomment-4985956226).
 
 ## Pending Gates and Known Blockers
 
-- **Solution 01 authentication/permission remediation (current serial gate).**
-  Seed attended governance auth for the six login-walled admin surfaces and
-  provide effective `Reports.Read.All` access for the D7 Copilot report, then
-  rerun the pinned contract. Do not proceed to Solution 02 until Solution 01
-  reaches an accepted PASS/BLOCKED/NOT-APPLICABLE disposition.
-- **PR #317 conflict (deliberately deferred).** Solution 01's PR conflicts with `main`
-  and is intentionally held for **post-lab finalization**. The other 22 review PRs are
-  mergeable but remain unmerged with `Lab status: pending`.
-- **No finalization has occurred.** No live-tenant or Playwright lab run has executed,
-  no accepted evidence exists, and no review PR has been versioned-final, rebased, or merged.
+- **Solution 02 is the current serial gate.** Pin PR #319, execute its read-only
+  contract, and require accepted evidence before advancing to Solution 16.
+- **Remaining review PRs.** Solutions 02–23 remain unmerged with
+  `Lab status: pending`.
 
 ## Metadata Gaps
 
@@ -151,19 +147,17 @@ machine-checked arrays so validation stays deterministic:
 
 Execute in order. Do not run labs in parallel; the review and lab program is serial.
 
-1. **Remediate Solution 01 prerequisites.** Complete attended sign-in for the
-   six blocked admin surfaces and authorize the read-only report permission.
-2. **Rerun Solution 01.** Reuse the pinned contract and privacy-gated evidence
-   workflow; accept only PASS/BLOCKED/NOT-APPLICABLE with required evidence.
-3. **Continue labs one at a time.** After Solution 01 is accepted, execute each
+1. **Run Solution 02.** Pin PR #319 and execute its read-only contract using the
+   studio adapter and privacy-gated evidence workflow.
+2. **Continue labs one at a time.** After Solution 02 is accepted, execute each
    remaining contract serially. The first cycle is
    read-only/detect-only (`mutations: []` normally); no tenant mutation is permitted.
-4. **Capture and accept evidence.** Emit `*.lab-result.json` and portable evidence
+3. **Capture and accept evidence.** Emit `*.lab-result.json` and portable evidence
    packages. Accepted `BLOCKED` and `NOT-APPLICABLE` dispositions require negative
    evidence **and** source verification and must not claim implemented control state.
    Do not include raw identifiers, secrets, or PII in evidence.
-5. **Recheck, version, rebase, merge.** After accepted evidence, recheck sources, apply
-   versioning where required, resolve PR #317's existing conflict, and merge all PRs
+4. **Recheck, version, rebase, merge.** After accepted evidence, recheck sources, apply
+   versioning where required, and merge all remaining PRs
    one at a time in the documented serial order.
 
 ## Critical Gotchas
@@ -230,14 +224,12 @@ PR is pushed. The resulting steady state is:
 
 - Root repository on `main` only, with no review worktrees and no local review branches.
 - Merged remote branches for #315, #316, and #318 deleted.
-- Remote branches backing the 23 open review PRs preserved.
+- Remote branches backing the remaining open review PRs preserved.
 - Generated leftovers removed (built `site/`, `__pycache__`, and other cache output).
 
 ## What Has NOT Happened
 
 To prevent a false-progress restart, the following are explicitly **not** done:
 
-- No accepted lab evidence exists.
 - Solutions 02–23 have not started lab execution.
-- No review PR has been versioned-final, rebased onto latest `main`, or merged.
-- Solution 01 (PR #317) remains conflicting and deferred.
+- Solutions 02–23 have not been versioned-final, rebased onto latest `main`, or merged.
