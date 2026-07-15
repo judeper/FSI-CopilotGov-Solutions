@@ -32,6 +32,11 @@ Recommended optional fields:
 - `tier`
 - `sourceSolutions`
 - `notes`
+- `collectedAt` — when the monitoring or seed run collected the record (distinct from `lastEvidenceDate`).
+- `sourceLastModified` — last-modified time reported by the source evidence package, or `null` when none is available.
+- `timestampProvenance` — one of `source-provided`, `detected-only`, `synthetic-seed`, or `missing`.
+- `freshnessState` — one of `current`, `stale`, `unknown`, or `not-applicable`.
+- `hashState` — hash and validation state of the referenced upstream evidence (for example `unresolved`, `not-collected`, or `seed`).
 
 ## Example control-status-snapshot Payload
 
@@ -50,6 +55,8 @@ Recommended optional fields:
   "notes": "Documentation-first seed record showing the expected dashboard posture contract before a live aggregation environment is connected."
 }
 ```
+
+> **Seed-mode note:** In the repository state, seed rows emitted by `Export-Evidence.ps1` set `lastEvidenceDate` to `null`, record only `collectedAt` (the seed generation time), set `sourceLastModified` to `null`, and mark `timestampProvenance` as `synthetic-seed` with `freshnessState` of `not-applicable`. They do not appear current, because no upstream evidence timestamp has been resolved. The populated example above illustrates a resolved record produced only after a runtime aggregation environment supplies real upstream export timestamps.
 
 ## Framework Coverage Matrix Content
 
@@ -74,6 +81,16 @@ Dashboard export packages should capture:
 - Referenced evidence package paths and hashes
 - Selected regulatory framework
 - Package owner and reviewer metadata
+
+## Freshness and Provenance Semantics
+
+Freshness and provenance are tracked as first-class properties so consumers can tell resolved evidence from seeded placeholders and never treat unresolved data as current.
+
+- **Collection time versus source time.** `collectedAt` records when a monitoring or seed run gathered a record; `sourceLastModified` records the last-modified time reported by the upstream evidence package. Freshness is evaluated from the source time, not from when the dashboard or seed run executed.
+- **Timestamp provenance.** Each record carries `timestampProvenance`: `source-provided` (from a resolved upstream package), `detected-only` (inferred from an evidence file's last-write time during deployment inventory), `synthetic-seed` (documentation-first seed output), or `missing`.
+- **Explicit gaps, never silent currency.** When a source timestamp or package hash is missing or unresolved, the record reports `freshnessState` / `evidenceFreshnessState` of `unknown` with `hasTimestampGap = true` rather than defaulting to `current`. The `dashboard-export` package rolls these up into a `dataQuality` object (`overall = gap`) whenever referenced upstream packages are unresolved.
+- **Monitoring warnings.** `Monitor-Compliance.ps1` returns `DataQualityGap` and `TimestampGapControlCount`, and emits a warning when any control lacks a source evidence timestamp, so operators do not treat the output as current.
+- **Hash and validation state.** Referenced upstream packages record `hashState` (for example `unresolved` at seed time, `not-collected` during deployment inventory). SHA-256 hashes and source timestamps are resolved by the runtime aggregation flow before freshness can be evaluated.
 
 ## Packaging Requirements
 

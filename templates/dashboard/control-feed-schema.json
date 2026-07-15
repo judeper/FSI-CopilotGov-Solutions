@@ -11,6 +11,7 @@
     "implemented",
     "partial",
     "monitor-only",
-    "playbook-only"
+    "playbook-only",
+    "not-applicable"
   ]
 }

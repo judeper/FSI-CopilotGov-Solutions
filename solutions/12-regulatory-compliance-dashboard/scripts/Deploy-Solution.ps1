@@ -170,6 +170,10 @@ function New-ControlStatusSnapshot {
             status = $control.status
             score = [int](Get-CopilotGovStatusScore -Status $control.status)
             lastEvidenceDate = if ($latestEvidence) { $latestEvidence.lastEvidenceDate } else { $null }
+            sourceLastModified = if ($latestEvidence) { $latestEvidence.lastEvidenceDate } else { $null }
+            timestampProvenance = if ($latestEvidence) { 'detected-only' } else { 'missing' }
+            freshnessState = if ($latestEvidence) { 'detected' } else { 'unknown' }
+            hashState = 'not-collected'
             solutionSlug = $script:SolutionCode
             sourceSolutions = @($control.sourceSolutions)
             availableEvidenceSources = $matchingEvidence.Count

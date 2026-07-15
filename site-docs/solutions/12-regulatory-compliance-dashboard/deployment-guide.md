@@ -112,6 +112,8 @@ Recommended RLS filters:
 - Region
 - Solution owner group
 
+> **Row-level security scope (current Microsoft guidance).** Row-level security restricts data only for consumers with the workspace **Viewer** role; it does not apply to workspace **Admin**, **Member**, or **Contributor** roles, who retain edit access to the underlying semantic model. Use least-privilege **Viewer** access for report consumers and keep authoring roles limited. See [Row-level security (RLS) with Power BI](https://learn.microsoft.com/fabric/security/service-admin-row-level-security) and [Roles in workspaces in Power BI](https://learn.microsoft.com/power-bi/collaborate-share/service-roles-new-workspaces).
+
 ## Post-Deployment Validation
 
 After deployment:
@@ -120,3 +122,9 @@ After deployment:
 2. Run `scripts\Export-Evidence.ps1` and confirm both the evidence JSON and `.sha256` files are created.
 3. Validate that the Power BI coverage matrix reflects the enabled frameworks for the chosen tier.
 4. Generate at least one examination readiness package to confirm the packaging flow is wired correctly.
+
+## Lab Validation Handoff
+
+A machine-readable lab-validation contract is provided at `lab/12-regulatory-compliance-dashboard.lab.json`. The first cycle is intentionally **read-only and detect-only** (`mutations: []`): it proves tenant and workspace identity without retaining raw identifiers, uses preauthorized delegated `Workspace.Read.All` with `GET /v1.0/myorg/groups` to confirm accessible workspaces without retaining workspace names/IDs, inspects an existing Power BI/Fabric report and semantic-model item metadata with the **Viewer** role (or an equivalent read-only role), confirms capacity and licensing prerequisites without changing them, explicitly treats Fabric administrator as out of scope for this Viewer-level cycle, runs the representative feed and evidence scripts, and validates schema, SHA-256 hashes, evidence lineage, freshness and timestamp provenance, control-status versus lab-disposition separation, and report-page assumptions.
+
+The lab must not publish, import, or upload content; refresh or reconfigure a semantic model; change gateways, credentials, workspace roles, row-level or object-level security, sharing, subscriptions, exports, deployment pipelines, capacity assignment, tenant settings, service-principal tenant settings, or app registrations; request consent; use `Workspace.ReadWrite.All`; or delete anything. The first cycle must not require Build permission or edit roles. No raw tenant, workspace, report, or semantic-model identifiers, user emails, report URLs, tokens, credentials, exported PBIX/PBIP content, underlying rows, or sensitive upstream evidence are retained. From the Groups response, retain aggregate counts and boolean workspace-match evidence only. Honest no-workspace/report/semantic-model, no-license/capacity, no-upstream-evidence, stale-or-invalid-input, missing-role, missing-scope-or-consent, unavailable-feature, and no-accepted-lab-result outcomes are captured as evidence-backed `BLOCKED` or `NOT-APPLICABLE` dispositions. Validate the contract with `python scripts/validate-lab-contracts.py solutions/12-regulatory-compliance-dashboard/lab/12-regulatory-compliance-dashboard.lab.json`.

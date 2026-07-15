@@ -1,0 +1,349 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:12-regulatory-compliance-dashboard:2026-07-readonly-cycle-1",
+  "solution": {
+    "id": "12-regulatory-compliance-dashboard",
+    "name": "Regulatory Compliance Dashboard",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "3.7",
+    "3.8",
+    "3.12",
+    "3.13",
+    "4.5",
+    "4.7"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-semantic-model-terminology",
+      "claimText": "Microsoft renamed the Power BI dataset content type to semantic model, so current documentation and human-readable output use semantic model terminology.",
+      "affectedFiles": [
+        "solutions/12-regulatory-compliance-dashboard/docs/architecture.md",
+        "solutions/12-regulatory-compliance-dashboard/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/power-bi/connect-data/service-datasets-rename",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-rls-viewer-only",
+      "claimText": "Power BI row-level security restricts data access only for users with the workspace Viewer role and does not apply to workspace Admin, Member, or Contributor roles.",
+      "affectedFiles": [
+        "solutions/12-regulatory-compliance-dashboard/docs/architecture.md",
+        "solutions/12-regulatory-compliance-dashboard/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/fabric/security/service-admin-row-level-security",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-workspace-roles",
+      "claimText": "Power BI workspaces expose the Admin, Member, Contributor, and Viewer roles, and Viewer is the least-privilege read-only role for report consumers.",
+      "affectedFiles": [
+        "solutions/12-regulatory-compliance-dashboard/docs/deployment-guide.md",
+        "solutions/12-regulatory-compliance-dashboard/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/power-bi/collaborate-share/service-roles-new-workspaces",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-licensing",
+      "claimText": "Sharing Power BI content requires a Power BI Pro or Premium Per User license unless the content resides in Premium or Fabric capacity, which report authors and workspace administrators must hold.",
+      "affectedFiles": [
+        "solutions/12-regulatory-compliance-dashboard/docs/prerequisites.md",
+        "solutions/12-regulatory-compliance-dashboard/README.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/power-bi/fundamentals/service-features-license-type",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-powerbi-rest-readonly",
+      "claimText": "Groups - Get Groups (GET /v1.0/myorg/groups) returns workspaces accessible to the caller and requires Workspace.Read.All or Workspace.ReadWrite.All. This first lab cycle uses preauthorized delegated Workspace.Read.All only.",
+      "affectedFiles": [
+        "solutions/12-regulatory-compliance-dashboard/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/rest/api/power-bi/groups/get-groups",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-fabric-admin-role",
+      "claimText": "Tenant-wide Power BI and Fabric settings are managed by the Fabric administrator role (formerly the Power BI administrator role) in the admin portal.",
+      "affectedFiles": [
+        "solutions/12-regulatory-compliance-dashboard/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/fabric/admin/roles",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Power BI Pro or Premium Per User license, or Viewer access to content in Power BI Premium or Fabric capacity"
+    ],
+    "roles": [
+      "Power BI workspace Viewer (read-only) on an existing governance dashboard workspace",
+      "Global Reader for tenant identity and license inspection"
+    ],
+    "features": [
+      "An existing Power BI/Fabric workspace containing a report and a semantic model",
+      "Preauthorized delegated Workspace.Read.All scope for GET /v1.0/myorg/groups (no Workspace.ReadWrite.All in this cycle)"
+    ],
+    "capacityRequirements": [
+      "Read-only access to an existing workspace and capacity; no new capacity assignment"
+    ],
+    "dataRequirements": [
+      "Representative sample evidence only; no production tenant rows, PBIX/PBIP content, or upstream evidence retained"
+    ],
+    "tenantCount": 1,
+    "notes": "This first cycle is read-only and detect-only. It uses preauthorized delegated Workspace.Read.All only for GET /v1.0/myorg/groups; no Workspace.ReadWrite.All, no service principal tenant-setting changes, and no consent requests are permitted. Missing scope or consent is recorded as an evidence-backed BLOCKED disposition. Where a workspace, report, semantic model, license, capacity, role, or upstream evidence package is unavailable, the reviewer records an evidence-backed BLOCKED or NOT-APPLICABLE disposition rather than proceeding."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm identity and prerequisites read-only",
+        "steps": [
+          {
+            "id": "step-prove-tenant-workspace-identity",
+            "mode": "ui",
+            "intent": "Positively confirm the tenant and target Power BI/Fabric workspace identity for the review without copying raw identifiers.",
+            "expected": "Tenant and workspace identity are confirmed; only a non-reversible reference such as a truncated hash is recorded.",
+            "locator": "app.powerbi.com > Workspaces > target governance workspace > Settings/About",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Workspace About and tenant banner",
+              "expectation": "Identity is confirmed and no raw tenant, workspace, or user identifier is retained."
+            }
+          },
+          {
+            "id": "step-confirm-prerequisites",
+            "mode": "manual",
+            "intent": "Confirm licensing, least-privilege Viewer role, capacity prerequisites, and preauthorized delegated Workspace.Read.All scope are present without modifying them.",
+            "expected": "Prerequisites are present, or a documented gap is recorded as an evidence-backed BLOCKED or NOT-APPLICABLE disposition. Missing Workspace.Read.All scope or missing consent evidence is recorded as BLOCKED.",
+            "operatorNote": "Confirm Power BI Pro/PPU or Fabric/Premium capacity licensing, Viewer (read-only) role on the target workspace, and preauthorized delegated Workspace.Read.All for GET /v1.0/myorg/groups. Do not assign Fabric administrator for this lab, do not request consent, and do not use Workspace.ReadWrite.All. If scope/consent evidence is missing, record BLOCKED.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Prerequisite attestation note",
+              "expectation": "Prerequisite state is recorded, scope/consent status is attested, Fabric administrator is documented as not required for Viewer inspection, and no license, role, capacity, tenant setting, or consent state was changed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Read-only inspection and representative script runs",
+        "steps": [
+          {
+            "id": "step-inspect-workspace-readonly",
+            "mode": "api",
+            "intent": "List the Power BI/Fabric workspaces the reviewer can access, read-only, to confirm an existing governance workspace is present.",
+            "expected": "A read-only workspace list is returned from GET /v1.0/myorg/groups; only aggregate count and boolean target-workspace-match are recorded, not workspace names, IDs, or URLs. Missing Workspace.Read.All scope or missing consent evidence is recorded as BLOCKED.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://api.powerbi.com/v1.0/myorg/groups"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Power BI REST API groups response",
+              "expectation": "Response confirms workspace accessibility with aggregate count and target-workspace-match boolean only; no workspace IDs, names, or URLs are retained."
+            }
+          },
+          {
+            "id": "step-inspect-report-semanticmodel-readonly",
+            "mode": "ui",
+            "intent": "Use Viewer-only access to render and interact with report pages and confirm workspace/report/semantic-model item existence and metadata without edit permissions.",
+            "expected": "Viewer confirms report-page behavior and item existence/metadata. Viewer does not inspect model-view tables/measures directly and this cycle does not require Build permission or edit roles. Documented tables/measures are verified against repository config/docs and representative feed artifacts. Live schema metadata is optional only when a preauthorized read-only metadata surface exists, with no underlying rows exported. Missing access is recorded as BLOCKED or NOT-APPLICABLE.",
+            "locator": "app.powerbi.com > target workspace > report pages and semantic model item metadata",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Report page interaction and item metadata view",
+              "expectation": "Viewer-level read-back confirms report interactivity and item existence/metadata only; Build permission or edit role is not required; no data rows, PBIX/PBIP content, or identifiers are exported or retained."
+            }
+          },
+          {
+            "id": "step-run-feed-and-evidence-scripts",
+            "mode": "powershell",
+            "intent": "Run the representative feed and evidence scripts in documentation-first mode.",
+            "expected": "Scripts emit seeded artifacts, SHA-256 companions, and documentation-first runtime markers with an explicit data-quality gap for unresolved freshness.",
+            "command": "pwsh -File solutions/12-regulatory-compliance-dashboard/scripts/Export-Evidence.ps1 -ConfigurationTier recommended -OutputPath lab-output; pwsh -File solutions/12-regulatory-compliance-dashboard/scripts/Monitor-Compliance.ps1 -ConfigurationTier recommended -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Script output and emitted artifacts",
+              "expectation": "Output includes runtime-mode markers, SHA-256 companions, and a data-quality gap rather than current freshness."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Validate schema, hashes, freshness, and source currency",
+        "steps": [
+          {
+            "id": "step-validate-schema-hash-freshness",
+            "mode": "powershell",
+            "intent": "Validate the emitted evidence against the shared schema, verify SHA-256 hash lineage, and confirm freshness and provenance and that control status stays separate from lab disposition.",
+            "expected": "Every artifact has a matching SHA-256 companion, the package validates against data/evidence-schema.json, freshness reports an explicit gap rather than current, and control statuses are not converted into lab dispositions.",
+            "command": "pwsh -NoLogo -NoProfile -File solutions/12-regulatory-compliance-dashboard/scripts/Validate-LabEvidence.ps1 -OutputPath lab-output",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Validation output and SHA-256 companions",
+              "expectation": "Schema validation passes, hashes match, freshness shows a gap, and control-status versus lab-disposition separation holds."
+            }
+          },
+          {
+            "id": "step-verify-source-currency",
+            "mode": "manual",
+            "intent": "Confirm the Microsoft Learn source citations remain current and match the recorded lifecycle state.",
+            "expected": "Each cited source remains published and generally available, or a change is recorded as a finding.",
+            "operatorNote": "Confirm the cited Microsoft Learn pages (semantic model terminology, RLS Viewer-only scope, workspace roles, licensing, Groups - Get Groups GET /v1.0/myorg/groups with required scopes, and Fabric admin role boundaries) remain published and match the recorded lifecycle state.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims source URLs",
+              "expectation": "Sources remain current and support the documented Power BI and Fabric claims."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Attest read-only cleanup",
+        "steps": [
+          {
+            "id": "step-confirm-no-mutations",
+            "mode": "manual",
+            "intent": "Capture operator attestation that no mutable changes were made and no sensitive identifiers were retained.",
+            "expected": "Attestation confirms a read-only cycle with no retained sensitive data.",
+            "operatorNote": "Attest that the cycle was read-only and detect-only, that no publish, refresh, share, role, RLS/OLS, gateway, capacity, tenant-setting, service-principal-setting, or consent changes occurred, and that no raw identifiers, URLs, rows, PBIX/PBIP content, tokens, or credentials were retained.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no mutation occurred and no sensitive identifiers were retained."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-readback-log",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript and read-back output from the representative feed and evidence script runs, including runtime-mode markers and the data-quality gap.",
+        "requiredForControls": [
+          "3.7",
+          "3.8",
+          "3.12",
+          "3.13",
+          "4.5",
+          "4.7"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "Microsoft Learn source citations confirming current Power BI and Fabric terminology, RLS Viewer-only scope, workspace roles, licensing, and Groups - Get Groups scope requirements.",
+        "requiredForControls": [
+          "3.7",
+          "3.8",
+          "3.13",
+          "4.7"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-readonly-inspection",
+        "type": "manual-attestation",
+        "description": "Attestation of Viewer-level read-only workspace/report/semantic-model item inspection with aggregate counts and boolean workspace-match only from Groups response, no model-view table/measure inspection requirement, and no raw tenant/workspace/report/semantic-model identifiers retained.",
+        "requiredForControls": [
+          "3.7",
+          "3.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-readback-log",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}
