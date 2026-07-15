@@ -1,6 +1,6 @@
 # FINRA Supervision Workflow for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-07-14
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
@@ -20,7 +20,7 @@ FINRA Supervision Workflow for Copilot routes flagged Copilot-assisted communica
 
 ## What this solution does
 
-This solution routes Copilot-assisted communications that were flagged by Microsoft Purview Communication Compliance into a supervisory review queue. It supports compliance with FINRA supervision obligations by assigning reviewers based on zone and governance tier, applying configurable sampling rates, enforcing review SLAs, and recording review actions in an append-only log.
+This solution routes Copilot-assisted communications that were flagged by a Microsoft Purview Communication Compliance policy detecting Microsoft 365 Copilot and Microsoft 365 Copilot Chat interactions (for example, a policy created from the **Detect Microsoft Copilot interactions** template) into a supervisory review queue. It supports compliance with FINRA supervision obligations by assigning reviewers based on zone and governance tier, applying configurable sampling rates, enforcing review SLAs, and recording review actions in an append-only log.
 
 The solution is documentation-first. Dataverse tables, Power Automate flows, connection references, and environment variables are described here and in the docs folder so that regulated teams can deploy them manually in a controlled Power Platform environment.
 
@@ -53,7 +53,7 @@ See [docs\prerequisites.md](prerequisites.md) for the full list. Minimum prerequ
 
 - Power Apps Premium and Power Automate Premium for Dataverse tables and cloud flows.
 - Eligible Communication Compliance licensing for scoped users, such as Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with the Advanced Compliance add-on.
-- Power Platform administrator, Global Reader, and the Communication Compliance Admins role group or an approved Compliance Administrator role/role group for deployment validation.
+- Power Platform administrator, Global Reader, and the Communication Compliance Admins role group or an approved Compliance Administrator role/role group for deployment validation. Reviewers use the least-privileged Communication Compliance Analysts role group and must be named on the Communication Compliance policy.
 - Microsoft Entra ID groups for supervisory principals, escalation recipients, and service identities.
 - PowerShell 7 or later for deployment, monitoring, and evidence export scripts.
 
@@ -70,7 +70,7 @@ The solution uses three Dataverse tables following the shared contract `fsi_cg_{
 Recommended Dataverse ownership model:
 
 - Queue items: organization-owned so supervisory teams can reassign work during outages or staff changes.
-- Log items: create-only for service accounts and reviewer flows to support an immutable log pattern.
+- Log items: create-only for service accounts and reviewer flows to support an append-only governance pattern. This is not a WORM or platform-level immutability guarantee.
 - Config items: restricted write access to governance administrators.
 
 ## Power Automate flows
@@ -78,7 +78,7 @@ Recommended Dataverse ownership model:
 The implementation uses four manual Power Automate cloud flows:
 
 1. Ingest Flagged Items
-   - Trigger: customer-validated handoff from Communication Compliance, such as a report export, audit-log review, or a Power Automate flow launched from a Communication Compliance alert.
+   - Trigger: customer-validated handoff from Communication Compliance, such as a report export, audit-log review, or a Power Automate flow created from a recommended default template through the **Automate** menu on a Communication Compliance alert.
    - Actions: receive exported or alert-context item metadata, classify zone and tier, create a SupervisionQueue row, and append a SupervisionLog action of `ingested`.
 
 2. Assignment Flow
@@ -147,4 +147,3 @@ This solution supports compliance with FINRA 3110, FINRA 2210, and SEC Reg BI by
 - Microsoft Purview Communication Compliance signal availability depends on upstream policy configuration and service latency.
 - Live evidence export requires Dataverse API connectivity and an access token supplied through the deployment environment.
 - Sampling configuration supports compliance with supervisory review design, but firms still need written supervisory procedures that define exception handling and sign-off authority.
-

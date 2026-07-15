@@ -70,10 +70,10 @@ Symptoms:
 - Expected flagged items are not available in the supervisory queue.
 
 Checks:
-- Confirm the account is in the Communication Compliance Admins role group, Communication Compliance role group, or an approved Compliance Administrator role/role group.
+- Confirm the account is in a Communication Compliance role group appropriate to the task: Communication Compliance Analysts (or Investigators) to review alerts and policy matches, Communication Compliance Admins or an approved Compliance Administrator role/role group to configure the policy, and that reviewers are named on the policy.
 - Confirm the policy ID in `fsi_ev_fsw_purviewpolicyid` matches the approved policy.
 - Confirm the policy has produced cases or alerts for the requested period.
-- If using Power Automate, confirm the flow is launched from a Communication Compliance alert action rather than scheduled polling.
+- If using Power Automate, confirm the flow is created from a recommended default template through the alert **Automate** menu rather than scheduled polling, and that the running account is in a Communication Compliance role group.
 
 Resolution:
 - Update the environment variable with the correct policy ID.
@@ -96,6 +96,19 @@ Resolution:
 - Correct the tier JSON file and reseed `fsi_cg_fsw_config` rows.
 - Re-run `Monitor-Compliance.ps1` to confirm the control status returns to implemented.
 - Document the change in the firm's supervisory procedures if sampling policy changed.
+
+## Live export cannot find a table or column
+
+Symptoms:
+- `-LiveExport` fails with HTTP 404 or an error such as "Could not find a property named ..." for a queue, log, or config table.
+
+Checks:
+- Confirm each `entitySetName` in `config\default-config.json` matches the tenant value from metadata: `GET {environmentUrl}/api/data/v9.2/EntityDefinitions(LogicalName='fsi_cg_fsw_queue')?$select=EntitySetName`. Do not assume the default plural collection name.
+- Confirm any lookup column (for example, `fsi_queueitem` when implemented as a lookup) is queried through its Web API form; a lookup value is exposed as `_fsi_queueitem_value`, not `fsi_queueitem`.
+
+Resolution:
+- Update the `entitySetName` values in `config\default-config.json` to the metadata-confirmed collection names and rerun the export.
+- Align the `$select` columns for live export with the actual column types in the target environment.
 
 ## Dataverse API rate limiting and transient failures
 

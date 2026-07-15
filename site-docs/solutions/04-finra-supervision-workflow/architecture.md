@@ -51,7 +51,7 @@ This architecture supports compliance with supervisory review requirements by se
 ### Flows
 
 - Ingest Flagged Items
-  - Receives customer-validated Communication Compliance alert-context or exported items for Copilot prompts and responses.
+  - Receives customer-validated Communication Compliance alert-context or exported items for Microsoft 365 Copilot and Microsoft 365 Copilot Chat prompts and responses.
   - Normalizes metadata and creates queue and log entries.
 - Assignment Flow
   - Routes queue items to supervisory principals by zone and tier.
@@ -61,7 +61,7 @@ This architecture supports compliance with supervisory review requirements by se
   - Records exception and escalation events in the log.
 - Review Complete Flow
   - Validates reviewer dispositions and final notes.
-  - Closes or escalates queue items and appends immutable log rows.
+  - Closes or escalates queue items and appends rows under an append-only governance pattern; Dataverse does not make them WORM records.
 
 ## Layer 3: Evidence export
 
