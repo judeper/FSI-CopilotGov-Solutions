@@ -47,10 +47,12 @@
 
 **Actions:**
 1. Verify `autoRevertEnabled` is set to `true` in `config/auto-revert-policy.json`
-2. Check that the appropriate risk tier is enabled in `autoRevertScopes` (HIGH, MEDIUM, LOW)
-3. Confirm the `-AutoRevert` switch was passed on the command line
+2. Check that the appropriate risk tier is enabled in `autoRevertScopes` (LOW or MEDIUM for safe auto-revert runs)
+3. If using `-AutoRevert`, confirm at least one of LOW or MEDIUM is enabled; HIGH remains approval-gated for safety
 4. Verify the service account has `Sites.FullControl.All` permission for write operations
 5. Review the reversion log for error entries
+
+> **WhatIf behavior:** `Invoke-DriftReversion.ps1 -WhatIf` does not send approval emails and does not write `pending-approvals.json` or reversion log files.
 
 ## Approval Email Not Received
 

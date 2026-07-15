@@ -325,6 +325,7 @@ function Export-SolutionEvidencePackage {
     )
 
     $null = New-Item -ItemType Directory -Path $OutputPath -Force
+    $resolvedOutputPath = (Resolve-Path -Path $OutputPath).Path
     $fileName = if ([string]::IsNullOrWhiteSpace($PackageFileName)) {
         '{0}-evidence.json' -f $Solution
     }
@@ -332,7 +333,8 @@ function Export-SolutionEvidencePackage {
         $PackageFileName
     }
 
-    $filePath = Join-Path $OutputPath $fileName
+    $filePath = Join-Path $resolvedOutputPath $fileName
+    $packageDirectory = Split-Path -Path $filePath -Parent
     $metadata = [ordered]@{
         solution = $Solution
         solutionCode = $SolutionCode
@@ -345,11 +347,47 @@ function Export-SolutionEvidencePackage {
         $metadata[$key] = $AdditionalMetadata[$key]
     }
 
+    $normalizedArtifacts = @()
+    foreach ($artifact in @($Artifacts)) {
+        if ($null -eq $artifact) {
+            $normalizedArtifacts += $artifact
+            continue
+        }
+
+        $artifactRecord = [ordered]@{}
+        if ($artifact -is [System.Collections.IDictionary]) {
+            foreach ($key in $artifact.Keys) {
+                $artifactRecord[[string]$key] = $artifact[$key]
+            }
+        }
+        else {
+            foreach ($property in $artifact.PSObject.Properties) {
+                $artifactRecord[$property.Name] = $property.Value
+            }
+        }
+
+        if ($artifactRecord.Contains('path')) {
+            $artifactPathValue = [string]$artifactRecord['path']
+            if (-not [string]::IsNullOrWhiteSpace($artifactPathValue) -and [IO.Path]::IsPathRooted($artifactPathValue)) {
+                $resolvedArtifactPath = try {
+                    (Resolve-Path -Path $artifactPathValue -ErrorAction Stop).Path
+                }
+                catch {
+                    $artifactPathValue
+                }
+
+                $artifactRecord['path'] = [IO.Path]::GetRelativePath($packageDirectory, $resolvedArtifactPath)
+            }
+        }
+
+        $normalizedArtifacts += [pscustomobject]$artifactRecord
+    }
+
     $payload = [ordered]@{
         metadata = $metadata
         summary = $Summary
         controls = $Controls
-        artifacts = $Artifacts
+        artifacts = $normalizedArtifacts
     }
 
     $payload | ConvertTo-Json -Depth 20 | Set-Content -Path $filePath -Encoding utf8

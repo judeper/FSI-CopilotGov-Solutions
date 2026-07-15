@@ -132,5 +132,25 @@ This solution documents Power Automate flow patterns for approval-gate workflows
 - Auto-reversion logic documents the reversion pattern but does not execute live permission changes.
 - Approval responses and timeout escalation require an external workflow to process `pending-approvals.json`.
 - Approval-gate email notifications require Microsoft Graph `Mail.Send` permission and a licensed sender mailbox.
+- `Compare-PermissionSet` remains a documented extension target for future live comparison; stable principal identifiers are required before tenant-bound matching should be treated as authoritative.
 - Baseline comparison operates at the unique permission entry level; sharing links, external users, and inherited-vs-unique analysis are documented as tenant-binding design targets.
 - Risk scoring uses fixed scaffold factors for permission level and principal type; Solution 02 and classifier-based score elevation are future integration steps.
+
+## Implementation Handoff
+
+Use the existing documentation set as the implementation handoff package:
+
+- `DELIVERY-CHECKLIST.md` (repository handoff checklist artifact)
+- [docs/deployment-guide.md](deployment-guide.md)
+- [docs/prerequisites.md](prerequisites.md)
+- [docs/evidence-export.md](evidence-export.md)
+
+Handoff should explicitly confirm documentation-first execution, upstream Solution 02 dependency context, approval-gate ownership, and any blocked prerequisite states (role, app-permission, or licensing) before tenant-bound work starts.
+
+## Lab Validation Contract
+
+The read-only lab contract for this solution is available at:
+
+- `lab/17-sharepoint-permissions-drift.lab.json` (read-only template contract artifact)
+
+The contract is template-bound, uses `mutations: []`, and documents baseline plus drift sample run validation with Graph/PnP/manual read-back checks.

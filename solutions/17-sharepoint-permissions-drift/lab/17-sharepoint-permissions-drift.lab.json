@@ -1,0 +1,293 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:17-sharepoint-permissions-drift:2026-07-read-only-template",
+  "solution": {
+    "id": "17-sharepoint-permissions-drift",
+    "name": "SharePoint Permissions Drift Detection",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.2",
+    "1.4",
+    "1.6",
+    "2.5"
+  ],
+  "portals": [
+    "sharepoint-admin-center",
+    "microsoft-entra-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-driveitem-permissions-owner-scope",
+      "claimText": "The driveItem permissions API returns all sharing permissions to owners, while non-owner callers only receive permissions that apply to the caller.",
+      "affectedFiles": [
+        "solutions/17-sharepoint-permissions-drift/docs/prerequisites.md",
+        "solutions/17-sharepoint-permissions-drift/docs/architecture.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/driveitem-list-permissions?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-sendmail-endpoints",
+      "claimText": "Microsoft Graph sendMail supports POST /me/sendMail and POST /users/{id|userPrincipalName}/sendMail with Mail.Send as least-privileged delegated and application permission.",
+      "affectedFiles": [
+        "solutions/17-sharepoint-permissions-drift/scripts/Invoke-DriftScan.ps1",
+        "solutions/17-sharepoint-permissions-drift/scripts/Invoke-DriftReversion.ps1",
+        "solutions/17-sharepoint-permissions-drift/docs/prerequisites.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/user-sendmail?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-rcd-adjacent-sam-control",
+      "claimText": "Restricted Content Discovery limits discoverability for selected SharePoint sites and explicitly does not change existing permissions, making it an adjacent SAM discoverability control rather than a permission-boundary change.",
+      "affectedFiles": [
+        "solutions/17-sharepoint-permissions-drift/docs/architecture.md",
+        "solutions/17-sharepoint-permissions-drift/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/sharepoint/restricted-content-discovery",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot license for the validation operator and SharePoint Advanced Management availability when Restricted Content Discovery is evaluated."
+    ],
+    "roles": [
+      "SharePoint Administrator for scoped read-only verification steps.",
+      "Application administrator approval path for Graph and PnP app permissions."
+    ],
+    "features": [
+      "Solution 02 upstream oversharing context is reviewed before running Solution 17 baseline and drift sample steps.",
+      "Read-only execution mode with representative sample data only."
+    ],
+    "capacityRequirements": [
+      "One disposable validation workspace for baseline and drift sample artifacts.",
+      "Operator time for manual portal verification and source read-back."
+    ],
+    "dataRequirements": [
+      "Representative baseline and drift sample outputs only; no tenant identifiers or secrets."
+    ],
+    "tenantCount": 1,
+    "notes": "If required roles, app permissions, or licensing prerequisites are missing, disposition must be BLOCKED with negative evidence."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-upstream-solution02-context",
+            "mode": "manual",
+            "intent": "Confirm Solution 02 context and Solution 17 prerequisites are documented before sample execution.",
+            "expected": "Operator confirms upstream dependency context and that this run remains documentation-first and read-only.",
+            "operatorNote": "Review Solution 02 dependency note and prerequisite readiness in repository docs.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Readiness checklist record",
+              "expectation": "Checklist confirms upstream and prerequisite context before sample execution."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run baseline and drift sample workflow",
+        "steps": [
+          {
+            "id": "step-run-baseline-sample-capture",
+            "mode": "powershell",
+            "intent": "Run New-PermissionsBaseline in documentation-first mode to capture representative baseline output.",
+            "expected": "Baseline artifacts are produced with representative sample data and no tenant mutation.",
+            "command": "pwsh -File solutions/17-sharepoint-permissions-drift/scripts/New-PermissionsBaseline.ps1 -TenantUrl https://example.sharepoint.com -OutputPath ./lab-output/baselines",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Baseline script output and baseline pointer file",
+              "expectation": "Output confirms representative baseline capture and latest-baseline pointer update."
+            }
+          },
+          {
+            "id": "step-run-drift-sample-scan",
+            "mode": "powershell",
+            "intent": "Run Invoke-DriftScan to generate representative drift findings against the sample baseline.",
+            "expected": "Drift report is generated with sample findings and risk tiers without tenant-bound writes.",
+            "command": "pwsh -File solutions/17-sharepoint-permissions-drift/scripts/Invoke-DriftScan.ps1 -TenantUrl https://example.sharepoint.com -BaselinePath ./lab-output/baselines/latest-baseline.json -OutputPath ./lab-output/reports",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Drift scan script output and drift report JSON",
+              "expectation": "Output confirms drift report creation and representative risk classification."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify Graph, PnP, and blocked prerequisite paths",
+        "steps": [
+          {
+            "id": "step-verify-driveitem-permissions-source",
+            "mode": "api",
+            "intent": "Verify the driveItem permissions source claim used for read-only permission visibility limits.",
+            "expected": "Source remains published and aligned with owner versus non-owner permission visibility guidance.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://learn.microsoft.com/graph/api/driveitem-list-permissions?view=graph-rest-1.0"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Source citation capture",
+              "expectation": "Citation confirms owner and non-owner visibility limitations."
+            }
+          },
+          {
+            "id": "step-verify-sendmail-source",
+            "mode": "api",
+            "intent": "Verify sendMail endpoint and Mail.Send permission requirements used by notification workflow documentation.",
+            "expected": "Source confirms /me/sendMail and /users/{id|userPrincipalName}/sendMail endpoint patterns and Mail.Send least privilege.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://learn.microsoft.com/graph/api/user-sendmail?view=graph-rest-1.0"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Source citation capture",
+              "expectation": "Citation confirms endpoint and permission details for sendMail."
+            }
+          },
+          {
+            "id": "step-verify-blocked-prerequisite-state",
+            "mode": "manual",
+            "intent": "Confirm BLOCKED disposition handling when role, app-permission, or licensing prerequisites are absent.",
+            "expected": "Validation run records BLOCKED outcome with negative evidence when prerequisite gates are not satisfied.",
+            "operatorNote": "Document blocked outcome if required role, Graph permission, or licensing gate is not met.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Blocked-state attestation note",
+              "expectation": "Attestation captures which prerequisite gate blocked execution."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Close read-only run",
+        "steps": [
+          {
+            "id": "step-record-no-cleanup-required",
+            "mode": "manual",
+            "intent": "Record cleanup decision for template read-only execution with zero mutations.",
+            "expected": "Operator attestation confirms no tenant mutation occurred and cleanup is not required.",
+            "operatorNote": "No mutable operation is defined for this contract.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms read-only execution and no cleanup action."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-baseline-scan-transcript",
+        "type": "powershell-transcript",
+        "description": "Transcript showing baseline capture and drift scan sample execution.",
+        "requiredForControls": [
+          "1.2",
+          "1.4",
+          "1.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-verification",
+        "type": "source-citation",
+        "description": "Source verification capture for driveItem permissions, sendMail, and Restricted Content Discovery references.",
+        "requiredForControls": [
+          "1.2",
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED",
+          "NOT-APPLICABLE",
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-blocked-attestation",
+        "type": "manual-attestation",
+        "description": "Manual attestation that records blocked prerequisite state when role, permission, or licensing gates fail.",
+        "requiredForControls": [
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-baseline-scan-transcript"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

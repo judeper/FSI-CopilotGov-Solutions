@@ -7,7 +7,7 @@
 | Microsoft 365 tenant | E5 or E5 Compliance license for target users |
 | SharePoint Online | Included with Microsoft 365; Advanced Management license recommended for large tenants |
 | Power Automate | Per-user or per-flow license for approval-gate workflows |
-| Azure Automation (optional) | For scheduled drift scan execution |
+| Azure Automation (optional) | For scheduled drift scan execution; PowerShell 7.4 is the current recommended runtime with PowerShell 5.1 support for legacy runbooks |
 
 ## Required Administrative Roles
 
@@ -34,7 +34,9 @@ Install-Module -Name Microsoft.Graph -MinimumVersion 2.0.0 -Scope CurrentUser
 Install-Module -Name Pester -MinimumVersion 5.0.0 -Scope CurrentUser
 ```
 
-> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4 or later and .NET 8.0. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation supports PowerShell 7.4 and Windows PowerShell 5.1; validate region, cloud, and selected `PnP.PowerShell` module compatibility before scheduling runbooks.
+> **PnP.PowerShell support note:** Microsoft Learn describes PnP.PowerShell as an open-source, community-provided module with no Microsoft SLA. Treat it as project-sourced tooling and validate module behavior in your environment before production use.
+>
+> **Runtime note:** Azure Automation currently supports PowerShell 7.4 and PowerShell 5.1 runbooks. Prefer PowerShell 7.4 for new automation where available, and validate runtime-region compatibility before scheduling jobs.
 
 ## Application Registration
 
@@ -50,6 +52,8 @@ For unattended (service account) operation, register a Microsoft Entra ID applic
 | `GroupMember.Read.All` / `Group.Read.All` or `Directory.Read.All` | Application | Resolve group identities and membership, depending on the queries used |
 
 > **Note:** Use `Files.Read.All` and, where site-wide inventory requires it, `Sites.Read.All` for detect-only mode. Elevate to `Sites.FullControl.All` only when auto-reversion is explicitly enabled and approved by your security team.
+>
+> **Bounded-site alternative:** `Sites.Selected` can be used to constrain application access to explicit sites, but endpoint behavior should be validated endpoint-by-endpoint in your tenant before relying on it as a complete replacement for broader scopes.
 
 ## Upstream Dependency
 
