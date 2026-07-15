@@ -1,0 +1,427 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:08-license-governance-roi:2026-07-readonly-detect",
+  "solution": {
+    "id": "08-license-governance-roi",
+    "name": "License Governance and ROI Tracker",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.9",
+    "4.5",
+    "4.6",
+    "4.8"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-entra-admin-center",
+    "power-platform-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-copilot-usage-user-detail-v1",
+      "claimText": "getMicrosoft365CopilotUsageUserDetail is generally available under Microsoft Graph v1.0 at GET /v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period={period}). The least-privileged permission is Reports.Read.All, supported period values are D7, D30, D90, D180, and ALL, the response is a report stream (CSV by default; append $format=application/json for JSON), and only users holding a Microsoft 365 Copilot license are returned.",
+      "affectedFiles": [
+        "solutions/08-license-governance-roi/scripts/Monitor-Compliance.ps1",
+        "solutions/08-license-governance-roi/scripts/Deploy-Solution.ps1",
+        "solutions/08-license-governance-roi/docs/architecture.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/extensibility/api/admin-settings/reports/copilotreportroot-getmicrosoft365copilotusageuserdetail",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-usercount-summary-v1",
+      "claimText": "getMicrosoft365CopilotUserCountSummary is generally available under Microsoft Graph v1.0 at GET /v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary(period={period}), returns aggregated enabled and active Microsoft 365 Copilot user counts, uses the least-privileged Reports.Read.All permission, and accepts the same period values D7, D30, D90, D180, and ALL.",
+      "affectedFiles": [
+        "solutions/08-license-governance-roi/scripts/Deploy-Solution.ps1",
+        "solutions/08-license-governance-roi/docs/architecture.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/extensibility/api/admin-settings/reports/copilotreportroot-getmicrosoft365copilotusercountsummary",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-subscribedskus-inventory",
+      "claimText": "License inventory is read from GET /v1.0/subscribedSkus, whose least-privileged Microsoft Graph permission is LicenseAssignment.Read.All; the response exposes skuId, skuPartNumber, consumedUnits, and prepaidUnits.enabled per commercial subscription, which is a distinct concern from usage and adoption reporting and must not be hardcoded as a tenant SKU GUID.",
+      "affectedFiles": [
+        "solutions/08-license-governance-roi/docs/prerequisites.md",
+        "solutions/08-license-governance-roi/docs/architecture.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/subscribedsku-list",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-studio-credits-capacity",
+      "claimText": "Copilot Credits are the unit of consumption for Copilot Chat and agents; prepaid Copilot Studio capacity packs provide 25,000 Copilot Credits per month per pack, pay-as-you-go usage is billed per credit to a linked Azure subscription, credit policies can be scoped to security groups, distribution groups, or the entire tenant, and employee-facing agent usage is generally included at no additional charge for users already licensed with Microsoft 365 Copilot. Per-credit dollar rates change over time and are published in Microsoft's living rate documentation rather than reproduced here.",
+      "affectedFiles": [
+        "solutions/08-license-governance-roi/README.md",
+        "solutions/08-license-governance-roi/docs/architecture.md",
+        "solutions/08-license-governance-roi/config/default-config.json"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/pay-as-you-go/copilot-capacity-packs",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-azure-budget-notify-not-cap",
+      "claimText": "Azure Cost Management budgets configure alerts on actual or forecasted cost and trigger notifications when thresholds are exceeded, but resources are not affected and consumption is not stopped; enforcement only occurs if a separate action group or automation workflow is configured. Budgets therefore support cost oversight and alerting, not hard spend caps.",
+      "affectedFiles": [
+        "solutions/08-license-governance-roi/README.md",
+        "solutions/08-license-governance-roi/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/azure/cost-management-billing/costs/tutorial-acm-create-budgets",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-control-system",
+      "claimText": "The Copilot Control System in the Microsoft 365 admin center manages Copilot license assignment, usage reporting, and licensing recommendations, so this sample solution models governance patterns that complement, rather than replace, those built-in admin-center capabilities.",
+      "affectedFiles": [
+        "solutions/08-license-governance-roi/README.md",
+        "solutions/08-license-governance-roi/docs/architecture.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/copilot-control-system/management-controls",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot licenses assigned to a representative sample cohort so usage-report rows exist to read; no license is assigned, removed, or changed during this read-only cycle",
+      "Qualifying Microsoft 365 base license (E3/E5, Business Standard/Premium, or Office 365 E3/E5) for the representative cohort"
+    ],
+    "roles": [
+      "Global Reader for read-only directory and subscribed-SKU inspection",
+      "Reports Reader for read-only Microsoft 365 Copilot usage-report access",
+      "Microsoft Graph Reports.Read.All and LicenseAssignment.Read.All delegated permissions for read-only usage and license-inventory discovery"
+    ],
+    "features": [
+      "Microsoft 365 Copilot provisioned in the tenant with usage reporting available",
+      "Optional Copilot Studio pay-as-you-go billing policy or prepaid capacity pack present if read-only PAYG and budget configuration is to be inspected"
+    ],
+    "capacityRequirements": [
+      "One representative sample cohort with prior Copilot activity for read-only usage-report inspection"
+    ],
+    "dataRequirements": [
+      "Representative sample and aggregated records only; user principal names and display names are redacted or retained in the concealed form returned when the tenant usage-report anonymization setting is enabled; no user PII is persisted to committed lab evidence"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No license assignment or removal, no billing policy or capacity-pack change, no Azure budget change, and no Copilot policy change is performed. If Reports.Read.All is not consented or report data latency prevents a read, the usage-report step is classified BLOCKED with source evidence. Tenant name concealment does not block the report; identity fields are removed from retained evidence regardless of whether Microsoft returns plaintext or concealed values."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant identity and read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before any read so discovery runs against the expected organization.",
+            "expected": "The organization identity returned matches the approved lab tenant recorded out of band.",
+            "operatorNote": "Compare the returned id and displayName with the separately maintained sanctioned-lab authorization record. Do not proceed on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "organization[].displayName",
+              "expectation": "The returned organization identity matches the separately maintained sanctioned-lab authorization record and is recorded before any further read."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Read-only license, usage, and consumption discovery",
+        "steps": [
+          {
+            "id": "step-discover-copilot-sku",
+            "mode": "api",
+            "intent": "Discover the Microsoft 365 Copilot SKU from the tenant catalog and capture its tenant skuId and seat counts without hardcoding a SKU GUID.",
+            "expected": "A subscribedSku with skuPartNumber Microsoft_365_Copilot (or legacy M365_Copilot) is present and its tenant skuId, prepaidUnits.enabled, and consumedUnits are captured.",
+            "operatorNote": "Match the Copilot subscribedSku by skuPartNumber and read its tenant skuId and seat counts from the response; do not embed a hardcoded SKU GUID.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/subscribedSkus",
+              "requestTemplate": "GET /subscribedSkus - match skuPartNumber 'Microsoft_365_Copilot' (legacy 'M365_Copilot'); capture skuId, prepaidUnits.enabled, and consumedUnits."
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "subscribedSkus[].skuPartNumber",
+              "expectation": "The Copilot subscribedSku is located by skuPartNumber and its tenant skuId and available-seat count (prepaidUnits.enabled minus consumedUnits) are captured."
+            }
+          },
+          {
+            "id": "step-read-copilot-usage-report",
+            "mode": "powershell",
+            "intent": "Read the current v1.0 Microsoft 365 Copilot usage report to obtain per-user last-activity data for inactivity and utilization analysis, or classify the step BLOCKED when it cannot be read.",
+            "expected": "The v1.0/copilot/reports usage report returns a stream and activity rows are retained only after identity columns are removed; missing permission or latent/empty report data may produce BLOCKED with source evidence, while tenant concealment is accepted as a valid identity representation.",
+            "command": "$root = 'lab-evidence/08-license-governance-roi'; $raw = Join-Path $root 'copilot-usage-D30.raw.csv'; $safe = Join-Path $root 'copilot-usage-D30.redacted.csv'; $null = New-Item -ItemType Directory -Path $root -Force; try { Invoke-MgGraphRequest -Method GET -Uri \"https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')\" -OutputFilePath $raw; $identityColumns = @('User Principal Name','Display Name','User Id','User ID','UserPrincipalName','DisplayName','UserId'); $rows = Import-Csv -Path $raw; $redacted = foreach ($row in $rows) { $record = [ordered]@{}; foreach ($property in $row.PSObject.Properties) { if ($identityColumns -notcontains $property.Name) { $record[$property.Name] = $property.Value } }; [pscustomobject]$record }; $redacted | Export-Csv -Path $safe -NoTypeInformation -Encoding utf8 } finally { if (Test-Path -LiteralPath $raw) { Remove-Item -LiteralPath $raw -Force -ErrorAction Stop } }; if (Test-Path -LiteralPath $raw) { throw 'Raw Copilot usage report was not removed.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "lab-evidence/08-license-governance-roi/copilot-usage-D30.redacted.csv activity columns",
+              "expectation": "The usage report is read from the v1.0/copilot/reports path (not beta), identity columns are absent from the retained file, and the raw stream no longer exists. A BLOCKED disposition is recorded only when permission or report availability prevents the read."
+            }
+          },
+          {
+            "id": "step-read-usercount-summary",
+            "mode": "powershell",
+            "intent": "Read the aggregated Microsoft 365 Copilot user-count summary as corroborating adoption evidence for management trend reporting.",
+            "expected": "The v1.0/copilot/reports user-count summary returns aggregated enabled and active user counts for the requested period.",
+            "command": "$root = 'lab-evidence/08-license-governance-roi'; $null = New-Item -ItemType Directory -Path $root -Force; Invoke-MgGraphRequest -Method GET -Uri \"https://graph.microsoft.com/v1.0/copilot/reports/getMicrosoft365CopilotUserCountSummary(period='D30')\" -OutputFilePath (Join-Path $root 'copilot-usercount-D30.csv')",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "copilot-usercount-D30.csv anyAppEnabledUsers/anyAppActiveUsers",
+              "expectation": "Aggregated enabled and active user counts are captured from the v1.0 endpoint and reconciled against the seat availability read from /subscribedSkus."
+            }
+          },
+          {
+            "id": "step-run-sample-monitor",
+            "mode": "powershell",
+            "intent": "Run the sample monitoring script to confirm the documented flow references the current v1.0 endpoints and makes no live tenant call.",
+            "expected": "The sample snapshot lists the /v1.0/copilot/reports usage endpoint (no beta path) and computes utilization from representative sample data only.",
+            "command": "pwsh -File solutions/08-license-governance-roi/scripts/Monitor-Compliance.ps1 -ConfigurationTier recommended -OutputPath lab-evidence/08-license-governance-roi/sample-monitor",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "08-license-governance-roi-compliance-status.json graphEndpoints",
+              "expectation": "The sample snapshot output shows the /v1.0/copilot/reports usage endpoint, contains no /beta/ path, and is derived from representative sample data with no live Graph call."
+            }
+          },
+          {
+            "id": "step-inspect-payg-budget-config",
+            "mode": "manual",
+            "intent": "Inspect Copilot pay-as-you-go and Azure budget configuration read-only to confirm what this sample solution only models versus what the admin centers actually enforce.",
+            "expected": "PAYG billing policy or capacity-pack allocation and any Azure Cost Management budget are observed read-only; the budget is confirmed to be notify-only, not a hard spend cap.",
+            "operatorNote": "In the Microsoft 365 admin center Copilot Billing and usage view and the Power Platform admin center Copilot Studio capacity view, observe billing-policy scope and capacity allocation without changing them. In Azure Cost Management, confirm any budget is configured for alerts on actual or forecasted cost and does not stop consumption. Make no configuration change.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "PAYG/capacity and budget read-only observation",
+              "expectation": "Billing-policy scope, capacity allocation, and budget alert thresholds are recorded read-only, and it is confirmed that budgets notify rather than cap spend and that no configuration was changed."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify no seat or billing change and confirm source currency",
+        "steps": [
+          {
+            "id": "step-verify-no-seat-change",
+            "mode": "api",
+            "intent": "Re-read the Copilot SKU seat counts as corroborating evidence that the read-only cycle did not consume or release a license seat.",
+            "expected": "consumedUnits for the Copilot SKU is compared with the earlier capture; any difference is investigated as possible concurrent tenant activity rather than attributed automatically to this read-only run.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/subscribedSkus",
+              "requestTemplate": "GET /subscribedSkus - compare consumedUnits for the Copilot SKU against the value captured during exercise."
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "subscribedSkus[].consumedUnits",
+              "expectation": "The comparison records whether consumedUnits changed and notes that the read-only steps and absence of any write call are the authoritative no-mutation evidence."
+            }
+          },
+          {
+            "id": "step-verify-source-claims",
+            "mode": "manual",
+            "intent": "Confirm each cited Microsoft Learn source remains published and matches the recorded lifecycle state.",
+            "expected": "All cited Microsoft Learn sources resolve and remain generally available.",
+            "operatorNote": "Open each microsoftSourceClaims.sourceUrl and confirm the Microsoft Learn page is still published and its lifecycle state remains generally-available, in particular the v1.0 status of the /copilot/reports usage functions.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims[].sourceUrl",
+              "expectation": "Every cited Microsoft Learn source resolves and its lifecycle state still matches the contract, with the usage-report functions confirmed generally available under v1.0."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove the local ignored staging directory after required redacted evidence has been captured by the lab result packager.",
+            "expected": "The Solution 08 lab staging directory and any raw report stream are absent after cleanup.",
+            "command": "$path = 'lab-evidence/08-license-governance-roi'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 08 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/08-license-governance-roi no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Attest that no mutable change occurred so cleanup is not required for this read-only cycle.",
+            "expected": "Operator note confirms mutations were empty and no cleanup is required.",
+            "operatorNote": "Attest that mutations were empty: no license assignment or removal, no billing policy or capacity-pack change, no Azure budget change, and no Copilot policy change occurred during this read-only cycle. Confirm that only redacted or aggregated evidence was retained.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "cleanup attestation note",
+              "expectation": "Operator attests no mutable change occurred, no cleanup is required, and no user PII was persisted to committed evidence."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus a reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "1.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-subscribedskus-readback",
+        "type": "api-response",
+        "description": "Redacted /subscribedSkus read showing the Copilot skuPartNumber, tenant skuId, and prepaidUnits/consumedUnits used to confirm seat availability.",
+        "requiredForControls": [
+          "1.9",
+          "4.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-usage-report-readback",
+        "type": "csv",
+        "description": "Microsoft 365 Copilot usage-report extract from the v1.0/copilot/reports path with identity columns removed before retention, regardless of the tenant concealment setting. Absent on a BLOCKED disposition, which instead cites the exact permission or report-availability reason.",
+        "requiredForControls": [
+          "4.5",
+          "4.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-payg-budget-observation",
+        "type": "manual-attestation",
+        "description": "Read-only observation of Copilot PAYG billing-policy scope, capacity-pack allocation, and any Azure Cost Management budget, confirming budgets are notify-only and no configuration was changed.",
+        "requiredForControls": [
+          "4.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-sample-monitor-output",
+        "type": "json",
+        "description": "Sample Monitor-Compliance.ps1 snapshot showing the /v1.0/copilot/reports usage endpoint, no beta path, and representative sample data only.",
+        "requiredForControls": [
+          "4.5",
+          "4.8"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "List of verified Microsoft Learn source URLs and lifecycle states supporting the reviewed usage-report, license-inventory, Copilot Studio credit, and Azure budget claims.",
+        "requiredForControls": [
+          "1.9",
+          "4.5",
+          "4.6",
+          "4.8"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-subscribedskus-readback",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

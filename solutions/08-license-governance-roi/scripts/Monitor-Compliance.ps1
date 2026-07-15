@@ -129,6 +129,8 @@ function Measure-LicenseUtilization {
         atOrAboveThreshold = ($utilizationPct -ge $ThresholdPct)
         averageVivaImpactScore = $averageImpact
         estimatedRecoverableCostUsd = (@($InactiveSeats).Count * $AnnualizedCostPerSeatUsd)
+        annualizedCostPerSeatUsdAssumption = $AnnualizedCostPerSeatUsd
+        costBasis = 'illustrative-customer-provided-planning-assumption'
     }
 }
 
@@ -154,6 +156,7 @@ try {
             accountEnabled = $seat.accountEnabled
             recommendedAction = if ($seat.riskTier -eq 'high') { 'Retain pending control-owner review' } else { 'Reallocate after manager approval' }
             annualizedRecoverableCostUsd = [int]$configuration.defaults.annualizedCostPerSeatUsd
+            costBasis = 'illustrative-customer-provided-planning-assumption'
         }
     }
 
@@ -183,7 +186,7 @@ try {
         graphEndpoints = @(
             '/v1.0/users?$select=id,displayName,userPrincipalName,department,assignedLicenses,accountEnabled'
             '/v1.0/subscribedSkus'
-            "/beta/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
+            "/v1.0/copilot/reports/getMicrosoft365CopilotUsageUserDetail(period='D30')"
         )
         metrics = $metrics
         inactiveSeats = $flaggedSeats

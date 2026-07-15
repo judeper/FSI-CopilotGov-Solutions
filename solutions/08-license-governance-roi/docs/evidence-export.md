@@ -29,7 +29,7 @@
 | `vivaInsightsEnabled` | boolean | Indicates whether Viva Insights signals were included. |
 | `roiSignalCoveragePct` | number | Percentage of scoped users or business units with ROI evidence. |
 | `estimatedHoursSaved` | number | Estimated productivity benefit from supported Copilot scenarios. |
-| `estimatedCostAvoidanceUsd` | number | Estimated value signal used for management discussion, not formal accounting. |
+| `estimatedCostAvoidanceUsd` | number | Illustrative value signal based on a customer-provided planning assumption; not a Microsoft price or formal accounting value. |
 | `businessUnitScorecard` | array | Per-business-unit ROI summary. |
 | `assumptions` | array | Declared assumptions for how value signals were calculated. |
 
@@ -43,7 +43,8 @@
 | `lastActivityDate` | string | Last observed Copilot activity date. |
 | `utilizationPct` | number | User-level or cohort-level utilization metric used for review. |
 | `recommendedAction` | string | Proposed action such as `Reallocate after manager approval`. |
-| `annualizedRecoverableCostUsd` | number | Estimated annual spend that could be recovered if the seat is removed. |
+| `annualizedRecoverableCostUsd` | number | Illustrative annual recovery estimate using the configured customer-provided planning assumption. |
+| `costBasis` | string | Marks cost outputs as `illustrative-customer-provided-planning-assumption`. |
 | `managerApprovalRequired` | boolean | Indicates whether a manager or control owner must approve the action. |
 | `reviewDueDate` | string | Date by which the recommendation should be reviewed. |
 

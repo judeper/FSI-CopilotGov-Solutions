@@ -29,9 +29,11 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 class LabValidationTests(unittest.TestCase):
     def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+        # No-argument discovery scans solutions/*/lab. It must succeed whether zero or
+        # more contracts exist (real contracts are registered as the review progresses).
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertIn("file(s) checked", result.stdout)
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
@@ -132,6 +134,32 @@ class LabValidationTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0, msg=result.stdout)
         combined_output = f"{result.stdout}\n{result.stderr}".lower()
         self.assertIn("is not a 'date-time'", combined_output)
+
+    def test_solution_08_license_governance_roi_contract_is_required(self) -> None:
+        """Solution 08's lab contract is a required, repository-tracked, read-only contract."""
+        contract_path = (
+            ROOT
+            / "solutions"
+            / "08-license-governance-roi"
+            / "lab"
+            / "08-license-governance-roi.lab.json"
+        )
+        self.assertTrue(
+            contract_path.is_file(),
+            msg=f"required lab contract is missing: {contract_path}",
+        )
+
+        result = run_validator(CONTRACT_VALIDATOR, contract_path)
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+
+        document = json.loads(contract_path.read_text(encoding="utf-8"))
+        self.assertEqual(document["solution"]["id"], "08-license-governance-roi")
+        self.assertEqual(
+            document["mutations"],
+            [],
+            msg="first Solution 08 lab cycle must be read-only (mutations: [])",
+        )
 
 
 if __name__ == "__main__":

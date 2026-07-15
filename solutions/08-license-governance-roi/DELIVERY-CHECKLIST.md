@@ -3,7 +3,7 @@
 ## Delivery Summary
 
 - Solution: License Governance and ROI Tracker
-- Version: v0.1.3
+- Version: v0.1.4
 - Track: C
 - Priority: P1
 - Dependency: 11-risk-tiered-rollout
@@ -66,6 +66,7 @@
 - [ ] Share the deployment guide, architecture guide, and evidence-export instructions with the platform owner.
 - [ ] Record the selected tier, reporting cadence, and approval workflow in the customer delivery notes.
 - [ ] Document any known tenant-specific gaps, such as unavailable Viva Insights data or delayed Graph reporting, before go-live.
+- [ ] Run the read-only, detect-only lab cycle in `lab\08-license-governance-roi.lab.json` (`mutations: []`) and record dispositions; classify the usage-report step `BLOCKED` only if `Reports.Read.All` consent or report availability/latency prevents a read. Confirm identity columns and the raw stream were removed, local staging was cleaned, and no license, billing, capacity, budget, or policy change occurred.
 
 ## Sign-Off
 

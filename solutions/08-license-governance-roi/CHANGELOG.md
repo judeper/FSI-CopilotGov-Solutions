@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Reverted the stale beta-only Copilot usage-report routes back to the generally available Microsoft Graph `v1.0` endpoint. `getMicrosoft365CopilotUsageUserDetail` and `getMicrosoft365CopilotUserCountSummary` are documented on Microsoft Learn under `GET https://graph.microsoft.com/v1.0/copilot/reports/...` (verified 2026-07-14); the v0.1.4 change that moved these to `/beta/copilot/reports/` was a regression. Restored `/v1.0/copilot/reports/...` in `scripts/Monitor-Compliance.ps1`, `scripts/Deploy-Solution.ps1`, and `docs/architecture.md`. Clarified that the older `reportRoot` surface on `/beta/reports/` remains preview-only, that both functions require `Reports.Read.All` plus a role such as Reports Reader, and that usage-report user/display names may be concealed (hashed) when the tenant anonymization setting is enabled.
+- Reconciled internal version drift: aligned `config/default-config.json`, `DELIVERY-CHECKLIST.md`, and the generated `solutions.json` / `solutions-graph.json` entries to the already released version `v0.1.4` (they were `v0.1.3`); no new release is introduced.
+- Removed unverifiable and volatile Copilot Studio pricing precision from forward-facing docs. Deleted the specific `$0.01 per Copilot Credit` rate and the partial per-interaction credit-cost table from `README.md` and `docs/architecture.md`. Retained the verified prepaid capacity-pack quantity (25,000 Copilot Credits per month per pack), clarified that per-interaction credit consumption varies by interaction type, noted that employee-facing agent usage is generally included at no additional charge for Microsoft 365 Copilot-licensed users, and pointed operators to Microsoft's current pay-as-you-go meters and Copilot Studio billing-rates documentation for authoritative rates.
+- Marked all remaining dollar-valued ROI/recovery fields as illustrative customer-provided planning assumptions, corrected sample evidence control states from implemented to partial/monitor-only, and made evidence packages portable while preserving absolute caller paths.
+
+### Changed
+
+- Updated `config/default-config.json` `last_verified` to `2026-07-14` after re-verifying license inventory, usage-report, permission, Copilot Studio credit/capacity, and Azure Cost Management budget claims against first-party Microsoft Learn documentation.
+
+### Added
+
+- Added a read-only, detect-only lab validation contract at `lab/08-license-governance-roi.lab.json` (`mutations: []`) covering tenant-identity confirmation, SKU/seat discovery via `/subscribedSkus`, the `v1.0/copilot/reports/` usage-report read (or a BLOCKED disposition when permission or report availability prevents it), and read-only inspection of PAYG/budget configuration. Tenant concealment is accepted as a valid report response; identity columns are removed immediately, raw files use ignored staging and are deleted fail-closed, and local staging is cleaned after evidence capture.
+
 ## [v0.1.4] - 2026-06-06
 
 ### Fixed
