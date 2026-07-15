@@ -132,10 +132,10 @@ function Test-PurviewLicensing {
     )
 
     $requiredSku = if ($Configuration.tier -eq 'baseline') {
-        'Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance for sensitivity labeling'
+        'Microsoft 365 E5/A5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance for sensitivity labeling'
     }
     else {
-        'Microsoft 365 E5/A5/G5, Microsoft Purview Suite, Microsoft Defender + Purview Suite, or Microsoft 365 Information Protection and Governance for service-side automatic sensitivity labeling'
+        'Microsoft 365 E5/A5, Microsoft Purview Suite, Microsoft Defender + Purview Suite, or Microsoft 365 Information Protection and Governance for service-side automatic sensitivity labeling'
     }
 
     return [pscustomobject]@{
