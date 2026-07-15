@@ -25,5 +25,5 @@
 - **User:** Jude
 - **Created:** 2026-05-23
 - **Team cast:** 2026-06-05
-- **Current focus:** Serial Microsoft product & feature accuracy review of all 23 solutions is **complete** (findings + fixes delivered across green draft PRs #317 and #319–#340, one branch/PR per solution, each held with `Lab status: pending`). The `studio-video-factory` Pilot A readiness prerequisite is merged; next focus is building the governance lab adapter, then serial read-only lab runs, accepted evidence, and per-PR source recheck/versioning/rebase/merge. See `docs/project-handoff.md`.
+- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solution 01's first read-only lab cycle is **PARTIAL / not accepted**. Current work is blocked on attended sign-in for six admin surfaces and effective `Reports.Read.All`; rerun Solution 01 before continuing the serial lab queue. See `docs/project-handoff.md`.
 - **Model policy:** Accuracy over cost — premium (Opus-class) models for verification and review; Haiku only for Scribe.

@@ -18,10 +18,10 @@ required to resume safely.
 | Field | Value |
 |-------|-------|
 | Snapshot date | 2026-07-15 |
-| `main` commit | `361d34d088423a8c0b7b311f764baf614c7159ad` |
-| Phase | Serial accuracy review **complete**; governance adapter build **ready**; lab execution **not started** |
+| Repository branch | `main` — read the current commit from Git; this page records durable phase state rather than a self-staling HEAD |
+| Phase | Serial accuracy review **complete**; governance adapter **merged**; Solution 01 lab **PARTIAL / not accepted** |
 | Draft review PRs | 23 open (one per solution); all checks green; all held with `Lab status: pending` |
-| Live lab runs executed | 0 — no live-tenant or Playwright run has happened |
+| Live lab runs executed | 1 — Solution 01 read-only cycle completed; no accepted evidence yet |
 | Final versioning / merges | Not started — no review PR has been merged |
 
 ## Merged Foundation and Handoff
@@ -51,7 +51,7 @@ version** column is the released version retained by each draft; the review chan
 
 | Sol | Solution | PR | Released version | Verified review outcome | Checks | Lab |
 |-----|----------|----|------------------|-------------------------|--------|-----|
-| 01 | Copilot Readiness Assessment Scanner | [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | v0.2.3 | Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; added the first read-only five-control lab contract. **Conflicting with `main` — deferred to post-lab finalization.** | Green | Pending |
+| 01 | Copilot Readiness Assessment Scanner | [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | v0.2.3 | Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; added the first read-only five-control lab contract. **Conflicting with `main` — deferred to post-lab finalization.** | Green | PARTIAL / not accepted |
 | 02 | Oversharing Risk Assessment and Remediation | [#319](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319) | v0.2.4 | Migrated go-forward guidance from Restricted SharePoint Search to Restricted Content Discovery; recorded the RSS new-enablement block (2026-07-31); updated SAM roles and the Microsoft 365 E7 entitlement path; fixed detect-only counts and portable evidence; added a six-control read-only lab contract. | Green | Pending |
 | 16 | Item-Level Oversharing Scanner | [#320](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320) | v0.1.3 | Synced item-level guidance with RSS retirement and Restricted Content Discovery; documented Graph owner/non-owner visibility limits; enforced the auto-remediation kill switch and HIGH/AnyoneLink approval gates; added ShouldProcess/-WhatIf protection; five-control read-only lab contract. | Green | Pending |
 | 17 | SharePoint Permissions Drift Detection | [#321](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321) | v0.1.4 | Fixed a StrictMode drift-scan crash and stopped failed scans from reporting `NoDriftDetected`; gated approval/reversion behind ShouldProcess/-WhatIf; calibrated config-driven scoring; portable evidence; four-control read-only lab contract. | Green | Pending |
@@ -94,13 +94,41 @@ The result file is the authoritative disposition record. Evidence packages remai
 portable, hash-verified artifacts reviewable independently of the execution host. See
 [Lab Validation Contract](./reference/lab-validation-contract.md).
 
+### Studio implementation status
+
+- [studio-video-factory PR #11](https://github.com/judep_microsoft/studio-video-factory/pull/11)
+  merged the offline-by-default governance adapter foundation.
+- [studio-video-factory PR #12](https://github.com/judep_microsoft/studio-video-factory/pull/12)
+  merged attended evidence replay, the privacy-gated Solution 01 collector, and
+  FSI-compatible package sidecars/versioning.
+
+## Lab Execution Status
+
+Solution 01 ran against pinned FSI commit
+`e8bae78b1036c6b55d7597d576df03b69e9418c4`.
+
+- **Result:** `PARTIAL`, `accepted: false`, `controlImplementation: partial`.
+- **Passed:** three documentation-first PowerShell checks plus the two manual
+  no-mutation/separation attestations.
+- **Blocked:** Microsoft 365/Entra portal checks, the combined Purview/Defender/
+  SharePoint/Teams portal check, and the Copilot D7 usage-report API.
+- **Observed:** Power Platform admin center was authenticated; six required admin
+  surfaces redirected to sign-in. The Graph endpoint returned 403 and no response
+  body/token was retained.
+- **Validation:** both `validate-lab-result.py` and `validate-lab-package.ps1` pass.
+- **Evidence hashes:** result
+  `30cd35255c1f30d1382a8c510f5f5e6b9cf6293b4e40f82dcb3d315297a03548`;
+  package
+  `4f1bbae69490834685eac2d3753d1c6a18bbb286ce01a4aa64f773b5d3d2c9b3`.
+- **PR record:** [Solution 01 lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317#issuecomment-4983757488).
+
 ## Pending Gates and Known Blockers
 
-- **Studio prerequisite cleared; adapter not built.** The
-  `judep_microsoft/studio-video-factory` branch `feat/pilot-a-readiness` merged
-  through [PR #7](https://github.com/judep_microsoft/studio-video-factory/pull/7)
-  on 2026-07-13. The next actionable task is to branch from updated studio
-  `main` and build the governance-validation adapter before any lab run.
+- **Solution 01 authentication/permission remediation (current serial gate).**
+  Seed attended governance auth for the six login-walled admin surfaces and
+  provide effective `Reports.Read.All` access for the D7 Copilot report, then
+  rerun the pinned contract. Do not proceed to Solution 02 until Solution 01
+  reaches an accepted PASS/BLOCKED/NOT-APPLICABLE disposition.
 - **PR #317 conflict (deliberately deferred).** Solution 01's PR conflicts with `main`
   and is intentionally held for **post-lab finalization**. The other 22 review PRs are
   mergeable but remain unmerged with `Lab status: pending`.
@@ -123,11 +151,12 @@ machine-checked arrays so validation stays deterministic:
 
 Execute in order. Do not run labs in parallel; the review and lab program is serial.
 
-1. **Synchronize the studio repository.** Fetch `judep_microsoft/studio-video-factory`
-   and confirm `main` includes merged PR #7 (`feat/pilot-a-readiness`).
-2. **Build the lab adapter.** In `studio-video-factory`, build the executor/adapter that
-   consumes each solution's `lab/<solution>.lab.json` contract.
-3. **Run labs one at a time.** Execute each contract serially. The first cycle is
+1. **Remediate Solution 01 prerequisites.** Complete attended sign-in for the
+   six blocked admin surfaces and authorize the read-only report permission.
+2. **Rerun Solution 01.** Reuse the pinned contract and privacy-gated evidence
+   workflow; accept only PASS/BLOCKED/NOT-APPLICABLE with required evidence.
+3. **Continue labs one at a time.** After Solution 01 is accepted, execute each
+   remaining contract serially. The first cycle is
    read-only/detect-only (`mutations: []` normally); no tenant mutation is permitted.
 4. **Capture and accept evidence.** Emit `*.lab-result.json` and portable evidence
    packages. Accepted `BLOCKED` and `NOT-APPLICABLE` dispositions require negative
@@ -208,7 +237,7 @@ PR is pushed. The resulting steady state is:
 
 To prevent a false-progress restart, the following are explicitly **not** done:
 
-- No live-tenant or Playwright lab run has executed.
 - No accepted lab evidence exists.
+- Solutions 02–23 have not started lab execution.
 - No review PR has been versioned-final, rebased onto latest `main`, or merged.
 - Solution 01 (PR #317) remains conflicting and deferred.

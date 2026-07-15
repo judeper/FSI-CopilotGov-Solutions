@@ -6,7 +6,7 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 
 > **Cloud scope:** This content targets US commercial-cloud Microsoft 365 only. See [SCOPE.md](./SCOPE.md) for details.
 
-> **Current status (2026-07-15):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete** across green draft PRs (#317 and #319–#340); each is held with `Lab status: pending`. The `studio-video-factory` Pilot A readiness prerequisite is merged, so the next actionable phase is building the governance lab adapter; no live lab run has started. See the [Project Handoff](./docs/project-handoff.md) for the authoritative resume point.
+> **Current status (2026-07-15):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete** across draft PRs #317 and #319–#340. The studio governance adapter is merged. Solution 01 completed its first read-only lab cycle as **PARTIAL / not accepted**; six admin portals require attended sign-in and the Copilot usage-report call lacks effective `Reports.Read.All`. The remaining 22 lab runs are paused until Solution 01 is remediated and rerun. See the [Project Handoff](./docs/project-handoff.md).
 
 ## Quickstart
 
