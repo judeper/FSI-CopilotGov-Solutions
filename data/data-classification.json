@@ -165,7 +165,7 @@
     "residency_options": ["commercial"],
     "retention_default_days": 1825,
     "retention_max_days": 1825,
-    "notes": "Cross-tenant federation audit metadata only; production exports may reference partner tenant identifiers and require reclassification."
+    "notes": "Cross-tenant trust and dependency audit metadata only; production exports may reference partner tenant identifiers and require reclassification."
   },
   {
     "slug": "22-pages-notebooks-retention-tracker",

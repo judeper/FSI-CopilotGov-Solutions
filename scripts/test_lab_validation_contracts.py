@@ -28,10 +28,11 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
-    def test_contract_validator_allows_zero_repository_contracts(self) -> None:
+    def test_contract_validator_accepts_repository_contracts(self) -> None:
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("0 file(s) checked", result.stdout)
+        self.assertIn("lab contract validation passed", result.stdout.lower())
+        self.assertIn("file(s) checked", result.stdout.lower())
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
@@ -47,6 +48,18 @@ class LabValidationTests(unittest.TestCase):
         self.assertIn("unknown control ids", combined_output.lower())
         self.assertIn("generally-available", combined_output.lower())
         self.assertIn("mutation 'mutation-sample-policy' is reversible", combined_output.lower())
+
+    def test_contract_validator_accepts_solution21_repository_contract(self) -> None:
+        contract_path = (
+            ROOT
+            / "solutions"
+            / "21-cross-tenant-agent-federation-auditor"
+            / "lab"
+            / "21-cross-tenant-agent-federation-auditor.lab.json"
+        )
+        result = run_validator(CONTRACT_VALIDATOR, contract_path)
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
 
     def test_result_validator_allows_zero_repository_results(self) -> None:
         result = run_validator(RESULT_VALIDATOR)

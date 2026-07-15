@@ -56,6 +56,7 @@
 ## Customer Handover
 
 - [ ] README reviewed with the customer security, identity, and third-party risk stakeholders.
+- [ ] Lab validation contract (`lab/21-cross-tenant-agent-federation-auditor.lab.json`) is reviewed and scheduled for read-only two-tenant validation, with independent identity proof for both tenants and BLOCKED/NOT-APPLICABLE conditions (licensing, roles, Entra Agent ID preview, Copilot Studio multitenant mode preview) recorded with source evidence.
 - [ ] Escalation path for cross-tenant agent invocation anomalies is documented.
 - [ ] Evidence retention and storage responsibilities are confirmed.
 

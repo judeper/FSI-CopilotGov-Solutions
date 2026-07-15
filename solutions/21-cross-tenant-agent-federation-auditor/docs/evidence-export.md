@@ -52,6 +52,8 @@ MCP server connection review records.
 
 Microsoft Entra Agent ID identity-governance review metadata.
 
+The stable artifact identifier retains the historical word `attestation`, but the content is a governance-review record. It does not represent a Microsoft-defined cryptographic signing or key-rotation attestation.
+
 | Field | Description |
 |-------|-------------|
 | agentIdentityId | Microsoft Entra Agent ID identity account for the agent. |

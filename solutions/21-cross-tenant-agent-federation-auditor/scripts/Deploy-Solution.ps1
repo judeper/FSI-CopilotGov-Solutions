@@ -63,18 +63,19 @@ $deploymentManifest = [pscustomobject]@{
     primaryControls                   = $configuration.primaryControls
     supportingControls                = $configuration.supportingControls
     federationReviewCadenceDays       = $configuration.federationReviewCadenceDays
-    mcpTrustAttestationRequired       = $configuration.mcpTrustAttestationRequired
-    mcpAttestationRevalidationRequired = $configuration.mcpAttestationRevalidationRequired
-    agentIdSigningRequired            = $configuration.agentIdSigningRequired
-    agentIdKeyRotationTrackingEnabled = $configuration.agentIdKeyRotationTrackingEnabled
+    mcpConnectionReviewRequired       = $configuration.mcpConnectionReviewRequired
+    mcpConnectionRevalidationRequired = $configuration.mcpConnectionRevalidationRequired
+    agentIdGovernanceReviewRequired   = $configuration.agentIdGovernanceReviewRequired
+    agentIdCredentialReviewEnabled    = $configuration.agentIdCredentialReviewEnabled
     crossTenantAuditLogRetentionDays  = $configuration.crossTenantAuditLogRetentionDays
     evidenceRetentionDays             = $configuration.evidenceRetentionDays
     notificationMode                  = $configuration.notificationMode
     copilotStudioPublishing           = $configuration.copilotStudioPublishing
-    mcpAttestation                    = $configuration.mcpAttestation
-    agentIdRotation                   = $configuration.agentIdRotation
+    mcpConnectionReview               = $configuration.mcpConnectionReview
+    agentIdCredentialReview           = $configuration.agentIdCredentialReview
     auditAggregation                  = $configuration.auditAggregation
     runtimeMode                       = 'sample'
+    dataSourceMode                    = 'representative-sample'
     documentationFirstNotice          = 'This deployment manifest is generated from documentation-first sample data and does not reflect live tenant state.'
     deploymentTimestamp               = (Get-Date).ToString('o')
     outputPath                        = $resolvedOutputPath
@@ -95,8 +96,8 @@ Write-Host (
     "CTAF deployment summary: tier [{0}] | review cadence {1}d | MCP connection review required: {2} | Agent ID governance review required: {3}." -f
     $ConfigurationTier,
     $configuration.federationReviewCadenceDays,
-    [bool]$configuration.mcpTrustAttestationRequired,
-    [bool]$configuration.agentIdSigningRequired
+    [bool]$configuration.mcpConnectionReviewRequired,
+    [bool]$configuration.agentIdGovernanceReviewRequired
 )
 
 $deploymentManifest

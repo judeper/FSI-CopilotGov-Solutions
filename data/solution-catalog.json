@@ -1408,7 +1408,7 @@
       "glba-501b",
       "ffiec-it-handbook"
     ],
-    "summary": "Documentation-first auditor for cross-tenant Copilot agent invocation, Microsoft Entra Agent ID federated trust, MCP federated server attestation, and multi-tenant Copilot Studio publishing controls.",
+    "summary": "Documentation-first auditor for cross-tenant Copilot agent trust and dependencies: Entra External ID cross-tenant access settings, Microsoft Entra Agent ID (preview) identity governance, MCP server connection reviews, Agent 365 registry inventory, and Copilot Studio multitenant publishing controls.",
     "evidence_outputs": [
       "agent-federation-inventory",
       "cross-tenant-trust-assessment",

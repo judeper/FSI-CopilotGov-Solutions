@@ -10,7 +10,7 @@
 
 **Symptom:** `CTAF configuration is missing required fields: ...`.
 
-**Resolution:** Compare `config/default-config.json` and the selected tier file against the shipped templates. The validator requires solution metadata (`solution`, `displayName`, `solutionCode`, `version`), tier metadata (`tier`, `primaryControls`), tier review settings (`federationReviewCadenceDays`, `mcpTrustAttestationRequired`, `agentIdSigningRequired`, `agentIdKeyRotationTrackingEnabled`, `crossTenantAuditLogRetentionDays`, `evidenceRetentionDays`, `notificationMode`), and nested review blocks (`copilotStudioPublishing`, `mcpAttestation`). `mcpAttestationRevalidationRequired` is optional and defaults to `false` unless present in a tier file.
+**Resolution:** Compare `config/default-config.json` and the selected tier file against the shipped templates. The validator requires solution metadata (`solution`, `displayName`, `solutionCode`, `version`), tier metadata (`tier`, `primaryControls`), tier review settings (`federationReviewCadenceDays`, `mcpConnectionReviewRequired`, `agentIdGovernanceReviewRequired`, `agentIdCredentialReviewEnabled`, `crossTenantAuditLogRetentionDays`, `evidenceRetentionDays`, `notificationMode`), and nested review blocks (`copilotStudioPublishing`, `mcpConnectionReview`). `mcpConnectionRevalidationRequired` is optional and defaults to `false` unless present in a tier file.
 
 ## SHA-256 companion file missing
 

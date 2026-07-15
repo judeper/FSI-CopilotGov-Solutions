@@ -4,9 +4,9 @@
   "primaryControls": ["2.17", "2.16"],
   "supportingControls": ["1.10", "2.13", "2.14", "4.13"],
   "federationReviewCadenceDays": 30,
-  "mcpTrustAttestationRequired": true,
-  "agentIdSigningRequired": true,
-  "agentIdKeyRotationTrackingEnabled": true,
+  "mcpConnectionReviewRequired": true,
+  "agentIdGovernanceReviewRequired": true,
+  "agentIdCredentialReviewEnabled": true,
   "crossTenantAuditLogRetentionDays": 365,
   "evidenceRetentionDays": 365,
   "notificationMode": "standard",
@@ -15,13 +15,13 @@
     "requireApprovedAudienceList": true,
     "blockUnreviewedTargetTenants": true
   },
-  "mcpAttestation": {
-    "verifySigningKey": true,
-    "maxAttestationAgeDays": 60,
+  "mcpConnectionReview": {
+    "requireAuthenticationReview": true,
+    "maxConnectionReviewAgeDays": 60,
     "requireScopeReview": true
   },
-  "agentIdRotation": {
-    "maxKeyAgeDays": 180,
-    "requireDualKeyDuringRotation": true
+  "agentIdCredentialReview": {
+    "maxCredentialAgeDays": 180,
+    "requireConditionalAccessCoverage": true
   }
 }

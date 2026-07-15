@@ -8,6 +8,8 @@
 
 The Cross-Tenant Agent Federation Auditor (CTAF) is a documentation-first auditor for cross-tenant Microsoft 365 Copilot agent invocation patterns, Copilot Studio channels, authentication settings, organization sharing controls, Microsoft Entra Agent ID identity-governance metadata, and Model Context Protocol (MCP) server connection reviews. The repository implementation produces sample inventories, trust assessments, and review evidence so that delivery teams can reason about cross-org agent risk before live tenant integration is wired.
 
+> **On terminology.** Microsoft does not publish a distinct "cross-tenant agent federation" product. CTAF audits cross-tenant *trust and dependencies* for agents: Microsoft Entra External ID cross-tenant access settings (B2B collaboration, B2B direct connect, tenant restrictions, and trust settings), multitenant application registrations and service principals, remote MCP server connections, the Microsoft Agent 365 agent registry inventory, and Microsoft Entra Agent ID identity governance. Cross-tenant *user* access to a Copilot Studio agent is provided by Copilot Studio multitenant mode, which is in preview, and Microsoft Entra Agent ID is also in preview. Verify current product and preview status with Microsoft before relying on any capability.
+
 CTAF helps meet third-party and information-security governance expectations under GLBA §501(b), the FFIEC IT Handbook (Information Security Booklet), SEC Reg S-P, OCC Bulletin 2023-17 (Third-Party Risk Management), and FINRA Rule 3110 by improving visibility into who can invoke agents across tenant boundaries, what trust relationships are in force, and what MCP connection and Agent ID governance review evidence has been recorded.
 
 ## What This Solution Monitors
@@ -34,9 +36,12 @@ CTAF helps meet third-party and information-security governance expectations und
 > scripts. It does not modify tenant state or connect to live services in its repository form.
 
 - ❌ Does not enumerate live Copilot Studio publishing settings (sample agent inventory only).
+- ❌ Does not treat "cross-tenant agent federation" as a shipping Microsoft product capability; it audits cross-tenant trust and dependencies (cross-tenant access settings, multitenant app registrations and service principals, MCP connections, Agent 365 registry inventory, and Entra Agent ID governance).
 - ❌ Does not call Microsoft Graph for Entra cross-tenant access policies (sample trust records only).
-- ❌ Does not perform live MCP server calls, tool approval changes, or cryptographic attestation; connection review evidence is template-driven.
+- ❌ Does not perform live MCP server calls, tool approval changes, or cryptographic attestation; connection review evidence is template-driven. MCP has no Microsoft-defined signing-key attestation.
 - ❌ Does not modify Entra Agent ID configurations, assign permissions, or manage credentials.
+- ❌ Does not enforce Entra Agent ID or MCP signing-key or key-rotation controls; those are not documented Microsoft Entra Agent ID or MCP capabilities. Agent ID evidence is owner/sponsor, permission, Conditional Access, and audit-log review; any signing or key-rotation fields are customer-defined and outside the documented schema.
+- ❌ Does not automatically correlate Agent 365 registry entries to Entra app registrations or service principals; that correlation is a documented manual review.
 - ❌ Does not block agent invocation; CTAF is detective and evidentiary, not preventive.
 - ❌ Does not cover internal-only (single-tenant) agents — see solution 20 for in-tenant agent inventory.
 
