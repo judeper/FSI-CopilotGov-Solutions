@@ -162,3 +162,30 @@ The prior July handoff recorded `studio-video-factory` `feat/pilot-a-readiness` 
 ### Updated Next Phase
 
 Synchronize the studio repository to updated `main`, build the isolated governance-validation adapter, then execute the 23 read-only lab contracts serially. No live lab run or accepted evidence exists yet. PR #317 remains deferred for conflict resolution during post-lab finalization.
+
+---
+
+## Solution 01 Lab Cycle PARTIAL / Not Accepted (2026-07-15)
+
+**Status:** SERIAL LAB QUEUE BLOCKED | **FSI PR:** [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | **Studio PRs:** [#11](https://github.com/judep_microsoft/studio-video-factory/pull/11), [#12](https://github.com/judep_microsoft/studio-video-factory/pull/12)
+
+### Result
+
+The pinned Solution 01 contract completed its first privacy-gated read-only cycle as `PARTIAL`, `accepted: false`, `controlImplementation: partial`. Five steps passed (three documentation-first PowerShell checks and two manual attestations); four steps were blocked.
+
+### Verified Blockers
+
+- Microsoft 365, Entra, Purview, Defender, SharePoint admin, and Teams admin surfaces redirected to attended sign-in. Power Platform admin center was authenticated.
+- The documented Copilot D7 usage-report GET returned 403 without effective `Reports.Read.All`; response body and token were not retained.
+
+### Evidence and Safety
+
+- Both authoritative validators pass: `validate-lab-result.py` and `validate-lab-package.ps1`.
+- Evidence remains outside Git with portable paths and FSI-compatible SHA-256 sidecars.
+- No tenant mutation occurred; cleanup was not required.
+- Result SHA-256: `30cd35255c1f30d1382a8c510f5f5e6b9cf6293b4e40f82dcb3d315297a03548`.
+- Package SHA-256: `4f1bbae69490834685eac2d3753d1c6a18bbb286ce01a4aa64f773b5d3d2c9b3`.
+
+### Decision
+
+Do not advance to Solution 02 and do not finalize PR #317. Seed attended governance authentication for the six blocked admin surfaces, provide effective `Reports.Read.All`, and rerun the pinned Solution 01 contract. Only an accepted PASS/BLOCKED/NOT-APPLICABLE result may unlock the serial queue.
