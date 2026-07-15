@@ -127,6 +127,15 @@ Before operational handoff, include `lab\01-copilot-readiness-scanner.lab.json` 
 python ..\..\scripts\validate-lab-contracts.py ..\..\solutions\01-copilot-readiness-scanner\lab\01-copilot-readiness-scanner.lab.json
 ```
 
+The first read-only lab cycle was accepted as `PASS` on 2026-07-15:
+
+- 9/9 contract steps passed.
+- Both the result and portable evidence package passed the repository validators.
+- No tenant mutation occurred; cleanup was `not-required`.
+- Result SHA-256: `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`.
+- Package SHA-256: `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`.
+- Evidence remains outside Git and contains no retained tenant identifier, token, or report body.
+
 ## Troubleshooting
 
 Deployment issues are most commonly caused by permissions, missing modules, or invalid configuration references.

@@ -134,8 +134,8 @@ Describe 'Deployment preview behavior' {
 }
 
 Describe 'CHANGELOG format' {
-    It 'CHANGELOG has v0.2.3 entry' {
-        (Get-Content -Path $script:changelogPath -Raw) | Should -Match '## \[v0\.2\.3\]'
+    It 'CHANGELOG has v0.2.4 entry' {
+        (Get-Content -Path $script:changelogPath -Raw) | Should -Match '## \[v0\.2\.4\]'
     }
 }
 

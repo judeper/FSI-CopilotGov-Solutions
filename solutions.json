@@ -1,13 +1,13 @@
 {
   "schemaVersion": "0.2.0",
-  "generatedAt": "2026-06-13T15:28:43Z",
+  "generatedAt": "2026-07-15T22:48:04Z",
   "solutions": [
     {
       "id": "01-copilot-readiness-scanner",
       "slug": "01-copilot-readiness-scanner",
       "tier": 1,
       "name": "Copilot Readiness Assessment Scanner",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "domain": "readiness-data",
       "summary": "Assesses tenant readiness across licensing, identity, Purview, SharePoint, and Copilot-specific data hygiene signals.",
       "repoPath": "solutions/01-copilot-readiness-scanner",

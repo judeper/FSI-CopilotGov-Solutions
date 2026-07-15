@@ -6,7 +6,7 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 
 > **Cloud scope:** This content targets US commercial-cloud Microsoft 365 only. See [SCOPE.md](./SCOPE.md) for details.
 
-> **Current status (2026-07-15):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete** across draft PRs #317 and #319–#340. The studio governance adapter is merged. Solution 01 completed its first read-only lab cycle as **PARTIAL / not accepted**; six admin portals require attended sign-in and the Copilot usage-report call lacks effective `Reports.Read.All`. The remaining 22 lab runs are paused until Solution 01 is remediated and rerun. See the [Project Handoff](./docs/project-handoff.md).
+> **Current status (2026-07-15):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete**. Solution 01 completed an accepted read-only `PASS` (9/9 steps, no mutation), is released as v0.2.4, and clears the serial queue to begin Solution 02. The remaining 22 review PRs stay draft with lab evidence pending. See the [Project Handoff](./docs/project-handoff.md).
 
 ## Quickstart
 

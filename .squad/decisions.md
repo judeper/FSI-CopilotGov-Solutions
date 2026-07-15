@@ -189,3 +189,24 @@ The pinned Solution 01 contract completed its first privacy-gated read-only cycl
 ### Decision
 
 Do not advance to Solution 02 and do not finalize PR #317. Seed attended governance authentication for the six blocked admin surfaces, provide effective `Reports.Read.All`, and rerun the pinned Solution 01 contract. Only an accepted PASS/BLOCKED/NOT-APPLICABLE result may unlock the serial queue.
+
+---
+
+## Solution 01 Lab PASS Accepted / Queue Advances (2026-07-15)
+
+**Status:** ACCEPTED PASS / FINALIZATION COMPLETE | **FSI PR:** [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | **Studio PRs:** [#14](https://github.com/judep_microsoft/studio-video-factory/pull/14), [#15](https://github.com/judep_microsoft/studio-video-factory/pull/15)
+
+### Remediated Result
+
+After attended lab authentication and delegated `Reports.Read.All` consent, the pinned Solution 01 contract completed with 9/9 steps `PASS`, `accepted: true`, `controlImplementation: implemented`, and cleanup `not-required`.
+
+- All seven required admin surfaces were observed through the privacy-gated collector.
+- The Copilot D7 usage-report GET succeeded; response content and tokens were not retained.
+- Both authoritative FSI validators passed.
+- No tenant mutation occurred.
+- Result SHA-256: `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`.
+- Package SHA-256: `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`.
+
+### Decision
+
+Finalize Solution 01 as v0.2.4 and merge PR #317 after the full gate is green. Advance the serial lab queue to Solution 02 / PR #319 only after Solution 01 lands.

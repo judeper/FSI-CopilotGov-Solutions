@@ -1,8 +1,10 @@
 # Copilot Readiness Assessment Scanner
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-07-15
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
+
+> **Lab validation:** Accepted `PASS` on 2026-07-15 against the pinned v0.2.3 review contract (9/9 steps, no mutation). Result SHA-256: `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`; package SHA-256: `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`. Evidence is retained outside Git.
 
 ## Overview
 

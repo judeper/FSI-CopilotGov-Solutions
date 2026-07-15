@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-06-13T15:40:29Z",
+  "generatedAt": "2026-07-15T22:48:05Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -14,7 +14,7 @@
       "id": "01-copilot-readiness-scanner",
       "name": "Copilot Readiness Assessment Scanner",
       "tier": 1,
-      "version": "0.2.3",
+      "version": "0.2.4",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.1",
