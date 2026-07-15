@@ -86,3 +86,5 @@ The package contract contains:
 ## Examiner Notes
 
 PNRT packages the technical metadata needed to demonstrate retention coverage, Purview audit/version-history context, and internal sample lineage for Copilot collaborative artifacts. It does not export the underlying record content and does not place legal holds. Records-management and compliance teams should add narrative coverage assessments, supervisory-review evidence, and any preservation-lock confirmations before sharing with examiners. Use of PNRT does not on its own satisfy SEC Rule 17a-4 (which applies only to specific broker-dealer required records), FINRA Rule 4511(a), or Sarbanes-Oxley §§302/404.
+
+> **Rollout note:** Microsoft Purview eDiscovery and legal hold support Copilot Pages and Copilot Notebooks content, but the eDiscovery custodian container data-source picker and the review-set full indexing and HTML export enhancements (Microsoft 365 Roadmap 561492) are rolling out. Confirm these capabilities by tenant validation before eDiscovery and legal-hold coverage is treated as complete rather than relying on the roadmap status alone.

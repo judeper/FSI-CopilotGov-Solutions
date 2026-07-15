@@ -82,6 +82,13 @@ Creates the four PNRT JSON artifacts and a SHA-256 file for each, then assembles
 - Caveat: Retention labels cannot be viewed or applied directly from a Copilot Page, and record/regulatory-record labels cannot be manually applied in Copilot Pages or Loop
 - Helps detect coverage gaps between the artifact inventory and active retention policies
 
+### Platform lifecycle and rollout notes
+
+- Copilot Pages (`.page`) and Copilot Notebooks (`.pod`) content is stored together in a single user-owned SharePoint Embedded container that is also shared with Loop My workspace. In the SharePoint admin center, PowerShell, and Purview audit data this container's application name is always `Loop`, and audit searches surface Pages by filtering on `"SourceFileExtension":"page"`.
+- There is no end-user recycle bin for Copilot Notebooks, and neither administrators nor end users can recover an individually deleted Copilot Notebook. Publishing a retention policy that covers the container or exporting content before deletion are the supported ways to preserve at-risk records.
+- When a user leaves the organization, the container follows the OneDrive deletion lifecycle with one manual handoff step at departure (access and notification are not automatic) and the option to permanently reassign the container to a new owner. Preserve content before departure by exporting it through Purview or the Graph API, or by adding the container to a retention policy.
+- Microsoft Purview eDiscovery and legal hold support Copilot Pages and Copilot Notebooks content, but selecting the user-owned container in the eDiscovery custodian data-source picker and the eDiscovery review-set full indexing and HTML export enhancements (Microsoft 365 Roadmap 561492) are rollout-sensitive and require tenant validation before the solution treats eDiscovery and legal-hold coverage as complete.
+
 ## Security Considerations
 
 - Use least-privilege Microsoft Graph, SharePoint Embedded, and Purview permissions for inventory reads; do not request write scopes.

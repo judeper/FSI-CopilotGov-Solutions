@@ -26,14 +26,22 @@
 .PARAMETER PassThru
     Returns the evidence summary object after writing artifacts.
 
+.PARAMETER WhatIf
+    Build the evidence plan in memory and return it without writing any JSON artifacts, SHA-256
+    companions, or the evidence package. Useful for read-only lab validation that must leave no
+    local artifacts. Planned artifact paths are returned with null hashes.
+
 .EXAMPLE
     .\Export-Evidence.ps1 -ConfigurationTier recommended -Verbose
+
+.EXAMPLE
+    .\Export-Evidence.ps1 -ConfigurationTier regulated -PassThru -WhatIf
 
 .NOTES
     Solution: Pages and Notebooks Retention Tracker (PNRT)
     Version: v0.1.3
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter()]
     [ValidateSet('baseline', 'recommended', 'regulated')]
@@ -86,7 +94,7 @@ Write-Verbose ("Loading PNRT configuration for tier [{0}]." -f $ConfigurationTie
 $configuration = Get-PnrtConfiguration -Tier $ConfigurationTier
 Test-PnrtConfiguration -Configuration $configuration
 
-$resolvedOutputPath = (New-Item -ItemType Directory -Path $OutputPath -Force).FullName
+$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
 $monitorScript = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
 
 Write-Verbose 'Collecting monitoring snapshot for evidence export.'
@@ -102,31 +110,49 @@ $baseEnvelope = [ordered]@{
     warning = $snapshot.StatusWarning
 }
 
-Write-Verbose 'Building pages-retention-inventory artifact.'
+$artifactPlans = [System.Collections.Generic.List[object]]::new()
+
+Write-Verbose 'Preparing pages-retention-inventory artifact.'
 $pagesArtifact = [ordered]@{} + $baseEnvelope
 $pagesArtifact.retentionDays = $configuration.pagesRetentionDays
 $pagesArtifact.records = @($snapshot.Pages)
-$pagesFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("pages-retention-inventory-{0}.json" -f $ConfigurationTier)) -Content $pagesArtifact
+$null = $artifactPlans.Add([pscustomobject]@{
+    name = 'pages-retention-inventory'
+    fileName = ("pages-retention-inventory-{0}.json" -f $ConfigurationTier)
+    content = $pagesArtifact
+})
 
-Write-Verbose 'Building notebook-retention-log artifact.'
+Write-Verbose 'Preparing notebook-retention-log artifact.'
 $notebookArtifact = [ordered]@{} + $baseEnvelope
 $notebookArtifact.retentionDays = $configuration.notebookRetentionDays
 $notebookArtifact.records = @($snapshot.Notebooks)
-$notebookFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("notebook-retention-log-{0}.json" -f $ConfigurationTier)) -Content $notebookArtifact
+$null = $artifactPlans.Add([pscustomobject]@{
+    name = 'notebook-retention-log'
+    fileName = ("notebook-retention-log-{0}.json" -f $ConfigurationTier)
+    content = $notebookArtifact
+})
 
-Write-Verbose 'Building loop-component-lineage artifact.'
+Write-Verbose 'Preparing loop-component-lineage artifact.'
 $loopArtifact = [ordered]@{} + $baseEnvelope
 $loopArtifact.signedLineageRequired = [bool]$configuration.signedLineageRequired
 $loopArtifact.records = @($snapshot.LoopComponents)
-$loopFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("loop-component-lineage-{0}.json" -f $ConfigurationTier)) -Content $loopArtifact
+$null = $artifactPlans.Add([pscustomobject]@{
+    name = 'loop-component-lineage'
+    fileName = ("loop-component-lineage-{0}.json" -f $ConfigurationTier)
+    content = $loopArtifact
+})
 
-Write-Verbose 'Building branching-event-log internal sample lineage artifact.'
+Write-Verbose 'Preparing branching-event-log internal sample lineage artifact.'
 $branchingArtifact = [ordered]@{} + $baseEnvelope
 $branchingArtifact.internalSampleLineageMode = $configuration.branchingAuditMode
 $branchingArtifact.branchingAuditRequired = [bool]$configuration.branchingAuditRequired
 $branchingArtifact.documentedEvidence = @('Purview audit logs', 'Version history export in Purview or Graph API where documented')
 $branchingArtifact.records = @($snapshot.InternalSampleLineageEvents)
-$branchingFile = Write-PnrtArtifactFile -Path (Join-Path $resolvedOutputPath ("branching-event-log-{0}.json" -f $ConfigurationTier)) -Content $branchingArtifact
+$null = $artifactPlans.Add([pscustomobject]@{
+    name = 'branching-event-log'
+    fileName = ("branching-event-log-{0}.json" -f $ConfigurationTier)
+    content = $branchingArtifact
+})
 
 $controls = @(
     [pscustomobject]@{
@@ -156,13 +182,6 @@ $controls = @(
     }
 )
 
-$artifacts = @(
-    [pscustomobject]@{ name = 'pages-retention-inventory'; type = 'json'; path = $pagesFile.Path; hash = $pagesFile.Hash },
-    [pscustomobject]@{ name = 'notebook-retention-log'; type = 'json'; path = $notebookFile.Path; hash = $notebookFile.Hash },
-    [pscustomobject]@{ name = 'loop-component-lineage'; type = 'json'; path = $loopFile.Path; hash = $loopFile.Hash },
-    [pscustomobject]@{ name = 'branching-event-log'; type = 'json'; path = $branchingFile.Path; hash = $branchingFile.Hash }
-)
-
 $recordCount = @($snapshot.Pages).Count + @($snapshot.Notebooks).Count + @($snapshot.LoopComponents).Count + @($snapshot.InternalSampleLineageEvents).Count
 $exceptionCount = ($controls | Where-Object { $_.status -ne 'implemented' }).Count
 
@@ -174,35 +193,65 @@ $summary = @{
     exceptionCount = $exceptionCount
 }
 
-Write-Verbose 'Creating PNRT evidence package with shared exporter.'
-$package = Export-SolutionEvidencePackage `
-    -Solution $configuration.solution `
-    -SolutionCode $configuration.solutionCode `
-    -Tier $ConfigurationTier `
-    -OutputPath $resolvedOutputPath `
-    -Summary $summary `
-    -Controls $controls `
-    -Artifacts $artifacts `
-    -PackageFileName ("22-pages-notebooks-retention-tracker-evidence-{0}.json" -f $ConfigurationTier) `
-    -ExpectedArtifacts @($configuration.evidenceOutputs) `
-    -AdditionalMetadata @{
-        runtimeMode = $snapshot.RuntimeMode
-        warning = $snapshot.StatusWarning
+# Package artifact entries use package-relative file names so the exported package stays valid when
+# the evidence directory is relocated (the shared validator resolves relative paths against the
+# package directory). Returned artifact entries use absolute paths so callers can locate the files.
+$resultArtifacts = @()
+$packageResult = [pscustomobject]@{ Path = $null; Hash = $null; HashPath = $null }
+
+if ($PSCmdlet.ShouldProcess($resolvedOutputPath, ("Export PNRT evidence package for tier {0}" -f $ConfigurationTier))) {
+    $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
+
+    $packageArtifacts = @()
+    foreach ($plan in $artifactPlans) {
+        $artifactPath = Join-Path $resolvedOutputPath $plan.fileName
+        $file = Write-PnrtArtifactFile -Path $artifactPath -Content $plan.content
+        $packageArtifacts += [pscustomobject]@{ name = $plan.name; type = 'json'; path = $plan.fileName; hash = $file.Hash }
+        $resultArtifacts += [pscustomobject]@{ name = $plan.name; type = 'json'; path = $file.Path; hash = $file.Hash }
     }
+
+    Write-Verbose 'Creating PNRT evidence package with shared exporter.'
+    $packageResult = Export-SolutionEvidencePackage `
+        -Solution $configuration.solution `
+        -SolutionCode $configuration.solutionCode `
+        -Tier $ConfigurationTier `
+        -OutputPath $resolvedOutputPath `
+        -Summary $summary `
+        -Controls $controls `
+        -Artifacts $packageArtifacts `
+        -PackageFileName ("22-pages-notebooks-retention-tracker-evidence-{0}.json" -f $ConfigurationTier) `
+        -ExpectedArtifacts @($configuration.evidenceOutputs) `
+        -AdditionalMetadata @{
+            runtimeMode = $snapshot.RuntimeMode
+            warning = $snapshot.StatusWarning
+        }
+}
+else {
+    Write-Verbose 'WhatIf enabled. Returning evidence plan without writing artifacts or package.'
+    foreach ($plan in $artifactPlans) {
+        $resultArtifacts += [pscustomobject]@{
+            name = $plan.name
+            type = 'json'
+            path = (Join-Path $resolvedOutputPath $plan.fileName)
+            hash = $null
+        }
+    }
+}
 
 $result = [pscustomobject]@{
     Summary = $summary
     Controls = $controls
-    Artifacts = $artifacts
+    Artifacts = $resultArtifacts
     RuntimeMode = $snapshot.RuntimeMode
-    PackagePath = $package.Path
-    Package = $package
+    PackagePath = $packageResult.Path
+    Package = $packageResult
 }
 
 Write-Host (
-    "Evidence summary: PNRT tier [{0}] exported {1} artifacts, {2} records, {3} coverage gaps." -f
+    "Evidence summary: PNRT tier [{0}] {1} {2} artifacts, {3} records, {4} coverage gaps." -f
     $ConfigurationTier,
-    $artifacts.Count,
+    $(if ($null -eq $packageResult.Path) { 'planned' } else { 'exported' }),
+    $resultArtifacts.Count,
     $recordCount,
     $summary['coverageGapCount']
 )

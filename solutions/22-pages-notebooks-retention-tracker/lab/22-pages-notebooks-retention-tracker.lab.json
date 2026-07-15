@@ -1,0 +1,351 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:22-pages-notebooks-retention-tracker:2026-07-13-accuracy-review",
+  "solution": {
+    "id": "22-pages-notebooks-retention-tracker",
+    "name": "Pages and Notebooks Retention Tracker",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.11",
+    "3.2",
+    "3.3",
+    "3.11"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-purview-compliance-portal",
+    "sharepoint-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-cpcn-storage-shared-container",
+      "claimText": "Microsoft Learn confirms Copilot Pages (.page) and Copilot Notebooks (.pod) content is stored together in a single user-owned SharePoint Embedded container shared with Loop My workspace, counts against SharePoint storage quota, and always reports the application name 'Loop' in SharePoint admin, PowerShell, and Purview audit data.",
+      "affectedFiles": [
+        "solutions/22-pages-notebooks-retention-tracker/README.md",
+        "solutions/22-pages-notebooks-retention-tracker/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-storage?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cpcn-retention-model",
+      "claimText": "Microsoft Learn confirms Purview retention policies configured for all SharePoint sites are enforced for Copilot Pages and Copilot Notebooks, while retention labels have only limited manual application and cannot be viewed or applied directly from a Copilot Page (the user must open the page in the Loop app).",
+      "affectedFiles": [
+        "solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md",
+        "solutions/22-pages-notebooks-retention-tracker/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cpcn-ediscovery-legalhold",
+      "claimText": "Microsoft Learn confirms Purview eDiscovery and Legal Hold are supported for Copilot Pages and Copilot Notebooks content in SharePoint Embedded (held in the Preservation Hold Library), and that selecting the user-owned container in the eDiscovery custodian data-source picker is rolling out and requires tenant validation before relying on it.",
+      "affectedFiles": [
+        "solutions/22-pages-notebooks-retention-tracker/README.md",
+        "solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cpcn-recyclebin-recovery",
+      "claimText": "Microsoft Learn confirms there is no end-user recycle bin for Copilot Notebooks and that neither administrators nor end users can recover individually deleted Copilot Notebooks, and that a departing user's container follows the OneDrive deletion lifecycle with one manual handoff step and optional permanent reassignment.",
+      "affectedFiles": [
+        "solutions/22-pages-notebooks-retention-tracker/docs/architecture.md",
+        "solutions/22-pages-notebooks-retention-tracker/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-storage?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-roadmap-561492-ediscovery-rollout",
+      "claimText": "M365 Roadmap item 561492 reports launched status for eDiscovery review-set full indexing of Copilot Pages content and HTML export enhancements, which must be confirmed by tenant rollout validation before treating eDiscovery review and export coverage as complete.",
+      "affectedFiles": [
+        "solutions/22-pages-notebooks-retention-tracker/docs/evidence-export.md",
+        "solutions/22-pages-notebooks-retention-tracker/scripts/Export-Evidence.ps1"
+      ],
+      "sourceType": "m365-roadmap",
+      "sourceUrl": "https://roadmap.cloud.microsoft/?filters=&searchterms=561492",
+      "lifecycleState": "unknown",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 E3 or E5 with Microsoft 365 Copilot for in-scope validation users",
+      "Microsoft Purview Data Lifecycle Management for retention policy configuration",
+      "Purview eDiscovery (Premium) licensing for review and HTML export validation"
+    ],
+    "roles": [
+      "Compliance Administrator",
+      "Microsoft Purview eDiscovery Administrator",
+      "SharePoint Administrator",
+      "Global Reader"
+    ],
+    "features": [
+      "Copilot Pages and Copilot Notebooks enabled for the validation scope",
+      "Purview retention policy published for All SharePoint Sites",
+      "Purview eDiscovery case access with review-set permissions for rollout validation"
+    ],
+    "capacityRequirements": [
+      "One controlled validation workspace using representative sample data",
+      "Read-only command-execution access for the solution scripts"
+    ],
+    "dataRequirements": [
+      "Representative sample artifacts only",
+      "No tenant identifiers, selectors, secrets, or customer content in contract evidence"
+    ],
+    "tenantCount": 1,
+    "notes": "Blocked conditions include missing licenses or roles, a retention policy not yet published for All SharePoint Sites, and eDiscovery review-set indexing/HTML export or the legal-hold container data-source picker not yet visible in tenant validation views. Primary control 3.14 is intentionally omitted from the machine-checked controls list because it is not yet present in data/controls-master.json; the same read-only evidence still substantiates Copilot artifact retention coverage and 3.14 should be added to this contract once the control exists in canonical metadata."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Validate prerequisites and deployment manifest",
+        "steps": [
+          {
+            "id": "step-check-license-role-prerequisites",
+            "mode": "manual",
+            "intent": "Confirm required Microsoft 365 Copilot, Purview retention, and eDiscovery licensing plus admin roles are present before running any validation command.",
+            "expected": "Licenses and roles are documented as present; otherwise the disposition moves to BLOCKED with evidence.",
+            "operatorNote": "Record a blocked condition if any required license, role, or Purview access is missing.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Prerequisite attestation log",
+              "expectation": "Attestation explicitly captures a pass or block decision for license and role readiness."
+            }
+          },
+          {
+            "id": "step-deploy-whatif",
+            "mode": "powershell",
+            "intent": "Run the deployment script in WhatIf mode to validate manifest generation without writing any artifact.",
+            "expected": "Deployment manifest object is returned for the selected tier and no manifest file is written to disk.",
+            "command": "pwsh -File solutions/22-pages-notebooks-retention-tracker/scripts/Deploy-Solution.ps1 -ConfigurationTier regulated -OutputPath solutions/22-pages-notebooks-retention-tracker/artifacts/lab-contract -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Deploy-Solution returned manifest object",
+              "expectation": "Manifest solution and tier are returned with no manifest file emitted under the output path."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run read-only sample-data validation commands",
+        "steps": [
+          {
+            "id": "step-run-monitor-whatif",
+            "mode": "powershell",
+            "intent": "Execute the monitor script in WhatIf mode to validate sample inventory, coverage-gap aggregation, and internal sample lineage without writing a snapshot.",
+            "expected": "Pages, Copilot Notebook, Loop, and internal sample lineage records plus a coverage-gap count are returned with no tenant reads and no snapshot file written.",
+            "command": "pwsh -File solutions/22-pages-notebooks-retention-tracker/scripts/Monitor-Compliance.ps1 -ConfigurationTier regulated -OutputPath solutions/22-pages-notebooks-retention-tracker/artifacts/lab-contract -PassThru -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance pass-through output",
+              "expectation": "RuntimeMode is sample-data and CoverageGapCount is returned with no monitor-snapshot file emitted."
+            }
+          },
+          {
+            "id": "step-run-export-whatif",
+            "mode": "powershell",
+            "intent": "Execute the evidence export in WhatIf mode to validate the evidence plan, artifact naming, and package portability contract without writing files.",
+            "expected": "Planned artifacts are returned with null hashes and a null package path, confirming package-relative artifact naming and no tenant-bound output.",
+            "command": "pwsh -File solutions/22-pages-notebooks-retention-tracker/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath solutions/22-pages-notebooks-retention-tracker/artifacts/lab-contract -PassThru -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence pass-through output",
+              "expectation": "Four planned artifacts are listed with null hashes and PackagePath is null while execution stays read-only."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify retention posture, rollout state, and source claims",
+        "steps": [
+          {
+            "id": "step-verify-retention-posture",
+            "mode": "manual",
+            "intent": "In Microsoft Purview, confirm an All SharePoint Sites retention policy covers Copilot Pages and Copilot Notebooks and confirm the limited retention-label application path via the Loop app, comparing against the sample coverage expectations.",
+            "expected": "Retention-policy coverage is confirmed for the shared SharePoint Embedded container, or the disposition moves to BLOCKED when policy coverage is not yet published.",
+            "operatorNote": "Capture whether All SharePoint Sites retention policy coverage is published and whether retention-label application via the Loop app matches the documented limitation.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Retention posture verification worksheet",
+              "expectation": "Worksheet records a dated pass or block decision for retention-policy coverage with a supporting evidence reference."
+            }
+          },
+          {
+            "id": "step-verify-ediscovery-legalhold-rollout",
+            "mode": "manual",
+            "intent": "In Purview eDiscovery, confirm whether the user-owned container appears in the custodian data-source picker and whether review-set indexing and HTML export (M365 Roadmap 561492) are visible in the tenant, without fabricating outcomes.",
+            "expected": "Rollout-sensitive eDiscovery and legal-hold capabilities are classified as confirmed or BLOCKED (rollout not yet visible) with explicit evidence; no tenant data is exported into contract evidence.",
+            "operatorNote": "Classify the blocked reason as container-picker rollout, review-set indexing/HTML export rollout, or licensing when the capability is not yet available.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "eDiscovery rollout verification note",
+              "expectation": "Note explicitly states the rollout state and, if BLOCKED, the rollout category with a supporting reference."
+            }
+          },
+          {
+            "id": "step-verify-source-citations",
+            "mode": "manual",
+            "intent": "Confirm the cited Microsoft Learn and roadmap sources remain reachable and aligned with the documented storage, retention, eDiscovery, legal-hold, and recycle-bin claims.",
+            "expected": "Every source claim is marked supported, stale, or blocked with explicit dated evidence.",
+            "operatorNote": "Use source verification notes to capture lifecycle and rollout status for each cited claim.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source verification worksheet",
+              "expectation": "Each claim has a dated verification decision and an evidence reference."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-confirm-no-cleanup-required",
+            "mode": "manual",
+            "intent": "Confirm no mutable tenant operation ran during this contract execution.",
+            "expected": "Cleanup note indicates a not-required state because the run was read-only.",
+            "operatorNote": "No mutation was executed in this read-only contract; only local sample artifacts under the output path may need routine removal.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation",
+              "expectation": "Attestation confirms cleanup is not required because no mutation executed."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-pages-notebooks-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-pages-notebooks-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-script-transcript",
+        "type": "powershell-transcript",
+        "description": "Transcript of Deploy, Monitor, and Export WhatIf command execution showing read-only sample-data behavior.",
+        "requiredForControls": [
+          "2.11",
+          "3.2",
+          "3.3",
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-retention-verification",
+        "type": "manual-attestation",
+        "description": "Attestation of Purview retention-policy coverage and retention-label application state for the shared SharePoint Embedded container.",
+        "requiredForControls": [
+          "3.2",
+          "3.3"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-ediscovery-rollout-note",
+        "type": "source-citation",
+        "description": "Verification note for eDiscovery and legal-hold rollout state against M365 Roadmap 561492 and the container data-source picker.",
+        "requiredForControls": [
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-verification",
+        "type": "source-citation",
+        "description": "Source verification worksheet for the cited Microsoft Learn and roadmap claims.",
+        "requiredForControls": [
+          "2.11",
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-script-transcript",
+      "artifact-source-verification"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}
