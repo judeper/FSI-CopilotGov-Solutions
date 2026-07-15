@@ -5,7 +5,8 @@ Queries active access review decisions and flags reviews approaching expiry.
 .DESCRIPTION
 Queries access reviews in Microsoft Entra ID Governance for pending and completed decisions using
 GET /identityGovernance/accessReviews/definitions/{id}/instances/{id}/decisions.
-Flags reviews approaching expiry (within 48 hours by default) for escalation.
+Flags reviews approaching expiry using the selected governance-tier escalation threshold
+(48 hours by default, 24 hours in the regulated tier).
 Scripts use representative sample data and do not connect to live Microsoft 365 services.
 
 .PARAMETER TenantId
@@ -19,6 +20,13 @@ Client secret for app-only authentication, provided as a SecureString. Migrate t
 
 .PARAMETER UseMgGraph
 When set, uses Connect-MgGraph for delegated authentication instead of client credentials.
+
+.PARAMETER ConfigurationTier
+Selects the governance tier to apply for escalation behavior. Supported values are baseline,
+recommended, and regulated.
+
+.PARAMETER EscalationThresholdHours
+Optional override for escalation threshold hours. Use -1 to apply the tier configuration value.
 
 .PARAMETER OutputPath
 Directory where review results output will be written.
@@ -46,6 +54,14 @@ param(
     [switch]$UseMgGraph,
 
     [Parameter()]
+    [ValidateSet('baseline', 'recommended', 'regulated')]
+    [string]$ConfigurationTier = 'baseline',
+
+    [Parameter()]
+    [ValidateRange(-1, 168)]
+    [int]$EscalationThresholdHours = -1,
+
+    [Parameter()]
     [string]$OutputPath = (Join-Path $PSScriptRoot '..\artifacts\reviews')
 )
 
@@ -54,7 +70,139 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 Import-Module (Join-Path $repoRoot 'scripts\common\GraphAuth.psm1') -Force
-Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
+
+function ConvertTo-Hashtable {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$InputObject
+    )
+
+    if ($null -eq $InputObject) {
+        return $null
+    }
+
+    if ($InputObject -is [System.Collections.IDictionary]) {
+        $table = @{}
+        foreach ($key in $InputObject.Keys) {
+            $table[$key] = ConvertTo-Hashtable -InputObject $InputObject[$key]
+        }
+
+        return $table
+    }
+
+    if ($InputObject -is [pscustomobject]) {
+        $table = @{}
+        foreach ($property in $InputObject.PSObject.Properties) {
+            $table[$property.Name] = ConvertTo-Hashtable -InputObject $property.Value
+        }
+
+        return $table
+    }
+
+    if (($InputObject -is [System.Collections.IEnumerable]) -and -not ($InputObject -is [string])) {
+        $list = @()
+        foreach ($item in $InputObject) {
+            $list += ,(ConvertTo-Hashtable -InputObject $item)
+        }
+
+        return $list
+    }
+
+    return $InputObject
+}
+
+function Merge-Hashtable {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [hashtable]$Base,
+
+        [Parameter(Mandatory)]
+        [hashtable]$Override
+    )
+
+    $merged = @{}
+
+    foreach ($key in $Base.Keys) {
+        $merged[$key] = $Base[$key]
+    }
+
+    foreach ($key in $Override.Keys) {
+        if (($merged.ContainsKey($key)) -and ($merged[$key] -is [hashtable]) -and ($Override[$key] -is [hashtable])) {
+            $merged[$key] = Merge-Hashtable -Base $merged[$key] -Override $Override[$key]
+        }
+        else {
+            $merged[$key] = $Override[$key]
+        }
+    }
+
+    return $merged
+}
+
+function Get-Configuration {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('baseline', 'recommended', 'regulated')]
+        [string]$ConfigurationTier
+    )
+
+    $configRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\config'))
+    $defaultConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path (Join-Path $configRoot 'default-config.json') -Raw) | ConvertFrom-Json)
+    $tierConfig = ConvertTo-Hashtable -InputObject ((Get-Content -Path (Join-Path $configRoot ("{0}.json" -f $ConfigurationTier)) -Raw) | ConvertFrom-Json)
+
+    return (Merge-Hashtable -Base $defaultConfig -Override $tierConfig)
+}
+
+function ConvertTo-ObjectArray {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [object]$InputObject
+    )
+
+    if ($null -eq $InputObject) {
+        return @()
+    }
+
+    return @($InputObject)
+}
+
+function Get-DefinitionContext {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [object]$Definition
+    )
+
+    $siteUrl = $null
+    $riskTier = $null
+
+    if ($null -ne $Definition) {
+        if (($Definition.PSObject.Properties.Name -contains 'siteUrl') -and -not [string]::IsNullOrWhiteSpace([string]$Definition.siteUrl)) {
+            $siteUrl = [string]$Definition.siteUrl
+        }
+
+        if (($Definition.PSObject.Properties.Name -contains 'riskTier') -and -not [string]::IsNullOrWhiteSpace([string]$Definition.riskTier)) {
+            $riskTier = [string]$Definition.riskTier
+        }
+
+        if (($Definition.PSObject.Properties.Name -contains 'displayName') -and ($Definition.displayName -match '^Access Review - (?<siteUrl>https?://.+?) \[(?<riskTier>[^\]]+)\]$')) {
+            if ([string]::IsNullOrWhiteSpace($siteUrl)) {
+                $siteUrl = [string]$Matches['siteUrl']
+            }
+            if ([string]::IsNullOrWhiteSpace($riskTier)) {
+                $riskTier = [string]$Matches['riskTier']
+            }
+        }
+    }
+
+    return [pscustomobject]@{
+        siteUrl = $siteUrl
+        riskTier = $riskTier
+    }
+}
 
 function Get-SampleReviewDecision {
     [CmdletBinding()]
@@ -138,38 +286,58 @@ function Get-ReviewDecision {
 
     if ($null -ne $GraphContext -and $GraphContext.Mode -ne 'placeholder') {
         try {
-            $definitions = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $definitions = ConvertTo-ObjectArray -InputObject (Invoke-CopilotGovGraphRequest -Context $GraphContext `
                 -Uri '/identityGovernance/accessReviews/definitions' `
                 -Method 'GET' `
-                -AllPages
+                -AllPages)
+
+            if ($definitions.Count -eq 0) {
+                Write-Verbose 'No access review definitions were returned from Microsoft Graph.'
+                return @()
+            }
 
             $allDecisions = @()
             foreach ($definition in $definitions) {
+                $definitionContext = Get-DefinitionContext -Definition $definition
                 try {
-                    $instances = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+                    $instances = ConvertTo-ObjectArray -InputObject (Invoke-CopilotGovGraphRequest -Context $GraphContext `
                         -Uri "/identityGovernance/accessReviews/definitions/$($definition.id)/instances" `
                         -Method 'GET' `
-                        -AllPages
+                        -AllPages)
+
+                    if ($instances.Count -eq 0) {
+                        Write-Verbose "No instances returned for definition '$($definition.id)'."
+                        continue
+                    }
 
                     foreach ($instance in $instances) {
                         try {
-                            $decisions = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+                            $decisions = ConvertTo-ObjectArray -InputObject (Invoke-CopilotGovGraphRequest -Context $GraphContext `
                                 -Uri "/identityGovernance/accessReviews/definitions/$($definition.id)/instances/$($instance.id)/decisions" `
                                 -Method 'GET' `
-                                -AllPages
+                                -AllPages)
+
+                            if ($decisions.Count -eq 0) {
+                                Write-Verbose "No decisions returned for definition '$($definition.id)' instance '$($instance.id)'."
+                                continue
+                            }
 
                             foreach ($decision in $decisions) {
+                                $principal = if ($null -ne $decision) { $decision.principal } else { $null }
+                                $reviewedBy = if (($null -ne $decision) -and ($null -ne $decision.reviewedBy)) { $decision.reviewedBy.displayName } else { $null }
                                 $allDecisions += [pscustomobject]@{
                                     reviewDefinitionId = $definition.id
                                     instanceId = $instance.id
                                     decisionId = $decision.id
-                                    userId = $decision.principal.id
-                                    userDisplayName = $decision.principal.displayName
-                                    userPrincipalName = $decision.principal.userPrincipalName
+                                    userId = if ($null -ne $principal) { $principal.id } else { $null }
+                                    userDisplayName = if ($null -ne $principal) { $principal.displayName } else { $null }
+                                    userPrincipalName = if ($null -ne $principal) { $principal.userPrincipalName } else { $null }
                                     decision = $decision.decision
-                                    reviewedBy = $decision.reviewedBy.displayName
+                                    reviewedBy = $reviewedBy
                                     reviewedAt = $decision.reviewedDateTime
                                     justification = $decision.justification
+                                    siteUrl = $definitionContext.siteUrl
+                                    riskTier = $definitionContext.riskTier
                                     instanceEndDateTime = $instance.endDateTime
                                     status = if ($decision.decision -eq 'NotReviewed') { 'pending' } else { 'completed' }
                                 }
@@ -199,12 +367,16 @@ function Get-ReviewDecision {
 function Test-ApproachingExpiry {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
-        [object[]]$Decisions,
+        [Parameter()]
+        [object[]]$Decisions = @(),
 
         [Parameter()]
         [int]$ThresholdHours = 48
     )
+
+    if (@($Decisions).Count -eq 0) {
+        return @()
+    }
 
     $now = Get-Date
     $escalationItems = @()
@@ -237,6 +409,11 @@ function Test-ApproachingExpiry {
     return $escalationItems
 }
 
+$configuration = Get-Configuration -ConfigurationTier $ConfigurationTier
+$escalationEnabled = [bool]$configuration.enableEscalation
+$configuredThresholdHours = if ($configuration.ContainsKey('escalationThresholdHours')) { [int]$configuration.escalationThresholdHours } else { 48 }
+$effectiveThresholdHours = if ($EscalationThresholdHours -ge 0) { $EscalationThresholdHours } else { $configuredThresholdHours }
+
 $graphContext = $null
 if ($UseMgGraph.IsPresent) {
     try {
@@ -261,7 +438,12 @@ else {
 }
 
 $decisions = Get-ReviewDecision -GraphContext $graphContext
-$escalationItems = Test-ApproachingExpiry -Decisions $decisions
+$escalationItems = if ($escalationEnabled) {
+    @(Test-ApproachingExpiry -Decisions $decisions -ThresholdHours $effectiveThresholdHours)
+}
+else {
+    @()
+}
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
 $null = New-Item -Path $outputRoot -ItemType Directory -Force
@@ -269,7 +451,7 @@ $null = New-Item -Path $outputRoot -ItemType Directory -Force
 $decisionsFile = Join-Path $outputRoot 'review-decisions.json'
 $decisions | ConvertTo-Json -Depth 10 | Set-Content -Path $decisionsFile -Encoding utf8
 
-if ($escalationItems.Count -gt 0) {
+if (@($escalationItems).Count -gt 0) {
     $escalationFile = Join-Path $outputRoot 'escalation-alerts.json'
     $escalationItems | ConvertTo-Json -Depth 10 | Set-Content -Path $escalationFile -Encoding utf8
 }
@@ -279,9 +461,12 @@ $completedCount = @($decisions | Where-Object { $_.status -eq 'completed' }).Cou
 
 [pscustomobject]@{
     TenantId = $TenantId
+    ConfigurationTier = $ConfigurationTier
     TotalDecisions = @($decisions).Count
     PendingDecisions = $pendingCount
     CompletedDecisions = $completedCount
+    EscalationEnabled = $escalationEnabled
+    EscalationThresholdHours = if ($escalationEnabled) { $effectiveThresholdHours } else { $null }
     EscalationAlerts = @($escalationItems).Count
     DecisionsOutputPath = $decisionsFile
 }

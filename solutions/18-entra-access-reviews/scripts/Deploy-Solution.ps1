@@ -170,12 +170,26 @@ function Test-UpstreamReadinessOutput {
     $dependencyRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\02-oversharing-risk-assessment\artifacts'))
 
     if (-not (Test-Path -Path $dependencyRoot)) {
-        throw ("Upstream dependency output path not found: {0}. Run {1} first." -f $dependencyRoot, $DependencyName)
+        return [pscustomobject]@{
+            Dependency = $DependencyName
+            Status = 'not-found'
+            OutputPath = $dependencyRoot
+            ArtifactCount = 0
+            SampleArtifact = $null
+            Notes = ("Upstream dependency output path '{0}' was not found. Continue in documentation-first mode or run {1} to produce artifacts." -f $dependencyRoot, $DependencyName)
+        }
     }
 
-    $artifactFiles = Get-ChildItem -Path $dependencyRoot -Filter *.json -Recurse -File -ErrorAction Stop
-    if (-not $artifactFiles) {
-        throw ("Upstream dependency output path '{0}' does not contain JSON artifacts." -f $dependencyRoot)
+    $artifactFiles = @(Get-ChildItem -Path $dependencyRoot -Filter *.json -Recurse -File -ErrorAction Stop)
+    if ($artifactFiles.Count -eq 0) {
+        return [pscustomobject]@{
+            Dependency = $DependencyName
+            Status = 'empty'
+            OutputPath = $dependencyRoot
+            ArtifactCount = 0
+            SampleArtifact = $null
+            Notes = ("Upstream dependency output path '{0}' exists but does not contain JSON artifacts yet." -f $dependencyRoot)
+        }
     }
 
     return [pscustomobject]@{

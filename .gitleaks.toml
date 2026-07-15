@@ -15,6 +15,9 @@ paths = [
   '''\.tools[/\\].*''',
   '''\.gitleaks-report\.json$''',
 ]
+regexes = [
+  '''2026-07-v015-hardening''',
+]
 # Allow inline `gitleaks:allow` annotations (already honored by gitleaks by default,
 # listed here for explicit documentation of the policy).
 regexTarget = "match"

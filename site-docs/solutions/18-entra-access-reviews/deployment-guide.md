@@ -28,7 +28,7 @@ Inspect the JSON files under `config\`:
 - `recommended.json` for multi-tier reviews with escalation
 - `regulated.json` for extended evidence retention and required attestation
 
-Tune review cadence and reviewer assignments before the first execution window.
+Tune calendar cadence and reviewer assignments before the first execution window (monthly for HIGH, quarterly for MEDIUM, semiannual for LOW).
 
 ## 4. Run Deploy-Solution.ps1
 
@@ -44,7 +44,7 @@ Example deployment:
 Expected outcomes:
 
 - Selected configuration is merged and validated
-- Upstream dependency status from solution 02 is captured
+- Upstream dependency status from solution 02 is captured as `not-found`, `empty`, or `validated`
 - Microsoft Entra ID Governance or Microsoft Entra Suite licensing check is recorded
 - A deployment manifest is written to the output path
 
@@ -79,7 +79,7 @@ Monitor active reviews for pending decisions and approaching deadlines:
 Review the output for:
 
 - Pending decisions that need reviewer attention
-- Reviews within 48 hours of expiry that need escalation
+- Reviews approaching expiry within the configured tier threshold (recommended 48 hours, regulated 24 hours) that need escalation
 - Completed decisions ready for application
 
 ## 7. Apply Review Decisions
@@ -99,8 +99,8 @@ Do not enable auto-apply until the decision review and escalation workflow has b
 
 After validating the HIGH-risk review cycle:
 
-- Enable MEDIUM-risk reviews (90-day cadence)
-- Enable LOW-risk reviews (180-day cadence)
+- Enable MEDIUM-risk reviews (quarterly cadence)
+- Enable LOW-risk reviews (semiannual cadence)
 - Adjust reviewer assignments based on lessons learned
 
 ## 9. Export Evidence
@@ -132,3 +132,9 @@ If deployment settings need to be reversed:
 5. Document the rollback decision and rationale for compliance records
 
 Rollback decisions should be documented whenever access review scope, reviewer assignments, or auto-apply behavior changes after approval.
+
+## Implementation Handoff Notes
+
+- Use `Invoke-RiskTriagedReviews.ps1 -WhatIf` for dry-run orchestration when validating workflow changes; decision application passthrough remains non-mutating in WhatIf mode.
+- Keep `autoApplyDecisions` aligned to selected tier configuration; tier setting is authoritative for review creation output.
+- Keep agent-identity access review automation out of scope for this implementation until preview guidance reaches stable operational support.

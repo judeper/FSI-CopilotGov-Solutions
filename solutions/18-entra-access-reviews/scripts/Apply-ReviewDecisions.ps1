@@ -130,7 +130,6 @@ function Resolve-ReviewDecisionAction {
         'Approve' { return 'maintain-access' }
         'DontKnow' { return 'no-action' }
         'NotReviewed' { return 'no-action' }
-        'Recommendation' { return 'no-action' }
         default { return 'unsupported-decision' }
     }
 }
@@ -185,14 +184,20 @@ function Invoke-ApplyDecision {
                 }
             }
 
-            $instances = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+            $instances = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
                 -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances" `
                 -Method 'GET' `
-                -AllPages
+                -AllPages)
 
             $appliedActions = @()
             foreach ($instance in $instances) {
                 try {
+                    $instanceStatus = [string]$instance.status
+                    if ($instanceStatus -ne 'Completed') {
+                        Write-Verbose "Skipping instance '$($instance.id)' because status '$instanceStatus' is not Completed."
+                        continue
+                    }
+
                     $target = "review definition '$DefinitionId' instance '$($instance.id)'"
                     if (-not $PSCmdlet.ShouldProcess($target, 'Apply access review decisions')) {
                         continue
@@ -202,10 +207,10 @@ function Invoke-ApplyDecision {
                         -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances/$($instance.id)/applyDecisions" `
                         -Method 'POST' | Out-Null
 
-                    $decisions = Invoke-CopilotGovGraphRequest -Context $GraphContext `
+                    $decisions = @(Invoke-CopilotGovGraphRequest -Context $GraphContext `
                         -Uri "/identityGovernance/accessReviews/definitions/$DefinitionId/instances/$($instance.id)/decisions" `
                         -Method 'GET' `
-                        -AllPages
+                        -AllPages)
 
                     foreach ($decision in $decisions) {
                         $action = Resolve-ReviewDecisionAction -Decision $decision.decision

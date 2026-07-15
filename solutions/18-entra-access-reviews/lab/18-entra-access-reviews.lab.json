@@ -1,0 +1,293 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:18-entra-access-reviews:2026-07-review",
+  "solution": {
+    "id": "18-entra-access-reviews",
+    "name": "Entra Access Reviews Automation",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.2",
+    "1.6",
+    "2.5",
+    "2.12"
+  ],
+  "portals": [
+    "microsoft-entra-admin-center",
+    "sharepoint-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-access-reviews-overview",
+      "claimText": "Microsoft Learn documents access reviews for users and groups in Microsoft Entra ID Governance and explains review definitions, instances, and decision workflows.",
+      "affectedFiles": [
+        "solutions/18-entra-access-reviews/README.md",
+        "solutions/18-entra-access-reviews/docs/prerequisites.md",
+        "solutions/18-entra-access-reviews/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/id-governance/access-reviews-overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-graph-access-review-definitions",
+      "claimText": "Microsoft Graph v1.0 documents access review definition and decision endpoints that this scaffold references for source verification and sample script outputs.",
+      "affectedFiles": [
+        "solutions/18-entra-access-reviews/scripts/New-AccessReview.ps1",
+        "solutions/18-entra-access-reviews/scripts/Get-ReviewResults.ps1",
+        "solutions/18-entra-access-reviews/scripts/Apply-ReviewDecisions.ps1"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/resources/accessreviewsv2-overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-identities-preview-scope",
+      "claimText": "Microsoft Learn notes that application and service principal access review coverage is still preview-scoped, so this contract remains limited to human and group review patterns.",
+      "affectedFiles": [
+        "solutions/18-entra-access-reviews/README.md",
+        "solutions/18-entra-access-reviews/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/entra/id-governance/access-reviews-overview",
+      "lifecycleState": "preview",
+      "verifiedOn": "2026-07-13",
+      "disposition": "pending-review"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft Entra ID Governance or Microsoft Entra Suite for production access review workflows"
+    ],
+    "roles": [
+      "Identity Governance Administrator or User Administrator for review creation and monitoring",
+      "SharePoint Administrator for owner and site association checks"
+    ],
+    "features": [
+      "Access review wizard visibility in Microsoft Entra admin center",
+      "Upstream solution 02 oversharing findings available for risk-prioritized review creation"
+    ],
+    "capacityRequirements": [
+      "One documentation-first execution host with PowerShell and representative artifact storage"
+    ],
+    "dataRequirements": [
+      "Representative sample data only; no production identities or membership exports"
+    ],
+    "tenantCount": 1,
+    "notes": "If licensing or wizard visibility is missing, expected disposition is BLOCKED with source citation and prerequisite attestation artifacts."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm prerequisites and upstream readiness",
+        "steps": [
+          {
+            "id": "step-confirm-upstream-solution02-output",
+            "mode": "manual",
+            "intent": "Verify solution 02 oversharing output path is present and identify whether status is not-found, empty, or validated before deployment.",
+            "expected": "Dependency status is recorded truthfully without fabricating readiness.",
+            "operatorNote": "Record deployment manifest dependency status before any review lifecycle command.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Deploy-Solution dependency status record",
+              "expectation": "Dependency status reflects actual upstream artifact availability."
+            }
+          },
+          {
+            "id": "step-check-entra-wizard-visibility",
+            "mode": "ui",
+            "intent": "Confirm the Access Reviews wizard is visible in Microsoft Entra admin center for authorized operators.",
+            "expected": "Wizard visibility is confirmed or explicitly marked as a blocked prerequisite.",
+            "locator": "Microsoft Entra admin center > Identity Governance > Access reviews",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Access Reviews blade screenshot or operator note",
+              "expectation": "Visibility result is captured for PASS or BLOCKED disposition."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run sample review creation and results checks",
+        "steps": [
+          {
+            "id": "step-run-new-access-review-sample",
+            "mode": "powershell",
+            "intent": "Execute New-AccessReview in documentation-first mode to validate review definition output shape and tier-driven autoApplyDecisions behavior.",
+            "expected": "Output includes riskTier, siteUrl, and calendar-cadence metadata without requiring tenant mutations.",
+            "command": "pwsh -File solutions/18-entra-access-reviews/scripts/New-AccessReview.ps1 -TenantId <tenant-guid> -ConfigurationTier recommended -OutputPath solutions/18-entra-access-reviews/artifacts/lab-reviews",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "access-review-definitions.json",
+              "expectation": "Definitions contain reviewFrequencyMonths, riskTier, siteUrl, and autoApplyDecisionsEnabled."
+            }
+          },
+          {
+            "id": "step-run-get-review-results-sample",
+            "mode": "powershell",
+            "intent": "Execute Get-ReviewResults in sample mode to verify escalation threshold handling and stable decision field shape.",
+            "expected": "Result summary reflects tier escalation threshold and outputs decisions with riskTier and siteUrl.",
+            "command": "pwsh -File solutions/18-entra-access-reviews/scripts/Get-ReviewResults.ps1 -TenantId <tenant-guid> -ConfigurationTier regulated -OutputPath solutions/18-entra-access-reviews/artifacts/lab-reviews",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "review-decisions.json and script summary output",
+              "expectation": "Escalation threshold is 24 in regulated tier and decisions include siteUrl plus riskTier."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify Microsoft source references without POST operations",
+        "steps": [
+          {
+            "id": "step-verify-definitions-reference",
+            "mode": "api",
+            "intent": "Verify source reference for access review definitions endpoint using Microsoft Graph documentation.",
+            "expected": "Documentation endpoint remains available and aligns with definition workflow claims.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://learn.microsoft.com/graph/api/resources/accessreviewsv2-overview"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Graph access reviews overview page",
+              "expectation": "Reference confirms definition and decision resources remain documented."
+            }
+          },
+          {
+            "id": "step-verify-applydecisions-reference-only",
+            "mode": "manual",
+            "intent": "Verify applyDecisions source references only and confirm no POST calls are executed during this contract run.",
+            "expected": "applyDecisions is documented as a referenced operation while runtime remains read-only in this lab contract.",
+            "operatorNote": "Do not execute POST /applyDecisions in this contract; capture documentation reference and no-mutation attestation instead.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Operator attestation plus source citation",
+              "expectation": "Attestation explicitly states source-verification only for applyDecisions."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Capture no-mutation cleanup attestation",
+        "steps": [
+          {
+            "id": "step-attest-no-mutations-executed",
+            "mode": "manual",
+            "intent": "Record that this contract run executed read-only verification and sample outputs only.",
+            "expected": "Cleanup note confirms no mutable tenant operations were performed.",
+            "operatorNote": "No mutation steps were executed; remove lab output files if local cleanup is required.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation record",
+              "expectation": "Attestation confirms read-only execution and zero tenant mutations."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-readback-transcript",
+        "type": "powershell-transcript",
+        "description": "PowerShell transcript covering sample review creation and result collection commands.",
+        "requiredForControls": [
+          "1.2",
+          "1.6",
+          "2.5",
+          "2.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Captured Learn and Graph references for definitions, decisions, and applyDecisions source verification.",
+        "requiredForControls": [
+          "1.2",
+          "2.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-blocked-prereq-note",
+        "type": "manual-attestation",
+        "description": "Blocked prerequisite note when licensing, role assignment, or wizard visibility is unavailable.",
+        "requiredForControls": [
+          "1.6",
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "BLOCKED"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-readback-transcript",
+      "artifact-source-citations"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}
