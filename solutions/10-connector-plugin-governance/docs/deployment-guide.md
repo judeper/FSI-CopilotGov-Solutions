@@ -107,3 +107,16 @@ Before production enablement:
 1. Map approved connectors and plugins to the rollout ring controls maintained by solution `09-feature-management-controller`.
 2. Keep new or high-risk connectors disabled until the approval register shows the required sign-off.
 3. Align exception handling so a denied connector request also results in a rollout block or rollback action where needed.
+
+## Step 10: Complete the read-only lab handoff
+
+Validate `lab\10-connector-plugin-governance.lab.json` before tenant execution. The first cycle is read-only (`mutations: []`) and:
+
+- compares tenant identity with a separately maintained sanctioned-lab record
+- inspects the Agent 365 registry/CSV experience with AI Reader
+- optionally reads the preview Package Management API with a Microsoft Agent 365 license, `CopilotPackages.Read.All`, and time-bound AI Administrator or Global Administrator access, retaining aggregate counts only
+- distinguishes synced connectors from federated MCP-based early access preview connectors
+- inspects Power Platform DLP classification and MCP authentication type without retaining names, endpoints, app IDs, client IDs, or secrets
+- runs the sample export offline under ignored `lab-evidence/10-connector-plugin-governance` staging and removes that staging fail-closed after evidence capture
+
+No connector, agent, package, pinning, MCP server, app registration, data policy, role, or license is changed.

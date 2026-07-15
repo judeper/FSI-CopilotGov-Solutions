@@ -28,7 +28,7 @@ Copilot Connector and Plugin Governance uses a documentation-first architecture 
 | Component | Technology | Responsibility |
 |-----------|------------|----------------|
 | Connector Discovery | Power Platform Admin API | Enumerates environment connectors, connector metadata, and policy-relevant identifiers used by Copilot or agent workflows. |
-| Agent Registry and app inventory | Microsoft 365 admin center Agent Registry; Microsoft Graph Agent Registry APIs (preview); Entra app registrations | Documents agent and plugin metadata separately from app registration dependencies used for custom connector or API authentication. |
+| Agent and plugin inventory | Microsoft Agent 365 agent registry (Microsoft 365 admin center > Agents > All agents > Registry, read-only CSV export); preview Package Management Graph API for read-only inventory; Microsoft Entra Agent ID for agent identities; Entra app registrations | Documents agent and plugin (agent and action) metadata separately from app registration dependencies used for custom connector or API authentication. Deeper Agent 365 platform and Microsoft Entra Agent ID governance is out of scope (see Solutions 21 and 23). |
 | Risk Classifier | `Deploy-Solution.ps1` and config JSON | Applies low, medium, high, or blocked treatment based on publisher trust, certification, data-flow boundaries, and access to financial systems. |
 | Approval Router | Power Automate flow `CPG-ApprovalRouter` | Routes requests through security review, then CISO or DLP review, before recording approval or denial. |
 | Dataverse Registry | Dataverse tables | Stores approved baseline records, findings for unapproved or risky integrations, and evidence-ready data-flow attestations. |
@@ -60,13 +60,14 @@ The solution uses the required naming convention `fsi_cg_{solution}_{purpose}` a
 ## Discovery and Classification Logic
 
 1. `CPG-ConnectorInventory` or `Deploy-Solution.ps1` models the Power Platform Admin API inventory path for connector enumeration.
-2. Microsoft 365 admin center Agent Registry and agent details metadata supplement discovery for agent and plugin context; Entra app registration inventory is reviewed separately for custom connector or API authentication dependencies, and Microsoft Graph Agent Registry APIs remain preview when used programmatically.
-3. The risk classifier uses the configured risk categories:
+2. The Microsoft Agent 365 agent registry in the Microsoft 365 admin center (Agents > All agents > Registry) supplements discovery through its read-only CSV export. The documented preview Package Management API can provide read-only inventory through `GET /v1.0/copilot/admin/catalog/packages` with `CopilotPackages.Read.All`; it requires a Microsoft Agent 365 license and AI Administrator or Global Administrator. Entra app registration inventory is reviewed separately for custom connector or API authentication dependencies. Agent identities are managed in Microsoft Entra Agent ID, and deeper Agent 365 platform governance is out of scope for this solution.
+3. Microsoft 365 Copilot connectors are reviewed as two models: synced connectors that index content into Microsoft Graph, and federated connectors that read content in real time through the Model Context Protocol (MCP) and are in early access preview. Both are managed in the Microsoft 365 admin center (Copilot connectors) by an AI Administrator; Copilot Studio MCP servers surface as Power Platform connectors and are governed by data loss prevention connector classification.
+4. The risk classifier uses the configured risk categories:
    - `low` for Microsoft-built connectors with no external data egress
    - `medium` for certified third-party connectors with limited external reach
    - `high` for custom or uncertified connectors and cross-boundary data flows
    - `blocked` for prohibited connectors such as personal storage or public social services in regulated scenarios
-4. Approval requirements are derived from the selected governance tier and written into the approval register.
+5. Approval requirements are derived from the selected governance tier and written into the approval register.
 
 ## Integration with Solution 09
 

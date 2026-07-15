@@ -3,9 +3,10 @@
 Builds the deployment manifest for Copilot Connector and Plugin Governance.
 
 .DESCRIPTION
-Models the Power Platform Admin API connector inventory path, Microsoft 365 admin
-center Agent Registry / Microsoft Graph Agent Registry APIs (preview) metadata for
-agent and plugin records, and separate Entra app registration dependency review.
+Models the Power Platform Admin API connector inventory path, Microsoft Agent 365
+agent registry (Microsoft 365 admin center) and preview Package Management Graph API
+read-only metadata for agent and plugin records, and separate Entra app registration
+dependency review.
 It applies risk classification for the selected governance tier, seeds approval requests,
 and generates data-flow attestation records. The script is intentionally
 documentation-first for the Power Automate and Dataverse assets that support this solution
@@ -209,7 +210,7 @@ function Get-ConnectorInventory {
             allowsExternalEgress = $true
             supportsFinancialData = $false
             requestedBusinessOwner = 'Enterprise Service Desk'
-            inventorySource = 'Microsoft 365 admin center Agent Registry / Microsoft Graph Agent Registry APIs (preview)'
+            inventorySource = 'Microsoft Agent 365 agent registry (CSV export or preview Package Management API read-only inventory)'
             environment = $Environment
             tenantId = $TenantId
             lastSeen = $discoveredAt.AddHours(-2).ToString('o')
@@ -241,7 +242,7 @@ function Get-ConnectorInventory {
             allowsExternalEgress = $true
             supportsFinancialData = $false
             requestedBusinessOwner = 'Unknown'
-            inventorySource = 'Microsoft 365 admin center Agent Registry / Microsoft Graph Agent Registry APIs (preview)'
+            inventorySource = 'Microsoft Agent 365 agent registry (CSV export or preview Package Management API read-only inventory)'
             environment = $Environment
             tenantId = $TenantId
             lastSeen = $discoveredAt.AddHours(-4).ToString('o')
@@ -418,10 +419,11 @@ try {
     }
 
     $agentRegistryInventory = [pscustomobject]@{
-        service = 'Microsoft 365 admin center Agent Registry / Microsoft Graph Agent Registry APIs (preview)'
+        service = 'Microsoft Agent 365 agent registry (Microsoft 365 admin center CSV export; preview Package Management API read-only inventory)'
         tenantId = $TenantId
-        scope = 'Agent Registry and Agent Details metadata for agents and plugins'
-        role = 'AI Administrator'
+        scope = 'Agent and plugin (agent and action) inventory metadata; deeper Agent 365 platform and Microsoft Entra Agent ID governance is out of scope'
+        role = 'AI Reader for UI/CSV; AI Administrator or Global Administrator with CopilotPackages.Read.All for preview API inventory'
+        accessMode = 'read-only'
         status = 'documented-stub'
     }
 

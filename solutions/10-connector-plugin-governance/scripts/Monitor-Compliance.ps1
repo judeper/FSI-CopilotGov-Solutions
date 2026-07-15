@@ -319,6 +319,8 @@ try {
         solution = 'Copilot Connector and Plugin Governance'
         solutionCode = 'CPG'
         reviewedAt = (Get-Date).ToString('o')
+        runtimeMode = 'documentation-first'
+        dataSourceMode = 'representative-sample'
         tier = $ConfigurationTier
         status = $status
         statusScore = Get-CopilotGovStatusScore -Status $status

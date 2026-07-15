@@ -6,14 +6,15 @@
 
 - Expected connectors are missing from `cpg-connector-inventory.json`
 - Custom connectors appear in Power Platform but not in the exported manifest
-- Agent, plugin, or tool metadata is missing from Agent Registry or agent details review output
+- Agent, plugin, or tool metadata is missing from the Microsoft Agent 365 agent registry review output
 - Custom connector or API authentication app registrations are missing from review output
 
 **Common causes**
 
 - The script was pointed at the wrong Power Platform environment ID
 - The Power Platform Administrator account lacks access to the target environment
-- Microsoft 365 admin center Agent Registry access or approved Microsoft Graph Agent Registry API access was not available to the reviewer or service principal
+- Microsoft Agent 365 agent registry access in the Microsoft 365 admin center was not available to the reviewer (for example, missing the AI Reader or AI Administrator role)
+- Preview Package Management API inventory was attempted without a Microsoft Agent 365 license, `CopilotPackages.Read.All`, or AI Administrator/Global Administrator
 - Entra app registration review access was not approved for custom connector or API authentication dependencies
 - Custom connectors were created in a different environment or solution layer
 
@@ -22,7 +23,7 @@
 1. Confirm the `-Environment` parameter value and rerun `Deploy-Solution.ps1`.
 2. Validate Power Platform Admin API permissions for the target admin account.
 3. Review environment specific custom connectors and confirm they were published.
-4. Compare agent, plugin, and tool metadata to Microsoft 365 admin center Agents > All agents > Registry and agent details output; if Microsoft Graph Agent Registry APIs are used, document the preview and AI Admin role caveats.
+4. Compare agent, plugin, and tool metadata to the Microsoft Agent 365 agent registry in the Microsoft 365 admin center (Agents > All agents > Registry); use the registry read-only CSV export and confirm the reviewer holds the AI Reader or AI Administrator role. If using the preview Package Management API, confirm the Microsoft Agent 365 license, `CopilotPackages.Read.All`, and AI Administrator/Global Administrator prerequisites.
 5. Compare custom connector or API authentication dependencies to Entra app registration and admin-consent inventory.
 
 ## Approval flow notifications not sending

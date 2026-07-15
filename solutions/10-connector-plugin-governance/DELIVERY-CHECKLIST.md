@@ -42,7 +42,8 @@
 - [ ] Confirm solution `09-feature-management-controller` is deployed and available for rollout gating.
 - [ ] Validate Power Platform Admin API access to enumerate connectors in the target environment.
 - [ ] Validate Entra app registration and admin-consent records for custom connector or API authentication dependencies.
-- [ ] Validate Microsoft 365 admin center Agent Registry and agent details metadata; if programmatic access is approved, document that Microsoft Graph Agent Registry APIs are preview and work with the AI Admin role.
+- [ ] Validate access to the Microsoft Agent 365 agent registry in the Microsoft 365 admin center (Agents > All agents > Registry); confirm read-only CSV export works and the reviewer holds the least-privilege AI Reader role (or AI Administrator).
+- [ ] If preview Package Management API validation is in scope, confirm Microsoft Agent 365 licensing, `CopilotPackages.Read.All`, and AI Administrator/Global Administrator; execute read-only inventory only.
 - [ ] Review `config\default-config.json` blocked connector IDs against current DLP and AppSource policy decisions.
 - [ ] Review risk classification outcomes for Microsoft-built, certified third-party, custom, and blocked connector categories.
 - [ ] Confirm the approval workflow path includes security review, CISO or DLP review, and approval or denial outcomes.
@@ -75,6 +76,7 @@
 - [ ] Review the blocked connector list and approval SLA commitments with the security operations team.
 - [ ] Run the deployment and monitoring scripts in a non-production tenant before production rollout.
 - [ ] Review evidence export outputs with internal audit or supervisory control owners.
+- [ ] Validate `lab\10-connector-plugin-governance.lab.json`, confirm `mutations: []`, and verify tenant proof, aggregate-only Package Management API evidence, identifier/secret minimization, and fail-closed staging cleanup.
 
 ## Communication Template
 

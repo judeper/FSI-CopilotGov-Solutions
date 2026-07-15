@@ -104,15 +104,31 @@ function Write-ArtifactDocument {
         name = $Name
         type = 'json'
         path = $Path
+        packagePath = [IO.Path]::GetFileName($Path)
         hash = $hashInfo.Hash
     }
 }
 
 $config = Get-CpgConfiguration -Tier $ConfigurationTier
-$resolvedOutputPath = [IO.Path]::GetFullPath($OutputPath)
-$null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
+$null = New-Item -ItemType Directory -Path $OutputPath -Force
+$resolvedOutputPath = (Resolve-Path -Path $OutputPath).Path
 $exportedAt = (Get-Date).ToString('o')
 $evidenceRetentionDays = [int]$config.evidenceRetentionDays
+
+# Runtime honesty markers. Every artifact below is derived from tier configuration templates
+# and representative sample values, not from live Microsoft 365, Power Platform, or Copilot
+# admin surfaces. These markers must remain in the exported package so reviewers do not treat
+# sample control states as proof of live connector, plugin, or MCP enforcement.
+$runtimeMode = 'documentation-first'
+$dataSourceMode = 'representative-sample'
+
+# Auto-approved connector IDs are optional per tier. The regulated tier requires approval for
+# every connector and defines no auto-approval list, so guard the lookup to avoid a strict-mode
+# property error when the key is absent.
+$autoApprovedConnectorIds = @()
+if (($config.approvalModel -is [System.Collections.IDictionary]) -and $config.approvalModel.ContainsKey('autoApprovedConnectorIds')) {
+    $autoApprovedConnectorIds = @($config.approvalModel.autoApprovedConnectorIds)
+}
 
 $connectorInventory = @(
     [pscustomobject]@{
@@ -120,7 +136,7 @@ $connectorInventory = @(
         displayName = 'SharePoint Online'
         publisher = 'Microsoft'
         riskLevel = 'low'
-        approvalStatus = if (@($config.approvalModel.autoApprovedConnectorIds) -contains 'shared_sharepointonline') { 'approved' } else { 'pending-security-review' }
+        approvalStatus = if ($autoApprovedConnectorIds -contains 'shared_sharepointonline') { 'approved' } else { 'pending-security-review' }
         dataFlowBoundaries = @('internal-m365')
         assetType = 'connector'
         publisherType = 'microsoft'
@@ -134,7 +150,7 @@ $connectorInventory = @(
         displayName = 'Microsoft Teams'
         publisher = 'Microsoft'
         riskLevel = 'low'
-        approvalStatus = if (@($config.approvalModel.autoApprovedConnectorIds) -contains 'shared_teams') { 'approved' } else { 'pending-security-review' }
+        approvalStatus = if ($autoApprovedConnectorIds -contains 'shared_teams') { 'approved' } else { 'pending-security-review' }
         dataFlowBoundaries = @('internal-m365')
         assetType = 'connector'
         publisherType = 'microsoft'
@@ -255,30 +271,49 @@ $inventoryArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath
 $approvalArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'approval-register.json') -Name 'approval-register' -Content $approvalRegister
 $attestationArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'data-flow-attestations.json') -Name 'data-flow-attestations' -Content $dataFlowAttestations
 
+# Control implementation status based on solution capabilities. All states are 'partial'
+# because the exported evidence is representative sample data derived from tier templates,
+# not live tenant collection. Live tenant evidence is required before any control can be
+# presented as implemented in a supervisory record.
 $controls = @(
     [pscustomobject]@{
         controlId = '1.13'
         status = 'partial'
-        notes = 'Connector inventory and risk classification are exported, but third-party due diligence still requires manual review.'
+        notes = 'Connector inventory and risk classification are exported as representative sample data; live enumeration and third-party due diligence still require manual review.'
     }
     [pscustomobject]@{
         controlId = '2.13'
-        status = 'implemented'
-        notes = 'Data-flow boundaries and attestation records document approved cross-boundary connector usage.'
+        status = 'partial'
+        notes = 'Data-flow boundaries and attestation records document approved cross-boundary connector usage using sample data; live boundary validation is a customer implementation step.'
     }
     [pscustomobject]@{
         controlId = '2.14'
-        status = 'implemented'
-        notes = 'Approval-register export captures reviewer routing, SLA timing, and escalation stages for connector enablement.'
+        status = 'partial'
+        notes = 'Approval-register export captures reviewer routing, SLA timing, and escalation stages from sample data; live approval records must be supplied by the customer.'
     }
     [pscustomobject]@{
         controlId = '4.13'
         status = 'partial'
-        notes = 'Operational monitoring records blocked and pending connectors, while DORA register reconciliation remains a manual control.'
+        notes = 'Operational monitoring records blocked and pending connectors from sample data, while live drift detection and DORA register reconciliation remain manual controls.'
     }
 )
 
 $artifacts = @($inventoryArtifact, $approvalArtifact, $attestationArtifact)
+
+# Package artifact references use package-relative file names so the evidence package stays
+# portable and free of local filesystem paths when relocated. Absolute paths are returned to
+# the caller for immediate inspection only.
+$packageArtifacts = @(
+    foreach ($artifact in $artifacts) {
+        [pscustomobject]@{
+            name = $artifact.name
+            type = $artifact.type
+            path = $artifact.packagePath
+            hash = $artifact.hash
+        }
+    }
+)
+
 $package = Export-SolutionEvidencePackage `
     -Solution '10-connector-plugin-governance' `
     -SolutionCode 'CPG' `
@@ -289,16 +324,21 @@ $package = Export-SolutionEvidencePackage `
         recordCount = ($connectorInventory.Count + $approvalRegister.Count + $dataFlowAttestations.Count)
         findingCount = @($approvalRegister | Where-Object { $_.status -ne 'approved' }).Count
         exceptionCount = @($dataFlowAttestations | Where-Object { $_.status -ne 'approved' }).Count
+        statusSemantics = 'Control states describe documentation-first sample evidence and must not be treated as proof of live connector, plugin, or MCP enforcement.'
         manualActionsRequired = @(
             'Reconcile approved third-party connectors to the DORA ICT third-party register.',
             'Complete manual due diligence review for high-risk and custom connectors before production rollout.'
         )
     } `
     -Controls $controls `
-    -Artifacts $artifacts
+    -Artifacts $packageArtifacts `
+    -ExpectedArtifacts ([string[]]$config.evidenceOutputs) `
+    -AdditionalMetadata ([ordered]@{ runtimeMode = $runtimeMode; dataSourceMode = $dataSourceMode })
 
 [pscustomobject]@{
     Package = $package
     Controls = $controls
     Artifacts = $artifacts
+    RuntimeMode = $runtimeMode
+    DataSourceMode = $dataSourceMode
 }
