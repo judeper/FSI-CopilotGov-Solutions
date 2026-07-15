@@ -1,0 +1,310 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:15-pages-notebooks-gap-monitor:2026-07-13-accuracy-review",
+  "solution": {
+    "id": "15-pages-notebooks-gap-monitor",
+    "name": "Copilot Pages and Notebooks Compliance Gap Monitor",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.11",
+    "3.2",
+    "3.3",
+    "3.11"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-purview-compliance-portal",
+    "sharepoint-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-cpcn-capability-summary",
+      "claimText": "Microsoft Learn confirms Copilot Pages and Copilot Notebooks compliance capabilities, app-level Conditional Access scope, and current platform limitations for SharePoint Embedded content.",
+      "affectedFiles": [
+        "solutions/15-pages-notebooks-gap-monitor/README.md",
+        "solutions/15-pages-notebooks-gap-monitor/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-compliance-summary?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-cpcn-requirements-storage-audit",
+      "claimText": "Microsoft Learn requirements guidance confirms .page and .pod storage in a shared user-owned SharePoint Embedded container and clarifies audit naming behavior.",
+      "affectedFiles": [
+        "solutions/15-pages-notebooks-gap-monitor/docs/prerequisites.md",
+        "solutions/15-pages-notebooks-gap-monitor/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/cpcn-requirements?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-loop-shared-container-behavior",
+      "claimText": "Microsoft Learn Loop compliance guidance confirms shared-container lifecycle behavior, legal-hold rollout language, and Information Barriers boundaries for SharePoint Embedded content.",
+      "affectedFiles": [
+        "solutions/15-pages-notebooks-gap-monitor/docs/architecture.md",
+        "solutions/15-pages-notebooks-gap-monitor/docs/troubleshooting.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/loop/loop-compliance-summary?view=o365-worldwide",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-roadmap-561492-rollout",
+      "claimText": "M365 Roadmap item 561492 reports launched status for review-set indexing and HTML export enhancements, requiring tenant rollout validation before control closure.",
+      "affectedFiles": [
+        "solutions/15-pages-notebooks-gap-monitor/scripts/Monitor-Compliance.ps1",
+        "solutions/15-pages-notebooks-gap-monitor/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "m365-roadmap",
+      "sourceUrl": "https://roadmap.cloud.microsoft/?filters=&searchterms=561492",
+      "lifecycleState": "unknown",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "OneDrive license with active OneDrive site for Pages validation users",
+      "Microsoft 365 Copilot or Copilot Chat license for Notebook validation users",
+      "Purview eDiscovery licensing that supports review and export checks"
+    ],
+    "roles": [
+      "Compliance Administrator",
+      "Microsoft Purview eDiscovery Administrator",
+      "SharePoint Administrator",
+      "Records Management reviewer"
+    ],
+    "features": [
+      "Copilot Pages and Copilot Notebooks enabled for validation scope",
+      "Purview eDiscovery case access with review-set permissions",
+      "Upstream 06-audit-trail-manager scaffold present for dependency read-back"
+    ],
+    "capacityRequirements": [
+      "One controlled validation workspace using representative sample data",
+      "Read-only command execution access for solution scripts and dependency checks"
+    ],
+    "dataRequirements": [
+      "Representative sample artifacts only",
+      "No tenant identifiers, selectors, secrets, or customer content in contract evidence"
+    ],
+    "tenantCount": 1,
+    "notes": "Blocked conditions for this contract include missing licenses, missing roles, missing dependency scaffold, missing audit/retention evidence, and rollout features not yet visible in tenant validation views."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Validate preflight dependencies",
+        "steps": [
+          {
+            "id": "step-verify-solution06-dependency",
+            "mode": "powershell",
+            "intent": "Confirm upstream dependency scaffold for 06-audit-trail-manager is present before regulated gap export review.",
+            "expected": "Dependency check reports repository-present and no missing dependency flags.",
+            "command": "pwsh -File solutions/15-pages-notebooks-gap-monitor/scripts/Deploy-Solution.ps1 -ConfigurationTier recommended -OutputPath solutions/15-pages-notebooks-gap-monitor/artifacts/lab-contract -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Deploy-Solution output dependencyStatus",
+              "expectation": "dependencyStatus.hasMissingDependencies is false, or execution is marked BLOCKED with evidence."
+            }
+          },
+          {
+            "id": "step-check-license-role-prerequisites",
+            "mode": "manual",
+            "intent": "Validate required licensing and role prerequisites before running compliance checks.",
+            "expected": "Licenses and roles are documented as present, otherwise disposition moves to BLOCKED.",
+            "operatorNote": "Record blocked condition if required license, role, or Purview access is missing.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Prerequisite attestation log",
+              "expectation": "Attestation explicitly captures pass/block decision for license and role readiness."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run read-only validation commands",
+        "steps": [
+          {
+            "id": "step-run-monitor-whatif",
+            "mode": "powershell",
+            "intent": "Execute monitor script in WhatIf mode to validate gap-state aggregation and rollout-sensitive status handling.",
+            "expected": "Output includes validation-required and open gap states without writing tenant data.",
+            "command": "pwsh -File solutions/15-pages-notebooks-gap-monitor/scripts/Monitor-Compliance.ps1 -ConfigurationTier regulated -OutputPath solutions/15-pages-notebooks-gap-monitor/artifacts/lab-contract -PassThru -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Monitor-Compliance pass-through output",
+              "expectation": "Gap states and control statuses are returned with no tenant identifiers and no mutation side effects."
+            }
+          },
+          {
+            "id": "step-run-export-whatif",
+            "mode": "powershell",
+            "intent": "Execute evidence export in WhatIf mode to validate package contract behavior and hash path planning.",
+            "expected": "Export reports package/artifact plan with no generated tenant-bound result file.",
+            "command": "pwsh -File solutions/15-pages-notebooks-gap-monitor/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath solutions/15-pages-notebooks-gap-monitor/artifacts/lab-contract -PassThru -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Export-Evidence pass-through output",
+              "expectation": "Output lists planned artifacts and dependency metadata while preserving read-only execution."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify rollout and source claims",
+        "steps": [
+          {
+            "id": "step-verify-source-citations",
+            "mode": "manual",
+            "intent": "Confirm cited Microsoft Learn and roadmap sources remain reachable and aligned with documented claims.",
+            "expected": "All source claims are marked supported, stale, or blocked with explicit evidence.",
+            "operatorNote": "Use source verification notes to capture lifecycle and rollout status checks.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source verification worksheet",
+              "expectation": "Each claim has a dated verification decision and evidence reference."
+            }
+          },
+          {
+            "id": "step-verify-blocked-no-data-conditions",
+            "mode": "manual",
+            "intent": "Classify blocked conditions for rollout delay, missing licenses/roles, or no-data limitations without fabricating tenant outcomes.",
+            "expected": "Blocked disposition is used when rollout or prerequisite evidence is unavailable; no tenant result is produced.",
+            "operatorNote": "Capture blocked reason as rollout, license, role, or no-data condition with supporting references.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Disposition log",
+              "expectation": "Disposition notes explicitly state blocked condition category and supporting evidence path."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-confirm-no-cleanup-required",
+            "mode": "manual",
+            "intent": "Confirm no mutable operation ran during this contract execution.",
+            "expected": "Cleanup note indicates not-required state for read-only run.",
+            "operatorNote": "No mutation was executed in this read-only contract.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation",
+              "expectation": "Attestation confirms cleanup is not required because no mutation executed."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-pages-notebooks-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-pages-notebooks-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-monitor-transcript",
+        "type": "powershell-transcript",
+        "description": "Transcript from Deploy/Monitor/Export read-only command execution.",
+        "requiredForControls": [
+          "2.11",
+          "3.2",
+          "3.3",
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-verification",
+        "type": "source-citation",
+        "description": "Source verification notes for Learn and roadmap claims.",
+        "requiredForControls": [
+          "3.3",
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-dependency-status-log",
+        "type": "log",
+        "description": "Dependency-state read-back output confirming upstream 06 solution presence.",
+        "requiredForControls": [
+          "3.2",
+          "3.11"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-monitor-transcript",
+      "artifact-source-verification"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

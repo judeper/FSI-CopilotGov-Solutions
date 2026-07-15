@@ -41,7 +41,7 @@
 .NOTES
     Solution: Copilot Pages and Notebooks Compliance Gap Monitor (PNGM)
     Controls: 2.11, 3.2, 3.3, 3.11
-    Overall status: monitor-only
+    Overall status: derived from mapped control states and dependency checks
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -84,10 +84,12 @@ function Write-ArtifactFile {
     $directory = Split-Path -Parent $Path
     $null = New-Item -ItemType Directory -Path $directory -Force
     $Content | ConvertTo-Json -Depth 8 | Set-Content -Path $Path -Encoding utf8
+    $resolvedPath = (Resolve-Path -Path $Path).Path
     $hashInfo = Write-CopilotGovSha256File -Path $Path
 
     return [pscustomobject]@{
-        Path = $Path
+        Path = [System.IO.Path]::GetFileName($resolvedPath)
+        AbsolutePath = $resolvedPath
         Hash = $hashInfo.Hash
     }
 }
@@ -96,10 +98,12 @@ if ($PeriodEnd -lt $PeriodStart) {
     throw 'PeriodEnd must be greater than or equal to PeriodStart.'
 }
 
+$OutputPath = [System.IO.Path]::GetFullPath($OutputPath)
 $configuration = Get-PngmConfiguration -Tier $ConfigurationTier
 $defaultConfig = $configuration.Default
 $tierConfig = $configuration.Tier
 $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
+$dependencyStatus = Get-PngmDependencyStatus -RepoRoot $repoRoot -Dependencies @($defaultConfig.dependencies)
 $generatedAt = Get-Date
 
 $gapFindings = @(
@@ -115,28 +119,28 @@ $gapFindings = @(
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-002'
-        description = 'Purview eDiscovery supports search, collection, review, and export for Pages, Notebooks, and Loop, but full-text search within .page files in review sets is not available.'
-        affectedCapability = 'Purview eDiscovery review-set full-text search'
+        description = 'M365 Roadmap 561492 (GA June 2026, rolling out) introduces full review-set indexing for Loop and Copilot Pages with HTML export from search. Tenant rollout verification remains required before retiring legacy workaround documentation.'
+        affectedCapability = 'Purview eDiscovery review-set indexing rollout validation'
         affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
-        severity = 'high'
-        discoveredAt = $PeriodStart.AddDays(4).ToString('o')
-        status = 'open'
-        platformUpdateRequired = $true
-    }
-    [pscustomobject]@{
-        gapId = 'PNGM-GAP-003'
-        description = 'Copilot Notebooks create .pod files in SharePoint Embedded containers; notebook storage, retention policy scope, and export evidence require tenant validation.'
-        affectedCapability = 'Notebooks preservation verification'
-        affectedRegulation = @('FINRA 4511', 'SOX 404')
         severity = 'medium'
-        discoveredAt = $PeriodStart.AddDays(7).ToString('o')
+        discoveredAt = $PeriodStart.AddDays(4).ToString('o')
         status = 'validation-required'
         platformUpdateRequired = $false
     }
     [pscustomobject]@{
+        gapId = 'PNGM-GAP-003'
+        description = 'Copilot Notebooks .pod files share the user-owned SharePoint Embedded container with Copilot Pages and Loop My workspace. Deleted notebooks cannot be recovered from an end-user recycle bin, so lifecycle controls remain open.'
+        affectedCapability = 'Notebook lifecycle, audit visibility, and recovery limitation'
+        affectedRegulation = @('SEC 17a-4', 'FINRA 4511', 'SOX 404')
+        severity = 'high'
+        discoveredAt = $PeriodStart.AddDays(7).ToString('o')
+        status = 'open'
+        platformUpdateRequired = $true
+    }
+    [pscustomobject]@{
         gapId = 'PNGM-GAP-004'
-        description = 'Copilot Pages sharing restrictions require manual review, and Information Barriers are not supported for content stored in SharePoint Embedded containers.'
-        affectedCapability = 'Copilot Pages security, sharing, and Information Barriers'
+        description = 'Conditional Access applies at app-level scope for Microsoft 365 Copilot, and Information Barriers are not supported for SharePoint Embedded containers used by Copilot Pages and Copilot Notebooks.'
+        affectedCapability = 'Access boundaries (Conditional Access app-level and Information Barriers limitation)'
         affectedRegulation = @('FINRA 4511', 'SOX 404')
         severity = 'high'
         discoveredAt = $PeriodStart.AddDays(9).ToString('o')
@@ -145,13 +149,13 @@ $gapFindings = @(
     }
     [pscustomobject]@{
         gapId = 'PNGM-GAP-005'
-        description = 'Legal hold requires manual SharePoint Embedded container addition per user, and retention labels have limited manual support for Pages, Notebooks, and Loop content.'
-        affectedCapability = 'Legal hold and retention label limitations'
+        description = 'Purview legal-hold container picker support for user-owned SharePoint Embedded containers is rolling out (expected early August 2026). Until verified per tenant, manual container inclusion and retention-label manual handling controls remain required.'
+        affectedCapability = 'Legal hold container picker rollout and retention-label manual limits'
         affectedRegulation = @('SEC 17a-4', 'FINRA 4511')
-        severity = 'high'
+        severity = 'medium'
         discoveredAt = $PeriodStart.AddDays(3).ToString('o')
-        status = 'open'
-        platformUpdateRequired = $true
+        status = 'validation-required'
+        platformUpdateRequired = $false
     }
 )
 
@@ -170,8 +174,8 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-002'
         gapId = 'PNGM-GAP-002'
-        controlDescription = 'Investigation teams record SharePoint Embedded container URLs, page owners, collection/export steps, and the review-set full-text search limitation in the case file.'
-        controlType = 'ediscovery-review-set-limitation'
+        controlDescription = 'Investigation teams validate rollout status for review-set indexing and HTML export, then capture evidence for any remaining manual search-limit procedures.'
+        controlType = 'ediscovery-rollout-validation'
         implementedAt = $PeriodStart.AddDays(6).ToString('o')
         implementedBy = 'Microsoft Purview eDiscovery Operations'
         approvedBy = 'Deputy General Counsel'
@@ -192,8 +196,8 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-004'
         gapId = 'PNGM-GAP-003'
-        controlDescription = 'Compliance operations validates notebook storage location, retention policy scope, retention label behavior, and export steps during quarterly control reviews.'
-        controlType = 'manual-export'
+        controlDescription = 'Compliance operations validates notebook storage location, .pod audit visibility, retention policy scope, and preservation export steps during quarterly control reviews.'
+        controlType = 'lifecycle-audit-validation'
         implementedAt = $PeriodStart.AddDays(10).ToString('o')
         implementedBy = 'Compliance Operations'
         approvedBy = 'Compliance Officer'
@@ -203,7 +207,7 @@ $compensatingControlLog = @(
     [pscustomobject]@{
         controlId = 'PNGM-CC-005'
         gapId = 'PNGM-GAP-005'
-        controlDescription = 'Records Management documents legal-hold container inclusion, retention-label limitations, and any preservation exception required for books-and-records review.'
+        controlDescription = 'Records Management documents legal-hold container inclusion until picker rollout is validated, tracks retention-label manual limits, and logs preservation exceptions when needed.'
         controlType = 'preservation-exception'
         implementedAt = $PeriodStart.AddDays(4).ToString('o')
         implementedBy = 'Records Management'
@@ -283,35 +287,25 @@ $exceptionRegisterArtifact = [ordered]@{
     records = $preservationExceptionRegister
 }
 
-$controls = @(
-    [pscustomobject]@{
-        controlId = '2.11'
-        status = 'monitor-only'
-        notes = 'Pages security controls and the SharePoint Embedded Information Barriers limitation are registered for manual governance review.'
-    }
-    [pscustomobject]@{
-        controlId = '3.2'
-        status = 'monitor-only'
-        notes = 'Retention policies are supported via All SharePoint Sites; validation evidence and compensating manual procedures are registered.'
-    }
-    [pscustomobject]@{
-        controlId = '3.3'
-        status = 'partial'
-        notes = 'Microsoft Purview eDiscovery supports search, collection, review, and export; review-set full-text search and container-scoping limitations are still monitored.'
-    }
-    [pscustomobject]@{
-        controlId = '3.11'
-        status = 'monitor-only'
-        notes = 'Books-and-records requirements are monitored through legal-hold, retention label, and preservation exception reviews.'
+$trackedGaps = @($gapFindings | Where-Object { $_.status -in @('open', 'validation-required') })
+$controlStateInput = @(
+    $compensatingControlLog |
+    ForEach-Object {
+        [pscustomobject]@{
+            gapId = $_.gapId
+            status = if ($_.status -eq 'active') { 'in-place' } else { 'planned' }
+        }
     }
 )
-
-$hasActiveControls = ($compensatingControlLog | Where-Object { $_.status -eq 'active' }).Count -gt 0
+$controls = Get-PngmControlState -TierConfiguration $tierConfig -TrackedGaps $trackedGaps -CompensatingControls $controlStateInput
 $summary = @{
-    overallStatus = $(if ($hasActiveControls) { 'partial' } else { 'monitor-only' })
+    overallStatus = $(if (@($controls | Where-Object { $_.status -eq 'partial' }).Count -gt 0) { 'partial' } else { 'monitor-only' })
     recordCount = ($gapFindings.Count + $compensatingControlLog.Count + $preservationExceptionRegister.Count)
     findingCount = $gapFindings.Count
     exceptionCount = $preservationExceptionRegister.Count
+}
+if ($dependencyStatus.hasMissingDependencies) {
+    $summary.overallStatus = 'monitor-only'
 }
 
 $artifacts = @(
@@ -374,6 +368,7 @@ if ($PSCmdlet.ShouldProcess($defaultConfig.displayName, "Export evidence package
         -Artifacts $artifacts `
         -AdditionalMetadata ([ordered]@{
             frameworkIds = @($defaultConfig.framework_ids)
+            dependencyStatus = $dependencyStatus
         })
 }
 
@@ -389,6 +384,7 @@ $exportResult = [ordered]@{
     packageHash = $packageResult.Hash
     artifacts = $artifacts
     summary = $summary
+    dependencyStatus = $dependencyStatus
 }
 
 if ($PassThru) {

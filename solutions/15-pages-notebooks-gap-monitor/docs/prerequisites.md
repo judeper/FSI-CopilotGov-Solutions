@@ -4,7 +4,7 @@
 
 - OneDrive license and an active OneDrive site for Copilot Pages; Microsoft 365 Copilot license for Copilot Notebooks
 - SharePoint Online and Microsoft Teams enabled for the workloads under review
-- Microsoft Purview retention and Microsoft Purview eDiscovery capabilities, typically E5 Compliance or an equivalent licensing bundle
+- Microsoft Purview retention and Microsoft Purview eDiscovery capabilities, typically E5 Compliance or an equivalent licensing bundle (Premium licensing required for review and HTML export workflows)
 - Microsoft Loop and Copilot Pages enabled in the tenant if those workloads are being assessed
 - A governed repository for storing exported evidence and supporting review records
 
@@ -38,6 +38,14 @@ The monitoring approach assumes future access to supporting inventory and policy
 - `06-audit-trail-manager` must be deployed before this solution is considered ready for production use.
 - Baseline retention and audit evidence should already be assessed through the dependency solution.
 - If the dependency solution identifies unresolved audit capture issues, address those before relying on this gap register for examiner-facing evidence.
+- `Deploy-Solution.ps1`, `Monitor-Compliance.ps1`, and `Export-Evidence.ps1` now emit dependency-state checks so handoff reviewers can confirm upstream scaffold presence before approving regulated exports.
+
+## Current Source Verification Checkpoints (2026-07-13)
+
+- `cpcn-compliance-summary` (Learn) confirms SharePoint Embedded storage, app-level Conditional Access behavior, legal-hold picker rollout timing, retention-label limits, and notebook recycle-bin limitations.
+- `cpcn-requirements` (Learn) confirms `.page`/`.pod` storage and audit naming expectations for the shared user-owned container.
+- `loop-compliance-summary` (Learn) confirms Loop and Copilot Pages shared-container posture and eDiscovery/legal-hold rollout language.
+- M365 Roadmap item `561492` confirms launch/rollout status for review-set indexing and HTML export enhancements.
 
 ## Governance and Approval Requirements
 

@@ -14,7 +14,7 @@ This solution is intentionally a gap monitor. It supports compliance with SEC 17
 
 Copilot Pages create `.page` files and Copilot Notebooks create `.pod` files in user-owned SharePoint Embedded containers. Microsoft Learn documents that these experiences are independent of Loop but can use the same user-owned container as Loop My workspace.
 
-Microsoft Purview retention policies and eDiscovery are supported for Copilot Pages and Notebooks, with specific documented limitations: full-text search in Purview review sets is not available for `.page` files, legal hold requires adding the SharePoint Embedded container per user, retention labels have limited manual support, and Information Barriers are not supported for SharePoint Embedded content.
+Microsoft Purview retention policies and eDiscovery are supported for Copilot Pages and Notebooks, and the latest Microsoft guidance now includes rollout-sensitive changes that require tenant verification. As of 2026-07-13, full review-set indexing and HTML export improvements for Loop/Copilot Pages are launched and rolling out, and legal-hold container picker support is also rolling out. This solution keeps those items as validation-required until each tenant confirms behavior.
 
 For financial services firms, the remaining limitations create control evidence needs in three areas:
 - books-and-records preservation for SEC 17a-4 and FINRA 4511
@@ -31,6 +31,7 @@ This solution gives compliance, legal, and operations teams a repeatable way to 
 - Platform update monitoring so supported capabilities and remaining limitations can be re-evaluated when Microsoft releases relevant changes
 - Tier-aware configuration for baseline, recommended, and regulated deployments
 - Evidence packaging for gap-findings, compensating-control-log, and preservation-exception-register
+- Read-only lab validation contract for controlled commercial-cloud verification (`lab/15-pages-notebooks-gap-monitor.lab.json`)
 
 ## Scope Boundaries
 
@@ -77,7 +78,8 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 4. Review the generated gap register with compliance and legal stakeholders.
 5. Export the initial evidence package:
    `pwsh -File .\scripts\Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath .\artifacts\evidence -PassThru`
-6. Schedule a quarterly review cycle and a release-note review for Microsoft 365 updates that affect Pages, Loop, notebook retention, Microsoft Purview eDiscovery, legal hold, retention labels, or Information Barriers guidance.
+6. Review Microsoft source updates (Learn + M365 roadmap) and dependency status from `06-audit-trail-manager` before closing any validation-required gap.
+7. Schedule a quarterly review cycle and a release-note review for Microsoft 365 updates that affect Pages, Loop, notebook retention, Microsoft Purview eDiscovery, legal hold, retention labels, or Information Barriers guidance.
 
 ## Solution Components
 
@@ -95,6 +97,7 @@ The solution also depends on `06-audit-trail-manager` for supporting audit evide
 | `docs/evidence-export.md` | Evidence schemas, packaging contract, and examiner notes |
 | `docs/prerequisites.md` | Required licenses, roles, permissions, and dependency expectations |
 | `docs/troubleshooting.md` | Known issues, workarounds, and review guidance |
+| `lab/15-pages-notebooks-gap-monitor.lab.json` | Read-only lab validation contract for source-verified execution and blocked-condition handling |
 | `tests/15-pages-notebooks-gap-monitor.Tests.ps1` | Pester validation for configuration, documentation, and script contract coverage |
 
 ## Deployment
@@ -137,5 +140,13 @@ Evidence is exported through the shared `Export-SolutionEvidencePackage` functio
 - It does not automate retention policy changes, legal hold actions, or Microsoft Purview eDiscovery configuration changes.
 - Human review is required for all gap registrations, compensating control approvals, and preservation exception entries.
 - Platform behavior for Copilot Pages, Copilot Notebooks, Loop, SharePoint Embedded retention, and Microsoft Purview eDiscovery can change over time and must be revalidated against current Microsoft guidance.
-- Current Microsoft Learn guidance states that Purview retention policies configured for all SharePoint sites and Purview eDiscovery are supported for Copilot Pages and Notebooks. The remaining documented limitations include no full-text search in Purview review sets for `.page` files, manual legal-hold container addition per user, limited manual retention-label support, no Information Barriers for SharePoint Embedded content, and departed-user handling differences.
+- Current Microsoft Learn guidance states that Purview retention policies configured for all SharePoint sites and Purview eDiscovery are supported for Copilot Pages and Notebooks. M365 Roadmap item 561492 is launched and rolling out for review-set indexing and HTML export, and legal-hold container picker support is rolling out. Until tenant rollout is verified, keep these as validation-required workflow items.
+- Conditional Access for Copilot Pages and Copilot Notebooks is app-level for Microsoft 365 Copilot; Information Barriers remain unsupported for SharePoint Embedded content.
 - There is no end-user recycle bin for Copilot Notebooks; neither administrators nor end users can recover individually deleted Copilot Notebooks. Organizations should document this limitation in their records management and preservation exception processes.
+
+## 2026-07-13 Accuracy Review Handoff
+
+- Primary sources verified on 2026-07-13: Learn `cpcn-compliance-summary`, Learn `cpcn-requirements`, Learn `loop-compliance-summary`, and M365 Roadmap `561492`.
+- Gap statuses were rebalanced so review-set indexing and legal-hold picker items are tracked as rollout validation, not fixed assumptions.
+- Script outputs now include dependency-state checks for upstream `06-audit-trail-manager` and refreshed control-status aggregation logic.
+- Read-only lab contract added at `lab/15-pages-notebooks-gap-monitor.lab.json` for commercial-cloud validation without tenant mutations.
