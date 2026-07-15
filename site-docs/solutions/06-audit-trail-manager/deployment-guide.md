@@ -8,7 +8,7 @@ Confirm licensing, roles, PowerShell modules, and Graph permissions described in
 
 - Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
 - Run the operational validation workflow aligned to `Check-AuditLogCompleteness`.
-- Confirm that `CopilotInteraction` (interactions with a Microsoft-developed Copilot application) and supporting workload events such as `FileAccessed` appear in scope; include `ConnectedAIAppInteraction` (a custom-built Copilot or third-party AI application deployed and registered within your organization) or `AIAppInteraction` (a third-party AI application that isn't deployed within your organization) only when those AI applications are in scope.
+- Confirm that `CopilotInteraction` (interactions with a Microsoft-developed Copilot application) and supporting workload events such as `FileAccessed` are searchable in scope; include `ConnectedAIAppInteraction` (a custom-built Copilot or third-party AI application deployed and registered within your organization) or `AIAppInteraction` (a third-party AI application that isn't deployed within your organization) only when those AI applications are in scope.
 - Allow for audit record availability to vary; Microsoft doesn't guarantee a specific return time, core services typically appear within 60-90 minutes, and other services can take longer.
 
 ## 3. Generate solution manifests
@@ -26,6 +26,7 @@ The deployment script creates the following files:
 ## 4. Apply retention policies
 
 - Use the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as `New-RetentionCompliancePolicy`, `Set-RetentionCompliancePolicy`, and `New-RetentionComplianceRule`/`Set-RetentionComplianceRule` to create or update the retention policies defined in `retention-policy-manifest.json`.
+- Distinguish service-default audit retention from policy-defined books-and-records retention targets in this solution.
 - Validate that the selected tier aligns to the target preservation objective:
   - baseline: 1095 days
   - recommended: 1825 days
@@ -34,9 +35,11 @@ The deployment script creates the following files:
 
 ## 5. Configure Microsoft Purview eDiscovery holds
 
+- Use the unified Microsoft Purview eDiscovery experience for case and hold checks.
 - Create or update Microsoft Purview eDiscovery cases for the selected tier.
-- Confirm hold count, custodian list, preservation status, and legal hold ownership.
+- Confirm hold count, People list (portal terminology) or custodian list (Graph API terminology), preservation status, and legal hold ownership.
 - Document export permissions and examination response contacts.
+- Allow up to 24 hours for hold synchronization before declaring readiness gaps.
 - Align case naming to the readiness templates in the tier configuration.
 
 ## 6. Deploy the Power BI monitoring dashboard
@@ -61,7 +64,15 @@ The deployment script creates the following files:
 
 Review the generated SHA-256 companions and archive the evidence package with the deployment record.
 
-## 9. Validate ongoing posture
+## 9. Validate lab contract before tenant execution
+
+```powershell
+python scripts/validate-lab-contracts.py solutions/06-audit-trail-manager/lab/06-audit-trail-manager.lab.json
+```
+
+The lab contract is read-only (`mutations: []`) and intended for handoff to a tenant-bound execution team.
+
+## 10. Validate ongoing posture
 
 ```powershell
 .\scripts\Monitor-Compliance.ps1 -ConfigurationTier baseline -OutputPath .\artifacts\monitor -TenantId <tenant-id> -CheckRetention $true -CheckAuditLevel $true

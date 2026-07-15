@@ -205,16 +205,19 @@ $ediscoveryArtifact = [ordered]@{
     generatedAt = $timestamp
     caseCount = $caseCount
     holdCount = $holdCount
+    peopleCount = $custodianCount
     custodianCount = $custodianCount
     preservationStatus = $tierConfig.ediscovery.preservationStatus
     caseTemplate = $tierConfig.ediscovery.caseTemplate
     holdConfiguration = [ordered]@{
         required = [bool]$tierConfig.ediscovery.holdRequired
         mode = $tierConfig.ediscovery.mode
+        peopleScope = $tierConfig.ediscovery.custodianScope
         custodianScope = $tierConfig.ediscovery.custodianScope
     }
     notes = @(
         'Counts reflect the tier readiness baseline and should be replaced with tenant values before regulator production.',
+        'Microsoft Purview portal workflow uses People/data sources while Microsoft Graph eDiscovery APIs continue to expose custodian resources.',
         'Legal hold ownership and export operators should be documented outside the package.'
     )
 }
@@ -265,6 +268,7 @@ $control312Status = if ($defaultConfig.defaults.evidenceOutputs -and $tierConfig
     'monitor-only'
 }
 
+$artifactOutputPaths = @($auditPath, $retentionPath, $ediscoveryPath)
 $controls = @(
     [pscustomobject]@{
         controlId = '3.1'
@@ -279,7 +283,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '3.3'
         status = $control33Status
-        notes = 'ediscovery-readiness-package records case, hold, custodian, and preservation expectations.'
+        notes = 'ediscovery-readiness-package records case, hold, People/custodian, and preservation expectations.'
     }
     [pscustomobject]@{
         controlId = '3.11'
@@ -308,19 +312,19 @@ $artifacts = @(
     [pscustomobject]@{
         name = 'audit-log-completeness'
         type = 'json'
-        path = $auditPath
+        path = [System.IO.Path]::GetFileName($auditPath)
         hash = $auditHash
     }
     [pscustomobject]@{
         name = 'retention-policy-state'
         type = 'json'
-        path = $retentionPath
+        path = [System.IO.Path]::GetFileName($retentionPath)
         hash = $retentionHash
     }
     [pscustomobject]@{
         name = 'ediscovery-readiness-package'
         type = 'json'
-        path = $ediscoveryPath
+        path = [System.IO.Path]::GetFileName($ediscoveryPath)
         hash = $ediscoveryHash
     }
 )
@@ -351,5 +355,5 @@ $package = Export-SolutionEvidencePackage `
     Tier = $ConfigurationTier
     PackagePath = $package.Path
     PackageHash = $package.Hash
-    ArtifactPaths = @($artifacts.path)
+    ArtifactPaths = $artifactOutputPaths
 }

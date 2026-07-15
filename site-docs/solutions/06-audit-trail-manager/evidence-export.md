@@ -31,6 +31,7 @@ This artifact records:
 
 - Case count.
 - Hold count.
+- People count (portal terminology).
 - Custodian count.
 - Preservation status.
 - Case template and scope.
@@ -49,12 +50,23 @@ A complete export contains:
 - `ediscovery-readiness-package.json`
 - `ediscovery-readiness-package.json.sha256`
 
+Evidence package paths in `06-audit-trail-manager-evidence.json` are stored as package-relative filenames so the package remains portable across lab environments.
+
 ## Control mapping
 
 | Control | Evidence note |
 |---------|---------------|
 | 3.1 | `audit-log-completeness.json` captures required UAL event scope and validation notes |
 | 3.2 | `retention-policy-state.json` compares configured days to regulatory minimums |
-| 3.3 | `ediscovery-readiness-package.json` records case, hold, custodian, and preservation expectations |
+| 3.3 | `ediscovery-readiness-package.json` records case, hold, People/custodian, and preservation expectations |
 | 3.11 | Retention labels and policy coverage are documented in the retention state artifact |
 | 3.12 | Notification mode and exception-handling notes are included in the evidence package summary |
+
+## Lab contract handoff
+
+- Contract file: `solutions/06-audit-trail-manager/lab/06-audit-trail-manager.lab.json`
+- Validate contract schema and policy constraints before handoff:
+
+```powershell
+python scripts/validate-lab-contracts.py solutions/06-audit-trail-manager/lab/06-audit-trail-manager.lab.json
+```

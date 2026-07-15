@@ -6,7 +6,7 @@
 
 - Microsoft 365 Unified Audit Log (UAL) with `CopilotInteraction` events for Microsoft-developed Copilot interactions.
 - Microsoft Purview retention policies and retention labels for Copilot interaction artifacts.
-- Microsoft Purview eDiscovery cases, holds, custodians, and preservation state.
+- Unified Microsoft Purview eDiscovery cases, holds, People/custodians, and preservation state.
 
 ### Processing layer
 
@@ -54,7 +54,7 @@
             v                              v
 +-----------------------+        +-----------------------+
 | Purview eDiscovery    |        | Power Automate        |
-| holds, custodians     |        | retention exceptions  |
+| holds, People/custod. |        | retention exceptions  |
 +-----------+-----------+        +-----------------------+
             |
             v
