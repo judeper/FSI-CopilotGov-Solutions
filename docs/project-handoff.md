@@ -2,8 +2,8 @@
 
 Durable handoff for the FSI-CopilotGov-Solutions accuracy-review and lab-validation
 program. This page is the single, authoritative resume point for the next operator
-or agent. It records what has been verified, what remains blocked, and the exact
-sequence required to resume safely.
+or agent. It records what has been verified, what remains, and the exact sequence
+required to resume safely.
 
 > **Cloud scope.** This content targets US commercial-cloud Microsoft 365 only. See the
 > [Disclaimer](./disclaimer.md).
@@ -18,13 +18,13 @@ sequence required to resume safely.
 | Field | Value |
 |-------|-------|
 | Snapshot date | 2026-07-15 |
-| `main` commit | `61e8921387da68266226e521f1339821615d8b21` |
-| Phase | Serial accuracy review **complete**; lab execution **blocked** (upstream dependency) |
+| `main` commit | `361d34d088423a8c0b7b311f764baf614c7159ad` |
+| Phase | Serial accuracy review **complete**; governance adapter build **ready**; lab execution **not started** |
 | Draft review PRs | 23 open (one per solution); all checks green; all held with `Lab status: pending` |
 | Live lab runs executed | 0 — no live-tenant or Playwright run has happened |
 | Final versioning / merges | Not started — no review PR has been merged |
 
-## Merged Foundation
+## Merged Foundation and Handoff
 
 The documentation-autonomy and lab-contract foundation is merged into `main`:
 
@@ -33,6 +33,7 @@ The documentation-autonomy and lab-contract foundation is merged into `main`:
 | [#315](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/315) | Docs autonomy protection contract | `c280fad` |
 | [#316](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/316) | Lab validation contract foundation (schemas, validators, fixtures) | `36cf7de` |
 | [#318](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/318) | Align lab scope contracts with the commercial-scope linter | `61e8921` |
+| [#341](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/341) | Durable project handoff, repository hygiene, and agent workflow guidance | `361d34d` |
 
 ## Draft Review PRs (serial review order)
 
@@ -93,11 +94,13 @@ The result file is the authoritative disposition record. Evidence packages remai
 portable, hash-verified artifacts reviewable independently of the execution host. See
 [Lab Validation Contract](./reference/lab-validation-contract.md).
 
-## Known Blockers
+## Pending Gates and Known Blockers
 
-- **Upstream executor dependency (primary blocker).** The next phase is blocked until
-  the `studio-video-factory` branch `feat/pilot-a-readiness` merges. Lab execution
-  cannot begin before the executor lane is ready.
+- **Studio prerequisite cleared; adapter not built.** The
+  `judep_microsoft/studio-video-factory` branch `feat/pilot-a-readiness` merged
+  through [PR #7](https://github.com/judep_microsoft/studio-video-factory/pull/7)
+  on 2026-07-13. The next actionable task is to branch from updated studio
+  `main` and build the governance-validation adapter before any lab run.
 - **PR #317 conflict (deliberately deferred).** Solution 01's PR conflicts with `main`
   and is intentionally held for **post-lab finalization**. The other 22 review PRs are
   mergeable but remain unmerged with `Lab status: pending`.
@@ -120,8 +123,8 @@ machine-checked arrays so validation stays deterministic:
 
 Execute in order. Do not run labs in parallel; the review and lab program is serial.
 
-1. **Unblock the executor.** Confirm `studio-video-factory` `feat/pilot-a-readiness`
-   has merged. Do not start until it has.
+1. **Synchronize the studio repository.** Fetch `judep_microsoft/studio-video-factory`
+   and confirm `main` includes merged PR #7 (`feat/pilot-a-readiness`).
 2. **Build the lab adapter.** In `studio-video-factory`, build the executor/adapter that
    consumes each solution's `lab/<solution>.lab.json` contract.
 3. **Run labs one at a time.** Execute each contract serially. The first cycle is

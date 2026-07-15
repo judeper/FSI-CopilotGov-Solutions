@@ -148,3 +148,17 @@ Steady state: root on `main` only, no review worktrees or local review branches,
 ### Next-Phase Blocker
 
 Blocked until `studio-video-factory` `feat/pilot-a-readiness` merges. Then: build the lab adapter → serial read-only lab runs → accepted evidence → per-PR source recheck/versioning/rebase/merge in the documented serial order, resolving PR #317's existing conflict during finalization.
+
+---
+
+## Studio Pilot A Prerequisite Confirmed Merged (2026-07-15)
+
+**Status:** PREREQUISITE CLEARED | **Studio PR:** [#7](https://github.com/judep_microsoft/studio-video-factory/pull/7) | **Merged:** 2026-07-13 | **Current action:** Build governance-validation adapter
+
+### Correction
+
+The prior July handoff recorded `studio-video-factory` `feat/pilot-a-readiness` as an unresolved blocker. A direct GitHub read-back confirmed that branch merged into `judep_microsoft/studio-video-factory` `main` through PR #7 on 2026-07-13. The upstream readiness prerequisite is therefore cleared.
+
+### Updated Next Phase
+
+Synchronize the studio repository to updated `main`, build the isolated governance-validation adapter, then execute the 23 read-only lab contracts serially. No live lab run or accepted evidence exists yet. PR #317 remains deferred for conflict resolution during post-lab finalization.
