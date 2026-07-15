@@ -86,7 +86,7 @@ Then run the same command without `-WhatIf` when the previewed manifest matches 
 
 1. Review the Wave 0 manifest with the rollout owner and service desk lead.
 2. Confirm pilot support coverage and escalation paths for the pilot window.
-3. Trigger or stage the license assignment action for the approved pilot cohort.
+3. Stage the license-assignment intent for the approved pilot cohort. `Deploy-Solution.ps1` honors a dry-run-by-default posture: `-TriggerLicenseAssignment` on its own produces a **preview** manifest (`licenseAssignment.mode` = `preview`, cohort `assignmentState` = `manifest-only`). To record staged intents for customer-run execution, re-run with `-TriggerLicenseAssignment -ConfirmAssignmentIntentStaging` after the preview is approved. No license is assigned by this script; execution is customer-run and must resolve the tenant `skuId` from `GET /subscribedSkus` (see prerequisites).
 4. Run `Monitor-Compliance.ps1` for Wave 0 and record:
    - readiness percent
    - blocked-user count
@@ -107,16 +107,29 @@ Wave 1 should not start until Wave 0 has been reviewed and approved. Recommended
 
 ## Rollback and Revocation
 
-If a wave must be reversed:
+Safe rollback requires captured prior state and clear ownership **before** any license or group change:
 
-1. Freeze additional assignments by disabling `License-Assignment-Trigger`.
-2. Export the latest evidence package so the rollback start point is preserved.
-3. Revoke the affected wave assignments:
-   - remove users from the wave-based assignment group, or
-   - use the tenant-approved Graph or admin process to revoke Copilot licenses
-4. Mark rollback findings in `fsi_cg_rtr_finding` with owner and remediation dates.
-5. Record the rollback approval or incident identifier in the approval-history artifact.
-6. Re-run `Monitor-Compliance.ps1` to confirm the affected wave is now blocked and awaiting remediation.
+1. Record the rollback owner and approver, and capture each affected user's prior assignment state — whether the Copilot license is **directly assigned** or **inherited from a group** — from `assignedLicenses`/`licenseAssignmentStates` before any removal. Only remove licenses or group memberships that this rollout added; never remove a pre-existing or inherited assignment without recorded ownership.
+2. Freeze additional assignments by disabling `License-Assignment-Trigger`.
+3. Export the latest evidence package so the rollback start point is preserved.
+4. Revoke the affected wave assignments through the correct scope:
+   - for group-inherited licenses, remove the user from the wave-based assignment group (an inherited license cannot be removed by a direct user `removeLicenses` call), or
+   - for directly assigned licenses, use the tenant-approved Graph (`POST /users/{id}/assignLicense` with `removeLicenses` carrying the tenant `skuId`) or admin process
+5. Mark rollback findings in `fsi_cg_rtr_finding` with owner and remediation dates.
+6. Record the rollback approval or incident identifier in the approval-history artifact.
+7. Re-run `Monitor-Compliance.ps1` to confirm the affected wave is now blocked and awaiting remediation.
+
+## Lab Validation Handoff
+
+A machine-readable lab-validation contract is provided at
+`lab/11-risk-tiered-rollout.lab.json` for the external Playwright/API lab executor.
+The first validation cycle is **read-only / detect-only**
+(`mutations: []`): it verifies tenant identity, discovers the Microsoft 365 Copilot SKU from
+`GET /subscribedSkus` by `skuPartNumber`, reads the test cohort group metadata and current
+`assignedLicenses`, and confirms documentation source claims — without assigning or removing any
+license. Disposable license assignment is intentionally deferred until exact prior-state capture and
+ownership can be enforced for a safe, reversible mutation. The contract carries no real tenant IDs,
+secrets, or user PII.
 
 ## Post-Deployment Review
 

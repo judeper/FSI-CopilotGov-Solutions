@@ -32,6 +32,8 @@ The solution depends on `01-copilot-readiness-scanner` to provide current readin
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
 - ❌ Does not distinguish Microsoft 365 Copilot Chat (free) vs Microsoft 365 Copilot (paid) tiers in wave planning (v1.3+ framework feature pending solution update)
+- ❌ Does not verify live Copilot seat availability or resolve the tenant `skuId`; these require tenant `GET /subscribedSkus` discovery (`prepaidUnits.enabled` minus `consumedUnits`)
+- ❌ Does not remove pre-existing or group-inherited licenses; rollback captures prior direct-vs-inherited state and acts only on assignments this rollout added
 - ❌ Does not include organizational branded footer configuration as a trust mechanism
 
 > **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
@@ -104,6 +106,7 @@ Detailed deployment steps, sample commands, and rollback actions are documented 
 - A qualifying Microsoft 365 base license (E3/E5, Business Standard/Premium, or Office 365 E3/E5) plus Microsoft 365 Copilot licenses are available for the intended wave size.
 - The Microsoft Entra **Usage location** property is populated for targeted users before they are added to wave-based license-assignment groups.
 - Required Microsoft Graph license-assignment permission is approved: `LicenseAssignment.ReadWrite.All` for group assignment (`POST /groups/{id}/assignLicense`) or direct user assignment (`POST /users/{id | userPrincipalName}/assignLicense`).
+- Read-only `LicenseAssignment.Read.All` is approved for tenant SKU and current-assignment discovery (`GET /subscribedSkus`), so the tenant `skuId` and prior assignment state are captured before any change.
 - Delegated license-assignment operators hold a supported Microsoft Entra role, such as Directory Writers, License Administrator, or User Administrator; group-based assignment also supports Groups Administrator.
 - Power Automate Premium is licensed for approval and orchestration flows.
 - Dataverse capacity is available for `fsi_cg_rtr_baseline`, `fsi_cg_rtr_finding`, and `fsi_cg_rtr_evidence`.
@@ -144,6 +147,7 @@ Each export aligns to the shared repository evidence schema and includes a compa
 ## Known Limitations
 
 - The deployment and monitoring scripts are structured stubs and do not directly invoke Microsoft Graph or Power Automate APIs in this repository state.
+- `Deploy-Solution.ps1` honors a dry-run-by-default posture: `-TriggerLicenseAssignment` previews the cohort manifest, and staged assignment intents require the explicit `-ConfirmAssignmentIntentStaging` switch. The script never assigns a license; the tenant `skuId` must be resolved from `GET /subscribedSkus` during customer-run execution.
 - Risk-tier classification uses representative sample logic until live HR, Entra, and readiness-scanner data feeds are connected.
 - Power Automate and Power BI assets remain documentation-first; implementation teams must bind the documented flows and datasets to the target environment.
 - The wave planning model assumes a single paid Copilot SKU assignment per user. Organizations using the free Copilot Chat tier should note that Tier 1 users may already have basic Copilot access before any wave begins.

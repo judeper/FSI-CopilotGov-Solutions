@@ -231,6 +231,7 @@ function Write-ArtifactFile {
 
     return [pscustomobject]@{
         Path = $Path
+        PackagePath = [IO.Path]::GetFileName($Path)
         Hash = $hashInfo.Hash
     }
 }
@@ -238,6 +239,7 @@ function Write-ArtifactFile {
 try {
     $configuration = Get-RolloutConfiguration -Tier $ConfigurationTier -SolutionRoot $solutionRoot
     $null = New-Item -ItemType Directory -Path $OutputPath -Force
+    $OutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
 
     $waveReadinessLog = New-WaveReadinessLog -Configuration $configuration -Tier $ConfigurationTier
     $approvalHistory = New-ApprovalHistory -Configuration $configuration
@@ -251,25 +253,25 @@ try {
     $findings = @($controls | Where-Object { $_.status -ne 'implemented' }).Count
     $overallStatus = if ($findings -gt 0) { 'partial' } else { 'implemented' }
 
-    $artifacts = @(
+    $packageArtifacts = @(
         [pscustomobject]@{
             name = 'wave-readiness-log'
             type = 'json'
-            path = $readinessArtifact.Path
+            path = $readinessArtifact.PackagePath
             hash = $readinessArtifact.Hash
             description = 'Per-wave readiness coverage, target sizes, and blocked-user counts derived from the rollout design.'
         }
         [pscustomobject]@{
             name = 'approval-history'
             type = 'json'
-            path = $approvalArtifact.Path
+            path = $approvalArtifact.PackagePath
             hash = $approvalArtifact.Hash
             description = 'Decision history for wave expansion approvals across business-owner, control-owner, and CAB stages.'
         }
         [pscustomobject]@{
             name = 'rollout-health-dashboard'
             type = 'json'
-            path = $dashboardArtifact.Path
+            path = $dashboardArtifact.PackagePath
             hash = $dashboardArtifact.Hash
             description = 'Dashboard snapshot showing health score, blocked users, and per-wave readiness state.'
         }
@@ -287,7 +289,7 @@ try {
             exceptionCount = 0
         } `
         -Controls $controls `
-        -Artifacts $artifacts `
+        -Artifacts $packageArtifacts `
         -ExpectedArtifacts @($configuration.evidenceOutputs) `
         -AdditionalMetadata @{
             runtimeMode = $script:RuntimeMode
@@ -298,7 +300,7 @@ try {
     [pscustomobject]@{
         Package = $package
         Controls = $controls
-        Artifacts = $artifacts
+        Artifacts = @($readinessArtifact, $approvalArtifact, $dashboardArtifact)
         RuntimeMode = $script:RuntimeMode
     }
 }
