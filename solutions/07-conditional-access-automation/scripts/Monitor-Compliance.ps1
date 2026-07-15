@@ -195,6 +195,16 @@ function Merge-Configuration {
         @()
     }
 
+    $emergencyAccessExclusionGroupIds = if ($TierConfig.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($TierConfig.emergencyAccessExclusionGroupIds)
+    }
+    elseif ($DefaultConfig.defaults.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($DefaultConfig.defaults.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+
     return [ordered]@{
         solution = $DefaultConfig.solution
         displayName = $DefaultConfig.displayName
@@ -214,6 +224,7 @@ function Merge-Configuration {
         namedLocations = $namedLocationIds
         namedLocationIds = $namedLocationIds
         namedLocationLabels = $namedLocationLabels
+        emergencyAccessExclusionGroupIds = $emergencyAccessExclusionGroupIds
         blockLegacyAuth = if ($TierConfig.ContainsKey('blockLegacyAuth')) { [bool]$TierConfig.blockLegacyAuth } else { $false }
         blockUnknownDeviceStates = if ($TierConfig.ContainsKey('blockUnknownDeviceStates')) { [bool]$TierConfig.blockUnknownDeviceStates } else { $false }
     }
@@ -287,10 +298,19 @@ function New-PolicyTemplate {
         @()
     }
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     $conditions = [ordered]@{
         users = [ordered]@{
             includeUsers = @('All')
             excludeUsers = @()
+            excludeGroups = @($emergencyExclusionGroupIds)
         }
         applications = [ordered]@{
             includeApplications = @($Configuration.copilotAppIds)
@@ -327,9 +347,11 @@ function New-PolicyTemplate {
         }
         namedLocationIds = @($namedLocationIds)
         namedLocationLabels = @($namedLocationLabels)
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $requiresTenantNamedLocationIds
-        manualReviewRequired = $requiresTenantNamedLocationIds
-        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = ($requiresTenantNamedLocationIds -or $requiresBreakGlassExclusion)
+        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } elseif ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds so break-glass/emergency-access accounts are excluded before enabling this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -344,6 +366,14 @@ function New-LegacyAuthenticationBlockPolicy {
     $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'LegacyAuth'
     $policyName = $policyName -replace '\{Purpose\}', 'Block'
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     return [ordered]@{
         displayName = $policyName
         tier = $Configuration.tier
@@ -357,6 +387,7 @@ function New-LegacyAuthenticationBlockPolicy {
             users = [ordered]@{
                 includeUsers = @('All')
                 excludeUsers = @()
+                excludeGroups = @($emergencyExclusionGroupIds)
             }
             applications = [ordered]@{
                 includeApplications = @($Configuration.copilotAppIds)
@@ -370,9 +401,11 @@ function New-LegacyAuthenticationBlockPolicy {
             }
         }
         sessionControls = [ordered]@{}
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $false
-        manualReviewRequired = $false
-        deploymentGuidance = 'Blocks legacy authentication client app types for the selected Copilot target resources.'
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = $requiresBreakGlassExclusion
+        deploymentGuidance = if ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds before enabling; this block policy targets all users and would otherwise block break-glass/emergency-access accounts.' } else { 'Blocks legacy authentication client app types for the selected Copilot target resources.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -387,6 +420,14 @@ function New-UnknownDeviceStateBlockPolicy {
     $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'UnknownDeviceState'
     $policyName = $policyName -replace '\{Purpose\}', 'Block'
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     return [ordered]@{
         displayName = $policyName
         tier = $Configuration.tier
@@ -400,6 +441,7 @@ function New-UnknownDeviceStateBlockPolicy {
             users = [ordered]@{
                 includeUsers = @('All')
                 excludeUsers = @()
+                excludeGroups = @($emergencyExclusionGroupIds)
             }
             applications = [ordered]@{
                 includeApplications = @($Configuration.copilotAppIds)
@@ -419,9 +461,11 @@ function New-UnknownDeviceStateBlockPolicy {
             }
         }
         sessionControls = [ordered]@{}
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $false
-        manualReviewRequired = $false
-        deploymentGuidance = 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.'
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = $requiresBreakGlassExclusion
+        deploymentGuidance = if ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds before enabling; this block policy targets all users and would otherwise block break-glass/emergency-access accounts.' } else { 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }

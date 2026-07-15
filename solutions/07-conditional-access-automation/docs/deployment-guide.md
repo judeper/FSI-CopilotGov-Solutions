@@ -42,7 +42,7 @@ Review `ca-policy-templates.json` before creating policies. Confirm:
 - Target resources use the `Office365` app-suite value or tenant-verified app IDs.
 - Grant controls align with the selected tier.
 - Named-location labels are tenant-specific and approved, and Graph-ready `namedLocationIds` contain tenant object IDs before execution.
-- Emergency access accounts are handled outside the default template.
+- `emergencyAccessExclusionGroupIds` is populated so each policy's `excludeGroups` documents break-glass/emergency-access exclusions. Live `-Execute` remains disabled; use the generated commands only in a tenant-bound process that also proves tenant identity, disposable scope, ownership, read-back, and cleanup.
 
 ## Step 4: Create or update Conditional Access policies
 
@@ -117,3 +117,20 @@ pwsh -File .\solutions\07-conditional-access-automation\scripts\Export-Evidence.
 - Confirm policy propagation before testing user sign-in outcomes.
 - Review drift findings and close any unexpected changes.
 - Archive evidence according to the selected retention period.
+
+## Lab validation handoff
+
+Lab validation for this solution is governed by the machine-readable contract at
+`lab\07-conditional-access-automation.lab.json` (schema: `data\lab-validation-contract.schema.json`).
+
+- **First cycle is read-only.** The contract declares `mutations: []`; the executor confirms tenant
+  proof, inspects Conditional Access posture, runs the documentation-first scripts, verifies Microsoft
+  source currency, and attests that no tenant object was created, modified, or deleted.
+- **The live mutation is deferred.** The intended later step — creating and then deleting one narrowly
+  scoped, disposable, report-only test policy — stays deferred until the executing adapter can
+  structurally enforce independent tenant-ID proof, a disposable target group, emergency-access and
+  automation exclusions, a unique run-ownership marker, no tenant-wide targeting, no enabled
+  enforcement, read-back, bounded propagation polling, run-owned-only cleanup, deletion read-back, and
+  fail-on-orphan (see `prerequisites.notes` in the contract).
+- Validate the contract locally with `python scripts\validate-lab-contracts.py
+  solutions\07-conditional-access-automation\lab\07-conditional-access-automation.lab.json`.

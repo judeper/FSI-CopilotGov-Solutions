@@ -83,6 +83,8 @@ Evidence exports are intentionally simple and machine-readable:
 
 ## Integration notes
 
-- Copilot app targeting uses the `Office365` app suite, which includes Enterprise Copilot Platform (Microsoft 365 Copilot). Copilot Studio is not part of the Office 365 app suite; its Conditional Access coverage applies only to agent identities running in the Microsoft Teams context.
+- Copilot app targeting uses the `Office365` app suite, which includes Enterprise Copilot Platform (Microsoft 365 Copilot). Microsoft Learn recommends targeting this suite grouping instead of individual cloud apps to avoid Conditional Access service dependencies. Copilot Studio is not part of the Office 365 app suite; its Conditional Access coverage applies only to agent identities running in the Microsoft Teams context.
+- Every generated policy carries an `excludeGroups` break-glass slot fed by `emergencyAccessExclusionGroupIds`; policies are flagged for manual review, and live `-Execute` is disabled until a tenant-bound executor can enforce all targeting, ownership, read-back, and cleanup safeguards.
+- **Microsoft-managed** and **Baseline security mode** Conditional Access policies are owned by Microsoft (they show **Microsoft** in the **Created by** column). This solution does not create, own, modify, or delete them; administrators may edit only their state and exclusions or duplicate them. Drift monitoring is scoped to this solution's own Copilot policy baseline and does not evaluate Microsoft-managed policies.
 - Drift monitoring should run weekly for baseline, daily for recommended, and near real time for regulated deployments.
 - Exception workflows should include supervisory approval, expiry tracking, and compensating-control documentation.

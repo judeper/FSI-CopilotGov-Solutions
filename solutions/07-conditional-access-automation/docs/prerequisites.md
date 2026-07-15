@@ -47,6 +47,7 @@ Grant admin consent where required before automation runs in production.
 ## Environment preparation
 
 - Verify the `Office365` Conditional Access target or any tenant-validated app IDs in `config\default-config.json`.
+- Record the tenant break-glass/emergency-access group object ID in `emergencyAccessExclusionGroupIds` so generated templates document those exclusions. The repository `-Execute` switch always fails closed; a later tenant-bound executor must also exclude its automation identity and enforce ownership and cleanup.
 - Define tenant-specific named locations and record their Microsoft Graph object IDs in `namedLocationIds` before enabling recommended or regulated policies.
 - Confirm a protected output path for the baseline and exception register.
 - Align environment variables to the `fsi_ev_caa_{setting}` naming convention if deployment automation uses centralized configuration.

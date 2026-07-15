@@ -3,7 +3,7 @@
 .SYNOPSIS
 Generates Conditional Access policy deployment artifacts for Microsoft 365 Copilot.
 .DESCRIPTION
-Generates baseline stubs, policy templates, deployment metadata, and Graph API command examples for Conditional Access policies targeting Copilot application IDs. Optional policy creation requires Microsoft Graph permissions and should be executed by a Conditional Access Administrator after tenant-specific review.
+Generates baseline stubs, policy templates, deployment metadata, and Graph API command examples for Conditional Access policies targeting Copilot application IDs. Live policy creation is deferred to a tenant-bound executor that can enforce tenant proof, scoped targets, ownership, and cleanup.
 .PARAMETER ConfigurationTier
 Specifies the governance tier to generate. Valid values are baseline, recommended, and regulated.
 .PARAMETER OutputPath
@@ -13,11 +13,9 @@ Specifies the Entra ID tenant identifier used in generated Graph connection comm
 .PARAMETER SkipBaseline
 Skips writing the baseline snapshot stub.
 .PARAMETER Execute
-Attempts to create Conditional Access policies through Microsoft Graph after templates are generated.
+Compatibility switch retained to fail closed. Live execution is disabled in this documentation-first scaffold.
 .EXAMPLE
 .\Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId contoso.onmicrosoft.com -OutputPath .\artifacts\recommended
-.EXAMPLE
-.\Deploy-Solution.ps1 -ConfigurationTier regulated -OutputPath .\artifacts\regulated -Execute
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
@@ -155,6 +153,16 @@ function Merge-Configuration {
         @()
     }
 
+    $emergencyAccessExclusionGroupIds = if ($TierConfig.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($TierConfig.emergencyAccessExclusionGroupIds)
+    }
+    elseif ($DefaultConfig.defaults.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($DefaultConfig.defaults.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+
     return [ordered]@{
         solution                 = $DefaultConfig.solution
         displayName              = $DefaultConfig.displayName
@@ -178,6 +186,7 @@ function Merge-Configuration {
         namedLocations = $namedLocationIds
         namedLocationIds = $namedLocationIds
         namedLocationLabels = $namedLocationLabels
+        emergencyAccessExclusionGroupIds = $emergencyAccessExclusionGroupIds
         blockLegacyAuth          = if ($TierConfig.ContainsKey('blockLegacyAuth')) { [bool]$TierConfig.blockLegacyAuth } else { $false }
         blockUnknownDeviceStates = if ($TierConfig.ContainsKey('blockUnknownDeviceStates')) { [bool]$TierConfig.blockUnknownDeviceStates } else { $false }
         doraAlignmentDocumented  = if ($TierConfig.ContainsKey('doraAlignmentDocumented')) { [bool]$TierConfig.doraAlignmentDocumented } else { $false }
@@ -238,6 +247,13 @@ function New-PolicyTemplate {
     }
 
     $requiresTenantNamedLocationIds = [bool]$RiskTierSettings.namedLocationRequired -and @($namedLocationIds).Count -eq 0
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
     $includeLocations = if ($RiskTierSettings.namedLocationRequired) {
         if (@($namedLocationIds).Count -gt 0) { @($namedLocationIds) } else { @() }
     }
@@ -256,6 +272,7 @@ function New-PolicyTemplate {
         users = [ordered]@{
             includeUsers = @('All')
             excludeUsers = @()
+            excludeGroups = @($emergencyExclusionGroupIds)
         }
         applications = [ordered]@{
             includeApplications = @($Configuration.copilotAppIds)
@@ -292,9 +309,11 @@ function New-PolicyTemplate {
         }
         namedLocationIds = @($namedLocationIds)
         namedLocationLabels = @($namedLocationLabels)
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $requiresTenantNamedLocationIds
-        manualReviewRequired = $requiresTenantNamedLocationIds
-        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = ($requiresTenantNamedLocationIds -or $requiresBreakGlassExclusion)
+        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } elseif ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds so break-glass/emergency-access accounts are excluded before enabling this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -309,6 +328,14 @@ function New-LegacyAuthenticationBlockPolicy {
     $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'LegacyAuth'
     $policyName = $policyName -replace '\{Purpose\}', 'Block'
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     return [ordered]@{
         displayName = $policyName
         tier = $Configuration.tier
@@ -322,6 +349,7 @@ function New-LegacyAuthenticationBlockPolicy {
             users = [ordered]@{
                 includeUsers = @('All')
                 excludeUsers = @()
+                excludeGroups = @($emergencyExclusionGroupIds)
             }
             applications = [ordered]@{
                 includeApplications = @($Configuration.copilotAppIds)
@@ -335,9 +363,11 @@ function New-LegacyAuthenticationBlockPolicy {
             }
         }
         sessionControls = [ordered]@{}
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $false
-        manualReviewRequired = $false
-        deploymentGuidance = 'Blocks legacy authentication client app types for the selected Copilot target resources.'
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = $requiresBreakGlassExclusion
+        deploymentGuidance = if ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds before enabling; this block policy targets all users and would otherwise block break-glass/emergency-access accounts.' } else { 'Blocks legacy authentication client app types for the selected Copilot target resources.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -352,6 +382,14 @@ function New-UnknownDeviceStateBlockPolicy {
     $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'UnknownDeviceState'
     $policyName = $policyName -replace '\{Purpose\}', 'Block'
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     return [ordered]@{
         displayName = $policyName
         tier = $Configuration.tier
@@ -365,6 +403,7 @@ function New-UnknownDeviceStateBlockPolicy {
             users = [ordered]@{
                 includeUsers = @('All')
                 excludeUsers = @()
+                excludeGroups = @($emergencyExclusionGroupIds)
             }
             applications = [ordered]@{
                 includeApplications = @($Configuration.copilotAppIds)
@@ -384,9 +423,11 @@ function New-UnknownDeviceStateBlockPolicy {
             }
         }
         sessionControls = [ordered]@{}
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $false
-        manualReviewRequired = $false
-        deploymentGuidance = 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.'
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = $requiresBreakGlassExclusion
+        deploymentGuidance = if ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds before enabling; this block policy targets all users and would otherwise block break-glass/emergency-access accounts.' } else { 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -429,6 +470,9 @@ function Get-GraphCommandText {
     $commands = New-Object System.Collections.Generic.List[string]
     $null = $commands.Add('# Review each request body before executing it against Microsoft Graph.')
     $null = $commands.Add('# Required scopes: Policy.Read.All, Policy.ReadWrite.ConditionalAccess')
+    $null = $commands.Add("# Policies are created in report-only state ('enabledForReportingButNotEnforced').")
+    $null = $commands.Add('# WARNING: Exclude break-glass/emergency-access accounts (populate emergencyAccessExclusionGroupIds')
+    $null = $commands.Add("#          in config so conditions.users.excludeGroups is set) before switching any policy state to 'enabled'.")
     if ([string]::IsNullOrWhiteSpace($TenantId)) {
         $null = $commands.Add("Connect-MgGraph -Scopes 'Policy.Read.All','Policy.ReadWrite.ConditionalAccess'")
     }
@@ -472,7 +516,7 @@ $requestBodies = @(foreach ($policyTemplate in $policyTemplates) {
         $requestBody
     }
 })
-$skippedGraphPolicies = @($policyTemplates | Where-Object { $_.ContainsKey('requiresTenantNamedLocationIds') -and [bool]$_.requiresTenantNamedLocationIds })
+$skippedGraphPolicies = @($policyTemplates | Where-Object { $_.Contains('requiresTenantNamedLocationIds') -and [bool]$_.requiresTenantNamedLocationIds })
 
 $policyTemplatePath = Join-Path $OutputPath 'ca-policy-templates.json'
 $graphCommandPath = Join-Path $OutputPath 'graph-api-commands.ps1'
@@ -538,6 +582,9 @@ $manifest = [ordered]@{
     graphReadyPolicyCount = $requestBodies.Count
     skippedGraphPolicyCount = @($skippedGraphPolicies).Count
     skippedGraphPolicyNames = @($skippedGraphPolicies | ForEach-Object { $_.displayName })
+    emergencyAccessExclusionGroupCount = @($config.emergencyAccessExclusionGroupIds).Count
+    breakGlassExclusionConfigured = (@($config.emergencyAccessExclusionGroupIds).Count -gt 0)
+    breakGlassGapPolicyCount = @($policyTemplates | Where-Object { $_.Contains('requiresBreakGlassExclusion') -and [bool]$_.requiresBreakGlassExclusion }).Count
     driftDetectionEnabled = $config.driftDetectionEnabled
     driftCheckFrequency = $config.driftCheckFrequency
     evidenceRetentionDays = $config.evidenceRetentionDays
@@ -548,62 +595,7 @@ $manifest = [ordered]@{
 Write-JsonFile -Path $manifestPath -InputObject $manifest
 
 if ($Execute) {
-    if (@($skippedGraphPolicies).Count -gt 0) {
-        throw 'Cannot use -Execute until tenant namedLocationIds are populated for all named-location-required policies.'
-    }
-
-    if (-not $PSCmdlet.ShouldProcess($config.displayName, 'Connect to Microsoft Graph and create Conditional Access policies')) {
-        return
-    }
-
-    if (-not (Get-Command -Name Connect-MgGraph -ErrorAction SilentlyContinue)) {
-        throw 'Microsoft.Graph PowerShell SDK is required to use -Execute.'
-    }
-
-    if (-not (Get-Command -Name Invoke-MgGraphRequest -ErrorAction SilentlyContinue)) {
-        throw 'Microsoft.Graph PowerShell SDK is required to use -Execute.'
-    }
-
-    $graphScopes = @('Policy.Read.All', 'Policy.ReadWrite.ConditionalAccess')
-    if ([string]::IsNullOrWhiteSpace($TenantId)) {
-        Connect-MgGraph -Scopes $graphScopes | Out-Null
-    }
-    else {
-        Connect-MgGraph -TenantId $TenantId -Scopes $graphScopes | Out-Null
-    }
-
-    foreach ($requestBody in $requestBodies) {
-        $jsonBody = $requestBody | ConvertTo-Json -Depth 12
-        $policyName = if ($requestBody.ContainsKey('displayName')) { $requestBody.displayName } else { 'unknown' }
-        if (-not $PSCmdlet.ShouldProcess($policyName, 'Create Conditional Access policy via Microsoft Graph')) {
-            continue
-        }
-        $maxRetries = 3
-        $retryDelays = @(2, 4, 8)
-        $succeeded = $false
-        $lastFailureMessage = ''
-        for ($attempt = 0; $attempt -lt $maxRetries; $attempt++) {
-            try {
-                Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies' -Body $jsonBody -ContentType 'application/json' | Out-Null
-                $succeeded = $true
-                break
-            }
-            catch {
-                $lastFailureMessage = $_.Exception.Message
-                $statusCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 }
-                if (($statusCode -eq 429 -or $statusCode -eq 503) -and $attempt -lt ($maxRetries - 1)) {
-                    Write-Warning ("Transient error (HTTP {0}) creating policy '{1}'. Retrying in {2}s (attempt {3}/{4})." -f $statusCode, $policyName, $retryDelays[$attempt], ($attempt + 2), $maxRetries)
-                    Start-Sleep -Seconds $retryDelays[$attempt]
-                }
-                else {
-                    Write-Error ("Failed to create Conditional Access policy '{0}': {1}" -f $policyName, $_.Exception.Message)
-                }
-            }
-        }
-        if (-not $succeeded) {
-            throw ("Failed to create Conditional Access policy '{0}' after {1} attempts: {2}" -f $policyName, $maxRetries, $lastFailureMessage)
-        }
-    }
+    throw 'Live -Execute is disabled in this documentation-first scaffold. Use the generated report-only templates only after a tenant-bound executor enforces positive tenant proof, disposable scoped targets, emergency and automation identity exclusions, run ownership, read-back, and fail-on-orphan cleanup.'
 }
 
 [pscustomobject]@{
@@ -616,5 +608,4 @@ if ($Execute) {
     GraphApiCommandsPath = $graphCommandPath
     GraphExecutionRequested = [bool]$Execute
 }
-
 

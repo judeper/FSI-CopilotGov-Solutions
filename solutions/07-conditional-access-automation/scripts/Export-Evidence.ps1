@@ -49,6 +49,8 @@ if ($PSBoundParameters.ContainsKey('PeriodStart') -and $PSBoundParameters.Contai
 
 $solutionRoot = Split-Path $PSScriptRoot -Parent
 $repoRoot = Resolve-Path (Join-Path $solutionRoot '..\..')
+$null = New-Item -ItemType Directory -Path $OutputPath -Force
+$OutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
 # NOTE: The external module import below requires the parent repository structure to be
 # intact. See docs\prerequisites.md for details on this dependency.
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
@@ -148,6 +150,16 @@ function Merge-Configuration {
         @()
     }
 
+    $emergencyAccessExclusionGroupIds = if ($TierConfig.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($TierConfig.emergencyAccessExclusionGroupIds)
+    }
+    elseif ($DefaultConfig.defaults.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($DefaultConfig.defaults.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+
     return [ordered]@{
         solution = $DefaultConfig.solution
         displayName = $DefaultConfig.displayName
@@ -162,6 +174,7 @@ function Merge-Configuration {
         namedLocations = $namedLocationIds
         namedLocationIds = $namedLocationIds
         namedLocationLabels = $namedLocationLabels
+        emergencyAccessExclusionGroupIds = $emergencyAccessExclusionGroupIds
         blockLegacyAuth = if ($TierConfig.ContainsKey('blockLegacyAuth')) { [bool]$TierConfig.blockLegacyAuth } else { $false }
         blockUnknownDeviceStates = if ($TierConfig.ContainsKey('blockUnknownDeviceStates')) { [bool]$TierConfig.blockUnknownDeviceStates } else { $false }
     }
@@ -221,6 +234,13 @@ function New-PolicyTemplate {
     }
 
     $requiresTenantNamedLocationIds = [bool]$RiskTierSettings.namedLocationRequired -and @($namedLocationIds).Count -eq 0
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
     $includeLocations = if ($RiskTierSettings.namedLocationRequired) {
         if (@($namedLocationIds).Count -gt 0) { @($namedLocationIds) } else { @() }
     }
@@ -239,6 +259,7 @@ function New-PolicyTemplate {
         users = [ordered]@{
             includeUsers = @('All')
             excludeUsers = @()
+            excludeGroups = @($emergencyExclusionGroupIds)
         }
         applications = [ordered]@{
             includeApplications = @($Configuration.copilotAppIds)
@@ -275,9 +296,11 @@ function New-PolicyTemplate {
         }
         namedLocationIds = @($namedLocationIds)
         namedLocationLabels = @($namedLocationLabels)
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $requiresTenantNamedLocationIds
-        manualReviewRequired = $requiresTenantNamedLocationIds
-        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = ($requiresTenantNamedLocationIds -or $requiresBreakGlassExclusion)
+        deploymentGuidance = if ($requiresTenantNamedLocationIds) { 'Record tenant namedLocationIds before generating executable Microsoft Graph commands for this policy.' } elseif ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds so break-glass/emergency-access accounts are excluded before enabling this policy.' } else { 'Review excluded break-glass accounts and service principals before enabling the policy.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -292,6 +315,14 @@ function New-LegacyAuthenticationBlockPolicy {
     $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'LegacyAuth'
     $policyName = $policyName -replace '\{Purpose\}', 'Block'
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     return [ordered]@{
         displayName = $policyName
         tier = $Configuration.tier
@@ -305,6 +336,7 @@ function New-LegacyAuthenticationBlockPolicy {
             users = [ordered]@{
                 includeUsers = @('All')
                 excludeUsers = @()
+                excludeGroups = @($emergencyExclusionGroupIds)
             }
             applications = [ordered]@{
                 includeApplications = @($Configuration.copilotAppIds)
@@ -318,9 +350,11 @@ function New-LegacyAuthenticationBlockPolicy {
             }
         }
         sessionControls = [ordered]@{}
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $false
-        manualReviewRequired = $false
-        deploymentGuidance = 'Blocks legacy authentication client app types for the selected Copilot target resources.'
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = $requiresBreakGlassExclusion
+        deploymentGuidance = if ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds before enabling; this block policy targets all users and would otherwise block break-glass/emergency-access accounts.' } else { 'Blocks legacy authentication client app types for the selected Copilot target resources.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -335,6 +369,14 @@ function New-UnknownDeviceStateBlockPolicy {
     $policyName = $Configuration.policyNamingConvention -replace '\{Tier\}', 'UnknownDeviceState'
     $policyName = $policyName -replace '\{Purpose\}', 'Block'
 
+    $emergencyExclusionGroupIds = if ($Configuration.ContainsKey('emergencyAccessExclusionGroupIds')) {
+        @($Configuration.emergencyAccessExclusionGroupIds)
+    }
+    else {
+        @()
+    }
+    $requiresBreakGlassExclusion = @($emergencyExclusionGroupIds).Count -eq 0
+
     return [ordered]@{
         displayName = $policyName
         tier = $Configuration.tier
@@ -348,6 +390,7 @@ function New-UnknownDeviceStateBlockPolicy {
             users = [ordered]@{
                 includeUsers = @('All')
                 excludeUsers = @()
+                excludeGroups = @($emergencyExclusionGroupIds)
             }
             applications = [ordered]@{
                 includeApplications = @($Configuration.copilotAppIds)
@@ -367,9 +410,11 @@ function New-UnknownDeviceStateBlockPolicy {
             }
         }
         sessionControls = [ordered]@{}
+        emergencyAccessExclusionGroupIds = @($emergencyExclusionGroupIds)
         requiresTenantNamedLocationIds = $false
-        manualReviewRequired = $false
-        deploymentGuidance = 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.'
+        requiresBreakGlassExclusion = $requiresBreakGlassExclusion
+        manualReviewRequired = $requiresBreakGlassExclusion
+        deploymentGuidance = if ($requiresBreakGlassExclusion) { 'Populate emergencyAccessExclusionGroupIds before enabling; this block policy targets all users and would otherwise block break-glass/emergency-access accounts.' } else { 'Blocks access for devices not excluded by the compliant-device filter, including unregistered devices with null device attributes.' }
         regulatoryNote = 'Supports compliance with OCC 2011-12, FINRA 3110, and DORA Article 9 access control expectations.'
     }
 }
@@ -422,6 +467,7 @@ function Write-ArtifactFile {
         name = $Name
         type = $Name
         path = $Path
+        packagePath = [IO.Path]::GetFileName($Path)
         hash = $hash
     }
 }
@@ -446,8 +492,6 @@ $resolvedExceptionRegisterPath = if ([string]::IsNullOrWhiteSpace($ExceptionRegi
 else {
     Resolve-ConfiguredPath -ConfiguredPath $ExceptionRegisterPath -BasePath $OutputPath -FallbackLeaf 'access-exception-register.json'
 }
-
-$null = New-Item -ItemType Directory -Path $OutputPath -Force
 
 $monitorResult = & (Join-Path $PSScriptRoot 'Monitor-Compliance.ps1') `
     -ConfigurationTier $ConfigurationTier `
@@ -575,6 +619,17 @@ if ($PSBoundParameters.ContainsKey('PeriodEnd')) {
     $additionalMetadata['periodEnd'] = $PeriodEnd.ToString('yyyy-MM-dd')
 }
 
+$packageArtifacts = @(
+    foreach ($artifact in @($policyArtifact, $driftArtifact, $exceptionArtifact)) {
+        [ordered]@{
+            name = $artifact.name
+            type = $artifact.type
+            path = $artifact.packagePath
+            hash = $artifact.hash
+        }
+    }
+)
+
 $packageResult = Export-SolutionEvidencePackage `
     -Solution $config.solution `
     -SolutionCode $config.solutionCode `
@@ -582,7 +637,7 @@ $packageResult = Export-SolutionEvidencePackage `
     -OutputPath $OutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts @($policyArtifact, $driftArtifact, $exceptionArtifact) `
+    -Artifacts $packageArtifacts `
     -AdditionalMetadata $additionalMetadata
 
 [pscustomobject]@{
@@ -594,5 +649,4 @@ $packageResult = Export-SolutionEvidencePackage `
     ArtifactCount = 3
     Artifacts = @($policyArtifact, $driftArtifact, $exceptionArtifact)
 }
-
 

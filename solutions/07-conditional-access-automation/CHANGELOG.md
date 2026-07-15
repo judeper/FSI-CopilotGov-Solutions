@@ -4,6 +4,25 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog, and this repository uses semantic versioning for solution content.
 
+## [Unreleased]
+
+### Fixed
+
+- Corrected a runtime defect where `$_.ContainsKey(...)` was called on `[ordered]` policy-template dictionaries in `Deploy-Solution.ps1` (an `OrderedDictionary` exposes `Contains`, not `ContainsKey`). The error silently emptied `$skippedGraphPolicies`, corrupting named-location safety metadata; switched the affected call sites to `Contains`.
+- Fixed evidence export so relative output paths resolve from the current PowerShell provider location, package artifact paths remain relative after relocation, and returned artifact paths remain absolute.
+- Disabled direct live `-Execute` writes in the documentation-first scaffold so generated commands cannot bypass tenant proof, disposable targeting, automation exclusions, ownership, read-back, or cleanup requirements.
+
+### Added
+
+- Break-glass/emergency-access exclusion modeling: every generated policy now carries an `excludeGroups` slot populated from a new `emergencyAccessExclusionGroupIds` field in `config\default-config.json`. Policies are flagged `requiresBreakGlassExclusion` and `manualReviewRequired`, and generated Graph commands warn against enabling a policy without emergency-access exclusions.
+- `## Scope Boundaries` and architecture/troubleshooting notes clarifying that the solution does not create, own, modify, or delete **Microsoft-managed** or **Baseline security mode** Conditional Access policies, and that drift monitoring is scoped to the solution's own Copilot policy baseline.
+- Lab validation contract `lab\07-conditional-access-automation.lab.json` (read-only first cycle; live mutation deferred) plus lab handoff notes in the deployment guide and delivery checklist.
+- Behavioral and static Pester regression tests covering the break-glass exclusion slot, fail-closed `-Execute`, provider-relative output resolution, portable evidence, and the `OrderedDictionary` fix.
+
+### Verified
+
+- Re-verified the Microsoft 365 Copilot Conditional Access targeting model against Microsoft Learn (2026-07-14): the `Office365` app-suite value still lists **Enterprise Copilot Platform**; Microsoft recommends the suite grouping over individual apps to avoid service dependencies; Graph `state` values (`enabled`, `disabled`, `enabledForReportingButNotEnforced`), `Policy.Read.All`/`Policy.ReadWrite.ConditionalAccess` permissions, Entra ID P1/P2 licensing, named-location semantics, and the "up to two hours (up to one day)" propagation guidance remain current.
+
 ## [v0.2.5] - 2026-06-11
 
 ### Verified
