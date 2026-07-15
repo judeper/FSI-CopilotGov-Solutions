@@ -25,5 +25,5 @@
 - **User:** Jude
 - **Created:** 2026-05-23
 - **Team cast:** 2026-06-05
-- **Current focus:** Review all 23 solutions one at a time for **Microsoft product & feature accuracy** (feature names, capabilities, licensing, API/cmdlet/Graph references) against Microsoft Learn. Deliverable: findings + fixes, one branch/PR per solution.
+- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solution 01's first read-only lab cycle is **PARTIAL / not accepted**. Current work is blocked on attended sign-in for six admin surfaces and effective `Reports.Read.All`; rerun Solution 01 before continuing the serial lab queue. See `docs/project-handoff.md`.
 - **Model policy:** Accuracy over cost — premium (Opus-class) models for verification and review; Haiku only for Scribe.

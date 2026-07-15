@@ -255,6 +255,7 @@ nav:
     - Threat Model: security/threat-model.md
   - Reference:
     - reference/index.md
+    - Project Handoff: project-handoff.md
     - Architecture: reference/architecture.md
     - Control Coverage: reference/control-coverage.md
     - Data Classification Matrix: reference/data-classification.md
