@@ -4,6 +4,27 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this solution uses semantic versioning.
 
+## [Unreleased] — Microsoft currency review and read-only lab contract
+
+### Fixed
+
+- Corrected `externalWebSearchGroundingRestriction` availability from `preview` to `generallyAvailable` in default-config.json; Microsoft Learn no longer marks the web-search grounding restriction as preview and the M365 roadmap records it as launched.
+- Hardened `Export-Evidence.ps1` workload-location resolution so a live baseline without `complementaryWorkloadDlpPolicyLocations` no longer throws under `Set-StrictMode`.
+- Made evidence-package artifact paths package-relative for relocation safety while preserving absolute artifact paths in the caller result.
+
+### Added
+
+- Documented the external-email grounding exclusion capability **(preview)** for the Microsoft 365 Copilot and Copilot Chat policy location (sender-domain metadata only; email body not inspected).
+- Documented rule-condition exclusivity (a sensitive-information-type condition and a sensitivity-label condition require separate rules in the same policy), Custom-template-only availability, policy simulation mode, and the up-to-four-hour policy propagation delay.
+- Refined DLP-for-Copilot licensing guidance to separate the E5/Purview-suite requirement for sensitivity-label blocking from the all-Copilot-user availability of prompt and web-search protection.
+- Added the read-only lab validation contract `lab/05-dlp-policy-governance.lab.json` (detect-only, `mutations: []`) plus lab handoff notes in the deployment guide and delivery checklist.
+- Added view-only DLP role guidance and retained `EnforcementPlanes` and `Locations` in lab policy evidence so the contract can prove Copilot scope instead of inferring it from policy name.
+- Added behavioral Pester tests for the DLP policy template, capability currency, monitoring drift detection, and the evidence-export workload fallback.
+
+### Marked illustrative
+
+- Annotated `defaults.sensitivityConditions` in default-config.json as an illustrative reference list; scripts consume the per-tier `sensitivityConditions` objects only.
+
 ## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy corrections
 
 ### Fixed

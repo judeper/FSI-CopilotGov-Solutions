@@ -121,10 +121,14 @@ function Write-HashCompanion {
 
 $defaultConfig = Read-JsonFile -Path (Join-Path $solutionRoot 'config\default-config.json')
 $tierConfig = Read-JsonFile -Path (Join-Path $solutionRoot ("config\{0}.json" -f $ConfigurationTier))
+$baselineFileName = 'dlp-policy-baseline.json'
+$driftFileName = 'policy-drift-findings.json'
+$exceptionFileName = 'exception-attestations.json'
 $null = New-Item -ItemType Directory -Path $OutputPath -Force
-$baselineArtifactPath = Join-Path $OutputPath 'dlp-policy-baseline.json'
-$driftArtifactPath = Join-Path $OutputPath 'policy-drift-findings.json'
-$exceptionArtifactPath = Join-Path $OutputPath 'exception-attestations.json'
+$resolvedOutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
+$baselineArtifactPath = Join-Path $resolvedOutputPath $baselineFileName
+$driftArtifactPath = Join-Path $resolvedOutputPath $driftFileName
+$exceptionArtifactPath = Join-Path $resolvedOutputPath $exceptionFileName
 
 if (-not (Test-Path -Path $baselineArtifactPath)) {
     $baselineSnapshot = New-BaselineSnapshot -Tier $ConfigurationTier -DefaultConfig $defaultConfig -TierConfig $tierConfig
@@ -132,7 +136,7 @@ if (-not (Test-Path -Path $baselineArtifactPath)) {
 }
 
 $monitorScriptPath = Join-Path $PSScriptRoot 'Monitor-Compliance.ps1'
-$monitorResult = & $monitorScriptPath -ConfigurationTier $ConfigurationTier -BaselinePath $baselineArtifactPath -OutputPath $OutputPath
+$monitorResult = & $monitorScriptPath -ConfigurationTier $ConfigurationTier -BaselinePath $baselineArtifactPath -OutputPath $resolvedOutputPath
 
 if (-not (Test-Path -Path $driftArtifactPath)) {
     ConvertTo-Json -InputObject @() -Depth 10 | Set-Content -Path $driftArtifactPath -Encoding utf8
@@ -160,7 +164,13 @@ $exceptionData = @($allExceptionData | Where-Object {
     }
 })
 $baselinePolicyCount = @($baselineData.policies).Count
-$workloadLocations = if ($baselineData.PSObject.Properties.Name -contains 'complementaryWorkloadDlpPolicyLocations') { @($baselineData.complementaryWorkloadDlpPolicyLocations) } else { @($baselineData.copilotWorkloads) }
+$workloadLocations = @(
+    if ($baselineData.PSObject.Properties.Name -contains 'complementaryWorkloadDlpPolicyLocations') {
+        $baselineData.complementaryWorkloadDlpPolicyLocations
+    } elseif ($baselineData.PSObject.Properties.Name -contains 'copilotWorkloads') {
+        $baselineData.copilotWorkloads
+    }
+)
 $workloadCount = $workloadLocations.Count
 
 $baselineHash = Write-HashCompanion -Path $baselineArtifactPath
@@ -195,23 +205,23 @@ $summary = [ordered]@{
     exceptionCount = [int]$exceptionData.Count
 }
 
-$artifacts = @(
+$packageArtifacts = @(
     [pscustomobject]@{
         name = 'dlp-policy-baseline'
         type = 'application/json'
-        path = $baselineArtifactPath
+        path = $baselineFileName
         hash = $baselineHash
     },
     [pscustomobject]@{
         name = 'policy-drift-findings'
         type = 'application/json'
-        path = $driftArtifactPath
+        path = $driftFileName
         hash = $driftHash
     },
     [pscustomobject]@{
         name = 'exception-attestations'
         type = 'application/json'
-        path = $exceptionArtifactPath
+        path = $exceptionFileName
         hash = $exceptionHash
     }
 )
@@ -220,10 +230,10 @@ $packageResult = Export-SolutionEvidencePackage `
     -Solution '05-dlp-policy-governance' `
     -SolutionCode 'DPG' `
     -Tier $ConfigurationTier `
-    -OutputPath $OutputPath `
+    -OutputPath $resolvedOutputPath `
     -Summary $summary `
     -Controls $controls `
-    -Artifacts $artifacts `
+    -Artifacts $packageArtifacts `
     -AdditionalMetadata @{
         periodStart = $PeriodStart.ToString('yyyy-MM-dd')
         periodEnd = $PeriodEnd.ToString('yyyy-MM-dd')
@@ -238,4 +248,3 @@ $packageResult = Export-SolutionEvidencePackage `
     summary = $summary
     monitoringStatus = $monitorResult.overallStatus
 }
-

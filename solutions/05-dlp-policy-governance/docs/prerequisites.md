@@ -2,9 +2,10 @@
 
 ## Licensing
 
-- Microsoft 365 E5 or E5 Compliance for Purview DLP capabilities used to monitor the Microsoft 365 Copilot and Copilot Chat policy location and complementary workload DLP baselines
-- Microsoft 365 Copilot licensing for the users and Copilot experiences being reviewed
-- Power Automate Premium if the exception approval workflow is deployed in production
+- The sensitivity-label file and email blocking capability for the Microsoft 365 Copilot and Copilot Chat policy location requires Microsoft 365 E5, the Microsoft Purview suite, Microsoft 365 E5/F5 Information Protection and Governance, or Office 365 E5.
+- Sensitive-information-type prompt blocking and external web-search grounding restriction are available to all Microsoft 365 Copilot and Copilot Chat users.
+- Microsoft 365 Copilot licensing for the users and Copilot experiences being reviewed.
+- Power Automate Premium if the exception approval workflow is deployed in production.
 
 ## Roles
 
@@ -20,7 +21,7 @@ Accounts that create or edit DLP policies to safeguard Microsoft 365 Copilot and
 - Purview Security Administrator
 - Entra Global Admin
 
-For least-privilege operations, keep Security Reader-style access limited to read-only review and confirm tenant-tested read permissions before using it for evidence review.
+For least-privilege lab inspection, use View-Only DLP Compliance Management for `Get-DlpCompliancePolicy` and `Get-DlpComplianceRule`, with Global Reader or Security Reader for read-only portal verification. These read-only roles are not sufficient for Copilot DLP policy create/edit.
 
 Power Automate deployment can also require a Power Platform environment admin or flow owner depending on tenant design.
 

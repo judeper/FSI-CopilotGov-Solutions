@@ -39,6 +39,13 @@ Use this checklist before declaring DLP Policy Governance for Copilot ready for 
 - [ ] Validate `dlp-policy-baseline`, `policy-drift-findings`, and `exception-attestations` outputs.
 - [ ] Confirm `.sha256` companion files are present and match the exported artifacts.
 
+## Lab validation readiness
+
+- [ ] Review the read-only lab contract `lab\05-dlp-policy-governance.lab.json` and confirm the first validation cycle is detect-only (`mutations: []`).
+- [ ] Confirm the lab operator has View-Only DLP Compliance Management and that policy evidence retains `EnforcementPlanes` and `Locations` to prove Copilot scope.
+- [ ] Verify the Microsoft source claims (external web-search restriction and sensitivity-label blocking generally available; sensitive-information-type prompt blocking and external-email exclusion preview) still match current Microsoft Learn guidance.
+- [ ] Record honest `BLOCKED` or `NOT-APPLICABLE` dispositions when a preview feature, license, role, policy, or rollout is not present in the target tenant.
+
 ## Sign-Off
 
 | Role | Name | Date | Signature |
