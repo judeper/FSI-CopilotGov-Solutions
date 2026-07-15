@@ -83,10 +83,13 @@ Deployment is intentionally staged:
 
 - Solutions `06-audit-trail-manager` and `11-risk-tiered-rollout` deployed in the same environment.
 - Power BI Pro or Premium Per User licensing for authors and workspace administrators.
+- Preauthorized delegated `Workspace.Read.All` for read-only `GET /v1.0/myorg/groups` inspection in the first lab cycle (`Workspace.ReadWrite.All` is out of scope).
 - Dataverse capacity of at least 1 GB for baseline, finding, and evidence tables.
 - Power Automate Premium licensing for scheduled aggregation and freshness monitoring.
-- Fabric administrator or Power Platform administrator rights for tenant-wide Fabric/Power BI settings, Power BI workspace Admin rights for workspace operations, and Dataverse System Administrator or System Customizer permissions as required.
+- Power BI workspace Viewer (or equivalent read-only role) for first-cycle lab inspection; workspace Admin and tenant-level roles are only required for authoring/deployment operations outside the read-only lab cycle.
 - Microsoft Purview Suite, Microsoft 365 E5/A5/G5, or the eligible Purview add-on/licensing required for the specific Purview Compliance Manager templates or evidence features in use.
+
+> **First-cycle lab boundary:** Fabric administrator is not required for Viewer-level workspace inspection and must not be assigned for this lab.
 
 ## Related Controls
 
@@ -134,3 +137,4 @@ All evidence packages must align to `../../data/evidence-schema.json` and includ
 - Repository outputs are seeded or fallback artifacts until Dataverse ingestion flows and Power BI workspace bindings are manually implemented in the target environment. Deployment scripts do not provision live Dataverse connections, Power Automate flows, or Power BI workspace bindings.
 - Examination readiness packages depend on upstream solutions 01-15 being deployed and exporting current evidence.
 - The dashboard reports implementation state and evidence freshness but does not remediate source control gaps directly.
+- Evidence freshness and package hashes are only resolved by the runtime aggregation flow; until then, seeded and referenced records surface an explicit data-quality gap (`freshnessState`/`freshnessStatus` of `unknown`, `timestampProvenance` of `missing` or `synthetic-seed`) rather than appearing current.

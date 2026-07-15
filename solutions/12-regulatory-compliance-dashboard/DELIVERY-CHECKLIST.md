@@ -49,6 +49,15 @@
 - [ ] Framework coverage matrix includes the enabled regulatory frameworks for the selected tier.
 - [ ] Examination readiness package generation has been tested for at least one regulation in the target environment.
 
+## Lab Validation
+
+- [ ] `lab/12-regulatory-compliance-dashboard.lab.json` reviewed; first cycle confirmed read-only and detect-only (`mutations: []`).
+- [ ] Contract validates: `python scripts/validate-lab-contracts.py solutions/12-regulatory-compliance-dashboard/lab/12-regulatory-compliance-dashboard.lab.json`.
+- [ ] Read-only Power BI/Fabric workspace, report, and semantic-model item inspection uses least-privilege **Viewer** (or equivalent) access; no Build permission or edit role required; no publish, refresh, sharing, RLS/OLS, gateway, capacity, tenant-setting, service-principal-setting, or consent changes.
+- [ ] `GET /v1.0/myorg/groups` inspection uses preauthorized delegated `Workspace.Read.All` only (no `Workspace.ReadWrite.All`), and retained evidence includes aggregate counts and boolean workspace match only (no workspace names/IDs).
+- [ ] Freshness, timestamp provenance, and SHA-256 hash lineage verified; control-status semantics kept separate from lab dispositions.
+- [ ] Evidence-backed `BLOCKED` / `NOT-APPLICABLE` handling agreed for no-workspace/report/semantic-model, no-license/capacity, no-upstream-evidence, stale-or-invalid-input, missing-role, missing-scope-or-consent, unavailable-feature, and no-accepted-lab-result outcomes.
+
 ## Customer Validation
 
 - [ ] Review prerequisites, mapped controls, and regulatory alignment with the governance team.

@@ -60,6 +60,25 @@ Resolution steps:
 3. Re-apply RLS roles and confirm membership is correct.
 4. Trigger a manual refresh and confirm the refresh history is clean before enabling schedules.
 
+## Read-only workspace inventory is blocked by missing scope or consent
+
+Symptoms:
+
+- `GET /v1.0/myorg/groups` returns unauthorized or forbidden.
+- The first-cycle lab cannot attest workspace accessibility.
+
+Common causes:
+
+- Delegated `Workspace.Read.All` is not preauthorized for the reviewer.
+- Consent evidence for the delegated read scope is missing.
+
+Resolution steps:
+
+1. Record an evidence-backed `BLOCKED` disposition for the lab step.
+2. Capture only aggregate failure context (for example, API status and timestamp), not raw workspace identifiers.
+3. Do not request consent during the read-only cycle and do not switch to `Workspace.ReadWrite.All`.
+4. Resume validation only after preauthorized delegated `Workspace.Read.All` is available.
+
 ## Control status shows not-applicable unexpectedly
 
 Symptoms:
@@ -97,6 +116,24 @@ Resolution steps:
 2. Validate the package output location and flow permissions.
 3. Confirm upstream evidence packages include both JSON and `.sha256` files.
 4. Re-run the package flow with a smaller scope to isolate the missing artifact.
+
+## Referenced evidence shows unknown freshness or a data-quality gap
+
+Symptoms:
+
+- `Monitor-Compliance.ps1` reports `DataQualityGap = true` or a non-zero `TimestampGapControlCount`.
+- `dashboard-export` shows `dataQuality.overall = gap`, and referenced packages show `freshnessStatus = unknown` with `hashState = unresolved`.
+
+Common causes:
+
+- The solution is running in the documentation-first repository state, where no upstream evidence timestamps or hashes are resolved yet.
+- Upstream solutions have not exported current evidence packages, so no `sourceLastModified` value is available.
+
+Resolution steps:
+
+1. Treat `unknown` freshness as an explicit gap, not as current evidence.
+2. Run each upstream solution's `Export-Evidence.ps1` so the aggregation flow can resolve `sourceLastModified` and SHA-256 hashes at runtime.
+3. Re-run monitoring and confirm `timestampProvenance` moves from `missing` to `source-provided` for resolved controls.
 
 ## Missing solutions in the coverage matrix
 

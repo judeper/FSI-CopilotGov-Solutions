@@ -174,3 +174,11 @@ Because Power BI assets are documentation-led in this repository, the template s
 - Default filters: `Tier`, `Framework`, `Evidence freshness state`, `Business unit`
 - Security model: row-level security by business unit, legal entity, or operating segment
 - Export modes: Power BI service export to PDF for executive review and JSON metadata export for audit packaging
+
+> **Row-level security scope.** Row-level security restricts data only for consumers with the workspace **Viewer** role and does not apply to workspace **Admin**, **Member**, or **Contributor** roles. Assign report consumers the least-privilege **Viewer** role and keep authoring roles limited. See [Row-level security (RLS) with Power BI](https://learn.microsoft.com/fabric/security/service-admin-row-level-security).
+
+## Read-only Workspace Inventory for Lab Validation
+
+The first lab cycle uses [Groups - Get Groups](https://learn.microsoft.com/en-us/rest/api/power-bi/groups/get-groups) (`GET /v1.0/myorg/groups`) to confirm workspace accessibility. This endpoint returns workspaces accessible to the caller and requires `Workspace.Read.All` or `Workspace.ReadWrite.All`; the lab contract allows only preauthorized delegated `Workspace.Read.All` for this cycle.
+
+For evidence minimization, retain only aggregate workspace counts and a boolean target-workspace match indicator from the response. Do not retain workspace names, workspace IDs, report URLs, or other raw identifiers.

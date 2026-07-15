@@ -37,6 +37,29 @@ $script:RuntimeWarning = 'Export-Evidence.ps1 emits seeded dashboard artifacts a
 Import-Module (Join-Path $repoRoot 'scripts\common\EvidenceExport.psm1') -Force
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
+function Resolve-OutputDirectoryPath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+
+    return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+}
+
+function Get-PortableRelativePath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$BasePath,
+
+        [Parameter(Mandatory)]
+        [string]$ChildPath
+    )
+
+    return ([IO.Path]::GetRelativePath($BasePath, $ChildPath) -replace '\\', '/')
+}
+
 function Read-JsonAsHashtable {
     [CmdletBinding()]
     param(
@@ -91,6 +114,9 @@ function Write-ArtifactDocument {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
+        [string]$BasePath,
+
+        [Parameter(Mandatory)]
         [string]$Path,
 
         [Parameter(Mandatory)]
@@ -106,7 +132,7 @@ function Write-ArtifactDocument {
     return [pscustomobject]@{
         name = $Name
         type = 'json'
-        path = $Path
+        path = Get-PortableRelativePath -BasePath $BasePath -ChildPath $Path
         hash = $hashInfo.Hash
     }
 }
@@ -114,7 +140,7 @@ function Write-ArtifactDocument {
 try {
 
 $config = Get-RcdConfiguration -Tier $ConfigurationTier
-$resolvedOutputPath = [IO.Path]::GetFullPath($OutputPath)
+$resolvedOutputPath = Resolve-OutputDirectoryPath -Path $OutputPath
 $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
 $exportedAt = (Get-Date).ToString('o')
 
@@ -157,7 +183,15 @@ $controlStatusSnapshot = @(
             controlId = $control.controlId
             status = $control.status
             score = Get-CopilotGovStatusScore -Status $control.status
-            lastEvidenceDate = $exportedAt
+            # Documentation-first seed rows describe no resolved upstream evidence export, so
+            # lastEvidenceDate is null and collectedAt records only when this seed was generated.
+            # Freshness is therefore not-applicable rather than appearing current.
+            lastEvidenceDate = $null
+            collectedAt = $exportedAt
+            sourceLastModified = $null
+            timestampProvenance = 'synthetic-seed'
+            freshnessState = 'not-applicable'
+            hashState = 'seed'
             solutionSlug = 'RCD'
             controlTitle = ('Regulatory dashboard status for control {0}' -f $control.controlId)
             tier = $ConfigurationTier
@@ -177,10 +211,34 @@ $frameworkCoverageMatrix = @(
                 controlId = $control.controlId
                 coverageState = if ($control.status -eq 'implemented') { 'covered' } else { 'monitoring' }
                 sourceSolutions = @($config.dependencies)
-                evidenceFreshnessState = if ([int]$config.freshnessThresholdHours -le 25) { 'current' } else { 'review-needed' }
+                # Freshness cannot be evaluated from a configured threshold alone. Until the
+                # aggregation flow resolves upstream evidence timestamps at runtime, seed rows
+                # report an explicit gap instead of appearing current.
+                evidenceFreshnessState = 'unknown'
+                timestampProvenance = 'missing'
+                hasTimestampGap = $true
                 aggregationCadence = $config.aggregationCadence
                 coverageBasis = $script:RuntimeMode
             }
+        }
+    }
+)
+
+$referencedEvidencePackages = @(
+    foreach ($dependency in @($config.dependencies)) {
+        [ordered]@{
+            solution = $dependency
+            packagePath = ('solutions/{0}/artifacts/{0}-evidence.json' -f $dependency)
+            # Sibling evidence packages must be exported at runtime before hashes can be computed;
+            # this placeholder is resolved by the RCD-EvidenceAggregator flow in the customer environment.
+            hash = 'pending-runtime-resolution'
+            hashState = 'unresolved'
+            sourceLastModified = $null
+            timestampProvenance = 'missing'
+            hasTimestampGap = $true
+            # Freshness is undetermined until the runtime aggregator resolves the source
+            # timestamp and hash; it must not default to current.
+            freshnessStatus = 'unknown'
         }
     }
 )
@@ -189,23 +247,26 @@ $dashboardExport = [ordered]@{
     reportName = 'FSI Copilot Governance Dashboard'
     workspace = $config.defaults.dashboardWorkspace
     exportTimestamp = $exportedAt
+    collectedAt = $exportedAt
+    timestampProvenance = 'synthetic-seed'
+    reportingPeriod = [ordered]@{
+        start = $null
+        end = $exportedAt
+        basis = 'documentation-first-seed'
+    }
     filters = [ordered]@{
         tier = $ConfigurationTier
         enabledFrameworks = @($config.enabledFrameworks)
         freshnessThresholdHours = [int]$config.freshnessThresholdHours
     }
-    referencedEvidencePackages = @(
-        foreach ($dependency in @($config.dependencies)) {
-            [ordered]@{
-                solution = $dependency
-                packagePath = ('solutions\{0}\artifacts\{0}-evidence.json' -f $dependency)
-                # Sibling evidence packages must be exported at runtime before hashes can be computed;
-                # this placeholder is resolved by the RCD-EvidenceAggregator flow in the customer environment.
-                hash = 'pending-runtime-resolution'
-                freshnessStatus = if ([int]$config.freshnessThresholdHours -le 25) { 'current' } else { 'review-needed' }
-            }
-        }
-    )
+    referencedEvidencePackages = $referencedEvidencePackages
+    dataQuality = [ordered]@{
+        overall = 'gap'
+        reason = 'Referenced upstream evidence packages are unresolved at documentation-first seed time; source last-modified timestamps and SHA-256 hashes must be resolved by the RCD-EvidenceAggregator flow at runtime before freshness can be evaluated.'
+        totalReferencedPackages = @($referencedEvidencePackages).Count
+        resolvedPackages = 0
+        hasTimestampGap = $true
+    }
     selectedRegulatoryFramework = @($config.enabledFrameworks)
     packageOwner = 'Compliance Operations'
     reviewer = 'Regulatory Readiness Lead'
@@ -215,9 +276,9 @@ $dashboardExport = [ordered]@{
     warning = $script:RuntimeWarning
 }
 
-$controlArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'control-status-snapshot.json') -Name 'control-status-snapshot' -Content $controlStatusSnapshot
-$coverageArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'framework-coverage-matrix.json') -Name 'framework-coverage-matrix' -Content $frameworkCoverageMatrix
-$dashboardArtifact = Write-ArtifactDocument -Path (Join-Path $resolvedOutputPath 'dashboard-export.json') -Name 'dashboard-export' -Content $dashboardExport
+$controlArtifact = Write-ArtifactDocument -BasePath $resolvedOutputPath -Path (Join-Path $resolvedOutputPath 'control-status-snapshot.json') -Name 'control-status-snapshot' -Content $controlStatusSnapshot
+$coverageArtifact = Write-ArtifactDocument -BasePath $resolvedOutputPath -Path (Join-Path $resolvedOutputPath 'framework-coverage-matrix.json') -Name 'framework-coverage-matrix' -Content $frameworkCoverageMatrix
+$dashboardArtifact = Write-ArtifactDocument -BasePath $resolvedOutputPath -Path (Join-Path $resolvedOutputPath 'dashboard-export.json') -Name 'dashboard-export' -Content $dashboardExport
 
 $artifacts = @($controlArtifact, $coverageArtifact, $dashboardArtifact)
 $package = Export-SolutionEvidencePackage `

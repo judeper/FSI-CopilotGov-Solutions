@@ -43,33 +43,75 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
 
 Import-Module (Join-Path $repoRoot 'scripts\common\IntegrationConfig.psm1') -Force
 
+function Resolve-OutputDirectoryPath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+
+    return $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+}
+
 function Get-ControlStatusSnapshot {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [string]$SnapshotPath,
+        [string]$RcdSnapshotPath,
+
+        [Parameter(Mandatory)]
+        [string]$ExportSnapshotPath,
 
         [Parameter(Mandatory)]
         [ValidateSet('baseline', 'recommended', 'regulated')]
         [string]$Tier
     )
 
-    if (Test-Path -Path $SnapshotPath) {
-        $snapshotDocument = Get-Content -Path $SnapshotPath -Raw | ConvertFrom-Json
-        if ($snapshotDocument.controls) {
-            return @($snapshotDocument.controls)
+    $candidateSnapshots = @(
+        [pscustomobject]@{
+            source = 'rcd-control-status-snapshot'
+            path = $RcdSnapshotPath
+        },
+        [pscustomobject]@{
+            source = 'control-status-snapshot'
+            path = $ExportSnapshotPath
+        }
+    )
+
+    foreach ($candidate in $candidateSnapshots) {
+        if (-not (Test-Path -Path $candidate.path -PathType Leaf)) {
+            continue
         }
 
-        return @($snapshotDocument)
+        $snapshotDocument = Get-Content -Path $candidate.path -Raw | ConvertFrom-Json
+        $hasControlsProperty = ($snapshotDocument -isnot [System.Array]) -and ($snapshotDocument.PSObject.Properties.Name -contains 'controls')
+        $controls = if ($hasControlsProperty -and $null -ne $snapshotDocument.controls) {
+            @($snapshotDocument.controls)
+        }
+        else {
+            @($snapshotDocument)
+        }
+
+        return [pscustomobject]@{
+            Controls = $controls
+            SnapshotSource = $candidate.source
+            SnapshotPath = $candidate.path
+            UsedFallback = $false
+        }
     }
 
-        return @(
+    return [pscustomobject]@{
+        Controls = @(
             [pscustomobject]@{
                 controlId = '3.7'
                 controlTitle = 'Compliance Posture Reporting and Executive Dashboards'
                 status = 'partial'
                 score = [int](Get-CopilotGovStatusScore -Status 'partial')
                 lastEvidenceDate = $null
+                sourceLastModified = $null
+                timestampProvenance = 'missing'
+                freshnessState = 'unknown'
+                hashState = 'unresolved'
                 solutionSlug = $script:SolutionCode
                 tier = $Tier
                 notes = 'Fallback snapshot entry used when no Dataverse seed file is available; the repository does not expose a live dashboard aggregator by default.'
@@ -80,6 +122,10 @@ function Get-ControlStatusSnapshot {
             status = 'partial'
             score = [int](Get-CopilotGovStatusScore -Status 'partial')
             lastEvidenceDate = $null
+            sourceLastModified = $null
+            timestampProvenance = 'missing'
+            freshnessState = 'unknown'
+            hashState = 'unresolved'
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -90,6 +136,10 @@ function Get-ControlStatusSnapshot {
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
             lastEvidenceDate = $null
+            sourceLastModified = $null
+            timestampProvenance = 'missing'
+            freshnessState = 'unknown'
+            hashState = 'unresolved'
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -100,6 +150,10 @@ function Get-ControlStatusSnapshot {
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
             lastEvidenceDate = $null
+            sourceLastModified = $null
+            timestampProvenance = 'missing'
+            freshnessState = 'unknown'
+            hashState = 'unresolved'
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -110,6 +164,10 @@ function Get-ControlStatusSnapshot {
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
             lastEvidenceDate = $null
+            sourceLastModified = $null
+            timestampProvenance = 'missing'
+            freshnessState = 'unknown'
+            hashState = 'unresolved'
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
@@ -120,11 +178,94 @@ function Get-ControlStatusSnapshot {
             status = 'monitor-only'
             score = [int](Get-CopilotGovStatusScore -Status 'monitor-only')
             lastEvidenceDate = $null
+            sourceLastModified = $null
+            timestampProvenance = 'missing'
+            freshnessState = 'unknown'
+            hashState = 'unresolved'
             solutionSlug = $script:SolutionCode
             tier = $Tier
             notes = 'Fallback snapshot entry used when no Dataverse seed file is available.'
         }
     )
+        SnapshotSource = 'fallback-defaults'
+        SnapshotPath = $null
+        UsedFallback = $true
+    }
+}
+
+function Get-TimestampState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$Control,
+
+        [Parameter(Mandatory)]
+        [datetimeoffset]$ReferenceTimeUtc
+    )
+
+    $sourceTimestamp = if (-not [string]::IsNullOrWhiteSpace([string]$Control.sourceLastModified)) {
+        [string]$Control.sourceLastModified
+    }
+    elseif (-not [string]::IsNullOrWhiteSpace([string]$Control.lastEvidenceDate)) {
+        [string]$Control.lastEvidenceDate
+    }
+    else {
+        $null
+    }
+
+    if ([string]::IsNullOrWhiteSpace($sourceTimestamp)) {
+        return [pscustomobject]@{
+            timestamp = $null
+            sourceTimestamp = $null
+            timestampProvenance = 'missing'
+            timestampState = 'missing'
+            freshnessState = 'unknown'
+            hoursSinceEvidence = $null
+            reason = 'No source evidence timestamp is available for this control.'
+            isTimestampGap = $true
+        }
+    }
+
+    $styles = [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal
+    $parsedTimestamp = [datetimeoffset]::MinValue
+    $isParsed = [datetimeoffset]::TryParse($sourceTimestamp, [System.Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$parsedTimestamp)
+    if (-not $isParsed) {
+        return [pscustomobject]@{
+            timestamp = $null
+            sourceTimestamp = $sourceTimestamp
+            timestampProvenance = 'invalid'
+            timestampState = 'invalid-format'
+            freshnessState = 'unknown'
+            hoursSinceEvidence = $null
+            reason = 'The source evidence timestamp is malformed and could not be parsed as UTC.'
+            isTimestampGap = $true
+        }
+    }
+
+    if ($parsedTimestamp -gt $ReferenceTimeUtc) {
+        return [pscustomobject]@{
+            timestamp = $null
+            sourceTimestamp = $sourceTimestamp
+            timestampProvenance = 'invalid'
+            timestampState = 'future'
+            freshnessState = 'unknown'
+            hoursSinceEvidence = $null
+            reason = 'The source evidence timestamp is in the future and cannot be treated as current evidence.'
+            isTimestampGap = $true
+        }
+    }
+
+    $hoursSinceEvidence = [math]::Round(($ReferenceTimeUtc - $parsedTimestamp).TotalHours, 2)
+    return [pscustomobject]@{
+        timestamp = $parsedTimestamp
+        sourceTimestamp = $sourceTimestamp
+        timestampProvenance = 'source-provided'
+        timestampState = 'valid'
+        freshnessState = 'fresh'
+        hoursSinceEvidence = $hoursSinceEvidence
+        reason = 'Source evidence timestamp was parsed successfully.'
+        isTimestampGap = $false
+    }
 }
 
 function Measure-GovernanceMaturity {
@@ -176,34 +317,37 @@ function Test-EvidenceFreshness {
         [int]$ThresholdHours
     )
 
-    $referenceTime = Get-Date
+    $referenceTime = [datetimeoffset]::UtcNow
     $staleEvidence = foreach ($control in $Controls) {
-        $parsedEvidenceDate = $null
-        if (-not [string]::IsNullOrWhiteSpace([string]$control.lastEvidenceDate)) {
-            $parsedEvidenceDate = [datetime]$control.lastEvidenceDate
-        }
-
-        $hoursSinceEvidence = if ($parsedEvidenceDate) {
-            [math]::Round(($referenceTime.ToUniversalTime() - $parsedEvidenceDate.ToUniversalTime()).TotalHours, 2)
-        }
-        else {
-            $null
-        }
-
-        $isFresh = $parsedEvidenceDate -and ($hoursSinceEvidence -le $ThresholdHours)
+        $timestampState = Get-TimestampState -Control $control -ReferenceTimeUtc $referenceTime
+        $isFresh = ($timestampState.timestampProvenance -eq 'source-provided') -and ($timestampState.hoursSinceEvidence -le $ThresholdHours)
         if (-not $isFresh) {
+            $freshnessState = if ($timestampState.timestampProvenance -eq 'source-provided') { 'stale' } else { 'unknown' }
+            $reason = if ($timestampState.timestampProvenance -eq 'source-provided') {
+                'Evidence age exceeds the configured freshness threshold.'
+            }
+            else {
+                $timestampState.reason
+            }
+
             [pscustomobject]@{
                 controlId = $control.controlId
                 controlTitle = $control.controlTitle
                 status = $control.status
                 lastEvidenceDate = $control.lastEvidenceDate
-                hoursSinceEvidence = $hoursSinceEvidence
-                reason = if ($parsedEvidenceDate) { 'Evidence age exceeds the configured freshness threshold.' } else { 'No evidence export date is available for this control.' }
+                sourceLastModified = $control.sourceLastModified
+                sourceTimestamp = $timestampState.sourceTimestamp
+                hoursSinceEvidence = $timestampState.hoursSinceEvidence
+                timestampProvenance = $timestampState.timestampProvenance
+                timestampState = $timestampState.timestampState
+                freshnessState = $freshnessState
+                reason = $reason
             }
         }
     }
 
     $staleIds = @($staleEvidence | ForEach-Object { $_.controlId })
+    $timestampGapCount = @($staleEvidence | Where-Object { $_.timestampProvenance -in @('missing', 'invalid') }).Count
     $freshnessPct = if ($Controls.Count -gt 0) {
         [math]::Round(((($Controls.Count - @($staleEvidence).Count) / $Controls.Count) * 100), 2)
     }
@@ -221,6 +365,8 @@ function Test-EvidenceFreshness {
         EvidenceFreshnessPct = $freshnessPct
         StaleEvidence = @($staleEvidence)
         ControlsAtRisk = $controlsAtRisk
+        TimestampGapCount = $timestampGapCount
+        HasTimestampGap = ($timestampGapCount -gt 0)
     }
 }
 
@@ -241,34 +387,45 @@ try {
         $weightMap[$weightProperty.Name] = [double]$weightProperty.Value
     }
 
-    $snapshotPath = Join-Path $OutputPath 'rcd-control-status-snapshot.json'
-    $snapshotExists = Test-Path -Path $snapshotPath
-    $controls = @(Get-ControlStatusSnapshot -SnapshotPath $snapshotPath -Tier $ConfigurationTier)
+    $resolvedOutputPath = Resolve-OutputDirectoryPath -Path $OutputPath
+    $rcdSnapshotPath = Join-Path $resolvedOutputPath 'rcd-control-status-snapshot.json'
+    $exportSnapshotPath = Join-Path $resolvedOutputPath 'control-status-snapshot.json'
+    $snapshotResult = Get-ControlStatusSnapshot -RcdSnapshotPath $rcdSnapshotPath -ExportSnapshotPath $exportSnapshotPath -Tier $ConfigurationTier
+    $controls = @($snapshotResult.Controls)
     $maturity = Measure-GovernanceMaturity -Controls $controls -WeightMap $weightMap
     $freshness = Test-EvidenceFreshness -Controls $controls -ThresholdHours $effectiveThresholdHours
 
-    $null = New-Item -ItemType Directory -Path $OutputPath -Force
-    $reportPath = Join-Path $OutputPath 'rcd-monitoring-status.json'
+    $null = New-Item -ItemType Directory -Path $resolvedOutputPath -Force
+    $reportPath = Join-Path $resolvedOutputPath 'rcd-monitoring-status.json'
     $report = [pscustomobject]@{
         Solution = $script:SolutionName
         SolutionCode = $script:SolutionCode
         Tier = $ConfigurationTier
         GeneratedAt = (Get-Date).ToString('o')
-        SnapshotSource = if ($snapshotExists) { $snapshotPath } else { 'fallback-defaults' }
-        RuntimeMode = if ($snapshotExists) { 'seeded-or-live-snapshot' } else { $script:RuntimeMode }
-        StatusWarning = if ($snapshotExists) { 'Monitoring reflects the supplied snapshot; confirm Dataverse ingestion and Power BI bindings before treating the dashboard as live.' } else { $script:RuntimeWarning }
+        SnapshotSource = $snapshotResult.SnapshotSource
+        SnapshotSourcePath = if ($snapshotResult.UsedFallback) { $null } else { $snapshotResult.SnapshotPath }
+        RuntimeMode = if ($snapshotResult.UsedFallback) { $script:RuntimeMode } else { 'seeded-or-live-snapshot' }
+        StatusWarning = if ($snapshotResult.UsedFallback) { $script:RuntimeWarning } else { ('Monitoring reflects snapshot source "{0}"; confirm Dataverse ingestion and Power BI bindings before treating the dashboard as live.' -f $snapshotResult.SnapshotSource) }
         FreshnessThresholdHours = $effectiveThresholdHours
         GovernanceMaturityScore = $maturity.GovernanceMaturityScore
         ControlsImplementedPct = $maturity.ControlsImplementedPct
         EvidenceFreshnessPct = $freshness.EvidenceFreshnessPct
         RAGStatus = $maturity.RAGStatus
+        DataQualityGap = [bool]$freshness.HasTimestampGap
+        TimestampGapControlCount = [int]$freshness.TimestampGapCount
         StaleEvidence = $freshness.StaleEvidence
         ControlsAtRisk = $freshness.ControlsAtRisk
         Controls = $controls
     }
 
-    if (-not $snapshotExists) {
+    if ($snapshotResult.UsedFallback) {
         Write-Warning $script:RuntimeWarning
+    }
+    else {
+        Write-Verbose ('Snapshot source used: {0} ({1})' -f $snapshotResult.SnapshotSource, $snapshotResult.SnapshotPath)
+    }
+    if ($freshness.HasTimestampGap) {
+        Write-Warning ('Evidence freshness data-quality gap: {0} control(s) have missing or invalid source evidence timestamps and are reported as unknown, not current.' -f $freshness.TimestampGapCount)
     }
     $report | ConvertTo-Json -Depth 10 | Set-Content -Path $reportPath -Encoding utf8
     Write-Output $report
