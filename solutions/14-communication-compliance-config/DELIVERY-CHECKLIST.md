@@ -59,6 +59,14 @@
 - [ ] Examination support contacts and evidence retrieval path are documented.
 - [ ] Manual Purview portal steps are documented for future updates.
 
+## Lab Validation Readiness
+
+- [ ] Review the read-only lab contract `lab\14-communication-compliance-config.lab.json` and confirm the first validation cycle is detect-only (`mutations: []`).
+- [ ] Confirm tenant identity matches the separate sanctioned-lab record and the operator holds least-privileged read-only access, including Global Reader for role-group membership inspection.
+- [ ] Confirm ignored `lab-evidence/14-communication-compliance-config` staging is removed after sample evidence capture and no policy, reviewer assignment, Power Automate flow, remediation, or retention setting is changed.
+- [ ] Verify the Microsoft source claims (role groups and the up-to-30-minute permission propagation window, the **Detect Microsoft Copilot interactions** template, licensing and pay-as-you-go boundaries, the Security & Compliance PowerShell surface and its Copilot limitation, and the supported Power Automate alert-context handoff) still match current Microsoft Learn guidance.
+- [ ] Record honest `BLOCKED` or `NOT-APPLICABLE` dispositions when a feature, license, role, policy, or rollout is not present in the target tenant.
+
 ## Sign-off
 
 - [ ] Solution Owner sign-off

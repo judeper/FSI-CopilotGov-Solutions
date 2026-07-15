@@ -159,7 +159,9 @@ $config = Get-SolutionConfiguration -ConfigRoot $configRoot -Tier $Configuration
 $tierDefinition = Get-CopilotGovTierDefinition -Tier $ConfigurationTier
 
 $null = New-Item -ItemType Directory -Path $OutputPath -Force
-$artifactRoot = Join-Path $OutputPath 'artifact-data'
+$resolvedOutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
+$artifactDirName = 'artifact-data'
+$artifactRoot = Join-Path $resolvedOutputPath $artifactDirName
 $null = New-Item -ItemType Directory -Path $artifactRoot -Force
 
 $policyTemplateExport = New-PolicyCatalog -Config $config -CreatedAt $PeriodStart -PublishedAt $PeriodEnd
@@ -186,13 +188,13 @@ $controls = @(
     }
     [pscustomobject]@{
         controlId = '3.4'
-        status = 'implemented'
-        notes = 'Communication compliance policy templates and queue metrics artifacts support compliance with monitored communications oversight.'
+        status = 'partial'
+        notes = 'Representative policy templates and queue-metric artifacts document the intended monitoring pattern; live tenant policy and queue evidence is required.'
     }
     [pscustomobject]@{
         controlId = '3.5'
-        status = 'implemented'
-        notes = 'FINRA 2210 promotional content and financial advice policy templates support compliance with retail communication review expectations.'
+        status = 'partial'
+        notes = 'Representative promotional-content and financial-advice templates document the intended FINRA 2210 review pattern; live policy evidence is required.'
     }
     [pscustomobject]@{
         controlId = '3.6'
@@ -206,7 +208,12 @@ $controls = @(
     }
 )
 
-$artifacts = @(
+$packageArtifacts = @(
+    [pscustomobject]@{ name = 'policy-template-export'; type = 'json'; path = ('{0}/policy-template-export.json' -f $artifactDirName); hash = $policyTemplateHash }
+    [pscustomobject]@{ name = 'reviewer-queue-metrics'; type = 'json'; path = ('{0}/reviewer-queue-metrics.json' -f $artifactDirName); hash = $queueMetricsHash }
+    [pscustomobject]@{ name = 'lexicon-update-log'; type = 'json'; path = ('{0}/lexicon-update-log.json' -f $artifactDirName); hash = $lexiconLogHash }
+)
+$resultArtifacts = @(
     [pscustomobject]@{ name = 'policy-template-export'; type = 'json'; path = $policyTemplatePath; hash = $policyTemplateHash }
     [pscustomobject]@{ name = 'reviewer-queue-metrics'; type = 'json'; path = $queueMetricsPath; hash = $queueMetricsHash }
     [pscustomobject]@{ name = 'lexicon-update-log'; type = 'json'; path = $lexiconLogPath; hash = $lexiconLogHash }
@@ -223,10 +230,10 @@ $exportParameters = @{
     Solution = '14-communication-compliance-config'
     SolutionCode = 'CCC'
     Tier = $ConfigurationTier
-    OutputPath = $OutputPath
+    OutputPath = $resolvedOutputPath
     Summary = $summary
     Controls = $controls
-    Artifacts = $artifacts
+    Artifacts = $packageArtifacts
 }
 
 $package = Export-SolutionEvidencePackage @exportParameters
@@ -240,9 +247,10 @@ $result = [pscustomobject]@{
     OverallStatusScore = Get-CopilotGovStatusScore -Status 'partial'
     PeriodStart = $PeriodStart.ToString('o')
     PeriodEnd = $PeriodEnd.ToString('o')
-    ArtifactCount = $artifacts.Count
+    ArtifactCount = $packageArtifacts.Count
     PackagePath = $package.Path
     PackageHash = $package.Hash
+    Artifacts = $resultArtifacts
 }
 
 if ($PassThru) {

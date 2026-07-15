@@ -1,5 +1,29 @@
 # Changelog
 
+## [Unreleased] — Microsoft currency review and read-only lab contract
+
+### Fixed
+
+- Corrected the documentation-first justification in README.md and docs/architecture.md: Communication Compliance policy publication is no longer described as portal-only. A Security & Compliance PowerShell surface (`New-`/`Get-SupervisoryReviewPolicyV2`, `New-`/`Get-`/`Set-SupervisoryReviewRule`) can create baseline policies, reviewers, sampling (review) percentages, and keyword or sensitive-information-type conditions; the Microsoft 365 Copilot detection location and its trainable classifiers remain portal-configured, which is why the solution stays documentation-first.
+- Removed the implication that a Microsoft Graph beta capability underpins reviewer queue metrics; documented that no supported Graph or Purview API exists for queue metrics and that data is exported manually from the Microsoft Purview portal.
+- Aligned the Deploy-Solution.ps1 NOTES version comment with the released v0.2.4 configuration version and clarified that the script never calls Purview cmdlets.
+- Made evidence-package `artifacts[].path` values package-relative (`artifact-data/...`) for relocation safety while keeping the absolute package path in the caller result.
+- Preserved absolute artifact paths in the caller result, added move-and-revalidate coverage, and kept all sample evidence controls at partial/monitor-only rather than implemented.
+
+### Added
+
+- Documented the pay-as-you-go billing boundary: detecting Microsoft 365 Copilot interactions has no pay-as-you-go requirement, while detecting non-Microsoft 365 AI data (connected, enterprise, or other AI apps such as Copilot in Microsoft Fabric, Microsoft Security Copilot, or Microsoft Copilot Studio) requires pay-as-you-go billing enabled.
+- Documented the current Communication Compliance role-group least-privilege model (configure vs. investigate vs. read-only), the policy-reviewer requirement, and the documented up-to-30-minute role-group permission propagation window.
+- Documented the current portal wizard route and the built-in **Detect Microsoft Copilot interactions** template (Microsoft 365 Copilot and Copilot Chat location; Prompt Shields and Protected material classifiers; 100% review percentage) plus the supported Power Automate alert-context handoff.
+- Added the read-only lab validation contract `lab/14-communication-compliance-config.lab.json` (detect-only, `mutations: []`) plus lab handoff notes in the deployment guide and delivery checklist.
+- Added out-of-band tenant proof, Global Reader for role-group membership inspection, direct cmdlet-parameter inventory, offline sample export validation, ignored staging, and fail-closed cleanup to the lab contract.
+- Added behavioral Pester tests for the PowerShell and pay-as-you-go documentation currency and for the evidence-package relative-path portability.
+- Tightened the README overview so documentation-first scaffolds are not described as live policy, workflow, lexicon, or queue configuration.
+
+### Changed
+
+- Relocated the stale, misplaced `[Unreleased]` validation-sweep note (dated 2026-05-25, previously below the released v0.2.4 entry) to a dated `Validation sweep — 2026-05-25` heading so a single `[Unreleased]` section stays at the top.
+
 ## v0.2.4 — 2026-06-05 — MS Learn accuracy pass-2 correction
 
 ### Fixed
@@ -15,9 +39,7 @@
 - Changed `defaultReviewerGroup` sample value from a non-existent role group to the built-in "Communication Compliance Analysts" role group.
 - Added Public preview status caveat for Teams audio recap in architecture and evidence-export documentation.
 
-## [Unreleased]
-
-### Validation sweep — 2026-05-25
+## Validation sweep — 2026-05-25 (no version change)
 
 - Verified Communication Compliance role groups (`Communication Compliance Admins`, `Analysts`, `Investigators`, `Viewers`) are current per Microsoft Learn.
 - Verified licensing terminology: Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) and Office 365 E3 with Advanced Compliance add-on are current.

@@ -1,0 +1,477 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:14-communication-compliance-config:2026-07-currency-readonly",
+  "solution": {
+    "id": "14-communication-compliance-config",
+    "name": "Communication Compliance Configurator",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.10",
+    "3.4",
+    "3.5",
+    "3.6",
+    "3.9"
+  ],
+  "portals": [
+    "microsoft-purview-compliance-portal",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-role-groups",
+      "claimText": "Communication Compliance uses six role groups. Only the Communication Compliance and Communication Compliance Admins role groups (and the equivalent Global Administrator, Compliance Administrator, or Organization Management roles) can configure policies; Communication Compliance Analysts and Investigators investigate alerts; Communication Compliance Viewers is read-only. After role-group changes, it can take up to 30 minutes for the new permissions to apply to assigned users.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/prerequisites.md",
+        "solutions/14-communication-compliance-config/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-permissions",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-policy-reviewers",
+      "claimText": "When creating a Communication Compliance policy in the Microsoft Purview portal, the administrator enters the policy name, selects the users and groups to apply the policy to, and selects the reviewers for the policy. Reviewers must be assigned as reviewers in the specific policy they need to investigate.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/prerequisites.md",
+        "solutions/14-communication-compliance-config/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-copilot",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-copilot-template",
+      "claimText": "The built-in Detect Microsoft Copilot interactions policy template targets the Microsoft 365 Copilot and Microsoft 365 Copilot Chat location, applies to inbound, outbound, and internal directions, uses a 100% review percentage, and uses the Prompt Shields and Protected material classifiers as conditions.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-policies",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-licensing",
+      "claimText": "Users covered by Communication Compliance policies must have a Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) license, an Office 365 Enterprise E3 license with the Advanced Compliance add-on, or be included in an Office 365 Enterprise E5 subscription.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/prerequisites.md",
+        "solutions/14-communication-compliance-config/README.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-plan",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-pay-as-you-go",
+      "claimText": "There are no pay-as-you-go billing requirements or charges for detecting inappropriate or risky interactions in Microsoft 365 Copilot data. Detecting inappropriate or risky interactions for non-Microsoft 365 AI data, including connected and other generative AI applications, requires pay-as-you-go billing to be enabled in the organization.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-copilot",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-powershell-surface",
+      "claimText": "Security & Compliance PowerShell provides New-SupervisoryReviewPolicyV2, Get-SupervisoryReviewPolicyV2, New-SupervisoryReviewRule, Get-SupervisoryReviewRule, and Set-SupervisoryReviewRule for supervisory review (Communication Compliance) policies and rules, including reviewers and the SamplingRate (review percentage) and keyword or sensitive-information-type conditions. These cmdlets do not expose the Microsoft 365 Copilot detection location or its trainable classifiers, and the WhatIf switch is not honored in Security & Compliance PowerShell.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/prerequisites.md",
+        "solutions/14-communication-compliance-config/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/powershell/module/exchangepowershell/new-supervisoryreviewrule",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-power-automate-handoff",
+      "claimText": "Power Automate flows for Communication Compliance are created from the Manage Power Automate flows option in the Automate menu while working directly in an alert, using recommended default templates such as notifying a user's manager when a Communication Compliance alert is generated. Recommended default templates do not require additional Power Automate licenses.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-power-automate",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-portal-route",
+      "claimText": "Communication Compliance is accessed in the Microsoft Purview portal at purview.microsoft.com by opening the Communication Compliance solution and selecting Policies in the left navigation to create or manage policies.",
+      "affectedFiles": [
+        "solutions/14-communication-compliance-config/docs/deployment-guide.md",
+        "solutions/14-communication-compliance-config/docs/architecture.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/communication-compliance-copilot",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with the Advanced Compliance add-on for users covered by Communication Compliance policies",
+      "Microsoft 365 Copilot license for the users and Copilot experiences under review",
+      "Pay-as-you-go billing enabled only if detection of non-Microsoft 365 AI data (connected, enterprise, or other AI apps) is in scope"
+    ],
+    "roles": [
+      "Communication Compliance Viewers role group for least-privileged read-only inspection of policies",
+      "Read-only reviewer access to confirm reviewer assignment on the specific policy under review",
+      "View-only Security & Compliance PowerShell access for Get-SupervisoryReviewPolicyV2 and Get-SupervisoryReviewRule read-back",
+      "Global Reader for read-only tenant and role-group membership verification"
+    ],
+    "features": [
+      "Microsoft Purview Communication Compliance enabled for the tenant",
+      "Communication Compliance solution available in the Microsoft Purview portal",
+      "Security & Compliance PowerShell (ExchangeOnlineManagement) connectivity for read-only inventory"
+    ],
+    "capacityRequirements": [
+      "No tenant capacity changes; the first cycle is read-only inspection only"
+    ],
+    "dataRequirements": [
+      "Existing tenant Communication Compliance policy configuration for inspection",
+      "Representative sample data only for the documentation-first repository scripts"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is detect-only. No policy, reviewer assignment, lexicon, Power Automate flow, remediation action, or retention setting is created, edited, published, or enforced. Use BLOCKED or NOT-APPLICABLE honestly when a feature, license, role, policy, or rollout is absent in the target tenant. Regulatory retention and supervision language is documentation-only and is not asserted as live service enforcement."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant identity and read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before any Communication Compliance inspection.",
+            "expected": "The organization id and displayName match the separately maintained sanctioned-lab authorization record.",
+            "operatorNote": "Compare the response with the out-of-band lab authorization record and stop on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Graph organization response and sanctioned-lab record",
+              "expectation": "Tenant identity matches the separately maintained sanctioned-lab record."
+            }
+          },
+          {
+            "id": "step-verify-licensing-and-payg",
+            "mode": "manual",
+            "intent": "Confirm the tenant licensing for Communication Compliance and whether pay-as-you-go billing is required for the AI detection scope under review.",
+            "expected": "Operator attests the covered users hold Microsoft Purview Suite, Office 365 E5, or Office 365 E3 with the Advanced Compliance add-on, and records that detecting Microsoft 365 Copilot interactions needs no pay-as-you-go billing while non-Microsoft 365 AI detection requires it.",
+            "operatorNote": "If only non-Microsoft 365 AI detection is desired but pay-as-you-go billing is not enabled, record that scope as NOT-APPLICABLE with source evidence rather than reporting it as available.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Licensing and pay-as-you-go attestation note",
+              "expectation": "Attestation records the licensed capability set and the pay-as-you-go posture for the target tenant."
+            }
+          },
+          {
+            "id": "step-verify-least-privileged-role",
+            "mode": "ui",
+            "intent": "Confirm the operator holds least-privileged read-only access to Communication Compliance and can view policies without configuration rights.",
+            "expected": "The Communication Compliance solution loads in read-only form for the Viewers role group and the Policies list is visible.",
+            "locator": "Microsoft Purview portal > Communication Compliance > Policies",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Communication Compliance policies list",
+              "expectation": "Policies list renders in read-only form for the least-privileged reviewer role."
+            }
+          },
+          {
+            "id": "step-inspect-role-group-membership",
+            "mode": "ui",
+            "intent": "Using Global Reader, inspect Communication Compliance role-group membership and note the up-to-30-minute permission propagation window without changing any assignment.",
+            "expected": "Role groups show current membership for Communication Compliance, Admins, Analysts, Investigators, and Viewers, and the operator records that role-group changes can take up to 30 minutes to apply.",
+            "locator": "Microsoft Purview portal > Settings > Roles and groups > Role groups",
+            "operatorNote": "Read-only inspection only. Do not add or remove any role-group member.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Role groups membership panel",
+              "expectation": "Membership is recorded read-only and the propagation window is noted."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Inspect current Copilot policy and wizard fields (detect-only)",
+        "steps": [
+          {
+            "id": "step-inspect-existing-copilot-policy",
+            "mode": "ui",
+            "intent": "Inspect any existing Copilot-scoped Communication Compliance policy to record its location, reviewers, and review percentage without editing it.",
+            "expected": "The policy details show the Microsoft 365 Copilot detection location, assigned reviewers, and the configured review percentage.",
+            "locator": "Microsoft Purview portal > Communication Compliance > Policies > (Copilot-scoped policy)",
+            "operatorNote": "Do not select Edit, Save, or any remediation action. If no Copilot policy exists yet, record the check as NOT-APPLICABLE with source evidence.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Policy details panel",
+              "expectation": "Location, reviewers, and review percentage are recorded read-only for the existing policy or NOT-APPLICABLE if none exists."
+            }
+          },
+          {
+            "id": "step-inspect-copilot-template-wizard",
+            "mode": "ui",
+            "intent": "Open the Create policy wizard and select the Detect Microsoft Copilot interactions template to confirm its pre-selected location, classifiers, and review percentage, then cancel without saving.",
+            "expected": "The template pre-selects the Microsoft 365 Copilot and Microsoft 365 Copilot Chat location with the Prompt Shields and Protected material classifiers at a 100% review percentage.",
+            "locator": "Microsoft Purview portal > Communication Compliance > Policies > Create policy > Detect Microsoft Copilot interactions",
+            "operatorNote": "Cancel or close the wizard before the Create policy or Save step. Do not create the policy.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Create policy wizard template summary",
+              "expectation": "Wizard shows the documented Copilot location, classifiers, and review percentage and is closed without saving."
+            }
+          },
+          {
+            "id": "step-readonly-powershell-inventory",
+            "mode": "powershell",
+            "intent": "Run a read-only Security & Compliance PowerShell inventory of supervisory review policies/rules and inspect the documented New-SupervisoryReviewRule parameter surface for an explicit Copilot location or classifier parameter.",
+            "expected": "The inventory lists supervisory review policies and rules with names, enabled state, and sampling percentage; the command parameter inventory contains no explicit Microsoft 365 Copilot detection-location or trainable-classifier parameter.",
+            "command": "Connect-IPPSSession; $policies = Get-SupervisoryReviewPolicyV2 | Select-Object Name, Enabled; $rules = Get-SupervisoryReviewRule | Select-Object Name, Policy, SamplingRate; $parameters = (Get-Command New-SupervisoryReviewRule).Parameters.Keys | Sort-Object; [pscustomobject]@{ policies = @($policies); rules = @($rules); newRuleParameters = @($parameters) } | ConvertTo-Json -Depth 8",
+            "operatorNote": "Read-only inspection only. Do not run New-, Set-, or Remove- cmdlets. Note that WhatIf is not honored in Security & Compliance PowerShell.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Get-SupervisoryReview* output",
+              "expectation": "Output lists current policies/rules and the New-SupervisoryReviewRule parameters, with no explicit Copilot detection-location or trainable-classifier parameter."
+            }
+          },
+          {
+            "id": "step-run-documentation-first-export",
+            "mode": "powershell",
+            "intent": "Run the documentation-first evidence export offline to validate sample status and portable artifact paths.",
+            "expected": "The export returns overallStatus partial, absolute caller artifact paths, and package-relative artifact paths without a tenant connection.",
+            "command": "pwsh -File solutions/14-communication-compliance-config/scripts/Export-Evidence.ps1 -ConfigurationTier baseline -OutputPath lab-evidence/14-communication-compliance-config -PassThru",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Solution 14 export result and package",
+              "expectation": "Sample controls remain partial/monitor-only, caller artifact paths are rooted, and package artifact paths are relative."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify Microsoft source currency and lifecycle",
+        "steps": [
+          {
+            "id": "step-verify-source-published",
+            "mode": "api",
+            "intent": "Confirm the primary Microsoft Learn source for the Copilot Communication Compliance detection remains published and current.",
+            "expected": "The Microsoft Learn page returns successfully and still documents the Detect Microsoft Copilot interactions template and pay-as-you-go boundary cited by this contract.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://learn.microsoft.com/purview/communication-compliance-copilot"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Microsoft Learn Copilot Communication Compliance source",
+              "expectation": "Source remains published and matches the lifecycle states recorded in microsoftSourceClaims."
+            }
+          },
+          {
+            "id": "step-verify-lifecycle-states",
+            "mode": "manual",
+            "intent": "Confirm the current lifecycle states of the role groups, Copilot template, licensing and pay-as-you-go boundary, PowerShell surface limitation, and Power Automate alert-context handoff.",
+            "expected": "Operator attests that Microsoft Learn still documents these capabilities as generally available with the same scope this contract records.",
+            "operatorNote": "If Microsoft changed any capability, template name, role group, licensing term, or lifecycle state, record the change and mark the affected check BLOCKED with source evidence instead of assuming the prior state.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Lifecycle verification note",
+              "expectation": "Attestation records verified lifecycle states with the Microsoft Learn source URLs."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Remove local staging and record no-mutation cleanup decision",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove ignored local staging after required evidence has been captured by the lab result packager.",
+            "expected": "The Solution 14 lab-evidence staging directory no longer exists.",
+            "command": "$path = 'lab-evidence/14-communication-compliance-config'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 14 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/14-communication-compliance-config no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Capture operator attestation that the first lab cycle applied no mutable changes to tenant Communication Compliance configuration.",
+            "expected": "Operator note confirms cleanup is not required because the cycle was read-only and detect-only.",
+            "operatorNote": "No policy, reviewer assignment, lexicon, Power Automate flow, remediation action, or retention setting was created, edited, published, or enforced during this validation run.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation note",
+              "expectation": "Attestation confirms no mutable changes occurred and no cleanup is required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "3.4"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Microsoft Learn URLs with confirmed lifecycle states for the Communication Compliance role groups, Copilot template, licensing and pay-as-you-go boundary, PowerShell surface, and Power Automate handoff cited in this contract.",
+        "requiredForControls": [
+          "3.4",
+          "3.6",
+          "3.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-role-and-policy-inspection",
+        "type": "screenshot",
+        "description": "Read-only Microsoft Purview portal screenshots of Communication Compliance role-group membership and the existing Copilot policy or Create policy wizard fields (location, classifiers, reviewers, review percentage).",
+        "requiredForControls": [
+          "3.4",
+          "3.6"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-powershell-inventory",
+        "type": "powershell-transcript",
+        "description": "Read-only Get-SupervisoryReviewPolicyV2 and Get-SupervisoryReviewRule transcript showing policy and rule inventory, sampling percentage, and the absence of a Copilot location parameter.",
+        "requiredForControls": [
+          "3.4",
+          "3.5"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-no-mutation-attestation",
+        "type": "manual-attestation",
+        "description": "Operator attestation that the validation cycle created, edited, published, or enforced no policy, reviewer assignment, lexicon, Power Automate flow, remediation action, or retention setting.",
+        "requiredForControls": [
+          "2.10",
+          "3.9"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-sample-export",
+        "type": "powershell-transcript",
+        "description": "Documentation-first Solution 14 export transcript and portable evidence-package validation result.",
+        "requiredForControls": [
+          "3.4",
+          "3.5",
+          "3.6",
+          "3.9"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-source-citations",
+      "artifact-role-and-policy-inspection"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

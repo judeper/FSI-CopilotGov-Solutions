@@ -14,6 +14,7 @@ Possible causes and checks:
 Possible causes and checks:
 
 - Wait for policy propagation. New Microsoft Purview Communication Compliance policies can take time to begin matching.
+- After changing Communication Compliance role-group membership, allow up to 30 minutes for the new permissions to apply before expecting reviewers to see the queue.
 - Confirm reviewers were assigned to the correct policy.
 - Confirm the users or locations under supervision are in scope.
 - Confirm the content source and channel are supported by the deployed policy.
