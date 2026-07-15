@@ -22,9 +22,9 @@ Copilot Feature Management Controller (FMC) provides a centralized operating mod
 
 The collector normalizes Copilot feature state from the following administrative surfaces:
 
-- **Microsoft 365 admin center:** feature policy and app-specific Copilot enablement settings
-- **Cloud Policy service:** the documented `Allow web search in Copilot` policy state and group scope
-- **Teams admin center:** documented Teams meeting/event and calling policy settings; Teams chat/channel Copilot inventory remains documentation-first unless a current admin control is cited
+- **Microsoft 365 admin center:** feature policy and app-specific Copilot enablement settings, surfaced through the Copilot Control System (**Copilot** > **Settings**: User access, Data access, Copilot actions, Other settings)
+- **Cloud Policy service:** the documented `Allow web search in Copilot` policy state and group scope (configured in the Microsoft 365 Apps admin center; also surfaced as a shortcut in the Copilot Control System)
+- **Teams admin center:** documented Teams meeting/event and calling policy settings — meetings use `Set-CsTeamsMeetingPolicy -Copilot` and calls use `Set-CsTeamsCallingPolicy -Copilot`; Teams chat/channel Copilot inventory remains documentation-first (there is no dedicated Teams-chat Copilot on/off policy; it follows Microsoft 365 Copilot license and app availability)
 - **Power Platform admin center:** Copilot settings and administrative exports for Power Apps, with Power Automate Copilot interpreted through the documented tenant-level limitation
 
 Each collected feature record is tagged with:
@@ -70,9 +70,9 @@ The alerting layer converts drift findings into actionable outputs:
 
 | Integration | Role in FMC | Notes |
 |-------------|-------------|-------|
-| Microsoft 365 admin center | Source for Microsoft 365 Copilot feature and app settings | Used as the primary documented source for tenant Copilot feature inventory. |
-| Cloud Policy service | Source for `Allow web search in Copilot` policy state and scope | Used to document whether web search is allowed for approved user groups. |
-| Teams admin center | Source for documented Teams meeting/event and calling policy coverage | Teams chat/channel Copilot inventory is documentation-first unless a current admin control is cited. |
+| Microsoft 365 admin center | Source for Microsoft 365 Copilot feature and app settings (Copilot Control System) | Used as the primary documented source for tenant Copilot feature inventory. Many settings are shortcuts to the Teams admin center, Microsoft 365 Apps admin center, Microsoft Purview portal, and Power Platform admin center. |
+| Cloud Policy service | Source for `Allow web search in Copilot` policy state and scope | Configured in the Microsoft 365 Apps admin center (config.office.com); a tenant/group on-off policy for whether Copilot can use web content as grounding. |
+| Teams admin center | Source for documented Teams meeting/event and calling Copilot policy coverage | Meetings use `Set-CsTeamsMeetingPolicy -Copilot`; calls use `Set-CsTeamsCallingPolicy -Copilot`. This solution inspects and documents these policies; it does not run the cmdlets. |
 | Power Platform admin center | Source for Copilot settings and administrative exports for Power Apps and tenant-level Power Automate settings | Power Automate Copilot environment-level disablement is not represented as available where Microsoft Learn says it is unavailable. |
 | Dataverse | Persistent store for baseline, findings, and evidence metadata | Table names follow the FMC naming convention. |
 | Power Automate | Notification and operational orchestration | Documentation-first until production import is approved. |
@@ -116,11 +116,22 @@ FMC extends feature management governance to cover the documented `Allow web sea
 
 ### Documented Web Search Policy
 
-The `Allow web search in Copilot` policy controls whether Copilot can use public web content during response generation. FMC governance templates document:
+The `Allow web search in Copilot` policy controls whether Copilot can use public web content during response generation. It is a tenant-level policy in the Cloud Policy service (Microsoft 365 Apps admin center) that can be scoped to specific groups; when enabled it offers three options (enabled for both Microsoft 365 Copilot and Copilot Chat, disabled for both, or disabled in Copilot Work mode while enabled in Web mode and Chat). FMC governance templates document:
 
 - Group-controlled web-search policy state aligned to rollout ring definitions
 - Regulated tier guidance that recommends disabling web search for populations handling sensitive or material non-public information
 - Baseline and recommended tier guidance that permits web search only where policy scope and approval are documented
+
+### Web Search Control Boundary: Cloud Policy versus Purview DLP
+
+Two distinct Microsoft controls affect Copilot web search, and this solution does not conflate them:
+
+- **Cloud Policy `Allow web search in Copilot`** — a tenant/group on-off policy in the Microsoft 365 Apps admin center (Cloud Policy service). This is the surface FMC inspects and documents as feature baseline state.
+- **Microsoft Purview data loss prevention** — a content-triggered control configured in the Microsoft Purview portal using the `Microsoft 365 Copilot and Copilot Chat` location and the `Prevent Copilot from processing content` > `Performing Web Searches` action. When a prompt contains configured sensitive information types, Copilot blocks external web search as a grounding source for that prompt only and continues using permitted internal Microsoft 365 data. This DLP surface is governed by the DLP policy solution (05); FMC records the boundary but does not configure it.
+
+## Agent Governance Boundary
+
+Copilot agents, the converged agent registry, and Microsoft Entra Agent ID are governed by **Microsoft Agent 365** (generally available for commercial tenants since May 1, 2026), not by this solution. FMC scopes to core Copilot feature policies. Agent, connector, and plugin lifecycle governance is handled by solutions 10, 21, and 23; FMC only flags connector and plugin exposure so a separate review can be triggered.
 
 ### Customer-Defined Web Grounding Metadata
 

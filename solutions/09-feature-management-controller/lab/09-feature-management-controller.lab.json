@@ -1,0 +1,464 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:09-feature-management-controller:2026-07-readonly-detect",
+  "solution": {
+    "id": "09-feature-management-controller",
+    "name": "Copilot Feature Management Controller",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-14",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "2.6",
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4",
+    "4.12",
+    "4.13"
+  ],
+  "portals": [
+    "microsoft-365-admin-center",
+    "microsoft-teams-admin-center",
+    "microsoft-365-app-admin-center",
+    "microsoft-purview-compliance-portal",
+    "power-platform-admin-center",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-copilot-control-system-routes",
+      "claimText": "The Copilot Control System in the Microsoft 365 admin center (under Copilot) centralizes Copilot licensing, usage reporting, and feature settings under the User access, Data access, Copilot actions, and Other settings tabs. Several settings are shortcuts that open the Microsoft Teams admin center, the Microsoft 365 Apps admin center (Cloud Policy service), the Microsoft Purview portal, and the Power Platform admin center, so this solution inspects and documents feature-policy state rather than replacing those admin surfaces.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/README.md",
+        "solutions/09-feature-management-controller/docs/architecture.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/copilot-control-system/management-controls",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-web-search-cloud-policy",
+      "claimText": "The Allow web search in Copilot policy is the IT-admin control that turns web search on or off for Microsoft 365 Copilot and Microsoft 365 Copilot Chat. It is available in the Cloud Policy service for Microsoft 365 (Microsoft 365 Apps admin center) and is also surfaced as a shortcut in the Copilot Control System; it can be scoped to the tenant or to specific groups and users and offers enabled-for-both, disabled-for-both, or disabled-in-Work-mode options.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/docs/architecture.md",
+        "solutions/09-feature-management-controller/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-365/copilot/manage-public-web-access",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-web-search-purview-dlp-boundary",
+      "claimText": "Microsoft Purview data loss prevention provides a separate, content-triggered web-search control for the Microsoft 365 Copilot and Copilot Chat location: the Prevent Copilot from processing content action with the Performing Web Searches option blocks external web search as a grounding source only when a prompt contains configured sensitive information types, while Copilot continues to use permitted internal Microsoft 365 data. This DLP surface is distinct from the Cloud Policy on-off toggle and is configured in the Microsoft Purview portal.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/docs/architecture.md",
+        "solutions/09-feature-management-controller/docs/troubleshooting.md",
+        "solutions/09-feature-management-controller/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-teams-meeting-copilot-policy",
+      "claimText": "Copilot for Teams meetings and events is managed with the -Copilot parameter of Set-CsTeamsMeetingPolicy, whose values are Enabled, EnabledWithTranscript (the default), EnabledWithTranscriptDefaultOn, and Disabled. Behavior depends on the transcription policy (-AllowTranscription), and users require an add-on Microsoft 365 Copilot license; Copilot is not available in end-to-end encrypted meetings.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/README.md",
+        "solutions/09-feature-management-controller/docs/prerequisites.md",
+        "solutions/09-feature-management-controller/config/default-config.json"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoftteams/copilot-teams-transcription",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-teams-calling-copilot-policy",
+      "claimText": "Copilot for Teams 1:1 and PSTN calls is managed with the -Copilot parameter of Set-CsTeamsCallingPolicy, whose values are Enabled, EnabledWithTranscript (used with -AllowTranscriptionForCalling), and Disabled. This calling policy is separate from the meeting policy, requires a Microsoft 365 Copilot license, and requires a Teams Phone license for PSTN calls.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/README.md",
+        "solutions/09-feature-management-controller/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/microsoftteams/copilot-teams-calling-transcription",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-agent-365-boundary",
+      "claimText": "Microsoft Agent 365 is Microsoft's enterprise control plane for AI agents, providing the converged agent registry, access control, observability, security, and lifecycle management; it became generally available for the commercial segment on a per-user basis on May 1, 2026. Agent identity is provided by Microsoft Entra Agent ID (in preview). Agent, registry, and identity governance therefore belongs to Microsoft Agent 365 and is out of scope for this core Copilot feature-policy solution.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/README.md",
+        "solutions/09-feature-management-controller/docs/architecture.md"
+      ],
+      "sourceType": "service-description",
+      "sourceUrl": "https://learn.microsoft.com/microsoft-agent-365/overview",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-no-copilot-feature-graph-api",
+      "claimText": "The Microsoft Graph featureRolloutPolicy resource governs Microsoft Entra staged authentication rollout, not Microsoft 365 Copilot feature management. No documented Microsoft Graph API for Copilot feature or admin settings was identified as of 2026-07-14; those controls are managed through the Microsoft 365 admin center, the Cloud Policy service, Microsoft Teams PowerShell, the Microsoft Purview portal, and the Power Platform admin center, so this solution leaves its Graph endpoint unset and invents no Copilot feature-management endpoint.",
+      "affectedFiles": [
+        "solutions/09-feature-management-controller/docs/prerequisites.md",
+        "solutions/09-feature-management-controller/config/default-config.json"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/resources/featurerolloutpolicy",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-14",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 Copilot licenses assigned to a representative sample cohort so Copilot feature policies exist to inspect; no license is assigned, removed, or changed during this read-only cycle",
+      "Qualifying Microsoft 365 base license (E3/E5, Business Standard/Premium, or Office 365 E3/E5) for the representative cohort"
+    ],
+    "roles": [
+      "Global Reader for read-only Copilot Control System and Copilot settings inspection",
+      "Read-only Teams PowerShell access for Get-CsTeamsMeetingPolicy and Get-CsTeamsCallingPolicy inspection",
+      "Security Reader or a read-only Microsoft Purview role for inspecting the data loss prevention web-search boundary"
+    ],
+    "features": [
+      "Microsoft 365 Copilot provisioned in the tenant",
+      "Cloud Policy service available in the Microsoft 365 Apps admin center for the Allow web search in Copilot policy",
+      "Optional Microsoft Purview data loss prevention for the Microsoft 365 Copilot and Copilot Chat location if the web-search boundary is inspected"
+    ],
+    "capacityRequirements": [
+      "One disposable test workspace for representative sample validation and redacted evidence staging"
+    ],
+    "dataRequirements": [
+      "Representative sample and policy-state records only; Teams policy-definition identities may be retained, but no user or group assignment identifiers or user PII are persisted to committed lab evidence"
+    ],
+    "tenantCount": 1,
+    "notes": "First lab cycle is read-only and detect-only. No Copilot feature toggle, rollout ring, web-search policy, Teams meeting or calling policy, agent, or license is changed. The Microsoft Agent 365 / agent-registry step is classified NOT-APPLICABLE because agent, registry, and identity governance are out of scope for this core Copilot feature-policy solution. A Copilot Control System, Cloud Policy, Purview DLP, or Teams-policy read is classified BLOCKED only when role, permission, or portal availability prevents the read, with source evidence recorded."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm tenant identity and read-only preconditions",
+        "steps": [
+          {
+            "id": "step-confirm-tenant-identity",
+            "mode": "api",
+            "intent": "Confirm the approved lab tenant before any read so inspection runs against the expected organization.",
+            "expected": "The organization identity returned matches the approved lab tenant recorded out of band.",
+            "operatorNote": "Compare the returned id and displayName with the separately maintained sanctioned-lab authorization record. Do not proceed on any mismatch.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/organization?$select=id,displayName"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "organization[].displayName",
+              "expectation": "The returned organization identity matches the separately maintained sanctioned-lab authorization record and is recorded before any further read."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Read-only feature-policy, web-search, and Teams-policy inspection",
+        "steps": [
+          {
+            "id": "step-inspect-ccs-settings",
+            "mode": "ui",
+            "intent": "Inspect Copilot Control System settings read-only to confirm the current feature-policy surface and which settings are shortcuts to other admin centers.",
+            "expected": "The Copilot > Settings tabs (User access, Data access, Copilot actions, Other settings) are observed read-only and their current values recorded without change.",
+            "locator": "Microsoft 365 admin center > Copilot > Settings",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Copilot Control System settings tabs",
+              "expectation": "Current feature-policy settings are recorded read-only and it is confirmed that no setting was changed."
+            }
+          },
+          {
+            "id": "step-inspect-web-search-cloud-policy",
+            "mode": "ui",
+            "intent": "Inspect the Cloud Policy Allow web search in Copilot on/off state and its group scope read-only.",
+            "expected": "The Allow web search in Copilot policy state and scope are observed read-only and confirmed to be the tenant/group on-off control, not a content-triggered control.",
+            "locator": "Microsoft 365 Apps admin center (config.office.com) > Customization > Policy Management > Allow web search in Copilot",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Allow web search in Copilot policy configuration",
+              "expectation": "The policy state and scope are recorded read-only and confirmed to be the Cloud Policy on-off surface."
+            }
+          },
+          {
+            "id": "step-inspect-purview-dlp-web-search-boundary",
+            "mode": "ui",
+            "intent": "Inspect the Microsoft Purview data loss prevention web-search boundary read-only to confirm it is a distinct, content-triggered control from the Cloud Policy toggle.",
+            "expected": "Any DLP policy for the Microsoft 365 Copilot and Copilot Chat location using the Performing Web Searches action is observed read-only; the step is classified NOT-APPLICABLE when the DLP surface is governed by solution 05 or is absent.",
+            "locator": "Microsoft Purview portal > Data Loss Prevention > Policies (Microsoft 365 Copilot and Copilot Chat location)",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "DLP Microsoft 365 Copilot location Performing Web Searches action",
+              "expectation": "It is confirmed read-only that the Performing Web Searches DLP action is a separate, content-triggered control from the Cloud Policy toggle, or NOT-APPLICABLE is recorded with source evidence."
+            }
+          },
+          {
+            "id": "step-read-teams-copilot-policy",
+            "mode": "powershell",
+            "intent": "Read Teams meeting and calling Copilot policy state with supported cmdlets to confirm current -Copilot values, or classify the step BLOCKED when it cannot be read.",
+            "expected": "Get-CsTeamsMeetingPolicy and Get-CsTeamsCallingPolicy return current -Copilot values and policy-definition identities; no user or group assignment identifiers are requested. Missing role, module, or connectivity produces BLOCKED with source evidence.",
+            "command": "$root = 'lab-evidence/09-feature-management-controller'; $null = New-Item -ItemType Directory -Path $root -Force; Get-CsTeamsMeetingPolicy | Select-Object Identity, Copilot, AllowTranscription | Export-Csv -Path (Join-Path $root 'teams-meeting-copilot-policy.csv') -NoTypeInformation -Encoding utf8; Get-CsTeamsCallingPolicy | Select-Object Identity, Copilot, AllowTranscriptionForCalling | Export-Csv -Path (Join-Path $root 'teams-calling-copilot-policy.csv') -NoTypeInformation -Encoding utf8",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "teams-meeting-copilot-policy.csv and teams-calling-copilot-policy.csv Copilot columns",
+              "expectation": "Current -Copilot values and policy-definition identities are captured read-only from Get-Cs* cmdlets (no Set-Cs* call); no user or group assignment identifiers are retained, and a BLOCKED disposition is recorded only when the read is prevented."
+            }
+          },
+          {
+            "id": "step-inspect-agent-365-registry",
+            "mode": "manual",
+            "intent": "Inspect Microsoft Agent 365 / agent-registry availability read-only and record it as out of scope for this feature-policy solution.",
+            "expected": "The agent registry availability in the Microsoft 365 admin center is observed read-only and the step is classified NOT-APPLICABLE because agent, registry, and identity governance belong to Microsoft Agent 365 and solutions 10, 21, and 23.",
+            "operatorNote": "In the Microsoft 365 admin center, note whether the Agents / agent registry experience is available, then record that agent, registry, and Microsoft Entra Agent ID governance is out of scope for this solution. Make no change to any agent, registry, or identity setting.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Agent registry availability observation and scope note",
+              "expectation": "Agent-registry availability is recorded read-only and the NOT-APPLICABLE (out-of-scope) disposition is captured with the Microsoft Agent 365 source citation."
+            }
+          },
+          {
+            "id": "step-run-sample-scripts",
+            "mode": "powershell",
+            "intent": "Run the sample Export-Evidence script offline to confirm documentation-first behavior, representative-sample control statuses, and a portable evidence package with no live tenant call.",
+            "expected": "The sample evidence package reports only partial control statuses, carries runtimeMode and dataSourceMode markers, uses package-relative artifact paths, and makes no live Microsoft 365 call.",
+            "command": "pwsh -File solutions/09-feature-management-controller/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -OutputPath lab-evidence/09-feature-management-controller/sample-export",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "09-feature-management-controller-evidence.json metadata and controls",
+              "expectation": "The package metadata shows runtimeMode documentation-first and dataSourceMode representative-sample, every control status is partial, artifact paths are package-relative, and no live Graph or admin call occurred."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify no policy change and confirm source currency",
+        "steps": [
+          {
+            "id": "step-verify-no-policy-change",
+            "mode": "powershell",
+            "intent": "Re-read Teams Copilot policy state as corroborating evidence that the read-only cycle did not change any policy.",
+            "expected": "The re-read -Copilot values match the earlier capture; any difference is investigated as concurrent tenant activity rather than attributed to this read-only run.",
+            "command": "$root = 'lab-evidence/09-feature-management-controller'; Get-CsTeamsMeetingPolicy | Select-Object Identity, Copilot | Export-Csv -Path (Join-Path $root 'teams-meeting-copilot-policy-recheck.csv') -NoTypeInformation -Encoding utf8; Get-CsTeamsCallingPolicy | Select-Object Identity, Copilot | Export-Csv -Path (Join-Path $root 'teams-calling-copilot-policy-recheck.csv') -NoTypeInformation -Encoding utf8",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Teams meeting and calling Copilot policy recheck CSV files",
+              "expectation": "The meeting and calling re-read Copilot values match the earlier captures and the absence of any Set-Cs* or policy-write call is the authoritative no-mutation evidence."
+            }
+          },
+          {
+            "id": "step-verify-source-claims",
+            "mode": "manual",
+            "intent": "Confirm each cited Microsoft Learn source remains published and matches the recorded lifecycle state.",
+            "expected": "All cited Microsoft Learn sources resolve and remain generally available.",
+            "operatorNote": "Open each microsoftSourceClaims.sourceUrl and confirm the Microsoft Learn page is still published and its lifecycle state matches the contract, in particular the Teams -Copilot policy values, the Cloud Policy versus Purview DLP web-search boundary, and the Microsoft Agent 365 general-availability status.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "microsoftSourceClaims[].sourceUrl",
+              "expectation": "Every cited Microsoft Learn source resolves and its lifecycle state still matches the contract."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record read-only cleanup decision",
+        "steps": [
+          {
+            "id": "step-remove-local-lab-staging",
+            "mode": "powershell",
+            "intent": "Remove the local ignored staging directory after required redacted evidence has been captured by the lab result packager.",
+            "expected": "The Solution 09 lab staging directory and any raw policy exports are absent after cleanup.",
+            "command": "$path = 'lab-evidence/09-feature-management-controller'; if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop }; if (Test-Path -LiteralPath $path) { throw 'Failed to remove Solution 09 lab staging directory.' }",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Local filesystem cleanup check",
+              "expectation": "lab-evidence/09-feature-management-controller no longer exists."
+            }
+          },
+          {
+            "id": "step-confirm-no-mutation",
+            "mode": "manual",
+            "intent": "Attest that no mutable change occurred so cleanup of tenant state is not required for this read-only cycle.",
+            "expected": "Operator note confirms mutations were empty and no tenant cleanup is required.",
+            "operatorNote": "Attest that mutations were empty: no Copilot feature toggle, rollout ring, web-search policy, Teams meeting or calling policy, agent, registry, or license change occurred during this read-only cycle. Confirm that only redacted or aggregated evidence was retained.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "cleanup attestation note",
+              "expectation": "Operator attests no mutable change occurred, no tenant cleanup is required, and no user PII was persisted to committed evidence."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 0
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-tenant-identity",
+        "type": "api-response",
+        "description": "Redacted organization id/displayName response plus a reference to the separately maintained sanctioned-lab authorization record.",
+        "requiredForControls": [
+          "4.1"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-ccs-settings-observation",
+        "type": "screenshot",
+        "description": "Read-only capture of the Copilot Control System settings tabs (User access, Data access, Copilot actions, Other settings) with current feature-policy values.",
+        "requiredForControls": [
+          "4.1"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-web-search-boundary-observation",
+        "type": "manual-attestation",
+        "description": "Read-only observation distinguishing the Cloud Policy Allow web search in Copilot on/off state from the Purview DLP Performing Web Searches content-triggered action.",
+        "requiredForControls": [
+          "2.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-teams-policy-readback",
+        "type": "powershell-transcript",
+        "description": "Get-CsTeamsMeetingPolicy and Get-CsTeamsCallingPolicy policy-definition output showing current -Copilot values without user or group assignment identifiers, or a BLOCKED disposition citing the exact role, module, or connectivity reason.",
+        "requiredForControls": [
+          "4.2",
+          "4.3"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED"
+        ]
+      },
+      {
+        "id": "artifact-agent-365-scope-note",
+        "type": "manual-attestation",
+        "description": "Read-only note recording agent-registry availability and the NOT-APPLICABLE out-of-scope disposition for Microsoft Agent 365 and Microsoft Entra Agent ID governance.",
+        "requiredForControls": [
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-sample-export-package",
+        "type": "json",
+        "description": "Sample Export-Evidence.ps1 package showing partial-only control statuses, runtimeMode/dataSourceMode markers, and package-relative artifact paths from representative sample data.",
+        "requiredForControls": [
+          "4.4",
+          "4.12"
+        ],
+        "requiredForDispositions": [
+          "PASS"
+        ]
+      },
+      {
+        "id": "artifact-source-citation",
+        "type": "source-citation",
+        "description": "List of verified Microsoft Learn source URLs and lifecycle states supporting the Copilot Control System, web-search, Teams policy, Agent 365, and Graph-scope claims.",
+        "requiredForControls": [
+          "2.6",
+          "4.1",
+          "4.2",
+          "4.3",
+          "4.4",
+          "4.12",
+          "4.13"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-tenant-identity",
+      "artifact-ccs-settings-observation",
+      "artifact-source-citation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

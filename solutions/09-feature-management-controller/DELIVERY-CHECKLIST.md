@@ -38,6 +38,7 @@
 - [ ] PowerShell syntax validation completed for all updated scripts.
 - [ ] Evidence export verified with a companion `.sha256` file.
 - [ ] Pester tests pass for `tests\09-feature-management-controller.Tests.ps1`.
+- [ ] Run the read-only, detect-only lab cycle in `lab\09-feature-management-controller.lab.json` (`mutations: []`) and record dispositions. Classify the Microsoft Agent 365 / agent-registry step `NOT-APPLICABLE` (out of scope for this feature-policy solution), and classify a Teams-policy, Copilot Control System, web-search Cloud Policy, or Purview DLP read `BLOCKED` only when role, permission, or portal availability prevents the read. Confirm no Copilot feature, rollout ring, web-search, Teams, agent, or license setting was changed and that only redacted evidence was retained.
 
 ## Feature Management Validation
 

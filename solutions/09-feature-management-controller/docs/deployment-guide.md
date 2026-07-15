@@ -136,6 +136,18 @@ Provide the following to operations, compliance, and service owners:
 - drift review cadence
 - evidence export location and retention period
 
+## Step 10: Read-only lab validation (recommended first cycle)
+
+Before any tenant change, run the read-only, detect-only lab cycle defined in `lab\09-feature-management-controller.lab.json` (`mutations: []`). The cycle:
+
+- confirms the approved lab tenant identity against an out-of-band record
+- inspects Copilot Control System settings, the Cloud Policy `Allow web search in Copilot` state, and the distinct Purview DLP `Performing Web Searches` boundary read-only
+- reads Teams meeting and calling Copilot policy with supported cmdlets (`Get-CsTeamsMeetingPolicy`, `Get-CsTeamsCallingPolicy`)
+- inspects Microsoft Agent 365 / agent-registry availability and records it as out of scope for this feature-policy solution
+- runs the sample Deploy, Monitor, and Export scripts offline
+
+Record a disposition (`PASS`, `BLOCKED`, or `NOT-APPLICABLE`) and retain redacted evidence for each step. Do not change any Copilot feature, rollout ring, web-search policy, Teams policy, agent, or license during this cycle.
+
 ## Rollback Considerations
 
 If a feature must be restricted quickly:
