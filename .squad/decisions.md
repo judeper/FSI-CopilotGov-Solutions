@@ -118,3 +118,33 @@ No new active decisions pending.
 - All meaningful changes require team consensus
 - Document architectural decisions here
 - Keep history focused on work, decisions focused on direction
+
+---
+
+## Serial Accuracy Review Complete → Lab Finalization Blocked (2026-07)
+
+**Status:** REVIEW COMPLETE / LAB EXECUTION BLOCKED | **Snapshot:** 2026-07-15 | **`main`:** `61e8921` | **PRs:** #317, #319–#340 (23 draft PRs, one per solution) | **Handoff:** `docs/project-handoff.md`
+
+### Decision
+
+The serial Microsoft product & feature accuracy review of all 23 solutions is complete. Each solution was reviewed **one at a time** against first-party Microsoft sources, hardened for read-only lab validation, and delivered as a green draft PR held with `Lab status: pending`. All 22 non-Solution-01 PRs are mergeable; PR #317 (Solution 01) conflicts with `main` and is deliberately deferred to post-lab finalization. No PR is merged.
+
+### Contract / Executor Split
+
+- `FSI-CopilotGov-Solutions` owns the versioned lab contracts (`lab/<solution>.lab.json`), result and package validation, schemas, and fixtures, and stays documentation-first.
+- `studio-video-factory` owns Playwright execution and evidence capture.
+
+### Evidence Gate
+
+- First lab cycle is read-only/detect-only (`mutations: []` normally).
+- Accepted `BLOCKED` / `NOT-APPLICABLE` dispositions require negative evidence **and** source verification; they must not claim implemented control state.
+- Package artifact paths are relative; caller paths are absolute. Provider-aware PowerShell path handling (never raw `GetFullPath` on relative input). No raw identifiers, secrets, or PII in evidence. Pester `5.7.1` + `Run.Exit` true. Strict MkDocs. Commercial-only contracts omit optional `prohibitedClouds`.
+- Known canonical control gaps: 2.17 (Sol 21), 3.14 (Sol 22), 4.14 (Sol 23) — omitted from machine-checked arrays until canonical.
+
+### Cleanup Policy
+
+Steady state: root on `main` only, no review worktrees or local review branches, merged foundation remotes (#315/#316/#318) deleted, remote branches backing open PRs preserved, generated leftovers (built `site/`, `__pycache__`) removed. One modifying agent per worktree; never `git checkout` in another agent's worktree.
+
+### Next-Phase Blocker
+
+Blocked until `studio-video-factory` `feat/pilot-a-readiness` merges. Then: build the lab adapter → serial read-only lab runs → accepted evidence → per-PR source recheck/versioning/rebase/merge in the documented serial order, resolving PR #317's existing conflict during finalization.

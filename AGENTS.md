@@ -66,6 +66,11 @@ python scripts/validate_solutions_json.py
 python scripts/validate_solutions_graph.py
 python scripts/validate_data_classification.py
 python scripts/verify_readme_counts.py
+python scripts/verify_commercial_scope.py
+python scripts/validate-lab-contracts.py
+python scripts/validate-lab-result.py
+python scripts/test_lab_validation_contracts.py
+python -m mkdocs build --strict
 pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null) | Out-Null }"
 ```
 
@@ -75,3 +80,20 @@ pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { [System.M
 - `Docs Autonomy Gate` must run on every pull request. It runs the deterministic documentation, contract, solution-index, evidence, and strict MkDocs validators when documentation-impacting paths change; otherwise it returns a successful shim result so non-documentation pull requests cannot deadlock.
 - Keep every context in `required_status_checks.contexts` backed by an unfiltered `pull_request` workflow job with the exact same display name.
 - External network link checks are intentionally non-required because network availability is not deterministic.
+
+## Review and Lab Validation Lifecycle
+
+- The current program reviews each solution one at a time for Microsoft product and feature accuracy, then hardens it for read-only lab validation. The authoritative status snapshot, blockers, and resume sequence live in `docs/project-handoff.md` — read it before starting or resuming work.
+- **Contract vs executor ownership.** `FSI-CopilotGov-Solutions` owns versioned lab contracts (`lab/<solution>.lab.json`), result and package validation, schemas, and fixtures. The separate `studio-video-factory` lane owns Playwright execution and evidence capture. Keep this repository documentation-first; do not add browser automation or attended tenant runs here.
+- **Read-only first cycle and dispositions.** The first lab cycle is read-only/detect-only; contracts normally declare `mutations: []`, and any non-null `mutationRef` must resolve to a declared mutation. Dispositions are `PASS`, `PARTIAL`, `BLOCKED`, `NOT-APPLICABLE`, and `FAIL`. Accepted `BLOCKED` and `NOT-APPLICABLE` require negative evidence **and** source verification and must not claim implemented control state.
+- **Evidence and path portability.** Package artifact paths are relative (relocatable); caller-returned artifact paths are absolute. Resolve PowerShell paths provider-aware — never use raw `GetFullPath` on relative input. Do not place raw identifiers, secrets, or PII in evidence.
+- **Pester.** Pin Pester `5.7.1` and set `Run.Exit` to `true` so failing tests return a non-zero exit code.
+- **Pester data-driven tests.** Do not define Pester tests inside a PowerShell `foreach` loop that relies on captured loop variables; use Pester's `-ForEach` parameter so values remain available at run time.
+- **Strict MkDocs.** The site must build clean under `python -m mkdocs build --strict`.
+- **Commercial-only contracts.** Forward-facing solution contracts omit the optional `prohibitedClouds` field and rely on the commercial-scope constants.
+
+## Worktree and Branch Hygiene
+
+- One modifying agent per worktree; a modifying agent owns its worktree exclusively. Never run `git checkout` in another agent's worktree.
+- After a branch is pushed and its local worktree is clean, remove the worktree and local branch and prune merged worktrees.
+- Preserve remote branches that back an open PR. Merged foundation remote branches (for example #315, #316, #318) may be deleted.
