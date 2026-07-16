@@ -231,3 +231,48 @@ The pinned Solution 02 contract completed with 8/8 steps `PASS`, `accepted: true
 ### Decision
 
 Finalize Solution 02 as v0.2.5 and advance the serial lab queue to Solution 16 / PR #320.
+
+---
+
+## Solution 16 Lab Initial PARTIAL / Not Accepted (2026-07-15)
+
+**Status:** INITIAL CYCLE PARTIAL / NOT ACCEPTED | **FSI PR:** [#320](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320) | **FSI `main`:** `6d6456a95a655378768e6e1630efb5329d086200` | **Studio draft PR:** [#17](https://github.com/judep_microsoft/studio-video-factory/pull/17)
+
+### Result
+
+The pinned Solution 16 contract ran once against pinned review commit
+`f024876a17b7198a33752b26fd93862b0fa7a8bd` and completed as `PARTIAL`, `accepted: false`,
+5 PASS / 2 BLOCKED. No tenant mutation occurred; cleanup was not required.
+
+### Verified Passes
+
+- Accepted Solution 02 upstream hash binding.
+- SharePoint Active-sites list observed; a site row selected without retaining identity.
+- Site settings panel and sharing surface observed; Restricted Content Discovery not
+  exposed (`rcdControlVisible: false`) — recorded as an honest availability read-back.
+- Sample-only item ACL enumeration: 1 representative site / 5 rows, documentation-first
+  PnP, no live PnP execution, no mutation.
+- Four Microsoft first-party source claims verified.
+- No-mutation cleanup confirmed.
+
+### Verified Blockers
+
+Graph driveItem permissions read-back and a dependent blocked-condition decision were
+both blocked. Device authorization stopped at an account picker; no identity was
+auto-selected. No token, identifier, or tenant data was retained.
+
+### Evidence
+
+- Both `validate-lab-result.py` and `validate-lab-package.ps1` pass on the PARTIAL result.
+- PARTIAL remains non-accepted; lab validators passing does not change that disposition.
+- Result SHA-256: `3c0702d0eb3ffc3f0158444ec849892048704b45bb7fcd3558bd03442ed473da`.
+- Package SHA-256: `7a42329208bbdeb31c74eb1e0cb5265cd4a171154be93b7faf6e0b52fd5d976f`.
+- PR record: https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320#issuecomment-4988037680.
+
+### Decision
+
+Do not advance to Solution 17 and do not finalize PR #320. Attend the account picker
+for the approved lab identity, rerun the strict read-only Graph driveItem permissions
+probe, rebuild the evidence package, and replay the contract. Never auto-select an
+identity. Expected accepted state is 7/7 PASS. Only an accepted result may unlock the
+serial queue.

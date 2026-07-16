@@ -25,5 +25,5 @@
 - **User:** Jude
 - **Created:** 2026-05-23
 - **Team cast:** 2026-06-05
-- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solutions 01 and 02 achieved accepted `PASS` evidence with final releases v0.2.4 and v0.2.5. The serial lab queue now advances to Solution 16 / PR #320. See `docs/project-handoff.md`.
+- **Current focus:** Solutions 01 and 02 achieved accepted `PASS` evidence with final releases v0.2.4 and v0.2.5. Solution 16 / PR #320 completed an initial read-only lab cycle as `PARTIAL` (`accepted: false`); blocked on attended Graph account selection. The serial queue does not advance until Solution 16 is accepted. Current active work: attend account picker, rerun Solution 16 strict read-only Graph driveItem probe, rebuild/replay. See `docs/project-handoff.md`.
 - **Model policy:** Accuracy over cost — premium (Opus-class) models for verification and review; Haiku only for Scribe.
