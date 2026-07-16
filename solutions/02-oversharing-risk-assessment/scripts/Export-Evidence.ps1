@@ -123,10 +123,12 @@ function Write-JsonWithHash {
 
     $hashInfo = Write-CopilotGovSha256File -Path $Path
 
+    $fullPath = [System.IO.Path]::GetFullPath($Path)
     return [pscustomobject]@{
         name = $ArtifactName
         type = $ArtifactType
-        path = ([System.IO.Path]::GetFullPath($Path))
+        path = [System.IO.Path]::GetFileName($fullPath)
+        absolutePath = $fullPath
         hash = $hashInfo.Hash
     }
 }
@@ -210,8 +212,24 @@ $remediationQueue = foreach ($finding in ($findings | Sort-Object -Property @{ E
     $queueIndex++
 }
 
-$siteOwnerAttestations = if ($IncludeAttestations.IsPresent) {
-    foreach ($queueItem in $remediationQueue | Where-Object { $_.priority -in @('P1', 'P2') }) {
+$attestationRequested = $IncludeAttestations.IsPresent -or [bool]$configuration.requireOwnerAttestation
+$siteOwnerAttestations = if ($attestationRequested) {
+    $attestationCandidates = @($remediationQueue | Where-Object { $_.priority -in @('P1', 'P2') })
+    if ($attestationCandidates.Count -eq 0) {
+        @(
+            [pscustomobject]@{
+                siteUrl = $null
+                owner = $null
+                attestationStatus = 'not-required'
+                requestedOn = (Get-Date).ToString('yyyy-MM-dd')
+                dueBy = $null
+                remediationTicket = $null
+                notes = 'No P1 or P2 remediation items were generated for attestation in this period.'
+            }
+        )
+    }
+    else {
+        foreach ($queueItem in $attestationCandidates) {
         $owner = ($oversharingFindings | Where-Object { $_.siteUrl -eq $queueItem.siteUrl } | Select-Object -First 1).owner
 
         [pscustomobject]@{
@@ -221,8 +239,14 @@ $siteOwnerAttestations = if ($IncludeAttestations.IsPresent) {
             requestedOn = (Get-Date).ToString('yyyy-MM-dd')
             dueBy = (Get-Date).AddDays(14).ToString('yyyy-MM-dd')
             remediationTicket = $queueItem.queueId
-            notes = 'Owner attestation requested after remediation queue creation.'
+            notes = if ([bool]$configuration.requireOwnerAttestation) {
+                'Owner attestation requested because requireOwnerAttestation=true for the selected tier.'
+            }
+            else {
+                'Owner attestation requested because IncludeAttestations was supplied.'
+            }
         }
+    }
     }
 }
 else {
@@ -271,7 +295,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '1.3'
         status = 'monitor-only'
-        notes = 'Temporary Restricted SharePoint Search planning is documented and tracked, but this script does not modify tenant state.'
+        notes = 'Restricted SharePoint Search is legacy transition guidance only (new enablement blocked starting 2026-07-31), and Restricted Content Discovery is the go-forward per-site discoverability control. This script documents planning status and does not modify tenant state.'
     }
     [pscustomobject]@{
         controlId = '1.4'
@@ -316,14 +340,14 @@ $package = [ordered]@{
 }
 
 $packageArtifact = Write-JsonWithHash -Path (Join-Path $outputRoot '02-oversharing-risk-assessment-evidence-package.json') -Content $package -ArtifactName 'ora-evidence-package' -ArtifactType 'evidence-package'
-$validation = Test-CopilotGovEvidencePackage -Path $packageArtifact.path -ExpectedArtifacts @($configuration.evidenceOutputs)
+$validation = Test-CopilotGovEvidencePackage -Path $packageArtifact.absolutePath -ExpectedArtifacts @($configuration.evidenceOutputs)
 if (-not $validation.IsValid) {
     $details = ($validation.Errors | ForEach-Object { ' - {0}' -f $_ }) -join [Environment]::NewLine
-    throw ("Evidence validation failed for {0}:{1}{2}" -f $packageArtifact.path, [Environment]::NewLine, $details)
+    throw ("Evidence validation failed for {0}:{1}{2}" -f $packageArtifact.absolutePath, [Environment]::NewLine, $details)
 }
 
 [pscustomobject]@{
-    PackagePath = $packageArtifact.path
+    PackagePath = $packageArtifact.absolutePath
     PackageHash = $packageArtifact.hash
     ArtifactCount = @($artifacts).Count
     Findings = @($oversharingFindings).Count

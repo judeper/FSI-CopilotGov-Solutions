@@ -1,0 +1,395 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:02-oversharing-risk-assessment:2026-07-rcd-transition",
+  "solution": {
+    "id": "02-oversharing-risk-assessment",
+    "name": "Oversharing Risk Assessment and Remediation",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.2",
+    "1.3",
+    "1.4",
+    "1.6",
+    "2.5",
+    "2.12"
+  ],
+  "portals": [
+    "sharepoint-admin-center",
+    "microsoft-365-admin-center",
+    "microsoft-purview-compliance-portal",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-rss-retirement-block",
+      "claimText": "Microsoft Learn documents Restricted SharePoint Search as retiring and states that new enablement is blocked starting 2026-07-31.",
+      "affectedFiles": [
+        "solutions/02-oversharing-risk-assessment/README.md",
+        "solutions/02-oversharing-risk-assessment/docs/deployment-guide.md",
+        "solutions/02-oversharing-risk-assessment/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/sharepoint/restricted-sharepoint-search",
+      "lifecycleState": "deprecated",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-rcd-ga",
+      "claimText": "Microsoft Learn positions Restricted Content Discovery as the current per-site SharePoint discoverability control that does not change permissions and may suppress AI entry points.",
+      "affectedFiles": [
+        "solutions/02-oversharing-risk-assessment/README.md",
+        "solutions/02-oversharing-risk-assessment/docs/architecture.md",
+        "solutions/02-oversharing-risk-assessment/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/sharepoint/restricted-content-discovery",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-sam-prerequisites-roles-e7",
+      "claimText": "Microsoft Learn prerequisites for SharePoint Advanced Management describe role and licensing expectations, including the documented Microsoft 365 E7 entitlement path where available.",
+      "affectedFiles": [
+        "solutions/02-oversharing-risk-assessment/docs/prerequisites.md",
+        "solutions/02-oversharing-risk-assessment/DELIVERY-CHECKLIST.md",
+        "solutions/02-oversharing-risk-assessment/scripts/Deploy-Solution.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/sharepoint/sharepoint-advanced-management-prerequisites",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-graph-extract-sensitivity-labels-v1",
+      "claimText": "Microsoft Graph v1.0 documents the driveItem extractSensitivityLabels action and expected read-only extraction behavior for supported files.",
+      "affectedFiles": [
+        "solutions/02-oversharing-risk-assessment/scripts/Monitor-Compliance.ps1",
+        "solutions/02-oversharing-risk-assessment/docs/evidence-export.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/graph/api/driveitem-extractsensitivitylabels?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-dspm-ai-classic-replaced",
+      "claimText": "Microsoft Learn documentation for DSPM for AI indicates the classic assessment experience has been replaced, so references to classic behavior must be treated as lifecycle-deprecated guidance.",
+      "affectedFiles": [
+        "solutions/02-oversharing-risk-assessment/docs/prerequisites.md",
+        "solutions/02-oversharing-risk-assessment/docs/evidence-export.md",
+        "solutions/02-oversharing-risk-assessment/scripts/Export-Evidence.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/purview/dspm-for-ai",
+      "lifecycleState": "deprecated",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Microsoft 365 base subscription plus one documented entitlement path (Microsoft 365 Copilot, SharePoint Advanced Management Plan 1, or Microsoft 365 E7 where available)"
+    ],
+    "roles": [
+      "SharePoint Administrator",
+      "SharePoint Advanced Management Administrator",
+      "Compliance Administrator (Purview/DSPM validation only)"
+    ],
+    "features": [
+      "Restricted Content Discovery available for planning",
+      "Microsoft Purview audit logging enabled for discoverability traceability"
+    ],
+    "capacityRequirements": [
+      "One US commercial test tenant with read-only lab operator access",
+      "Upstream solution 01 baseline artifacts present under solutions/01-copilot-readiness-scanner/artifacts"
+    ],
+    "dataRequirements": [
+      "Representative sample data only; no production customer data in repository runs"
+    ],
+    "tenantCount": 1,
+    "notes": "If upstream solution 01 artifacts are absent, Deploy-Solution.ps1 -WhatIf is expected to return a preview-blocked dependency status and non-WhatIf deployment remains blocked."
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm discoverability preconditions",
+        "steps": [
+          {
+            "id": "step-review-sharepoint-sharing-posture",
+            "mode": "ui",
+            "intent": "Review SharePoint sharing posture in read-only mode before running sample monitoring.",
+            "expected": "Current sharing posture is documented for later risk comparison without tenant changes.",
+            "locator": "SharePoint admin center > Policies > Sharing",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "SharePoint sharing policy view",
+              "expectation": "Operator captures current sharing posture with no settings changed."
+            }
+          },
+          {
+            "id": "step-review-rcd-availability",
+            "mode": "ui",
+            "intent": "Review Restricted Content Discovery availability and management ownership in SharePoint admin center.",
+            "expected": "RCD availability is documented as planning evidence only.",
+            "locator": "SharePoint admin center > Policies > Restricted Content Discovery",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Restricted Content Discovery policy view",
+              "expectation": "Operator records whether RCD is available without changing site state."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run read-only solution scripts",
+        "steps": [
+          {
+            "id": "step-run-deploy-whatif-detectonly",
+            "mode": "powershell",
+            "intent": "Run Deploy-Solution.ps1 in detect-only WhatIf mode to capture dependency and discoverability planning state.",
+            "expected": "Deployment preview reports dependency status and records RSS legacy guidance plus RCD planning state without tenant writes.",
+            "command": "pwsh -File solutions/02-oversharing-risk-assessment/scripts/Deploy-Solution.ps1 -ConfigurationTier recommended -TenantId $env:FSI_LAB_TENANT -ScanMode DetectOnly -WhatIf",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Deploy-Solution preview output",
+              "expectation": "Output shows dependency status (validated or preview-blocked) and no manifest write action."
+            }
+          },
+          {
+            "id": "step-run-monitor-sample-mode",
+            "mode": "powershell",
+            "intent": "Run Monitor-Compliance.ps1 in sample mode for read-only detect-only evidence generation.",
+            "expected": "Monitoring output contains representative findings and sample label coverage for scoped workloads.",
+            "command": "pwsh -File solutions/02-oversharing-risk-assessment/scripts/Monitor-Compliance.ps1 -ConfigurationTier baseline -TenantId $env:FSI_LAB_TENANT -WorkloadsToScan sharePoint -MaxSites 50 -ExportPath .\\artifacts\\lab\\02-monitor",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "monitor-summary.json",
+              "expectation": "Summary confirms read-only representative output and records sensitivity label coverage for supplied scanned sites."
+            }
+          },
+          {
+            "id": "step-run-export-evidence",
+            "mode": "powershell",
+            "intent": "Run Export-Evidence.ps1 with the runtime tenant placeholder to produce schema-aligned sample evidence.",
+            "expected": "Evidence package is generated with package-relative artifact paths and absolute returned PackagePath.",
+            "command": "pwsh -File solutions/02-oversharing-risk-assessment/scripts/Export-Evidence.ps1 -ConfigurationTier regulated -TenantId $env:FSI_LAB_TENANT -OutputPath .\\artifacts\\lab\\02-evidence -PeriodStart (Get-Date).AddDays(-7) -PeriodEnd (Get-Date)",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "02-oversharing-risk-assessment-evidence-package.json",
+              "expectation": "Package validates and includes owner-attestation records when regulated tier requires them."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify supported read-only references",
+        "steps": [
+          {
+            "id": "step-verify-graph-readonly-endpoint",
+            "mode": "api",
+            "intent": "Use a safe read-only Microsoft Graph endpoint to validate API reachability assumptions for lab notes.",
+            "expected": "Endpoint is reachable when consent exists; otherwise the run is recorded as BLOCKED with source evidence.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/sites/root?$select=id,webUrl"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Read-only Graph response or blocked error record",
+              "expectation": "Evidence captures either successful read-only response or explicit blocked reason."
+            }
+          },
+          {
+            "id": "step-verify-source-citations",
+            "mode": "manual",
+            "intent": "Confirm all Microsoft source claims remain published and lifecycle-aligned on review date.",
+            "expected": "Claim lifecycle states and notes remain consistent with cited Microsoft sources.",
+            "operatorNote": "Capture source validation notes and include retirement/deprecated markers where applicable.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source verification checklist",
+              "expectation": "Each claim has verification evidence dated on or before reviewedOn."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record no-mutation cleanup attestation",
+        "steps": [
+          {
+            "id": "step-attest-no-mutations-executed",
+            "mode": "manual",
+            "intent": "Record cleanup attestation that the run was read-only with no tenant mutations.",
+            "expected": "Cleanup attestation confirms no mutation steps were executed.",
+            "operatorNote": "No tenant writes were executed; contract uses mutations: [] and mutationRef: null for all steps.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation record",
+              "expectation": "Attestation confirms no mutable actions occurred and no cleanup runbook actions were required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-copilotgov-lab-owners",
+    "breakGlassApprover": "fsi-copilotgov-breakglass",
+    "cleanupOwner": "fsi-copilotgov-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-ui-sharing-posture",
+        "type": "screenshot",
+        "description": "SharePoint sharing posture screenshot captured during setup.",
+        "requiredForControls": [
+          "1.2",
+          "1.6",
+          "2.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-ui-rcd-availability",
+        "type": "screenshot",
+        "description": "Restricted Content Discovery availability screenshot from SharePoint admin center.",
+        "requiredForControls": [
+          "1.3",
+          "1.4"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-deploy-preview-log",
+        "type": "powershell-transcript",
+        "description": "Deploy-Solution.ps1 preview transcript showing dependency and discoverability states.",
+        "requiredForControls": [
+          "1.2",
+          "1.3",
+          "1.4",
+          "1.6",
+          "2.5",
+          "2.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-monitor-summary-json",
+        "type": "json",
+        "description": "monitor-summary.json from sample-mode monitoring run.",
+        "requiredForControls": [
+          "1.2",
+          "1.6",
+          "2.5",
+          "2.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-citations",
+        "type": "source-citation",
+        "description": "Microsoft source verification records for retirement, RCD, SAM, Graph, and DSPM claims.",
+        "requiredForControls": [
+          "1.3",
+          "1.4",
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-cleanup-attestation",
+        "type": "manual-attestation",
+        "description": "No-mutation cleanup attestation signed by the lab operator.",
+        "requiredForControls": [
+          "1.2",
+          "1.3",
+          "1.4",
+          "1.6",
+          "2.5",
+          "2.12"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-deploy-preview-log",
+      "artifact-source-citations",
+      "artifact-cleanup-attestation"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

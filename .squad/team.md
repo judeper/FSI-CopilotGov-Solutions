@@ -25,5 +25,5 @@
 - **User:** Jude
 - **Created:** 2026-05-23
 - **Team cast:** 2026-06-05
-- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solution 01 achieved accepted `PASS` evidence and final v0.2.4 release metadata. The serial lab queue now advances to Solution 02 / PR #319. See `docs/project-handoff.md`.
+- **Current focus:** The 23-solution accuracy review and studio governance adapter are complete. Solutions 01 and 02 achieved accepted `PASS` evidence with final releases v0.2.4 and v0.2.5. The serial lab queue now advances to Solution 16 / PR #320. See `docs/project-handoff.md`.
 - **Model policy:** Accuracy over cost — premium (Opus-class) models for verification and review; Haiku only for Scribe.

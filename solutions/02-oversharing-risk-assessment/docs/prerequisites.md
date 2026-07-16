@@ -3,24 +3,30 @@
 ## Platform and Licensing
 
 - SharePoint Advanced Management feature entitlement requires an eligible Microsoft 365
-  or Office 365 base subscription (such as Microsoft 365 E1, E3, E5, or A5; or Office 365
-  E3 or E5) plus at least one of the
-  following: a Microsoft 365 Copilot license assigned to at least one user in the
-  organization, or the SharePoint Advanced Management Plan 1 add-on (requires a
-  SharePoint K, P1, or P2 subscription). Note that some features — such as restricted
-  site creation — require SharePoint Advanced Management Plan 1 even when Microsoft 365
-  Copilot licenses are present. If neither entitlement path is available, document the
-  limitation before enabling this solution.
+  or Office 365 base subscription (for example, Microsoft 365 E1/E3/E5/A5/E7 or
+  Office 365 E3/E5) plus one documented entitlement path: Microsoft 365 Copilot,
+  SharePoint Advanced Management Plan 1 add-on, or Microsoft 365 E7 where the current
+  Microsoft Learn prerequisites guidance applies. If no supported path is available,
+  document the limitation before enabling this solution.
 - Microsoft Purview Data Security Posture Management (DSPM) prerequisites should be validated for the selected scenarios, including appropriate permissions, Microsoft Purview auditing, Microsoft 365 Copilot user licensing for Copilot and agents, and any Edge, device onboarding, browser extension, or pay-as-you-go billing requirements that apply.
 - The target tenant should already have a defined Copilot pilot or rollout scope so findings can be prioritized against real exposure risk.
+
+## Discoverability Control Prerequisites
+
+- Treat Restricted SharePoint Search (RSS) as legacy transition guidance only. Microsoft Learn states RSS is retiring and new enablement is blocked starting 2026-07-31.
+- Use Restricted Content Discovery (RCD) as the go-forward discoverability control. RCD is configured per SharePoint site, does not change permissions, and is SharePoint-only (not OneDrive).
+- RCD planning in this solution assumes Copilot plus SharePoint Advanced Management prerequisites are met and that Microsoft Purview audit logging is enabled for traceability.
 
 ## Required Administrative Roles
 
 At least one of the following roles should be assigned to the operator, depending on the task being performed:
 
-- SharePoint Admin
-- Compliance Admin
+- SharePoint Administrator
+- SharePoint Advanced Management Administrator
+- Compliance Administrator (for Purview/DSPM tasks)
 - Global Admin
+
+For Restricted Content Discovery operations, SharePoint Administrator is the default role and delegated site-admin management should be approved when used.
 
 For Teams-specific governance review, an approved Teams administrator or collaboration governance contact is recommended even though the core script uses site-backed exposure logic.
 
@@ -38,7 +44,7 @@ Example installation command:
 Install-Module PnP.PowerShell, Microsoft.Graph, ExchangeOnlineManagement -Scope CurrentUser
 ```
 
-> **PnP.PowerShell v3.x note:** PnP.PowerShell 3.x requires PowerShell 7.4.0 or later. Organizations running PowerShell 7.4 or later will use .NET 8.0 automatically. Organizations must register their own Microsoft Entra ID application (the multi-tenant PnP app was removed in September 2024). Azure Automation environments using the older PowerShell 7.2 runtime are limited to PnP.PowerShell 2.12.0; the PowerShell 7.4 runtime (GA) supports current PnP.PowerShell versions.
+> **PnP.PowerShell runtime note (project-documented; validate in your lab):** This repository documents a PowerShell 7.4+ execution posture and customer-owned Microsoft Entra app registration patterns for PnP usage. Confirm exact module/runtime behavior in your tenant lab before production rollout because this solution does not treat host-specific PnP runtime combinations as independently verified Microsoft source claims.
 
 ## Power Automate Environment
 

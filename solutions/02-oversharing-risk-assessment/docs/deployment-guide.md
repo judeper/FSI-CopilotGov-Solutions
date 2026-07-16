@@ -12,9 +12,9 @@ Before deploying, confirm that solution 01-copilot-readiness-scanner has already
 
 Review [prerequisites.md](prerequisites.md) and confirm:
 
-- SharePoint Advanced Management feature entitlement is available through the required base license plus either a Microsoft 365 Copilot license assignment or a standalone SharePoint Advanced Management Plan 1 license, or the gap is formally documented
+- SharePoint Advanced Management feature entitlement is available through the required base license and one documented entitlement path (Microsoft 365 Copilot, standalone SharePoint Advanced Management Plan 1, or Microsoft 365 E7 where available), or the gap is formally documented
 - Microsoft Purview Data Security Posture Management (DSPM) prerequisites are understood for the target scenarios
-- Required admin roles are assigned
+- Required admin roles are assigned (SharePoint Administrator and SharePoint Advanced Management Administrator for SharePoint/SAM tasks; Compliance Administrator for Purview/DSPM tasks)
 - Network access to SharePoint REST API and Graph API is available
 
 ## 3. Review and Adjust Configuration
@@ -23,8 +23,8 @@ Inspect the JSON files under `config\`:
 
 - `default-config.json` for common defaults, risk thresholds, and classifier weights
 - `baseline.json` for minimal rollout posture
-- `recommended.json` for multi-workload scanning with owner notifications
-- `regulated.json` for extended evidence retention and required attestation
+- `recommended.json` for multi-workload scanning with owner notifications and RCD planning enabled
+- `regulated.json` for extended evidence retention, required attestation, and RCD planning enabled
 
 Tune `maxSitesPerRun`, workload scope, and notification settings before the first execution window.
 
@@ -46,9 +46,14 @@ Expected outcomes:
 - A placeholder SharePoint Advanced Management feature-entitlement check is recorded
 - Upstream dependency status is captured
 - A deployment manifest is written to the output path
-- Temporary Restricted SharePoint Search planning is recorded with the current Microsoft limitations when configured
+- Restricted SharePoint Search state is recorded as legacy transition guidance only
+- Restricted Content Discovery planning state is recorded separately
 
-Restricted SharePoint Search planning must document that Microsoft describes it as a short-term measure with an allowed list of up to 100 SharePoint sites. It is not a security boundary, does not change SharePoint permissions, and documents that allowed-list membership is not the only way content can appear in search or Copilot responses.
+When upstream solution 01 artifacts are missing, `Deploy-Solution.ps1 -WhatIf` returns a preview dependency result with `BLOCKED` semantics and warning output (no manifest write). Real deployment without `-WhatIf` still blocks and throws until upstream artifacts exist.
+
+Restricted SharePoint Search is legacy transition guidance only. Microsoft Learn states RSS is retiring and new enablement is blocked starting **2026-07-31**. Existing RSS caveats remain explicit for transition review: temporary usage, up to 100 allowed sites, not a security boundary, and no permission changes.
+
+Restricted Content Discovery is the go-forward discoverability control: per SharePoint-site scope, no permission changes, SharePoint-only (not OneDrive), Copilot plus SharePoint Advanced Management prerequisites, SharePoint Administrator default management with optional delegated site-admin management, Microsoft Purview audit visibility, and possible suppression of AI entry points on restricted sites.
 
 ## 5. Execute the Initial Scan in Detect-Only Mode
 
@@ -126,8 +131,23 @@ If deployment settings need to be reversed:
 
 1. Revert to the previous tier JSON or set `remediationMode` back to `detectOnly`
 2. Disable or pause Power Automate notification flows
-3. Revert any temporary Restricted SharePoint Search configuration changes, then confirm search and Copilot experiences rely on standard permission-based access
+3. Revert tenant-side Restricted Content Discovery changes made during testing (if any), then confirm search and Copilot experiences rely on the intended permission-based access model
 4. Archive the evidence from the failed or rolled-back window for audit traceability
 5. Re-run `Monitor-Compliance.ps1` in detect-only mode to confirm the tenant is back to the intended state
 
 Rollback decisions should be documented whenever permissions, search scope, or owner notification behavior changes after approval.
+
+## 11. Lab Contract Handoff
+
+- Use `lab\02-oversharing-risk-assessment.lab.json` as the handoff contract for lab execution planning.
+- Keep execution read-only/detect-only and preserve `mutations: []` with `mutationRef: null` on all steps.
+- Record accepted dispositions as PASS, BLOCKED, or NOT-APPLICABLE with source evidence.
+
+Accepted read-only lab validation (2026-07-16):
+
+- Pinned contract commit `488d8f63a1c3ba6c01e5ce7b37f7f68bcd644158` completed with `PASS`, `accepted: true`, `controlImplementation: implemented`, 8/8 steps PASS, cleanup `not-required`, and no tenant mutation.
+- Restricted Content Discovery control surface was authenticated but not exposed (`observedAvailability: false`) and recorded as an honest availability read-back.
+- Graph `GET /v1.0/sites/root` succeeded with delegated `Sites.Read.All`; response body, token, site identifiers, and tenant identifiers were not retained.
+- Both authoritative validators passed (`validate-lab-result.py` and `validate-lab-package.ps1`).
+- Result SHA-256: `19240ff458f97fa3b78c299c86a9b27bba57cf506fcf75fe18f578fbeb750bda`.
+- Package SHA-256: `51700b6478e4e6787d70de9016835c5fee0a3408e6599e11735c91ac7d83b197`.

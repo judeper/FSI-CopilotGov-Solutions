@@ -1,6 +1,6 @@
 # Troubleshooting
 
-## Error: PnP PowerShell connection failures
+## Error: PnP PowerShell connection failures (project-documented runtime pattern)
 
 **Symptoms**
 
@@ -10,9 +10,36 @@
 **Actions**
 
 - Confirm the correct tenant admin URL and authentication method are being used
-- Confirm the operator has SharePoint Admin, Compliance Admin, or Global Admin rights as needed
+- Confirm the operator has SharePoint Administrator, SharePoint Advanced Management Administrator, or Global Administrator rights for the current task, and reserve Compliance Administrator for Purview/DSPM steps
+- Validate the documented PnP runtime/app-registration pattern in a tenant lab before rollout
 - Reinstall or update `PnP.PowerShell` if the module version is outdated
 - Validate that conditional access does not block the execution host
+
+## Error: Restricted SharePoint Search is expected but cannot be newly enabled
+
+**Symptoms**
+
+- Legacy documentation references Restricted SharePoint Search (RSS)
+- Teams request new RSS enablement after July 2026 planning windows
+
+**Actions**
+
+- Treat RSS as legacy transition guidance only: Microsoft Learn states RSS is retiring and new enablement is blocked starting 2026-07-31
+- For existing RSS tenants, keep caveats explicit (temporary, up to 100 allowed sites, not a security boundary, no permission changes)
+- Move discoverability planning to Restricted Content Discovery (RCD)
+
+## Error: Restricted Content Discovery scope does not match expected behavior
+
+**Symptoms**
+
+- Stakeholders expect RCD changes to alter permissions
+- OneDrive discoverability is expected to follow SharePoint RCD settings
+
+**Actions**
+
+- Confirm RCD is modeled as a per-SharePoint-site discoverability control
+- Confirm RCD does not change permissions and is SharePoint-only (not OneDrive)
+- Confirm SharePoint Administrator ownership, delegated site-admin management approvals, and Microsoft Purview audit requirements before rollout
 
 ## Error: SharePoint throttling during bulk scans
 

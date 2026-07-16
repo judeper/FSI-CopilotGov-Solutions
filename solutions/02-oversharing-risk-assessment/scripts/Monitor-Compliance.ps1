@@ -657,19 +657,22 @@ function Get-SensitivityLabelCoverage {
         [psobject]$GraphContext,
 
         [Parameter()]
-        [object[]]$ScannedSites = @()
+        [AllowNull()]
+        [object[]]$ScannedSites
     )
 
     if ($null -eq $GraphContext) {
         # Sample data: representative label coverage for documentation-first scenarios
-        $totalSites = [Math]::Max(@($ScannedSites).Count, 7)
-        $labeledCount = [Math]::Floor($totalSites * 0.43)
+        $scannedSitesSupplied = $PSBoundParameters.ContainsKey('ScannedSites')
+        $totalSites = if ($scannedSitesSupplied) { @($ScannedSites).Count } else { 7 }
+        $labeledCount = if ($totalSites -gt 0) { [Math]::Floor($totalSites * 0.43) } else { 0 }
+        $coveragePercent = if ($totalSites -gt 0) { [Math]::Round(($labeledCount / $totalSites) * 100, 1) } else { 0.0 }
         return [pscustomobject]@{
             TenantId = $TenantId
             TotalSitesScanned = $totalSites
             SitesWithLabels = $labeledCount
             SitesWithoutLabels = ($totalSites - $labeledCount)
-            LabelCoveragePercent = [Math]::Round(($labeledCount / $totalSites) * 100, 1)
+            LabelCoveragePercent = $coveragePercent
             LabelBreakdown = @(
                 [pscustomobject]@{ Label = 'Highly Confidential'; Count = [Math]::Floor($labeledCount * 0.33) }
                 [pscustomobject]@{ Label = 'Confidential'; Count = [Math]::Floor($labeledCount * 0.50) }

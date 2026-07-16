@@ -19,6 +19,7 @@
   "notificationMode": "summary",
   "enableSiteOwnerNotifications": false,
   "enableRestrictedSharePointSearch": false,
+  "enableRestrictedContentDiscoveryPlanning": false,
   "requireOwnerAttestation": false,
   "requireExaminerReadyEvidence": false
 }

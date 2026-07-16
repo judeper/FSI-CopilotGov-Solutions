@@ -1,6 +1,6 @@
 {
   "schemaVersion": "0.2.0",
-  "generatedAt": "2026-07-15T22:48:04Z",
+  "generatedAt": "2026-07-16T02:22:48Z",
   "solutions": [
     {
       "id": "01-copilot-readiness-scanner",
@@ -32,7 +32,7 @@
       "slug": "02-oversharing-risk-assessment",
       "tier": 1,
       "name": "Oversharing Risk Assessment and Remediation",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "domain": "readiness-data",
       "summary": "Detects overshared SharePoint, Teams, and OneDrive content that could widen Copilot grounding beyond intended audiences.",
       "repoPath": "solutions/02-oversharing-risk-assessment",

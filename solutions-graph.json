@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1.0",
-  "generatedAt": "2026-07-15T22:48:05Z",
+  "generatedAt": "2026-07-16T02:22:48Z",
   "counts": {
     "solutions": 23,
     "tier1": 6,
@@ -37,7 +37,7 @@
       "id": "02-oversharing-risk-assessment",
       "name": "Oversharing Risk Assessment and Remediation",
       "tier": 1,
-      "version": "0.2.4",
+      "version": "0.2.5",
       "domain": "readiness-data",
       "controlCoverage": [
         "1.2",
