@@ -4,7 +4,7 @@
 
 - Solution: Copilot Readiness Assessment Scanner
 - Solution Code: CRS
-- Version: v0.2.3
+- Version: v0.2.4
 - Track: A
 - Priority: P0
 - Evidence Outputs: readiness-scorecard, data-hygiene-findings, remediation-plan
@@ -19,6 +19,7 @@
 - docs\evidence-export.md
 - docs\prerequisites.md
 - docs\troubleshooting.md
+- lab\01-copilot-readiness-scanner.lab.json
 - scripts\Deploy-Solution.ps1
 - scripts\Monitor-Compliance.ps1
 - scripts\Export-Evidence.ps1
@@ -45,9 +46,20 @@
 - [ ] `pwsh -Command "Invoke-Pester tests/ -Passthru"` — Pester tests pass
 - [ ] PowerShell syntax validation completed for all three scripts and `CRS-Common.psm1`
 - [ ] Pester test file executed successfully
+- [ ] `python ..\..\scripts\validate-lab-contracts.py ..\..\solutions\01-copilot-readiness-scanner\lab\01-copilot-readiness-scanner.lab.json` — lab contract passes schema + semantic validation
 - [ ] Tier configuration values reviewed for retention, threshold, notification, and scan scope
 - [ ] Evidence export verified to create JSON artifacts and matching `.sha256` files
 - [ ] Power BI consumers have confirmed the expected JSON artifact naming and folder structure
+
+## Lab Validation Acceptance
+
+- [x] Read-only contract executed against pinned review commit `e8bae78b1036c6b55d7597d576df03b69e9418c4`
+- [x] All nine contract steps passed
+- [x] `validate-lab-result.py` accepted the result
+- [x] `validate-lab-package.ps1` accepted the portable evidence package
+- [x] No tenant mutation occurred; cleanup state is `not-required`
+- [x] Result SHA-256: `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`
+- [x] Package SHA-256: `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`
 
 ## Customer Validation Steps
 
@@ -72,5 +84,6 @@
 ## Handover Notes
 
 - Provide the customer with the README, deployment guide, prerequisites, troubleshooting guide, and evidence export documentation.
+- Include `lab\01-copilot-readiness-scanner.lab.json` in the handoff package and confirm the external lab executor accepted the read-only contract.
 - Record the selected governance tier, output path, and tenant identifier used for the initial baseline.
 - Document any manual remediation actions that remain outside the current automation scope.

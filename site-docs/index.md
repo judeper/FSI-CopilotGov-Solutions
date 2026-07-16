@@ -13,6 +13,7 @@ Use this site to understand the solution catalog, shared contracts, deployment o
 
 ## Operator Handoff Layer
 
+- [Project Handoff](./project-handoff.md) — authoritative snapshot of review status, the lab-execution blocker, and the exact resume sequence.
 - [Operational Handbook](./operational-handbook.md) — central handoff runbook for preflight, sequencing, and steady-state support.
 - [Operational RACI](./operational-raci.md) — named ownership model for deployment, monitoring, and change control.
 - [Operational Cadence](./operational-cadence.md) — recurring review schedule for monitoring, evidence, and runbook upkeep.

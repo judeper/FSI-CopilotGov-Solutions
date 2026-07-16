@@ -6,6 +6,8 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 
 > **Cloud scope:** This content targets US commercial-cloud Microsoft 365 only. See [SCOPE.md](./SCOPE.md) for details.
 
+> **Current status (2026-07-15):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete**. Solution 01 completed an accepted read-only `PASS` (9/9 steps, no mutation), is released as v0.2.4, and clears the serial queue to begin Solution 02. The remaining 22 review PRs stay draft with lab evidence pending. See the [Project Handoff](./docs/project-handoff.md).
+
 ## Quickstart
 
 Want to deploy one solution against a non-production tenant? Follow this minimum path:
@@ -82,7 +84,7 @@ See [Tier Applicability](./docs/reference/tier-applicability.md) for the per-sol
 | 07 | Conditional Access Automation | ✅ | ❌ | Generated policy templates | Entra ID, Graph |
 | 08 | License Governance ROI | ✅ | ❌ | Representative sample usage data | Graph, Viva Insights |
 | 09 | Feature Management Controller | ✅ | ❌ | Tier-defined feature templates | M365 Admin, Graph, Teams Admin |
-| 10 | Connector Plugin Governance | ✅ | ❌ | Config-defined connector lists | Power Platform Admin |
+| 10 | Connector Plugin Governance | ✅ | ❌ | Config-defined connector lists | Power Platform Admin, Agent 365 registry, Graph Package Management API (preview) |
 | 11 | Risk-Tiered Rollout | ✅ | ❌ | Wave manifest generation | Graph (license assignment) |
 | 12 | Regulatory Compliance Dashboard | ✅ | ❌ | Seeded reference data | Dataverse, Power BI |
 | 13 | DORA Resilience Monitor | ✅ | ❌ | Local stub sample data | Graph (service health), Sentinel |
@@ -91,8 +93,8 @@ See [Tier Applicability](./docs/reference/tier-applicability.md) for the per-sol
 | 16 | Item-Level Oversharing Scanner | ✅ | ❌ | Representative sample data | PnP PowerShell, SharePoint |
 | 17 | SharePoint Permissions Drift | ✅ | ❌ | Representative sample data | PnP PowerShell, Graph |
 | 18 | Entra Access Reviews Automation | ✅ | ❌ | Representative sample data | Graph, Entra ID |
-| 19 | Copilot Tuning Governance (Microsoft 365 Copilot Tuning early access preview; eligible tenants only) | ✅ | ❌ | Representative sample data | Microsoft 365 admin center (eligible tenants with at least 5,000 Microsoft 365 Copilot licenses), Graph |
-| 20 | Generative AI Model Governance Monitor | ✅ | ❌ | Representative sample data | Model Risk Committee, Microsoft attestations |
+| 19 | Copilot Tuning Governance (Microsoft 365 Copilot Tuning early access preview; eligible tenants only) | ✅ | ❌ | Representative sample data | Microsoft 365 admin center (eligible tenants with at least 5,000 Microsoft 365 Copilot licenses) |
+| 20 | Generative AI Model Governance Monitor | ✅ | ❌ | Representative sample data | Microsoft Foundry, Azure AI Content Safety, Model Risk Committee |
 | 21 | Cross-Tenant Agent Federation Auditor | ✅ | ❌ | Representative sample data | Entra Agent ID, Copilot Studio, MCP |
 | 22 | Pages and Notebooks Retention Tracker | ✅ | ❌ | Representative sample data | Purview, SharePoint, OneNote, Loop |
 | 23 | Copilot Studio Agent Lifecycle Tracker | ✅ | ❌ | Representative sample data | Power Platform Admin, Copilot Studio |
@@ -112,7 +114,7 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 | 07 | ✅ | ✅ | ✅ | ✅ | — | ✅ | — |
 | 08 | ✅ | ✅ | ✅ | ✅ | — | — | Viva Insights |
 | 09 | ✅ | ✅ | ✅ | ✅ | — | — | Teams Admin |
-| 10 | — | ✅ | ✅ | ✅ | — | — | Power Platform |
+| 10 | ✅ | ✅ | ✅ | ✅ | — | — | Power Platform, Agent 365 registry |
 | 11 | ✅ | ✅ | — | ✅ | — | — | — |
 | 12 | — | ✅ | ✅ | ✅ | — | — | — |
 | 13 | ✅ | ✅ | ✅ | ✅ | — | — | Sentinel |
@@ -121,8 +123,8 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 | 16 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 17 | ✅ | — | — | — | — | — | SharePoint (PnP) |
 | 18 | ✅ | — | — | — | — | ✅ | SharePoint |
-| 19 | ✅ | — | — | — | — | — | Microsoft 365 admin center (early access preview; eligible tenants with at least 5,000 Microsoft 365 Copilot licenses) |
-| 20 | — | — | — | — | — | — | Model Risk Committee workflow |
+| 19 | — | — | — | — | — | — | Microsoft 365 admin center (early access preview; eligible tenants with at least 5,000 Microsoft 365 Copilot licenses) |
+| 20 | — | — | — | — | — | — | Microsoft Foundry, Azure AI Content Safety |
 | 21 | ✅ | — | — | — | — | ✅ | Copilot Studio, MCP |
 | 22 | — | — | — | — | ✅ | — | SharePoint, OneNote, Loop |
 | 23 | — | — | — | — | — | — | Power Platform Admin |
@@ -143,17 +145,31 @@ This table summarizes which Microsoft 365 and Azure services each solution requi
 
 ## Operator Handoff
 
-- Start with [Common Prerequisites](./docs/getting-started/prerequisites.md) and [Identity and Secrets Prep](./docs/getting-started/identity-and-secrets-prep.md).
+- Start with the [Project Handoff](./docs/project-handoff.md) — the authoritative snapshot of review status, the lab-execution blocker, and the exact resume sequence.
+- Then review [Common Prerequisites](./docs/getting-started/prerequisites.md) and [Identity and Secrets Prep](./docs/getting-started/identity-and-secrets-prep.md).
 - Use [DEPLOYMENT-GUIDE.md](./DEPLOYMENT-GUIDE.md) for wave sequencing, [Operational Handbook](./docs/operational-handbook.md) for ownership and support expectations, and [Documentation vs Runnable Assets Guide](./docs/documentation-vs-runnable-assets-guide.md) to keep the documentation-first boundary clear.
 - Run `pwsh -File scripts\deployment\Validate-Prerequisites.ps1` and capture the result in `DELIVERY-CHECKLIST-TEMPLATE.md` before customer handoff or production execution.
 
 ## Local Validation
 
+Run the deterministic validators from the repository root before pushing:
+
 ```powershell
-python scripts/build-docs.py
-python scripts/validate-contracts.py
-python scripts/validate-solutions.py
-python scripts/validate-documentation.py
+python scripts/test_docs_protection.py         # docs-autonomy gate + branch protection
+python scripts/build-docs.py                   # refresh site-docs and validate nav
+python scripts/validate-contracts.py           # shared contract layer
+python scripts/validate-solutions.py           # solution structure and metadata
+python scripts/validate-documentation.py       # FSI language rules and required sections
+python scripts/validate_solutions_json.py      # generated solutions.json
+python scripts/validate_solutions_graph.py     # generated solutions-graph.json
+python scripts/validate_data_classification.py # data classification matrix
+python scripts/verify_readme_counts.py         # README counts vs canonical data
+python scripts/verify_commercial_scope.py      # US commercial-cloud scope
+python scripts/validate-lab-contracts.py       # lab contract structure and semantics
+python scripts/validate-lab-result.py          # lab result semantics
+python scripts/test_lab_validation_contracts.py # lab contract fixtures
+python -m mkdocs build --strict                # strict MkDocs build
+pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null) | Out-Null }"  # PowerShell parse
 ```
 
 ## License

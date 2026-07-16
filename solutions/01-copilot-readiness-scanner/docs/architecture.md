@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Copilot Readiness Assessment Scanner is a PowerShell-first solution that documents how to collect readiness signals from six Microsoft 365 governance domains, applies a financial services weighting model, and exports structured artifacts for Power BI reporting and evidence retention. The architecture is intentionally modular so customer teams can replace the repository's representative sample logic with live tenant connectors, adjust score thresholds, and add new regulatory evidence outputs without changing the repository-wide contracts.
+The Copilot Readiness Assessment Scanner is a PowerShell-first solution that documents how to collect readiness signals from six Microsoft 365 governance domains, applies a financial services weighting model, and exports structured artifacts for Power BI reporting and evidence retention. The architecture aligns to Microsoft 365 Copilot readiness guidance, including the Microsoft 365 Copilot Optimization Assessment, while remaining intentionally modular so customer teams can replace the repository's representative sample logic with live tenant connectors, adjust score thresholds, and add new regulatory evidence outputs without changing the repository-wide contracts.
 
 ## Component Diagram
 
@@ -81,13 +81,13 @@ The Copilot Readiness Assessment Scanner is a PowerShell-first solution that doc
 | Power Platform governance | Environment inventory, connector risk, DLP policy coverage, maker sprawl | Power Platform admin endpoints | 1.1, 1.6 |
 | Copilot configuration | Copilot service enablement, scoped readiness, app configuration drift | Microsoft 365 Copilot admin configuration surfaces | 1.1, 1.9 |
 
-> **Admin center readiness input:** Microsoft 365 admin center Copilot > Settings scenarios provide selected Copilot management controls and shortcuts to related admin centers that can complement the scanner's domain-level assessment pattern. Organizations should review those scenarios alongside the scanner's outputs when evaluating overall Copilot readiness posture.
+> **Admin center readiness input:** Microsoft 365 admin center Copilot > Settings scenarios provide selected Copilot management controls and shortcuts to related admin centers that can complement the scanner's domain-level assessment pattern. For control 1.7, SharePoint Advanced Management Restricted Content Discovery can be used as a temporary discoverability/governance readiness input; it does not change permissions and is not a security boundary. Organizations should review those scenarios alongside the scanner's outputs when evaluating overall Copilot readiness posture.
 
 ## Scoring Model
 
 ### Domain Scores
 
-- Each domain returns a score from 0 to 100 based on the percentage of expected readiness checks that pass for the selected governance tier.
+- Repository scripts currently emit representative fixed base scores with tier adjustments (baseline +0, recommended +5, regulated +10). Percentage-of-passed-checks scoring is the intended tenant-bound extension model once live readiness checks are connected.
 - Domain findings are categorized into data exposure, control gap, retention gap, or operating model exception.
 - Thresholds are tier-aware and read from configuration so customers can tighten expectations as governance matures.
 

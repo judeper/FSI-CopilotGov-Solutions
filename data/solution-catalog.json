@@ -7,7 +7,7 @@
     "domain": "readiness-data",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.2.3",
+    "version": "v0.2.4",
     "solution_type": [
       "PowerShell",
       "Power BI"

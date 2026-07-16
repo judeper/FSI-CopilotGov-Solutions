@@ -1,12 +1,14 @@
 # Copilot Readiness Assessment Scanner
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-07-15
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
 
+> **Lab validation:** Accepted `PASS` on 2026-07-15 against the pinned v0.2.3 review contract (9/9 steps, no mutation). Result SHA-256: `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`; package SHA-256: `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`. Evidence is retained outside Git.
+
 ## Overview
 
-The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 readiness assessment pattern - licensing, Entra identity, Defender security, Purview compliance, Power Platform governance, and Copilot configuration - and emits representative sample scores for financial services environments. It extends Microsoft 365 Copilot readiness and optimization guidance with regulatory weighting that reflects FINRA 3110 supervision, SEC records retention readiness, GLBA safeguard expectations, OCC model governance oversight, and FFIEC control maturity reviews while leaving live tenant connectors as explicit implementation steps.
+The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 readiness assessment pattern - licensing, Entra identity, Defender security, Purview compliance, Power Platform governance, and Copilot configuration - and emits representative sample scores for financial services environments. It extends Microsoft 365 Copilot readiness guidance, including the Microsoft 365 Copilot Optimization Assessment, with regulatory weighting that reflects FINRA 3110 supervision, SEC records retention readiness, GLBA safeguard expectations, OCC model governance oversight, and FFIEC control maturity reviews while leaving live tenant connectors as explicit implementation steps.
 
 ## Features
 
@@ -16,6 +18,7 @@ The Copilot Readiness Assessment Scanner documents a six-domain Microsoft 365 re
 - Exports evidence packages aligned to the shared schema, including companion SHA-256 files for downstream audit handling.
 - Produces Power BI-ready JSON artifacts that can be used to populate executive scorecards and remediation dashboards.
 - References Microsoft 365 admin center Copilot > Settings scenarios, which provide selected Copilot management controls and shortcuts to related admin centers as supplemental readiness inputs.
+- Treats SharePoint Advanced Management Restricted Content Discovery as a temporary control 1.7 discoverability/governance readiness input; it does not change permissions and is not a security boundary.
 - Tracks FSI-relevant controls 1.1, 1.5, 1.6, 1.7, and 1.9 in a format suitable for control owners, security teams, and exam preparation leads.
 
 ## Scope Boundaries
@@ -61,6 +64,7 @@ The solution uses tiered configuration, PowerShell collection scripts, shared he
 | `docs/evidence-export.md` | Evidence package contents, naming conventions, and hashing requirements |
 | `docs/prerequisites.md` | Roles, workload permissions, modules, and connectivity requirements |
 | `docs/troubleshooting.md` | Common deployment and monitoring issues with diagnostic steps |
+| `lab/01-copilot-readiness-scanner.lab.json` | Read-only lab validation contract for PASS/BLOCKED/NOT-APPLICABLE evidence handoff |
 | `tests/01-copilot-readiness-scanner.Tests.ps1` | Pester checks for structure, configuration, documentation, changelog, and script syntax |
 
 ## Deployment
@@ -104,5 +108,5 @@ The solution exports the following evidence types: `readiness-scorecard`, `data-
 - Very large tenants may require batching, API throttling controls, and staged site sampling to complete scans within operational windows.
 - Power BI visuals depend on a customer-managed dataset refresh process and are not published automatically by the current script set.
 - Immutable evidence storage and long-term retention controls depend on the target storage platform selected by the customer.
-- Account for Microsoft 365 Copilot Chat at no additional cost for eligible subscriptions, Microsoft 365 Copilot as an add-on license, and documented Microsoft 365 Copilot pay-as-you-go services such as Microsoft 365 Copilot Chat, SharePoint agents, and the Microsoft 365 Copilot Retrieval API (Preview) when assessing control 1.9.
+- Account for Microsoft 365 Copilot Chat at no additional cost for eligible subscriptions, Microsoft 365 Copilot as an add-on license, and current Microsoft 365 Copilot Retrieval API licensing semantics: the Retrieval API is included at no additional cost for users licensed with the Microsoft 365 Copilot add-on, while Retrieval API pay-as-you-go consumption for non-licensed users is preview.
 - Reference Copilot Control System management controls across the Microsoft 365 admin center, Power Platform admin center, and Copilot Studio for licensing, metering, agent lifecycle, connector, and customization controls.

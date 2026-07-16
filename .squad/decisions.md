@@ -118,3 +118,95 @@ No new active decisions pending.
 - All meaningful changes require team consensus
 - Document architectural decisions here
 - Keep history focused on work, decisions focused on direction
+
+---
+
+## Serial Accuracy Review Complete → Lab Finalization Blocked (2026-07)
+
+**Status:** REVIEW COMPLETE / LAB EXECUTION BLOCKED | **Snapshot:** 2026-07-15 | **`main`:** `61e8921` | **PRs:** #317, #319–#340 (23 draft PRs, one per solution) | **Handoff:** `docs/project-handoff.md`
+
+### Decision
+
+The serial Microsoft product & feature accuracy review of all 23 solutions is complete. Each solution was reviewed **one at a time** against first-party Microsoft sources, hardened for read-only lab validation, and delivered as a green draft PR held with `Lab status: pending`. All 22 non-Solution-01 PRs are mergeable; PR #317 (Solution 01) conflicts with `main` and is deliberately deferred to post-lab finalization. No PR is merged.
+
+### Contract / Executor Split
+
+- `FSI-CopilotGov-Solutions` owns the versioned lab contracts (`lab/<solution>.lab.json`), result and package validation, schemas, and fixtures, and stays documentation-first.
+- `studio-video-factory` owns Playwright execution and evidence capture.
+
+### Evidence Gate
+
+- First lab cycle is read-only/detect-only (`mutations: []` normally).
+- Accepted `BLOCKED` / `NOT-APPLICABLE` dispositions require negative evidence **and** source verification; they must not claim implemented control state.
+- Package artifact paths are relative; caller paths are absolute. Provider-aware PowerShell path handling (never raw `GetFullPath` on relative input). No raw identifiers, secrets, or PII in evidence. Pester `5.7.1` + `Run.Exit` true. Strict MkDocs. Commercial-only contracts omit optional `prohibitedClouds`.
+- Known canonical control gaps: 2.17 (Sol 21), 3.14 (Sol 22), 4.14 (Sol 23) — omitted from machine-checked arrays until canonical.
+
+### Cleanup Policy
+
+Steady state: root on `main` only, no review worktrees or local review branches, merged foundation remotes (#315/#316/#318) deleted, remote branches backing open PRs preserved, generated leftovers (built `site/`, `__pycache__`) removed. One modifying agent per worktree; never `git checkout` in another agent's worktree.
+
+### Next-Phase Blocker
+
+Blocked until `studio-video-factory` `feat/pilot-a-readiness` merges. Then: build the lab adapter → serial read-only lab runs → accepted evidence → per-PR source recheck/versioning/rebase/merge in the documented serial order, resolving PR #317's existing conflict during finalization.
+
+---
+
+## Studio Pilot A Prerequisite Confirmed Merged (2026-07-15)
+
+**Status:** PREREQUISITE CLEARED | **Studio PR:** [#7](https://github.com/judep_microsoft/studio-video-factory/pull/7) | **Merged:** 2026-07-13 | **Current action:** Build governance-validation adapter
+
+### Correction
+
+The prior July handoff recorded `studio-video-factory` `feat/pilot-a-readiness` as an unresolved blocker. A direct GitHub read-back confirmed that branch merged into `judep_microsoft/studio-video-factory` `main` through PR #7 on 2026-07-13. The upstream readiness prerequisite is therefore cleared.
+
+### Updated Next Phase
+
+Synchronize the studio repository to updated `main`, build the isolated governance-validation adapter, then execute the 23 read-only lab contracts serially. No live lab run or accepted evidence exists yet. PR #317 remains deferred for conflict resolution during post-lab finalization.
+
+---
+
+## Solution 01 Lab Cycle PARTIAL / Not Accepted (2026-07-15)
+
+**Status:** SERIAL LAB QUEUE BLOCKED | **FSI PR:** [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | **Studio PRs:** [#11](https://github.com/judep_microsoft/studio-video-factory/pull/11), [#12](https://github.com/judep_microsoft/studio-video-factory/pull/12)
+
+### Result
+
+The pinned Solution 01 contract completed its first privacy-gated read-only cycle as `PARTIAL`, `accepted: false`, `controlImplementation: partial`. Five steps passed (three documentation-first PowerShell checks and two manual attestations); four steps were blocked.
+
+### Verified Blockers
+
+- Microsoft 365, Entra, Purview, Defender, SharePoint admin, and Teams admin surfaces redirected to attended sign-in. Power Platform admin center was authenticated.
+- The documented Copilot D7 usage-report GET returned 403 without effective `Reports.Read.All`; response body and token were not retained.
+
+### Evidence and Safety
+
+- Both authoritative validators pass: `validate-lab-result.py` and `validate-lab-package.ps1`.
+- Evidence remains outside Git with portable paths and FSI-compatible SHA-256 sidecars.
+- No tenant mutation occurred; cleanup was not required.
+- Result SHA-256: `30cd35255c1f30d1382a8c510f5f5e6b9cf6293b4e40f82dcb3d315297a03548`.
+- Package SHA-256: `4f1bbae69490834685eac2d3753d1c6a18bbb286ce01a4aa64f773b5d3d2c9b3`.
+
+### Decision
+
+Do not advance to Solution 02 and do not finalize PR #317. Seed attended governance authentication for the six blocked admin surfaces, provide effective `Reports.Read.All`, and rerun the pinned Solution 01 contract. Only an accepted PASS/BLOCKED/NOT-APPLICABLE result may unlock the serial queue.
+
+---
+
+## Solution 01 Lab PASS Accepted / Queue Advances (2026-07-15)
+
+**Status:** ACCEPTED PASS / FINALIZATION COMPLETE | **FSI PR:** [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | **Studio PRs:** [#14](https://github.com/judep_microsoft/studio-video-factory/pull/14), [#15](https://github.com/judep_microsoft/studio-video-factory/pull/15)
+
+### Remediated Result
+
+After attended lab authentication and delegated `Reports.Read.All` consent, the pinned Solution 01 contract completed with 9/9 steps `PASS`, `accepted: true`, `controlImplementation: implemented`, and cleanup `not-required`.
+
+- All seven required admin surfaces were observed through the privacy-gated collector.
+- The Copilot D7 usage-report GET succeeded; response content and tokens were not retained.
+- Both authoritative FSI validators passed.
+- No tenant mutation occurred.
+- Result SHA-256: `a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211`.
+- Package SHA-256: `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`.
+
+### Decision
+
+Finalize Solution 01 as v0.2.4 and merge PR #317 after the full gate is green. Advance the serial lab queue to Solution 02 / PR #319 only after Solution 01 lands.
