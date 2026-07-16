@@ -142,3 +142,12 @@ Rollback decisions should be documented whenever permissions, search scope, or o
 - Use `lab\02-oversharing-risk-assessment.lab.json` as the handoff contract for lab execution planning.
 - Keep execution read-only/detect-only and preserve `mutations: []` with `mutationRef: null` on all steps.
 - Record accepted dispositions as PASS, BLOCKED, or NOT-APPLICABLE with source evidence.
+
+Accepted read-only lab validation (2026-07-16):
+
+- Pinned contract commit `488d8f63a1c3ba6c01e5ce7b37f7f68bcd644158` completed with `PASS`, `accepted: true`, `controlImplementation: implemented`, 8/8 steps PASS, cleanup `not-required`, and no tenant mutation.
+- Restricted Content Discovery control surface was authenticated but not exposed (`observedAvailability: false`) and recorded as an honest availability read-back.
+- Graph `GET /v1.0/sites/root` succeeded with delegated `Sites.Read.All`; response body, token, site identifiers, and tenant identifiers were not retained.
+- Both authoritative validators passed (`validate-lab-result.py` and `validate-lab-package.ps1`).
+- Result SHA-256: `19240ff458f97fa3b78c299c86a9b27bba57cf506fcf75fe18f578fbeb750bda`.
+- Package SHA-256: `51700b6478e4e6787d70de9016835c5fee0a3408e6599e11735c91ac7d83b197`.

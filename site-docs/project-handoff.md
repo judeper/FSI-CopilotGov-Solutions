@@ -10,19 +10,20 @@ required to resume safely.
 
 > ⚠️ **Documentation-first repository.** Scripts and lab contracts use representative
 > sample data and do not connect to live Microsoft 365 services in their repository form.
-> No live-tenant or Playwright lab run has executed. See
+> Attended lab execution runs in `studio-video-factory`; validated summaries and hashes are
+> recorded here, and raw evidence remains outside Git. See
 > [Documentation vs Runnable Assets Guide](./documentation-vs-runnable-assets-guide.md).
 
 ## Snapshot
 
 | Field | Value |
 |-------|-------|
-| Snapshot date | 2026-07-15 |
+| Snapshot date | 2026-07-16 |
 | Repository branch | `main` — read the current commit from Git; this page records durable phase state rather than a self-staling HEAD |
-| Phase | Serial accuracy review **complete**; Solution 01 lab **PASS / accepted**; serial queue advances to Solution 02 |
-| Draft review PRs | 22 remain open with `Lab status: pending`; Solution 01 is finalized as v0.2.4 |
-| Live lab runs executed | 2 Solution 01 cycles — initial PARTIAL, remediated PASS |
-| Final versioning / merges | Solution 01 complete; Solutions 02–23 pending |
+| Phase | Serial accuracy review **complete**; Solutions 01-02 lab **PASS / accepted**; serial queue advances to Solution 16 |
+| Draft review PRs | 21 remain open with `Lab status: pending`; Solutions 01-02 are finalized (v0.2.4 and v0.2.5) |
+| Live lab runs executed | 4 cycles total — two each for Solutions 01 and 02 |
+| Final versioning / merges | Solutions 01-02 complete; Solutions 16-23 pending |
 
 ## Merged Foundation and Handoff
 
@@ -39,9 +40,9 @@ The documentation-autonomy and lab-contract foundation is merged into `main`:
 
 All 23 solutions were reviewed **one at a time** for Microsoft product and feature
 accuracy against first-party Microsoft sources, then hardened for read-only lab
-validation. Rows are listed in the serial review sequence (PR order). Solution 01 has
-completed accepted lab validation and final release; the remaining 22 PRs stay draft
-until their own accepted evidence exists.
+validation. Rows are listed in the serial review sequence (PR order). Solutions 01 and
+02 have completed accepted lab validation and final release; the remaining 21 PRs stay
+draft until their own accepted evidence exists.
 
 > **Solution 08 version note.** The table uses the corrected v0.1.4 carried by
 > PR #330 and the solution README/changelog. Current `main` still reports v0.1.3
@@ -51,7 +52,7 @@ until their own accepted evidence exists.
 | Sol | Solution | PR | Released version | Verified review outcome | Checks | Lab |
 |-----|----------|----|------------------|-------------------------|--------|-----|
 | 01 | Copilot Readiness Assessment Scanner | [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | v0.2.4 | Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; completed accepted read-only lab validation and final release metadata. | Merged | PASS / accepted |
-| 02 | Oversharing Risk Assessment and Remediation | [#319](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319) | v0.2.4 | Migrated go-forward guidance from Restricted SharePoint Search to Restricted Content Discovery; recorded the RSS new-enablement block (2026-07-31); updated SAM roles and the Microsoft 365 E7 entitlement path; fixed detect-only counts and portable evidence; added a six-control read-only lab contract. | Green | Pending |
+| 02 | Oversharing Risk Assessment and Remediation | [#319](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319) | v0.2.5 | Rechecked all five first-party source claims; completed accepted read-only lab validation (`PASS`, `accepted: true`, `controlImplementation: implemented`, 8/8 steps, no mutation); recorded authenticated RCD availability read-back (`observedAvailability: false`) and delegated Graph `/v1.0/sites/root` success with no retained identifiers. | Merged | PASS / accepted |
 | 16 | Item-Level Oversharing Scanner | [#320](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320) | v0.1.3 | Synced item-level guidance with RSS retirement and Restricted Content Discovery; documented Graph owner/non-owner visibility limits; enforced the auto-remediation kill switch and HIGH/AnyoneLink approval gates; added ShouldProcess/-WhatIf protection; five-control read-only lab contract. | Green | Pending |
 | 17 | SharePoint Permissions Drift Detection | [#321](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321) | v0.1.4 | Fixed a StrictMode drift-scan crash and stopped failed scans from reporting `NoDriftDetected`; gated approval/reversion behind ShouldProcess/-WhatIf; calibrated config-driven scoring; portable evidence; four-control read-only lab contract. | Green | Pending |
 | 18 | Entra Access Reviews Automation | [#322](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/322) | v0.1.5 | Fixed empty live-result handling and upstream dependency status; aligned access-review API enums, apply behavior, and tier settings; added end-to-end WhatIf safety and run-scoped evidence provenance; four-control read-only lab contract. | Green | Pending |
@@ -104,8 +105,15 @@ portable, hash-verified artifacts reviewable independently of the execution host
   added the current Microsoft 365 admin center host alias.
 - [studio-video-factory PR #15](https://github.com/judep_microsoft/studio-video-factory/pull/15)
   made Solution 01 replay outcomes evidence-driven for authenticated reruns.
+- [studio-video-factory PR #16](https://github.com/judep_microsoft/studio-video-factory/pull/16)
+  merged Solution 02 governance replay updates (squash commit `b608bce686cc2efcb92e3440dc91ec987095399d`).
 
 ## Lab Execution Status
+
+Four attended lab cycles have executed in `studio-video-factory` (two for Solution 01 and
+two for Solution 02).
+
+### Solution 01
 
 Solution 01 ran twice against pinned FSI commit
 `e8bae78b1036c6b55d7597d576df03b69e9418c4`.
@@ -124,12 +132,28 @@ Solution 01 ran twice against pinned FSI commit
   `f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc`.
 - **PR record:** [Accepted Solution 01 lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317#issuecomment-4985956226).
 
+### Solution 02
+
+Solution 02 ran twice against pinned FSI commit
+`488d8f63a1c3ba6c01e5ce7b37f7f68bcd644158`.
+
+- **Initial result:** `PARTIAL`, `accepted: false` (7 PASS / 1 BLOCKED) because
+  the Graph read-back returned 403 without effective `Sites.Read.All`.
+- **Final result:** `PASS`, `accepted: true`, `controlImplementation: implemented` (8/8 PASS).
+- **Cleanup:** `not-required`; no tenant mutation occurred.
+- **RCD read-back:** control surface authenticated but not exposed (`observedAvailability: false`), recorded as an honest availability outcome.
+- **Graph:** `GET /v1.0/sites/root` succeeded with delegated `Sites.Read.All`; response body, token, site identifiers, and tenant identifiers were not retained.
+- **Validation:** both `validate-lab-result.py` and `validate-lab-package.ps1` pass.
+- **Evidence hashes:** result `19240ff458f97fa3b78c299c86a9b27bba57cf506fcf75fe18f578fbeb750bda`; package `51700b6478e4e6787d70de9016835c5fee0a3408e6599e11735c91ac7d83b197`.
+- **Studio companion:** [studio-video-factory PR #16](https://github.com/judep_microsoft/studio-video-factory/pull/16) merged as `b608bce686cc2efcb92e3440dc91ec987095399d`.
+- **PR record:** [Accepted Solution 02 lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319#issuecomment-4987169791).
+
 ## Pending Gates and Known Blockers
 
-- **Solution 02 is the current serial gate.** Pin PR #319, execute its read-only
-  contract, and require accepted evidence before advancing to Solution 16.
-- **Remaining review PRs.** Solutions 02–23 remain unmerged with
-  `Lab status: pending`.
+- **Solution 16 is the current serial gate.** Pin PR #320, execute its read-only
+  contract, and require accepted evidence before advancing in sequence.
+- **Remaining review PRs.** 21 draft PRs remain open with `Lab status: pending`;
+  Solutions 16–23 are the next serial run set.
 
 ## Metadata Gaps
 
@@ -147,9 +171,9 @@ machine-checked arrays so validation stays deterministic:
 
 Execute in order. Do not run labs in parallel; the review and lab program is serial.
 
-1. **Run Solution 02.** Pin PR #319 and execute its read-only contract using the
+1. **Run Solution 16.** Pin PR #320 and execute its read-only contract using the
    studio adapter and privacy-gated evidence workflow.
-2. **Continue labs one at a time.** After Solution 02 is accepted, execute each
+2. **Continue labs one at a time.** After Solution 16 is accepted, execute each
    remaining contract serially. The first cycle is
    read-only/detect-only (`mutations: []` normally); no tenant mutation is permitted.
 3. **Capture and accept evidence.** Emit `*.lab-result.json` and portable evidence
@@ -231,5 +255,5 @@ PR is pushed. The resulting steady state is:
 
 To prevent a false-progress restart, the following are explicitly **not** done:
 
-- Solutions 02–23 have not started lab execution.
-- Solutions 02–23 have not been versioned-final, rebased onto latest `main`, or merged.
+- Solutions 16–23 have not started lab execution.
+- Solutions 16–23 have not been versioned-final, rebased onto latest `main`, or merged.

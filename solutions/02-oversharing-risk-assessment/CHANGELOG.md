@@ -6,6 +6,8 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 
 ## [Unreleased]
 
+## [v0.2.5] — 2026-07-16 — Current-source review and accepted lab validation
+
 ### Changed
 
 - Updated Restricted SharePoint Search guidance across solution 02 to legacy transition posture only and documented retirement with new enablement blocked starting 2026-07-31.
@@ -19,6 +21,17 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 - `Deploy-Solution.ps1 -WhatIf` now returns a preview dependency result with warning output when upstream solution 01 artifacts are missing; non-WhatIf deployment remains blocking.
 - `Export-Evidence.ps1` now generates owner-attestation records automatically for regulated tier exports with `requireOwnerAttestation: true`.
 - Evidence package artifact paths are now package-relative filenames while `PackagePath` in script output remains absolute.
+
+### Validated
+
+- Rechecked all five first-party Microsoft source claims on 2026-07-16; each remained unchanged.
+- Accepted read-only lab result: `PASS`, `accepted: true`, `controlImplementation: implemented`, 8/8 steps PASS, cleanup `not-required`, no tenant mutation.
+- Restricted Content Discovery control surface was authenticated but not exposed (`observedAvailability: false`), recorded as an honest availability read-back.
+- Graph `GET /v1.0/sites/root` succeeded with delegated `Sites.Read.All`; response body, token, site identifiers, and tenant identifiers were not retained.
+- Both authoritative validators passed (`validate-lab-result.py` and `validate-lab-package.ps1`).
+- Result SHA-256: `19240ff458f97fa3b78c299c86a9b27bba57cf506fcf75fe18f578fbeb750bda`.
+- Portable evidence package SHA-256: `51700b6478e4e6787d70de9016835c5fee0a3408e6599e11735c91ac7d83b197`.
+- Studio companion PR [#16](https://github.com/judep_microsoft/studio-video-factory/pull/16) merged as `b608bce686cc2efcb92e3440dc91ec987095399d`; accepted PR record: https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319#issuecomment-4987169791.
 
 ## [v0.2.4] - 2026-06-07
 

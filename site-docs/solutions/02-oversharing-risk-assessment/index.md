@@ -1,8 +1,10 @@
 # Oversharing Risk Assessment and Remediation
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-06-07
+> **Status:** Documentation-first scaffold | **Version:** v0.2.5 | **Priority:** P0 | **Track:** A | **Last Verified:** 2026-07-16
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../disclaimer.md) and [Documentation vs Runnable Assets Guide](../../documentation-vs-runnable-assets-guide.md).
+
+> **Lab validation:** Accepted `PASS` on 2026-07-16 against pinned contract commit `488d8f63a1c3ba6c01e5ce7b37f7f68bcd644158` (`accepted: true`, `controlImplementation: implemented`, 8/8 steps PASS, cleanup `not-required`, no tenant mutation). Restricted Content Discovery was authenticated with `observedAvailability: false` (control not exposed). Result SHA-256: `19240ff458f97fa3b78c299c86a9b27bba57cf506fcf75fe18f578fbeb750bda`; package SHA-256: `51700b6478e4e6787d70de9016835c5fee0a3408e6599e11735c91ac7d83b197`. Evidence is retained outside Git.
 
 ## Overview
 

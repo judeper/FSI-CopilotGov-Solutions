@@ -88,6 +88,21 @@ Describe 'Documentation regression checks' {
         $readme | Should -Match 'lab\\02-oversharing-risk-assessment\.lab\.json'
     }
 
+    It 'keeps v0.2.5 release metadata and accepted lab markers aligned' {
+        $readme = Get-Content -Path (Join-Path $script:solutionRoot 'README.md') -Raw
+        $changelog = Get-Content -Path (Join-Path $script:solutionRoot 'CHANGELOG.md') -Raw
+        $checklist = Get-Content -Path (Join-Path $script:solutionRoot 'DELIVERY-CHECKLIST.md') -Raw
+
+        $readme | Should -Match '\*\*Version:\*\* v0\.2\.5'
+        $readme | Should -Match 'Last Verified:\*\* 2026-07-16'
+        $readme | Should -Match 'Accepted `PASS` on 2026-07-16'
+
+        $script:defaultConfig.version | Should -Be 'v0.2.5'
+        $changelog | Should -Match '## \[v0\.2\.5\]'
+        $changelog | Should -Match '### Validated'
+        $checklist | Should -Match '## Lab Validation Acceptance'
+    }
+
     It 'documents SAM role and entitlement updates plus qualified PnP guidance' {
         $prereq = Get-Content -Path (Join-Path $script:docsRoot 'prerequisites.md') -Raw
         $troubleshooting = Get-Content -Path (Join-Path $script:docsRoot 'troubleshooting.md') -Raw

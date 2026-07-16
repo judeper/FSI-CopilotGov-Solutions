@@ -78,7 +78,7 @@
     "domain": "readiness-data",
     "priority": "P0",
     "phase": 1,
-    "version": "v0.2.3",
+    "version": "v0.2.5",
     "solution_type": [
       "PowerShell",
       "Power Automate"
