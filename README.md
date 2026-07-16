@@ -6,7 +6,7 @@ This repository translates the framework's 58 controls and 243 playbooks into so
 
 > **Cloud scope:** This content targets US commercial-cloud Microsoft 365 only. See [SCOPE.md](./SCOPE.md) for details.
 
-> **Current status (2026-07-16):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete**. Solution 01 (v0.2.4) and Solution 02 (v0.2.5) now have accepted read-only `PASS` evidence (9/9 and 8/8 steps, no mutation) and are finalized. The remaining 21 review PRs stay draft with lab evidence pending, and the serial queue advances to Solution 16 / PR #320. See the [Project Handoff](./docs/project-handoff.md).
+> **Current status (2026-07-16):** The serial Microsoft product-and-feature accuracy review of all 23 solutions is **complete**. Solution 01 (v0.2.4) and Solution 02 (v0.2.5) are accepted and finalized. Solution 16 / PR #320 completed an initial read-only lab cycle as **PARTIAL** (5 PASS / 2 BLOCKED, `accepted: false`); blocked on attended Graph account selection — the serial queue does not advance. The remaining 21 review PRs stay draft. See the [Project Handoff](./docs/project-handoff.md).
 
 ## Quickstart
 

@@ -20,9 +20,10 @@ required to resume safely.
 |-------|-------|
 | Snapshot date | 2026-07-16 |
 | Repository branch | `main` — read the current commit from Git; this page records durable phase state rather than a self-staling HEAD |
-| Phase | Serial accuracy review **complete**; Solutions 01-02 lab **PASS / accepted**; serial queue advances to Solution 16 |
+| `main` after Solution 02 v0.2.5 | `6d6456a95a655378768e6e1630efb5329d086200` |
+| Phase | Serial accuracy review **complete**; Solutions 01-02 lab **PASS / accepted**; Solution 16 initial run **PARTIAL / not accepted**; serial queue blocked on attended account selection |
 | Draft review PRs | 21 remain open with `Lab status: pending`; Solutions 01-02 are finalized (v0.2.4 and v0.2.5) |
-| Live lab runs executed | 4 cycles total — two each for Solutions 01 and 02 |
+| Live lab runs executed | 5 cycles total — two each for Solutions 01 and 02; one initial for Solution 16 |
 | Final versioning / merges | Solutions 01-02 complete; Solutions 16-23 pending |
 
 ## Merged Foundation and Handoff
@@ -53,7 +54,7 @@ draft until their own accepted evidence exists.
 |-----|----------|----|------------------|-------------------------|--------|-----|
 | 01 | Copilot Readiness Assessment Scanner | [#317](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317) | v0.2.4 | Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; completed accepted read-only lab validation and final release metadata. | Merged | PASS / accepted |
 | 02 | Oversharing Risk Assessment and Remediation | [#319](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319) | v0.2.5 | Rechecked all five first-party source claims; completed accepted read-only lab validation (`PASS`, `accepted: true`, `controlImplementation: implemented`, 8/8 steps, no mutation); recorded authenticated RCD availability read-back (`observedAvailability: false`) and delegated Graph `/v1.0/sites/root` success with no retained identifiers. | Merged | PASS / accepted |
-| 16 | Item-Level Oversharing Scanner | [#320](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320) | v0.1.3 | Synced item-level guidance with RSS retirement and Restricted Content Discovery; documented Graph owner/non-owner visibility limits; enforced the auto-remediation kill switch and HIGH/AnyoneLink approval gates; added ShouldProcess/-WhatIf protection; five-control read-only lab contract. | Green | Pending |
+| 16 | Item-Level Oversharing Scanner | [#320](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320) | v0.1.3 | Synced item-level guidance with RSS retirement and Restricted Content Discovery; documented Graph owner/non-owner visibility limits; enforced the auto-remediation kill switch and HIGH/AnyoneLink approval gates; added ShouldProcess/-WhatIf protection; five-control read-only lab contract. | Green | PARTIAL / not accepted |
 | 17 | SharePoint Permissions Drift Detection | [#321](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321) | v0.1.4 | Fixed a StrictMode drift-scan crash and stopped failed scans from reporting `NoDriftDetected`; gated approval/reversion behind ShouldProcess/-WhatIf; calibrated config-driven scoring; portable evidence; four-control read-only lab contract. | Green | Pending |
 | 18 | Entra Access Reviews Automation | [#322](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/322) | v0.1.5 | Fixed empty live-result handling and upstream dependency status; aligned access-review API enums, apply behavior, and tier settings; added end-to-end WhatIf safety and run-scoped evidence provenance; four-control read-only lab contract. | Green | Pending |
 | 06 | Copilot Interaction Audit Trail Manager | [#323](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/323) | v0.2.3 | Refreshed Microsoft Purview Audit and unified eDiscovery terminology, roles, and service-default retention; separated service defaults from solution-defined retention intent; corrected evidence aggregation and portable paths; five-control read-only lab contract. | Green | Pending |
@@ -107,11 +108,15 @@ portable, hash-verified artifacts reviewable independently of the execution host
   made Solution 01 replay outcomes evidence-driven for authenticated reruns.
 - [studio-video-factory PR #16](https://github.com/judep_microsoft/studio-video-factory/pull/16)
   merged Solution 02 governance replay updates (squash commit `b608bce686cc2efcb92e3440dc91ec987095399d`).
+- [studio-video-factory draft PR #17](https://github.com/judep_microsoft/studio-video-factory/pull/17)
+  is the Solution 16 companion adapter (`lab/2026-07/16-item-level-oversharing-validation`,
+  head commit `b673f76`); it collects SharePoint Active-sites and Graph driveItem evidence
+  for the item-level oversharing lab contract. Draft; not yet merged.
 
 ## Lab Execution Status
 
-Four attended lab cycles have executed in `studio-video-factory` (two for Solution 01 and
-two for Solution 02).
+Five attended lab cycles have executed in `studio-video-factory` (two for Solution 01,
+two for Solution 02, and one initial run for Solution 16).
 
 ### Solution 01
 
@@ -148,12 +153,46 @@ Solution 02 ran twice against pinned FSI commit
 - **Studio companion:** [studio-video-factory PR #16](https://github.com/judep_microsoft/studio-video-factory/pull/16) merged as `b608bce686cc2efcb92e3440dc91ec987095399d`.
 - **PR record:** [Accepted Solution 02 lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319#issuecomment-4987169791).
 
+### Solution 16
+
+Solution 16 ran once against pinned FSI commit
+`f024876a17b7198a33752b26fd93862b0fa7a8bd` (PR #320).
+
+- **Initial result:** `PARTIAL`, `accepted: false` (5 PASS / 2 BLOCKED). No tenant
+  mutation; cleanup not required.
+- **PASS steps:** accepted Solution 02 upstream hash binding; SharePoint Active-sites
+  observation and site-settings panel read; sample-only item ACL enumeration (1
+  representative site / 5 rows, documentation-first PnP, no live PnP execution); four
+  Microsoft first-party source claims verified; no-mutation cleanup confirmed.
+- **UI observation:** SharePoint Active sites authenticated; a site row was selected
+  without retaining identity; settings panel and sharing surface observed; Restricted
+  Content Discovery not exposed (`rcdControlVisible: false`) — recorded as an honest
+  availability read-back.
+- **BLOCKED steps:** Graph driveItem permissions read-back and the dependent
+  blocked-condition decision both blocked. Device authorization stopped at an account
+  picker; no identity was auto-selected. No token, identifier, or tenant data was retained.
+- **Validation:** both `validate-lab-result.py` and `validate-lab-package.ps1` pass on
+  the PARTIAL result; PARTIAL remains non-accepted.
+- **Evidence hashes:** result
+  `3c0702d0eb3ffc3f0158444ec849892048704b45bb7fcd3558bd03442ed473da`;
+  package
+  `7a42329208bbdeb31c74eb1e0cb5265cd4a171154be93b7faf6e0b52fd5d976f`.
+- **Studio companion:** [studio-video-factory draft PR #17](https://github.com/judep_microsoft/studio-video-factory/pull/17)
+  (`lab/2026-07/16-item-level-oversharing-validation`, head `b673f76`). Draft; not merged.
+- **PR record:** [Solution 16 initial PARTIAL lab update](https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320#issuecomment-4988037680).
+
 ## Pending Gates and Known Blockers
 
-- **Solution 16 is the current serial gate.** Pin PR #320, execute its read-only
-  contract, and require accepted evidence before advancing in sequence.
+- **Solution 16 is the current serial gate.** The initial read-only lab cycle completed
+  as `PARTIAL` (`accepted: false`, 5 PASS / 2 BLOCKED). The Graph driveItem permissions
+  read-back and a dependent blocked-condition decision were blocked when device
+  authorization stopped at an account picker; no identity was auto-selected. To unblock:
+  attend the account picker for the approved lab identity, rerun the strict read-only
+  Graph driveItem permissions probe, rebuild the evidence package, and replay the
+  contract. **Never auto-select an identity.** Expected accepted state is 7/7 PASS. Do
+  not advance to Solution 17 until Solution 16 returns an accepted result.
 - **Remaining review PRs.** 21 draft PRs remain open with `Lab status: pending`;
-  Solutions 16–23 are the next serial run set.
+  Solutions 17–23 are the next serial run set after Solution 16 is accepted.
 
 ## Metadata Gaps
 
@@ -171,16 +210,20 @@ machine-checked arrays so validation stays deterministic:
 
 Execute in order. Do not run labs in parallel; the review and lab program is serial.
 
-1. **Run Solution 16.** Pin PR #320 and execute its read-only contract using the
-   studio adapter and privacy-gated evidence workflow.
-2. **Continue labs one at a time.** After Solution 16 is accepted, execute each
-   remaining contract serially. The first cycle is
+1. **Resolve Solution 16 account-picker blocker.** Attend the account picker for the
+   approved lab identity and rerun the strict read-only Graph driveItem permissions
+   probe. Never auto-select an identity. Rebuild the evidence package and replay the
+   contract. Expected accepted state: 7/7 PASS.
+2. **Accept Solution 16.** Require an accepted `PASS` result before advancing. Do not
+   finalize PR #320 until the accepted evidence exists.
+3. **Continue labs one at a time.** After Solution 16 is accepted, execute each
+   remaining contract (Solutions 17 onward) serially. The first cycle is
    read-only/detect-only (`mutations: []` normally); no tenant mutation is permitted.
-3. **Capture and accept evidence.** Emit `*.lab-result.json` and portable evidence
+4. **Capture and accept evidence.** Emit `*.lab-result.json` and portable evidence
    packages. Accepted `BLOCKED` and `NOT-APPLICABLE` dispositions require negative
    evidence **and** source verification and must not claim implemented control state.
    Do not include raw identifiers, secrets, or PII in evidence.
-4. **Recheck, version, rebase, merge.** After accepted evidence, recheck sources, apply
+5. **Recheck, version, rebase, merge.** After accepted evidence, recheck sources, apply
    versioning where required, and merge all remaining PRs
    one at a time in the documented serial order.
 
@@ -255,5 +298,7 @@ PR is pushed. The resulting steady state is:
 
 To prevent a false-progress restart, the following are explicitly **not** done:
 
-- Solutions 16–23 have not started lab execution.
-- Solutions 16–23 have not been versioned-final, rebased onto latest `main`, or merged.
+- Solution 16 has not been accepted; its initial lab cycle was `PARTIAL` / `accepted: false`.
+  Solution 16 has not been versioned-final, rebased onto latest `main`, or merged.
+- Solutions 17–23 have not started lab execution.
+- Solutions 17–23 have not been versioned-final, rebased onto latest `main`, or merged.
