@@ -47,16 +47,17 @@ Use this checklist to move solution 16 from documentation review into controlled
 
 ## 2. Licensing and Platform Prerequisites
 
-- [ ] Validate SharePoint Advanced Management licensing for the tenant or document the approved alternative control path.
+- [ ] Validate SharePoint Advanced Management entitlement using a qualifying commercial base subscription plus one of: Microsoft 365 Copilot license assignment, SharePoint Advanced Management Plan 1 add-on (with SharePoint K/P1/P2), or Microsoft 365 E7.
 - [ ] Validate licensing and permissions for Microsoft Purview Data Security Posture Management (DSPM). If using DSPM for AI, identify it as DSPM for AI (classic).
+- [ ] Confirm discoverability-control posture: Restricted Content Discovery (RCD) is the go-forward site-level control; Restricted SharePoint Search (RSS) is retiring and blocks new enablement starting 2026-07-31.
 - [ ] Confirm PnP PowerShell connectivity from the execution environment to the target SharePoint tenant.
 - [ ] Confirm the required PowerShell modules are installed and approved for use in the administration workstation or automation host.
 
 ## 3. Administrative Access
 
-- [ ] Confirm target-site site collection administrator access for delegated item-level permission enumeration, or document how a SharePoint Administrator/Global Administrator grants that access.
+- [ ] Confirm target-site site collection administrator access for delegated item-level permission enumeration, or document how a SharePoint Administrator/SharePoint Advanced Management Administrator grants that access.
 - [ ] Confirm Purview or Compliance Administrator roles are used only for DSPM/Purview review tasks, not as substitutes for target-site content access.
-- [ ] For Microsoft Graph read-only permission listing, confirm documented permissions such as `Files.Read.All` or `Sites.Read.All` where applicable; reserve write/full-control permissions for approved remediation and document the specific API surface.
+- [ ] For Microsoft Graph `driveItem` read-only permission listing, confirm least-privilege permissions (`Files.Read` delegated or `Files.Read.All` application) and document owner/non-owner visibility limits; reserve higher-privilege permissions for approved remediation APIs only.
 - [ ] Confirm security operations and compliance reviewers are identified for HIGH-risk findings.
 
 ## 4. Configuration Review
@@ -136,6 +137,13 @@ Use this checklist to move solution 16 from documentation review into controlled
 - [ ] Run the initial scan → score → remediate pipeline and review findings with stakeholders.
 - [ ] Approve remediation wave sequencing and approval routing.
 - [ ] Run `Export-Evidence.ps1` and archive the resulting package and checksums.
+
+## 14. Lab Validation Handoff
+
+- [ ] Validate `lab\16-item-level-oversharing-scanner.lab.json` with `python scripts/validate-lab-contracts.py solutions/16-item-level-oversharing-scanner/lab/16-item-level-oversharing-scanner.lab.json`.
+- [ ] Confirm the lab contract remains template-bound, read-only, and detect-only (`mutations` is empty).
+- [ ] Capture blocked-condition decisions for SAM entitlement gaps, missing site admin access, or missing app permissions.
+- [ ] Record manual source verification for RSS retirement timing, RCD behavior, SAM prerequisites, and Graph `driveItem` permission limits.
 
 ## Sign-Off Items
 

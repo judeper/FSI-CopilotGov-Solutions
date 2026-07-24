@@ -42,6 +42,10 @@ class LabValidationTests(unittest.TestCase):
             "solutions/02-oversharing-risk-assessment/lab/02-oversharing-risk-assessment.lab.json",
             normalized_output,
         )
+        self.assertIn(
+            "solutions/16-item-level-oversharing-scanner/lab/16-item-level-oversharing-scanner.lab.json",
+            normalized_output,
+        )
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
@@ -68,6 +72,18 @@ class LabValidationTests(unittest.TestCase):
             / "02-oversharing-risk-assessment"
             / "lab"
             / "02-oversharing-risk-assessment.lab.json"
+        )
+        result = run_validator(CONTRACT_VALIDATOR, contract_path)
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        self.assertIn("validation passed", result.stdout.lower())
+
+    def test_contract_validator_accepts_solution_16_contract(self) -> None:
+        contract_path = (
+            ROOT
+            / "solutions"
+            / "16-item-level-oversharing-scanner"
+            / "lab"
+            / "16-item-level-oversharing-scanner.lab.json"
         )
         result = run_validator(CONTRACT_VALIDATOR, contract_path)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)

@@ -2,6 +2,30 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Updated RSS/RCD guidance across README, prerequisites, deployment, troubleshooting, evidence export, checklist, and export script notes to align with Microsoft Learn: RSS retirement with new enablement blocked starting 2026-07-31, and RCD as the site-level discoverability control.
+- Tightened SAM entitlement and role guidance to align with current Learn prerequisites: qualifying base subscription plus Copilot or SharePoint Advanced Management Plan 1 (and Microsoft 365 E7 where applicable), with SharePoint Administrator or SharePoint Advanced Management Administrator roles separated from Purview roles.
+- Updated runtime wording to state that PowerShell 7.4 runtime is available in Azure Automation while keeping PnP module/app-registration compatibility project-documented and lab-validated.
+- Added explicit Microsoft Graph `driveItem` permissions visibility limitation guidance for owner/non-owner callers while retaining least-privilege `Files.Read.All` application-permission guidance.
+
+### Fixed
+
+- Enforced `autoRemediationEnabled` as a global kill switch in `Invoke-BulkRemediation.ps1`; false or absent now forces approval-gate behavior for every tier.
+- Preserved HIGH-risk approval requirements even when tier policy requests auto-remediation; added defensive AnyoneLink-to-HIGH enforcement for remediation routing.
+- Added `SupportsShouldProcess` with high impact and `-WhatIf` behavior so auto-remediate branches report planned-no-change without mutation.
+- Updated evidence package artifact entries to use package-relative paths while preserving an absolute returned `PackagePath` from `Export-Evidence.ps1`.
+
+### Added
+
+- Added `solutions/16-item-level-oversharing-scanner/lab/16-item-level-oversharing-scanner.lab.json` as a template/read-only/detect-only lab-validation contract with source-verified RSS/RCD/SAM/Graph claims and blocked-condition guidance.
+- Added lab handoff guidance to solution README, deployment guide, and delivery checklist.
+
+### Tests
+
+- Expanded solution 16 Pester coverage with behavioral tests for AnyoneLink risk-tier override, global kill switch enforcement, mandatory HIGH approval routing, `-WhatIf` no-mutation behavior, and evidence hash/package round-trip validation.
+- Updated Python lab-validator tests to assert real repository lab-contract discovery now that solution 16 ships a contract file.
+
 ## [v0.1.3] — 2026-06-05 — Microsoft Learn accuracy fixes
 
 ### Fixed

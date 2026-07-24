@@ -44,8 +44,10 @@ See [docs/architecture.md](docs/architecture.md) for the 3-script pipeline diagr
 ## Prerequisites
 
 - Review [docs/prerequisites.md](docs/prerequisites.md) and confirm the required admin roles, PowerShell modules, and API permissions are in place.
+- Confirm SharePoint Advanced Management entitlement with a qualifying base subscription plus Microsoft 365 Copilot, SharePoint Advanced Management Plan 1, or Microsoft 365 E7; assign SharePoint Administrator or SharePoint Advanced Management Administrator for RCD/SAM operations.
 - Verify that solution [02-oversharing-risk-assessment](../02-oversharing-risk-assessment/) has completed a site-level assessment and identified high-risk sites for item-level deep-dive.
 - Confirm PnP PowerShell connectivity to the target SharePoint tenant.
+- For optional Microsoft Graph `driveItem` permission listing, keep `Files.Read.All` as the least-privileged application permission and account for owner/non-owner visibility limits.
 
 ## Quick Start
 
@@ -63,6 +65,13 @@ See [docs/architecture.md](docs/architecture.md) for the 3-script pipeline diagr
 Deploy this solution after solution 02 has completed site-level scanning and identified high-risk sites that warrant item-level investigation. Start with the scan script in a constrained scope (a few sites) to validate permissions enumeration and risk scoring before expanding to broader coverage.
 
 After the deployment manifest is created with `Deploy-Solution.ps1`, run the 3-script pipeline (scan → score → remediate), review findings with site owners and compliance teams, then run `Export-Evidence.ps1` to archive the approved baseline.
+
+## Lab Validation Handoff
+
+- Lab contract: `lab\16-item-level-oversharing-scanner.lab.json`
+- Validation command: `python scripts/validate-lab-contracts.py solutions/16-item-level-oversharing-scanner/lab/16-item-level-oversharing-scanner.lab.json`
+- Contract posture: template-bound, read-only, detect-only (`mutations: []`)
+- Handoff expectation: include upstream solution 02 evidence references, manual source verification notes, and blocked-condition documentation for SAM entitlement, site admin access, and app permissions.
 
 ## Solution Components
 
@@ -95,7 +104,7 @@ Solution 16 depends on the site-level oversharing assessment from solution 02 to
 | Control | Status Focus | How this solution supports the control |
 |---------|--------------|----------------------------------------|
 | 1.2 | Primary | Detects item-level oversharing within SharePoint document libraries and prepares governed remediation actions |
-| 1.3 | Primary | Supports temporary Restricted SharePoint Search or Restricted Content Discovery planning by identifying sites and items needing permission cleanup; RSS is a tenant-level control with a site allow-list, short-term, and does not change permissions |
+| 1.3 | Primary | Supports temporary discoverability governance by identifying sites and items for permission cleanup before applying Restricted Content Discovery (RCD); RCD is site-level, does not change permissions, is not a security boundary, and doesn't apply to OneDrive. Restricted SharePoint Search (RSS) is retiring, with new enablement blocked starting 2026-07-31 |
 | 1.4 | Primary | Supports semantic index governance by surfacing items with permissions that exceed intended Copilot grounding scope |
 | 1.6 | Supporting | Supplements site-level permission audits with granular item-level anomaly detection |
 | 2.5 | Primary | Promotes data minimization by identifying and remediating item-level permissions that are broader than necessary |
@@ -121,3 +130,4 @@ Each JSON artifact is written with a companion `.sha256` file so control evidenc
 - Sensitivity label information depends on tenant labeling configuration and may not be available for all items.
 - Auto-remediation is intentionally not the default mode because high-risk FSI content often requires legal, compliance, and records-management review before permissions change.
 - Teams-connected document libraries are scanned through their underlying SharePoint site; direct Teams API integration is not included.
+- For Graph `driveItem` list-permissions calls, non-owner callers see only permissions that apply to them; owner/co-owner context is required for full permission visibility.

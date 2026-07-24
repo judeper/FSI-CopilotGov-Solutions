@@ -36,7 +36,7 @@ Optional SharePoint tenant admin URL reserved for tenant-specific PnP remediatio
 #>
 # PnP.PowerShell is required for live SharePoint operations.
 # Scripts fall back to representative sample data when PnP is unavailable.
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
@@ -79,6 +79,41 @@ function Get-RemediationAction {
     }
 }
 
+function Get-PolicyValue {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [object]$InputObject,
+
+        [Parameter(Mandatory)]
+        [string]$Name,
+
+        [Parameter()]
+        [AllowNull()]
+        [object]$DefaultValue = $null
+    )
+
+    if ($null -eq $InputObject) {
+        return $DefaultValue
+    }
+
+    if ($InputObject -is [hashtable]) {
+        if ($InputObject.ContainsKey($Name)) {
+            return $InputObject[$Name]
+        }
+
+        return $DefaultValue
+    }
+
+    $property = $InputObject.PSObject.Properties[$Name]
+    if ($null -ne $property) {
+        return $property.Value
+    }
+
+    return $DefaultValue
+}
+
 try {
     $policy = (Get-Content -Path $ConfigPath -Raw) | ConvertFrom-Json
 }
@@ -100,14 +135,39 @@ catch {
 }
 
 $outputRoot = [System.IO.Path]::GetFullPath($OutputPath)
-$null = New-Item -Path $outputRoot -ItemType Directory -Force
+$null = New-Item -Path $outputRoot -ItemType Directory -Force -WhatIf:$false
+
+$globalAutoRemediationEnabled = $false
+$autoRemediationSetting = Get-PolicyValue -InputObject $policy -Name 'autoRemediationEnabled' -DefaultValue $null
+if ($null -ne $autoRemediationSetting) {
+    try {
+        $globalAutoRemediationEnabled = [bool]$autoRemediationSetting
+    }
+    catch {
+        $globalAutoRemediationEnabled = $false
+    }
+}
+
+if (-not $globalAutoRemediationEnabled) {
+    Write-Verbose "Global autoRemediationEnabled is disabled or absent. Forcing approval-gate behavior for all tiers."
+}
 
 $pendingApprovals = @()
 $remediationLog = @()
 $actionIndex = 1
 
 foreach ($item in $scoredItems) {
-    $riskTier = $item.RiskTier
+    $riskTier = [string]$item.RiskTier
+    if ([string]::IsNullOrWhiteSpace($riskTier)) {
+        $riskTier = 'LOW'
+    }
+    $riskTier = $riskTier.ToUpperInvariant()
+
+    if ([string]$item.ShareType -eq 'AnyoneLink' -and $riskTier -ne 'HIGH') {
+        Write-Warning "Item $($item.ItemPath) is AnyoneLink but reported as $riskTier. Enforcing HIGH risk approval handling."
+        $riskTier = 'HIGH'
+    }
+
     $action = Get-RemediationAction -ShareType $item.ShareType
 
     $tierPolicy = switch ($riskTier) {
@@ -117,12 +177,38 @@ foreach ($item in $scoredItems) {
         default { [pscustomobject]@{ mode = 'approval-gate' } }
     }
 
-    $mode = if ($tierPolicy -is [hashtable]) { $tierPolicy['mode'] } else { $tierPolicy.mode }
-    if ($null -eq $mode) { $mode = 'approval-gate' }
+    $configuredMode = [string](Get-PolicyValue -InputObject $tierPolicy -Name 'mode' -DefaultValue 'approval-gate')
+    if ([string]::IsNullOrWhiteSpace($configuredMode)) {
+        $configuredMode = 'approval-gate'
+    }
+
+    $effectiveMode = $configuredMode
+    $policyNotes = @()
+
+    if (-not $globalAutoRemediationEnabled) {
+        if ($configuredMode -eq 'auto-remediate') {
+            $policyNotes += 'Global autoRemediationEnabled is false or absent; forced approval-gate.'
+        }
+        $effectiveMode = 'approval-gate'
+    }
+
+    if ($riskTier -eq 'HIGH') {
+        if ($configuredMode -eq 'auto-remediate') {
+            $policyNotes += 'HIGH risk always requires approval; auto-remediate mode ignored.'
+        }
+        $effectiveMode = 'approval-gate'
+    }
 
     $actionId = 'IOS-{0:D4}' -f $actionIndex
 
-    if ($riskTier -eq 'HIGH' -or $mode -eq 'approval-gate') {
+    if ($effectiveMode -eq 'approval-gate') {
+        $approvalNote = if (@($policyNotes).Count -gt 0) {
+            (@($policyNotes) -join ' ')
+        }
+        else {
+            'Routed to approval gate. No action taken.'
+        }
+
         $pendingApprovals += [pscustomobject]@{
             actionId = $actionId
             siteUrl = $item.SiteUrl
@@ -135,7 +221,7 @@ foreach ($item in $scoredItems) {
             approvalRequired = $true
             approvedBy = $null
             executedAt = $null
-            notes = "Awaiting compliance/legal approval before remediation."
+            notes = $approvalNote
         }
 
         $remediationLog += [pscustomobject]@{
@@ -149,25 +235,51 @@ foreach ($item in $scoredItems) {
             approvalRequired = $true
             approvedBy = $null
             executedAt = $null
-            notes = "Routed to approval gate. No action taken."
+            notes = $approvalNote
         }
     }
-    elseif ($mode -eq 'auto-remediate') {
+    elseif ($effectiveMode -eq 'auto-remediate') {
         try {
-            Write-Verbose "Auto-remediation stub: $action for $($item.ItemPath)"
+            $target = if ([string]::IsNullOrWhiteSpace([string]$item.SiteUrl)) {
+                [string]$item.ItemPath
+            }
+            else {
+                '{0} :: {1}' -f $item.SiteUrl, $item.ItemPath
+            }
 
-            $remediationLog += [pscustomobject]@{
-                actionId = $actionId
-                siteUrl = $item.SiteUrl
-                itemPath = $item.ItemPath
-                shareType = $item.ShareType
-                riskTier = $riskTier
-                action = $action
-                status = 'completed-stub'
-                approvalRequired = $false
-                approvedBy = 'auto'
-                executedAt = (Get-Date).ToString('o')
-                notes = "Auto-remediation stub executed. Replace with live PnP calls for production."
+            if ($PSCmdlet.ShouldProcess($target, "Apply auto-remediation action '$action'")) {
+                Write-Verbose "Auto-remediation stub: $action for $($item.ItemPath)"
+
+                $remediationLog += [pscustomobject]@{
+                    actionId = $actionId
+                    siteUrl = $item.SiteUrl
+                    itemPath = $item.ItemPath
+                    shareType = $item.ShareType
+                    riskTier = $riskTier
+                    action = $action
+                    status = 'completed-stub'
+                    approvalRequired = $false
+                    approvedBy = 'auto'
+                    executedAt = (Get-Date).ToString('o')
+                    notes = "Auto-remediation stub executed. Replace with live PnP calls for production."
+                }
+            }
+            else {
+                Write-Verbose "WhatIf/ShouldProcess prevented auto-remediation for $($item.ItemPath). Logged as planned only."
+
+                $remediationLog += [pscustomobject]@{
+                    actionId = $actionId
+                    siteUrl = $item.SiteUrl
+                    itemPath = $item.ItemPath
+                    shareType = $item.ShareType
+                    riskTier = $riskTier
+                    action = $action
+                    status = 'planned-whatif'
+                    approvalRequired = $false
+                    approvedBy = $null
+                    executedAt = $null
+                    notes = 'WhatIf/ShouldProcess prevented mutation. Planned action only.'
+                }
             }
         }
         catch {
@@ -189,7 +301,7 @@ foreach ($item in $scoredItems) {
         }
     }
     else {
-        Write-Warning "Unsupported remediation mode '$mode' for $($item.ItemPath). Item logged as skipped."
+        Write-Warning "Unsupported remediation mode '$effectiveMode' for $($item.ItemPath). Item logged as skipped."
 
         $remediationLog += [pscustomobject]@{
             actionId = $actionId
@@ -202,7 +314,7 @@ foreach ($item in $scoredItems) {
             approvalRequired = $false
             approvedBy = $null
             executedAt = $null
-            notes = "Unsupported remediation mode '$mode'. No action taken."
+            notes = "Unsupported remediation mode '$effectiveMode'. No action taken."
         }
     }
 
@@ -212,13 +324,18 @@ foreach ($item in $scoredItems) {
 $pendingApprovalsPath = Join-Path $outputRoot 'pending-approvals.json'
 $remediationLogPath = Join-Path $outputRoot 'remediation-log.json'
 
-@($pendingApprovals) | ConvertTo-Json -Depth 5 | Set-Content -Path $pendingApprovalsPath -Encoding UTF8
-@($remediationLog) | ConvertTo-Json -Depth 5 | Set-Content -Path $remediationLogPath -Encoding UTF8
+$pendingApprovalsJson = ConvertTo-Json -InputObject @($pendingApprovals) -Depth 5
+$remediationLogJson = ConvertTo-Json -InputObject @($remediationLog) -Depth 5
+
+Set-Content -Path $pendingApprovalsPath -Value $pendingApprovalsJson -Encoding UTF8 -WhatIf:$false
+Set-Content -Path $remediationLogPath -Value $remediationLogJson -Encoding UTF8 -WhatIf:$false
 
 [pscustomobject]@{
     TotalItems = @($scoredItems).Count
     PendingApprovals = @($pendingApprovals).Count
     ActionsLogged = @($remediationLog).Count
+    PlannedNoChange = @($remediationLog | Where-Object { $_.status -eq 'planned-whatif' }).Count
+    GlobalAutoRemediationEnabled = $globalAutoRemediationEnabled
     PendingApprovalsPath = $pendingApprovalsPath
     RemediationLogPath = $remediationLogPath
 }

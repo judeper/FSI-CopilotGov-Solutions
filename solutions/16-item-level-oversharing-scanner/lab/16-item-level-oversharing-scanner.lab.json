@@ -1,0 +1,350 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "lab-contract:16-item-level-oversharing-scanner:2026-07-readonly-detect-only",
+  "solution": {
+    "id": "16-item-level-oversharing-scanner",
+    "name": "Item-Level Oversharing Scanner",
+    "binding": "template"
+  },
+  "reviewedOn": "2026-07-13",
+  "scope": {
+    "cloud": "m365-us-commercial",
+    "usCommercialOnly": true
+  },
+  "controls": [
+    "1.2",
+    "1.3",
+    "1.4",
+    "1.6",
+    "2.5"
+  ],
+  "portals": [
+    "sharepoint-admin-center",
+    "microsoft-entra-admin-center",
+    "microsoft-purview-compliance-portal",
+    "manual-verification"
+  ],
+  "microsoftSourceClaims": [
+    {
+      "id": "claim-rss-retirement-date",
+      "claimText": "Restricted SharePoint Search is retiring and blocks new enablement starting 2026-07-31.",
+      "affectedFiles": [
+        "solutions/16-item-level-oversharing-scanner/README.md",
+        "solutions/16-item-level-oversharing-scanner/docs/evidence-export.md",
+        "solutions/16-item-level-oversharing-scanner/scripts/Export-Evidence.ps1"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/sharepoint/restricted-sharepoint-search",
+      "lifecycleState": "deprecated",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-rcd-go-forward-behavior",
+      "claimText": "Restricted Content Discovery is the go-forward SharePoint site-level discoverability control, does not change permissions, is not a security boundary, and is not supported for OneDrive.",
+      "affectedFiles": [
+        "solutions/16-item-level-oversharing-scanner/README.md",
+        "solutions/16-item-level-oversharing-scanner/docs/prerequisites.md",
+        "solutions/16-item-level-oversharing-scanner/docs/deployment-guide.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/sharepoint/restricted-content-discovery",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-sam-prereq-entitlement-rbac",
+      "claimText": "SharePoint Advanced Management prerequisites require qualifying commercial base subscriptions and one of Copilot licensing, SharePoint Advanced Management Plan 1, or Microsoft 365 E7, with SharePoint Administrator or SharePoint Advanced Management Administrator role assignments for administration.",
+      "affectedFiles": [
+        "solutions/16-item-level-oversharing-scanner/README.md",
+        "solutions/16-item-level-oversharing-scanner/DELIVERY-CHECKLIST.md",
+        "solutions/16-item-level-oversharing-scanner/docs/prerequisites.md"
+      ],
+      "sourceType": "learn-doc",
+      "sourceUrl": "https://learn.microsoft.com/en-us/sharepoint/sharepoint-advanced-management-prerequisites",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    },
+    {
+      "id": "claim-graph-driveitem-permissions-limits",
+      "claimText": "For driveItem list-permissions, Files.Read.All is the least-privileged application permission and non-owner callers do not receive full sharing permission visibility.",
+      "affectedFiles": [
+        "solutions/16-item-level-oversharing-scanner/README.md",
+        "solutions/16-item-level-oversharing-scanner/docs/prerequisites.md",
+        "solutions/16-item-level-oversharing-scanner/docs/troubleshooting.md"
+      ],
+      "sourceType": "graph-reference",
+      "sourceUrl": "https://learn.microsoft.com/en-us/graph/api/driveitem-list-permissions?view=graph-rest-1.0",
+      "lifecycleState": "generally-available",
+      "verifiedOn": "2026-07-13",
+      "disposition": "supported"
+    }
+  ],
+  "prerequisites": {
+    "licenses": [
+      "Qualifying commercial base subscription for SharePoint Advanced Management prerequisites",
+      "Microsoft 365 Copilot license assignment or SharePoint Advanced Management Plan 1 add-on, or Microsoft 365 E7 entitlement"
+    ],
+    "roles": [
+      "SharePoint Administrator or SharePoint Advanced Management Administrator",
+      "Site collection administrator on each target site for delegated item-level permission enumeration",
+      "Purview review roles scoped to Purview and not treated as SharePoint content-access substitutes"
+    ],
+    "features": [
+      "Restricted Content Discovery visibility in SharePoint admin center",
+      "PnP/PowerShell item-level ACL enumeration path configured for representative data only",
+      "Optional read-only Microsoft Graph permission signal with owner/non-owner visibility caveat documented"
+    ],
+    "capacityRequirements": [
+      "Upstream solution 02 site-level evidence available for target-site prioritization",
+      "Operator runbook documenting blocked conditions for SAM entitlement, site admin access, and app permissions"
+    ],
+    "dataRequirements": [
+      "Representative sample records only",
+      "No tenant identifiers, selectors, or secrets stored in contract artifacts"
+    ],
+    "tenantCount": 1
+  },
+  "execution": {
+    "phases": [
+      {
+        "id": "setup",
+        "title": "Confirm governance preconditions",
+        "steps": [
+          {
+            "id": "step-review-upstream-solution02-evidence",
+            "mode": "manual",
+            "intent": "Verify upstream solution 02 evidence exists and identifies the first site set for item-level review.",
+            "expected": "A traceable list of high-risk sites from solution 02 is available for this run.",
+            "operatorNote": "Reference the latest solution 02 evidence package path and capture the selected site set.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Upstream evidence reference note",
+              "expectation": "Recorded note ties this run to solution 02 evidence without storing tenant identifiers."
+            }
+          },
+          {
+            "id": "step-ui-confirm-rcd-marker-and-sharing-posture",
+            "mode": "ui",
+            "intent": "Review SharePoint admin center site settings to confirm RCD marker visibility and current sharing posture before detection.",
+            "expected": "Site settings show whether Restricted Content Discovery is applied while preserving existing permission posture.",
+            "locator": "SharePoint admin center > Active sites > Site settings",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "ui",
+              "reference": "Site settings panel screenshot",
+              "expectation": "Evidence shows RCD visibility state and records that this check is discoverability-only."
+            }
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Run read-only detection steps",
+        "steps": [
+          {
+            "id": "step-run-pnp-item-acl-enumeration",
+            "mode": "powershell",
+            "intent": "Execute sample-only item-level permission enumeration using the solution script and approved runbook settings.",
+            "expected": "The script emits representative item permission findings without mutating tenant permissions.",
+            "command": "pwsh -File solutions/16-item-level-oversharing-scanner/scripts/Get-ItemLevelPermissions.ps1 -SiteUrls @('<site-url>') -OutputPath lab-output/scan",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "powershell",
+              "reference": "Item-level scan output and transcript",
+              "expectation": "Output includes item-level permission rows and no remediation mutation markers."
+            }
+          },
+          {
+            "id": "step-optional-readonly-graph-signal",
+            "mode": "api",
+            "intent": "Optionally validate driveItem permission listing signal while recording owner/non-owner visibility limitations.",
+            "expected": "Read-only Graph response is captured with explicit note that non-owner callers receive only caller-applicable permissions.",
+            "api": {
+              "method": "GET",
+              "endpoint": "https://graph.microsoft.com/v1.0/drives/drive-id/items/item-id/permissions"
+            },
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "api",
+              "reference": "Optional Graph response capture",
+              "expectation": "Captured notes include least-privilege permission model and owner/non-owner visibility caveat."
+            }
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify source claims and blocked conditions",
+        "steps": [
+          {
+            "id": "step-manual-source-verification",
+            "mode": "manual",
+            "intent": "Verify Microsoft Learn and Graph source claims used by this contract before acceptance.",
+            "expected": "Source verification confirms RSS retirement date, RCD behavior, SAM prerequisites, and Graph permission limitations.",
+            "operatorNote": "Capture verification date and any claim disagreements as BLOCKED evidence.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Source verification checklist",
+              "expectation": "Checklist maps each claim ID to a verified outcome and documented rationale."
+            }
+          },
+          {
+            "id": "step-evaluate-blocked-conditions",
+            "mode": "manual",
+            "intent": "Evaluate blocked conditions for missing SAM entitlement, missing site admin access, or missing app permissions.",
+            "expected": "Run is marked BLOCKED when prerequisite conditions are not met, with no mutation attempts.",
+            "operatorNote": "If blocked, document which prerequisite failed and retain detection-only output.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Blocked-condition decision log",
+              "expectation": "Decision log records why the run proceeded or stopped and references the supporting evidence."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cleanup",
+        "title": "Record no-mutation cleanup posture",
+        "steps": [
+          {
+            "id": "step-attest-no-mutations",
+            "mode": "manual",
+            "intent": "Record operator attestation that the run remained template/read-only/detect-only.",
+            "expected": "Cleanup record confirms no mutable actions were executed and no rollback is required.",
+            "operatorNote": "Mutations are intentionally disabled for this contract.",
+            "mutationRef": null,
+            "readBack": {
+              "required": true,
+              "method": "manual",
+              "reference": "Cleanup attestation entry",
+              "expectation": "Attestation confirms mutation count is zero and cleanup state is not-required."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "mutations": [],
+  "ownership": {
+    "primaryOwner": "fsi-governance-lab-owners",
+    "breakGlassApprover": "fsi-governance-breakglass",
+    "cleanupOwner": "fsi-governance-lab-operators",
+    "cleanupWindowHours": 24
+  },
+  "evidence": {
+    "requiredArtifacts": [
+      {
+        "id": "artifact-pnp-acl-detection-log",
+        "type": "powershell-transcript",
+        "description": "Transcript and sample outputs from PnP/PowerShell ACL enumeration.",
+        "requiredForControls": [
+          "1.2",
+          "1.4",
+          "1.6",
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-ui-rcd-visibility",
+        "type": "screenshot",
+        "description": "SharePoint admin center capture showing RCD visibility state for reviewed sites.",
+        "requiredForControls": [
+          "1.3"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-optional-graph-readback",
+        "type": "api-response",
+        "description": "Optional read-only Graph permission signal with owner/non-owner limitation note.",
+        "requiredForControls": [
+          "1.2",
+          "1.6"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-source-verification",
+        "type": "source-citation",
+        "description": "Manual source verification outcomes for Learn and Graph claims used in this contract.",
+        "requiredForControls": [
+          "1.3",
+          "1.4",
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "PASS",
+          "BLOCKED",
+          "NOT-APPLICABLE"
+        ]
+      },
+      {
+        "id": "artifact-blocked-decision-log",
+        "type": "manual-attestation",
+        "description": "Decision log for blocked conditions including SAM entitlement, site access, and app permissions.",
+        "requiredForControls": [
+          "1.2",
+          "1.3",
+          "1.4",
+          "1.6",
+          "2.5"
+        ],
+        "requiredForDispositions": [
+          "PARTIAL",
+          "BLOCKED",
+          "FAIL"
+        ]
+      }
+    ],
+    "minimumForAccepted": [
+      "artifact-pnp-acl-detection-log",
+      "artifact-source-verification",
+      "artifact-blocked-decision-log"
+    ]
+  },
+  "dispositionRules": {
+    "allowedDispositions": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "NOT-APPLICABLE",
+      "FAIL"
+    ],
+    "acceptedDispositions": [
+      "PASS",
+      "BLOCKED",
+      "NOT-APPLICABLE"
+    ],
+    "failIsBlocking": true,
+    "blockedRequiresSourceEvidence": true,
+    "notApplicableRequiresSourceEvidence": true,
+    "partialRequiresFollowUp": true
+  }
+}

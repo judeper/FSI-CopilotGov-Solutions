@@ -104,6 +104,8 @@ Recommended sequence:
 
 Document the owner, due date, approval path, and rollback expectation for each wave.
 
+If temporary discoverability controls are needed during remediation waves, prefer site-level Restricted Content Discovery (RCD). Restricted SharePoint Search (RSS) is retiring and blocks new enablement starting 2026-07-31.
+
 ## 9. Export Evidence
 
 Run the evidence export after each scan or remediation cycle. The exporter packages the existing artifacts unless `-RunFreshMonitor` is explicitly supplied:
@@ -134,3 +136,11 @@ If deployment settings need to be reversed:
 4. Re-run the scan to confirm the items are back to the intended permission state
 
 Rollback decisions should be documented whenever item permissions are changed after approval.
+
+## 11. Lab Validation Handoff
+
+Before production rollout sign-off, hand off and validate the lab contract:
+
+- Contract path: `solutions/16-item-level-oversharing-scanner/lab/16-item-level-oversharing-scanner.lab.json`
+- Validator command: `python scripts/validate-lab-contracts.py solutions/16-item-level-oversharing-scanner/lab/16-item-level-oversharing-scanner.lab.json`
+- Required handoff notes: upstream solution 02 evidence references, blocked-condition decisions (SAM entitlement, site admin access, app permissions), and manual source verification outcomes.
