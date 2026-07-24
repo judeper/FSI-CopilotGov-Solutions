@@ -1,0 +1,2301 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services">
+      
+      
+      
+        <link rel="canonical" href="https://judeper.github.io/FSI-CopilotGov-Solutions/project-handoff/">
+      
+      
+        <link rel="prev" href="../reference/">
+      
+      
+        <link rel="next" href="../reference/architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Project Handoff - FSI Copilot Governance Solutions</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#project-handoff" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="FSI Copilot Governance Solutions" class="md-header__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FSI Copilot Governance Solutions
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Project Handoff
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../operational-handbook/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../solutions/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Solutions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../security/managed-identity-standard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Disclaimer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="FSI Copilot Governance Solutions" class="md-nav__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    FSI Copilot Governance Solutions
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../getting-started/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../operational-handbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../solutions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solutions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../security/managed-identity-standard/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Handoff
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Handoff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merged-foundation-and-handoff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merged Foundation and Handoff
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#draft-review-prs-serial-review-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Draft Review PRs (serial review order)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-ownership-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture and Ownership Boundary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and Ownership Boundary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#studio-implementation-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Studio implementation status
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-execution-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Execution Status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Execution Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solution-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 01
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 02
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 16
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pending-gates-and-known-blockers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pending Gates and Known Blockers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-step-resume-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next-Step / Resume Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#git-hygiene-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Git Hygiene Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Git Hygiene Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cleanup-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-has-not-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Has NOT Happened
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/control-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/data-classification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Classification Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/examination-readiness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examination Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/shared-modules-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Modules Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/lab-validation-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab Validation Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/runtime-hardening-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/runtime-hardening-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Findings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disclaimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merged-foundation-and-handoff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merged Foundation and Handoff
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#draft-review-prs-serial-review-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Draft Review PRs (serial review order)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-ownership-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture and Ownership Boundary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and Ownership Boundary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#studio-implementation-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Studio implementation status
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-execution-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Execution Status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Execution Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solution-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 01
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 02
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution 16
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pending-gates-and-known-blockers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pending Gates and Known Blockers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-step-resume-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next-Step / Resume Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#git-hygiene-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Git Hygiene Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Git Hygiene Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cleanup-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-has-not-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Has NOT Happened
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../reference/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="project-handoff">Project Handoff<a class="headerlink" href="#project-handoff" title="Permanent link">&para;</a></h1>
+<p>Durable handoff for the FSI-CopilotGov-Solutions accuracy-review and lab-validation
+program. This page is the single, authoritative resume point for the next operator
+or agent. It records what has been verified, what remains, and the exact sequence
+required to resume safely.</p>
+<blockquote>
+<p><strong>Cloud scope.</strong> This content targets US commercial-cloud Microsoft 365 only. See the
+<a href="../disclaimer/">Disclaimer</a>.</p>
+<p>⚠️ <strong>Documentation-first repository.</strong> Scripts and lab contracts use representative
+sample data and do not connect to live Microsoft 365 services in their repository form.
+Attended lab execution runs in <code>studio-video-factory</code>; validated summaries and hashes are
+recorded here, and raw evidence remains outside Git. See
+<a href="../documentation-vs-runnable-assets-guide/">Documentation vs Runnable Assets Guide</a>.</p>
+</blockquote>
+<h2 id="snapshot">Snapshot<a class="headerlink" href="#snapshot" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Snapshot date</td>
+<td>2026-07-16</td>
+</tr>
+<tr>
+<td>Repository branch</td>
+<td><code>main</code> — read the current commit from Git; this page records durable phase state rather than a self-staling HEAD</td>
+</tr>
+<tr>
+<td><code>main</code> after Solution 02 v0.2.5</td>
+<td><code>6d6456a95a655378768e6e1630efb5329d086200</code></td>
+</tr>
+<tr>
+<td>Phase</td>
+<td>Serial accuracy review <strong>complete</strong>; Solutions 01-02 lab <strong>PASS / accepted</strong>; Solution 16 initial run <strong>PARTIAL / not accepted</strong>; serial queue blocked on attended account selection</td>
+</tr>
+<tr>
+<td>Draft review PRs</td>
+<td>21 remain open with <code>Lab status: pending</code>; Solutions 01-02 are finalized (v0.2.4 and v0.2.5)</td>
+</tr>
+<tr>
+<td>Live lab runs executed</td>
+<td>5 cycles total — two each for Solutions 01 and 02; one initial for Solution 16</td>
+</tr>
+<tr>
+<td>Final versioning / merges</td>
+<td>Solutions 01-02 complete; Solutions 16-23 pending</td>
+</tr>
+</tbody>
+</table>
+<h2 id="merged-foundation-and-handoff">Merged Foundation and Handoff<a class="headerlink" href="#merged-foundation-and-handoff" title="Permanent link">&para;</a></h2>
+<p>The documentation-autonomy and lab-contract foundation is merged into <code>main</code>:</p>
+<table>
+<thead>
+<tr>
+<th>PR</th>
+<th>Purpose</th>
+<th>Merge commit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/315">#315</a></td>
+<td>Docs autonomy protection contract</td>
+<td><code>c280fad</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/316">#316</a></td>
+<td>Lab validation contract foundation (schemas, validators, fixtures)</td>
+<td><code>36cf7de</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/318">#318</a></td>
+<td>Align lab scope contracts with the commercial-scope linter</td>
+<td><code>61e8921</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/341">#341</a></td>
+<td>Durable project handoff, repository hygiene, and agent workflow guidance</td>
+<td><code>361d34d</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="draft-review-prs-serial-review-order">Draft Review PRs (serial review order)<a class="headerlink" href="#draft-review-prs-serial-review-order" title="Permanent link">&para;</a></h2>
+<p>All 23 solutions were reviewed <strong>one at a time</strong> for Microsoft product and feature
+accuracy against first-party Microsoft sources, then hardened for read-only lab
+validation. Rows are listed in the serial review sequence (PR order). Solutions 01 and
+02 have completed accepted lab validation and final release; the remaining 21 PRs stay
+draft until their own accepted evidence exists.</p>
+<blockquote>
+<p><strong>Solution 08 version note.</strong> The table uses the corrected v0.1.4 carried by
+PR #330 and the solution README/changelog. Current <code>main</code> still reports v0.1.3
+in <code>config/default-config.json</code> and <code>solutions.json</code>; PR #330 owns that
+reconciliation and must preserve it during finalization.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Sol</th>
+<th>Solution</th>
+<th>PR</th>
+<th>Released version</th>
+<th>Verified review outcome</th>
+<th>Checks</th>
+<th>Lab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>Copilot Readiness Assessment Scanner</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317">#317</a></td>
+<td>v0.2.4</td>
+<td>Restored the Microsoft 365 Copilot Optimization Assessment name; clarified Retrieval API licensing vs preview pay-as-you-go; added Restricted Content Discovery as a control 1.7 readiness input; completed accepted read-only lab validation and final release metadata.</td>
+<td>Merged</td>
+<td>PASS / accepted</td>
+</tr>
+<tr>
+<td>02</td>
+<td>Oversharing Risk Assessment and Remediation</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319">#319</a></td>
+<td>v0.2.5</td>
+<td>Rechecked all five first-party source claims; completed accepted read-only lab validation (<code>PASS</code>, <code>accepted: true</code>, <code>controlImplementation: implemented</code>, 8/8 steps, no mutation); recorded authenticated RCD availability read-back (<code>observedAvailability: false</code>) and delegated Graph <code>/v1.0/sites/root</code> success with no retained identifiers.</td>
+<td>Merged</td>
+<td>PASS / accepted</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Item-Level Oversharing Scanner</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320">#320</a></td>
+<td>v0.1.3</td>
+<td>Synced item-level guidance with RSS retirement and Restricted Content Discovery; documented Graph owner/non-owner visibility limits; enforced the auto-remediation kill switch and HIGH/AnyoneLink approval gates; added ShouldProcess/-WhatIf protection; five-control read-only lab contract.</td>
+<td>Green</td>
+<td>PARTIAL / not accepted</td>
+</tr>
+<tr>
+<td>17</td>
+<td>SharePoint Permissions Drift Detection</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321">#321</a></td>
+<td>v0.1.4</td>
+<td>Fixed a StrictMode drift-scan crash and stopped failed scans from reporting <code>NoDriftDetected</code>; gated approval/reversion behind ShouldProcess/-WhatIf; calibrated config-driven scoring; portable evidence; four-control read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Entra Access Reviews Automation</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/322">#322</a></td>
+<td>v0.1.5</td>
+<td>Fixed empty live-result handling and upstream dependency status; aligned access-review API enums, apply behavior, and tier settings; added end-to-end WhatIf safety and run-scoped evidence provenance; four-control read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>06</td>
+<td>Copilot Interaction Audit Trail Manager</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/323">#323</a></td>
+<td>v0.2.3</td>
+<td>Refreshed Microsoft Purview Audit and unified eDiscovery terminology, roles, and service-default retention; separated service defaults from solution-defined retention intent; corrected evidence aggregation and portable paths; five-control read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Copilot Pages and Notebooks Compliance Gap Monitor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/324">#324</a></td>
+<td>v0.1.3</td>
+<td>Refreshed Copilot Pages/Notebooks/Loop/SharePoint Embedded/Purview guidance; reclassified indexing/export items as rollout-sensitive <code>validation-required</code> gaps; added a Solution 06 dependency read-back; four-control read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Pages and Notebooks Retention Tracker</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/325">#325</a></td>
+<td>v0.1.3</td>
+<td>Refreshed Pages/Notebooks/Loop/SharePoint Embedded storage and retention guidance; treated the eDiscovery custodian picker and Roadmap 561492 review-set behavior as tenant-validation states; true read-only -WhatIf; lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>03</td>
+<td>Sensitivity Label Coverage Auditor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/326">#326</a></td>
+<td>v0.2.4</td>
+<td>Re-verified Graph v1.0 label extraction/assignment, metered-API prerequisites, auto-labeling limits, and label-group migration; removed the government-only G5 SKU to align with commercial scope; read-only/detect-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>05</td>
+<td>DLP Policy Governance for Copilot</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/327">#327</a></td>
+<td>v0.2.3</td>
+<td>Updated Copilot DLP lifecycle (web-search restriction GA, label-blocking GA, sensitive-prompt and external-email controls preview); documented scope/exclusivity boundaries; fixed a StrictMode export and made evidence relocatable; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>07</td>
+<td>Conditional Access Policy Automation for Copilot</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/328">#328</a></td>
+<td>v0.2.5</td>
+<td>Re-verified Copilot targeting via the Graph <code>Office365</code> Conditional Access app suite; added Microsoft-managed/Baseline ownership boundaries and break-glass exclusions; fixed an OrderedDictionary safety-metadata bug; disabled live <code>-Execute</code> writes; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Risk-Tiered Rollout Automation</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/329">#329</a></td>
+<td>v0.1.3</td>
+<td>Re-verified Copilot SKU discovery, <code>assignLicense</code> APIs, least-privilege, and group-based licensing; requires tenant <code>/subscribedSkus</code> discovery; kept assignment-intent staging preview-only so scripts never assign or remove licenses; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>08</td>
+<td>License Governance and ROI Tracker</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/330">#330</a></td>
+<td>v0.1.4</td>
+<td>Restored the GA Graph v1.0 <code>copilot/reports</code> routes (fixed a beta regression); reconciled the already-released v0.1.4 without a new bump; removed volatile per-credit dollar claims; sanitized identity fields with fail-closed cleanup; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>04</td>
+<td>FINRA Supervision Workflow for Copilot</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/331">#331</a></td>
+<td>v0.2.3</td>
+<td>Refreshed Communication Compliance guidance for Copilot interactions; required Dataverse <code>EntitySetName</code> discovery; replaced the immutable-log overstatement with an append-only governance pattern; made exports fail closed for repository paths; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Communication Compliance Configurator</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/332">#332</a></td>
+<td>v0.2.4</td>
+<td>Refreshed Communication Compliance portal/role/reviewer/licensing/PAYG guidance; documented the supported Security &amp; Compliance PowerShell surface; removed active-verb overstatement; added tenant-proof and fail-closed cleanup to a read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>09</td>
+<td>Copilot Feature Management Controller</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/333">#333</a></td>
+<td>v0.1.3</td>
+<td>Defined the boundary between Copilot Control System feature settings and Microsoft Agent 365/agent-registry governance; documented Teams meeting/calling Copilot policy cmdlets; recorded that no documented Graph API for Copilot feature settings was identified; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Copilot Connector and Plugin Governance</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/334">#334</a></td>
+<td>v0.2.3</td>
+<td>Refreshed synced vs federated connector and MCP guidance; restored the documented preview Package Management Graph API with exact read-only endpoint/permission/license/role prerequisites; aligned inventory with the Agent 365 registry; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Cross-Tenant Agent Federation Auditor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/335">#335</a></td>
+<td>v0.1.3</td>
+<td>Removed fabricated native federation, Entra Agent ID signing/key-rotation, and MCP attestation claims; reframed around Entra cross-tenant access settings, MCP connection reviews, and Agent 365 registry inventory; two-tenant read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Copilot Studio Agent Lifecycle Tracker</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/336">#336</a></td>
+<td>v0.1.4</td>
+<td>Refreshed Agent 365 registry and Copilot Studio publish/republish lifecycle; documented solution-based ALM (managed/unmanaged solutions, pipelines, <code>pac</code> CLI); recorded that no canonical one-click rollback API was identified; read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Copilot Tuning Governance</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/337">#337</a></td>
+<td>v0.1.4</td>
+<td>Re-verified Copilot Tuning guidance (2026-07-14); kept the released v0.1.4 and recorded the review under <code>Unreleased</code>; added a read-only lab contract and hardened evidence-package portability.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Generative AI Model Governance Monitor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/338">#338</a></td>
+<td>v0.1.3</td>
+<td>Re-verified Microsoft Foundry, Azure OpenAI Guardrail, and Azure AI Content Safety guidance (2026-07-14); kept the released v0.1.3; added a read-only lab contract and strengthened identity proof, sidecar verification, and evidence minimization.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>13</td>
+<td>DORA Operational Resilience Monitor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/339">#339</a></td>
+<td>v0.1.3</td>
+<td>Re-verified Microsoft 365 Service Health, Microsoft Graph, Microsoft Sentinel, and official DORA guidance (2026-07-14); kept the released v0.1.3; added a read-only lab contract and made freshness/DORA-timeline behavior testable.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Regulatory Compliance Dashboard</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/340">#340</a></td>
+<td>v0.1.3</td>
+<td>Terminal aggregation review against current Power BI and Microsoft Fabric guidance (2026-07-14); kept the released v0.1.3; reconciled dashboard coverage status, upstream evidence lineage, freshness/hash, and lab-disposition semantics; final read-only lab contract.</td>
+<td>Green</td>
+<td>Pending</td>
+</tr>
+</tbody>
+</table>
+<h2 id="architecture-and-ownership-boundary">Architecture and Ownership Boundary<a class="headerlink" href="#architecture-and-ownership-boundary" title="Permanent link">&para;</a></h2>
+<p>Two repositories cooperate; their responsibilities do not overlap:</p>
+<ul>
+<li><strong>FSI-CopilotGov-Solutions (this repository)</strong> owns the <strong>versioned lab contracts,
+  results, and package validation</strong>: the contract and result schemas
+  (<code>data/lab-validation-contract.schema.json</code>, <code>data/lab-validation-result.schema.json</code>),
+  the deterministic validators (<code>scripts/validate-lab-contracts.py</code>,
+  <code>scripts/validate-lab-result.py</code>, <code>scripts/validate-lab-package.ps1</code>), the fixtures,
+  and each solution's <code>lab/&lt;solution&gt;.lab.json</code> contract. This repository stays
+  documentation-first and never executes browser automation or attended tenant runs.</li>
+<li><strong><code>studio-video-factory</code></strong> owns <strong>Playwright execution and evidence capture</strong>: it
+  runs each contract against a tenant and emits <code>*.lab-result.json</code> results and portable,
+  hash-verified evidence packages that this repository's validators then check.</li>
+</ul>
+<p>The result file is the authoritative disposition record. Evidence packages remain
+portable, hash-verified artifacts reviewable independently of the execution host. See
+<a href="../reference/lab-validation-contract/">Lab Validation Contract</a>.</p>
+<h3 id="studio-implementation-status">Studio implementation status<a class="headerlink" href="#studio-implementation-status" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/judep_microsoft/studio-video-factory/pull/11">studio-video-factory PR #11</a>
+  merged the offline-by-default governance adapter foundation.</li>
+<li><a href="https://github.com/judep_microsoft/studio-video-factory/pull/12">studio-video-factory PR #12</a>
+  merged attended evidence replay, the privacy-gated Solution 01 collector, and
+  FSI-compatible package sidecars/versioning.</li>
+<li><a href="https://github.com/judep_microsoft/studio-video-factory/pull/14">studio-video-factory PR #14</a>
+  added the current Microsoft 365 admin center host alias.</li>
+<li><a href="https://github.com/judep_microsoft/studio-video-factory/pull/15">studio-video-factory PR #15</a>
+  made Solution 01 replay outcomes evidence-driven for authenticated reruns.</li>
+<li><a href="https://github.com/judep_microsoft/studio-video-factory/pull/16">studio-video-factory PR #16</a>
+  merged Solution 02 governance replay updates (squash commit <code>b608bce686cc2efcb92e3440dc91ec987095399d</code>).</li>
+<li><a href="https://github.com/judep_microsoft/studio-video-factory/pull/17">studio-video-factory draft PR #17</a>
+  is the Solution 16 companion adapter (<code>lab/2026-07/16-item-level-oversharing-validation</code>,
+  head commit <code>b673f76</code>); it collects SharePoint Active-sites and Graph driveItem evidence
+  for the item-level oversharing lab contract. Draft; not yet merged.</li>
+</ul>
+<h2 id="lab-execution-status">Lab Execution Status<a class="headerlink" href="#lab-execution-status" title="Permanent link">&para;</a></h2>
+<p>Five attended lab cycles have executed in <code>studio-video-factory</code> (two for Solution 01,
+two for Solution 02, and one initial run for Solution 16).</p>
+<h3 id="solution-01">Solution 01<a class="headerlink" href="#solution-01" title="Permanent link">&para;</a></h3>
+<p>Solution 01 ran twice against pinned FSI commit
+<code>e8bae78b1036c6b55d7597d576df03b69e9418c4</code>.</p>
+<ul>
+<li><strong>Initial result:</strong> <code>PARTIAL</code>, <code>accepted: false</code> (5 PASS / 4 BLOCKED).</li>
+<li><strong>Remediated result:</strong> <code>PASS</code>, <code>accepted: true</code>,
+  <code>controlImplementation: implemented</code> (9/9 PASS).</li>
+<li><strong>Observed:</strong> all seven required admin surfaces were authenticated through the
+  privacy-gated collector.</li>
+<li><strong>Graph:</strong> the D7 Copilot usage-report GET succeeded with delegated
+  <code>Reports.Read.All</code>; the report body/token were not retained.</li>
+<li><strong>Validation:</strong> both <code>validate-lab-result.py</code> and <code>validate-lab-package.ps1</code> pass.</li>
+<li><strong>Evidence hashes:</strong> result
+  <code>a2d643e24365666bed8b0013b1e46551ff5d37d25c70b8049cdbfafc804f5211</code>;
+  package
+  <code>f456f1bab70a0407bac62cbda0f2bcb0d62a5dfc3d584719aee8ac79b220eefc</code>.</li>
+<li><strong>PR record:</strong> <a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/317#issuecomment-4985956226">Accepted Solution 01 lab update</a>.</li>
+</ul>
+<h3 id="solution-02">Solution 02<a class="headerlink" href="#solution-02" title="Permanent link">&para;</a></h3>
+<p>Solution 02 ran twice against pinned FSI commit
+<code>488d8f63a1c3ba6c01e5ce7b37f7f68bcd644158</code>.</p>
+<ul>
+<li><strong>Initial result:</strong> <code>PARTIAL</code>, <code>accepted: false</code> (7 PASS / 1 BLOCKED) because
+  the Graph read-back returned 403 without effective <code>Sites.Read.All</code>.</li>
+<li><strong>Final result:</strong> <code>PASS</code>, <code>accepted: true</code>, <code>controlImplementation: implemented</code> (8/8 PASS).</li>
+<li><strong>Cleanup:</strong> <code>not-required</code>; no tenant mutation occurred.</li>
+<li><strong>RCD read-back:</strong> control surface authenticated but not exposed (<code>observedAvailability: false</code>), recorded as an honest availability outcome.</li>
+<li><strong>Graph:</strong> <code>GET /v1.0/sites/root</code> succeeded with delegated <code>Sites.Read.All</code>; response body, token, site identifiers, and tenant identifiers were not retained.</li>
+<li><strong>Validation:</strong> both <code>validate-lab-result.py</code> and <code>validate-lab-package.ps1</code> pass.</li>
+<li><strong>Evidence hashes:</strong> result <code>19240ff458f97fa3b78c299c86a9b27bba57cf506fcf75fe18f578fbeb750bda</code>; package <code>51700b6478e4e6787d70de9016835c5fee0a3408e6599e11735c91ac7d83b197</code>.</li>
+<li><strong>Studio companion:</strong> <a href="https://github.com/judep_microsoft/studio-video-factory/pull/16">studio-video-factory PR #16</a> merged as <code>b608bce686cc2efcb92e3440dc91ec987095399d</code>.</li>
+<li><strong>PR record:</strong> <a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/319#issuecomment-4987169791">Accepted Solution 02 lab update</a>.</li>
+</ul>
+<h3 id="solution-16">Solution 16<a class="headerlink" href="#solution-16" title="Permanent link">&para;</a></h3>
+<p>Solution 16 ran once against pinned FSI commit
+<code>f024876a17b7198a33752b26fd93862b0fa7a8bd</code> (PR #320).</p>
+<ul>
+<li><strong>Initial result:</strong> <code>PARTIAL</code>, <code>accepted: false</code> (5 PASS / 2 BLOCKED). No tenant
+  mutation; cleanup not required.</li>
+<li><strong>PASS steps:</strong> accepted Solution 02 upstream hash binding; SharePoint Active-sites
+  observation and site-settings panel read; sample-only item ACL enumeration (1
+  representative site / 5 rows, documentation-first PnP, no live PnP execution); four
+  Microsoft first-party source claims verified; no-mutation cleanup confirmed.</li>
+<li><strong>UI observation:</strong> SharePoint Active sites authenticated; a site row was selected
+  without retaining identity; settings panel and sharing surface observed; Restricted
+  Content Discovery not exposed (<code>rcdControlVisible: false</code>) — recorded as an honest
+  availability read-back.</li>
+<li><strong>BLOCKED steps:</strong> Graph driveItem permissions read-back and the dependent
+  blocked-condition decision both blocked. Device authorization stopped at an account
+  picker; no identity was auto-selected. No token, identifier, or tenant data was retained.</li>
+<li><strong>Validation:</strong> both <code>validate-lab-result.py</code> and <code>validate-lab-package.ps1</code> pass on
+  the PARTIAL result; PARTIAL remains non-accepted.</li>
+<li><strong>Evidence hashes:</strong> result
+  <code>3c0702d0eb3ffc3f0158444ec849892048704b45bb7fcd3558bd03442ed473da</code>;
+  package
+  <code>7a42329208bbdeb31c74eb1e0cb5265cd4a171154be93b7faf6e0b52fd5d976f</code>.</li>
+<li><strong>Studio companion:</strong> <a href="https://github.com/judep_microsoft/studio-video-factory/pull/17">studio-video-factory draft PR #17</a>
+  (<code>lab/2026-07/16-item-level-oversharing-validation</code>, head <code>b673f76</code>). Draft; not merged.</li>
+<li><strong>PR record:</strong> <a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320#issuecomment-4988037680">Solution 16 initial PARTIAL lab update</a>.</li>
+</ul>
+<h2 id="pending-gates-and-known-blockers">Pending Gates and Known Blockers<a class="headerlink" href="#pending-gates-and-known-blockers" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Solution 16 is the current serial gate.</strong> The initial read-only lab cycle completed
+  as <code>PARTIAL</code> (<code>accepted: false</code>, 5 PASS / 2 BLOCKED). The Graph driveItem permissions
+  read-back and a dependent blocked-condition decision were blocked when device
+  authorization stopped at an account picker; no identity was auto-selected. To unblock:
+  attend the account picker for the approved lab identity, rerun the strict read-only
+  Graph driveItem permissions probe, rebuild the evidence package, and replay the
+  contract. <strong>Never auto-select an identity.</strong> Expected accepted state is 7/7 PASS. Do
+  not advance to Solution 17 until Solution 16 returns an accepted result.</li>
+<li><strong>Remaining review PRs.</strong> 21 draft PRs remain open with <code>Lab status: pending</code>;
+  Solutions 17–23 are the next serial run set after Solution 16 is accepted.</li>
+</ul>
+<h2 id="metadata-gaps">Metadata Gaps<a class="headerlink" href="#metadata-gaps" title="Permanent link">&para;</a></h2>
+<p>The following canonical controls are not yet present upstream in the machine-checked
+control set; the corresponding contracts intentionally omit unknown IDs from
+machine-checked arrays so validation stays deterministic:</p>
+<table>
+<thead>
+<tr>
+<th>Missing control</th>
+<th>Solution</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.17</td>
+<td>21 — Cross-Tenant Agent Federation Auditor</td>
+<td>Omitted from machine-checked arrays until canonical</td>
+</tr>
+<tr>
+<td>3.14</td>
+<td>22 — Pages and Notebooks Retention Tracker</td>
+<td>Omitted from machine-checked arrays until canonical</td>
+</tr>
+<tr>
+<td>4.14</td>
+<td>23 — Copilot Studio Agent Lifecycle Tracker</td>
+<td>Omitted from machine-checked arrays until canonical</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next-step-resume-sequence">Next-Step / Resume Sequence<a class="headerlink" href="#next-step-resume-sequence" title="Permanent link">&para;</a></h2>
+<p>Execute in order. Do not run labs in parallel; the review and lab program is serial.</p>
+<ol>
+<li><strong>Resolve Solution 16 account-picker blocker.</strong> Attend the account picker for the
+   approved lab identity and rerun the strict read-only Graph driveItem permissions
+   probe. Never auto-select an identity. Rebuild the evidence package and replay the
+   contract. Expected accepted state: 7/7 PASS.</li>
+<li><strong>Accept Solution 16.</strong> Require an accepted <code>PASS</code> result before advancing. Do not
+   finalize PR #320 until the accepted evidence exists.</li>
+<li><strong>Continue labs one at a time.</strong> After Solution 16 is accepted, execute each
+   remaining contract (Solutions 17 onward) serially. The first cycle is
+   read-only/detect-only (<code>mutations: []</code> normally); no tenant mutation is permitted.</li>
+<li><strong>Capture and accept evidence.</strong> Emit <code>*.lab-result.json</code> and portable evidence
+   packages. Accepted <code>BLOCKED</code> and <code>NOT-APPLICABLE</code> dispositions require negative
+   evidence <strong>and</strong> source verification and must not claim implemented control state.
+   Do not include raw identifiers, secrets, or PII in evidence.</li>
+<li><strong>Recheck, version, rebase, merge.</strong> After accepted evidence, recheck sources, apply
+   versioning where required, and merge all remaining PRs
+   one at a time in the documented serial order.</li>
+</ol>
+<h2 id="critical-gotchas">Critical Gotchas<a class="headerlink" href="#critical-gotchas" title="Permanent link">&para;</a></h2>
+<p>Durable engineering rules verified during the review program:</p>
+<ul>
+<li><strong>Read-only first cycle.</strong> The first lab cycle is detect-only; contracts normally
+  declare <code>mutations: []</code>. Any non-null <code>mutationRef</code> must resolve to a declared mutation.</li>
+<li><strong>Negative + source evidence for non-PASS dispositions.</strong> Accepted <code>BLOCKED</code> and
+  <code>NOT-APPLICABLE</code> require both negative evidence and source verification.</li>
+<li><strong>Evidence path portability.</strong> Package artifact paths are <strong>relative</strong> (relocatable),
+  while caller-returned artifact paths are <strong>absolute</strong>.</li>
+<li><strong>Provider-aware PowerShell paths.</strong> Never use raw <code>GetFullPath</code> on relative input;
+  resolve paths provider-aware so output stays portable.</li>
+<li><strong>Pester 5.7.1 + <code>Run.Exit</code>.</strong> Pin Pester <code>5.7.1</code> and set the run configuration
+  <code>Run.Exit</code> to <code>true</code> so failures propagate a non-zero exit code in CI.</li>
+<li><strong>Pester data-driven tests.</strong> Do not define Pester tests inside a PowerShell
+  <code>foreach</code> loop that relies on captured loop variables; use Pester's <code>-ForEach</code>
+  parameter so values remain available at run time.</li>
+<li><strong>Strict MkDocs.</strong> The site must build clean under <code>mkdocs build --strict</code>.</li>
+<li><strong>Commercial-only contracts.</strong> Forward-facing solution contracts omit the optional
+  <code>prohibitedClouds</code> field and rely on the commercial-scope constants.</li>
+<li><strong>No sensitive data in evidence.</strong> No raw identifiers, secrets, or PII in any evidence
+  artifact.</li>
+</ul>
+<h2 id="validation-commands">Validation Commands<a class="headerlink" href="#validation-commands" title="Permanent link">&para;</a></h2>
+<p>Run from the repository root before pushing documentation or contract changes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_docs_protection</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">build-docs</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate-contracts</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate-solutions</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate-documentation</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate_solutions_json</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate_solutions_graph</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate_data_classification</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">verify_readme_counts</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">verify_commercial_scope</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate-lab-contracts</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">validate-lab-result</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">python</span> <span class="n">scripts</span><span class="p">/</span><span class="n">test_lab_validation_contracts</span><span class="p">.</span><span class="n">py</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">python</span> <span class="n">-m</span> <span class="n">mkdocs</span> <span class="n">build</span> <span class="p">-</span><span class="n">-strict</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">pwsh</span> <span class="n">-Command</span> <span class="s2">&quot;Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null) | Out-Null }&quot;</span>
+</code></pre></div>
+<h2 id="git-hygiene-policy">Git Hygiene Policy<a class="headerlink" href="#git-hygiene-policy" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>One modifying agent per worktree.</strong> A modifying agent owns its worktree exclusively.
+  Never run <code>git checkout</code> in another agent's worktree.</li>
+<li><strong>Remove clean local worktrees/branches after push.</strong> Once a branch is pushed and the
+  local worktree is clean, remove the worktree and local branch; prune merged worktrees.</li>
+<li><strong>Preserve remote open-PR branches.</strong> Do not delete remote branches that back an open PR.</li>
+<li><strong>Delete merged remotes.</strong> Remote branches for merged foundation PRs #315, #316, and
+  #318 are safe to delete.</li>
+</ul>
+<h3 id="cleanup-state">Cleanup State<a class="headerlink" href="#cleanup-state" title="Permanent link">&para;</a></h3>
+<p>The July 2026 hygiene pass removed the 17 review worktrees, all local review
+branches, the merged remote branches for #315/#316/#318, and classified generated
+leftovers. The temporary handoff worktree/local branch is removed after this handoff
+PR is pushed. The resulting steady state is:</p>
+<ul>
+<li>Root repository on <code>main</code> only, with no review worktrees and no local review branches.</li>
+<li>Merged remote branches for #315, #316, and #318 deleted.</li>
+<li>Remote branches backing the remaining open review PRs preserved.</li>
+<li>Generated leftovers removed (built <code>site/</code>, <code>__pycache__</code>, and other cache output).</li>
+</ul>
+<h2 id="what-has-not-happened">What Has NOT Happened<a class="headerlink" href="#what-has-not-happened" title="Permanent link">&para;</a></h2>
+<p>To prevent a false-progress restart, the following are explicitly <strong>not</strong> done:</p>
+<ul>
+<li>Solution 16 has not been accepted; its initial lab cycle was <code>PARTIAL</code> / <code>accepted: false</code>.
+  Solution 16 has not been versioned-final, rebased onto latest <code>main</code>, or merged.</li>
+<li>Solutions 17–23 have not started lab execution.</li>
+<li>Solutions 17–23 have not been versioned-final, rebased onto latest <code>main</code>, or merged.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../reference/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Reference">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Reference
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../reference/architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Architecture">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Architecture
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 FSI Copilot Governance Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
