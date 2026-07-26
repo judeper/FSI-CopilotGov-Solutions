@@ -14,6 +14,19 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTRACT_VALIDATOR = ROOT / "scripts" / "validate-lab-contracts.py"
 RESULT_VALIDATOR = ROOT / "scripts" / "validate-lab-result.py"
 FIXTURES = ROOT / "scripts" / "tests" / "fixtures"
+SOLUTIONS = ROOT / "solutions"
+
+
+def discover_repository_contracts() -> list[Path]:
+    """Return every reviewed solution's lab contract, sorted by solution slug.
+
+    Coverage is derived from the filesystem rather than a hardcoded list so that
+    adding a reviewed solution's contract requires no edit to this file. That
+    keeps parallel review branches from colliding on a shared test module and
+    prevents any single branch from silently dropping another solution's
+    coverage.
+    """
+    return sorted(SOLUTIONS.glob("*/lab/*.lab.json"))
 
 
 def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProcess[str]:
@@ -28,20 +41,23 @@ def run_validator(script_path: Path, *paths: Path) -> subprocess.CompletedProces
 
 
 class LabValidationTests(unittest.TestCase):
+    def test_repository_exposes_at_least_one_lab_contract(self) -> None:
+        """Guard so an empty discovery can never make the suite vacuously pass."""
+        self.assertTrue(
+            discover_repository_contracts(),
+            msg="no solutions/*/lab/*.lab.json contracts were discovered",
+        )
+
     def test_contract_validator_discovers_repository_contracts(self) -> None:
         result = run_validator(CONTRACT_VALIDATOR)
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
         self.assertIn("lab contract validation passed", result.stdout.lower())
         self.assertNotIn("0 file(s) checked", result.stdout)
         normalized_output = result.stdout.replace("\\", "/")
-        self.assertIn(
-            "solutions/01-copilot-readiness-scanner/lab/01-copilot-readiness-scanner.lab.json",
-            normalized_output,
-        )
-        self.assertIn(
-            "solutions/02-oversharing-risk-assessment/lab/02-oversharing-risk-assessment.lab.json",
-            normalized_output,
-        )
+        for contract_path in discover_repository_contracts():
+            relative = contract_path.relative_to(ROOT).as_posix()
+            with self.subTest(contract=relative):
+                self.assertIn(relative, normalized_output)
 
     def test_contract_validator_accepts_valid_fixture(self) -> None:
         valid_path = FIXTURES / "lab-contracts" / "valid"
@@ -49,29 +65,15 @@ class LabValidationTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
         self.assertIn("validation passed", result.stdout.lower())
 
-    def test_contract_validator_accepts_solution_01_contract(self) -> None:
-        contract_path = (
-            ROOT
-            / "solutions"
-            / "01-copilot-readiness-scanner"
-            / "lab"
-            / "01-copilot-readiness-scanner.lab.json"
-        )
-        result = run_validator(CONTRACT_VALIDATOR, contract_path)
-        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("validation passed", result.stdout.lower())
-
-    def test_contract_validator_accepts_solution_02_contract(self) -> None:
-        contract_path = (
-            ROOT
-            / "solutions"
-            / "02-oversharing-risk-assessment"
-            / "lab"
-            / "02-oversharing-risk-assessment.lab.json"
-        )
-        result = run_validator(CONTRACT_VALIDATOR, contract_path)
-        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
-        self.assertIn("validation passed", result.stdout.lower())
+    def test_contract_validator_accepts_each_repository_contract(self) -> None:
+        for contract_path in discover_repository_contracts():
+            relative = contract_path.relative_to(ROOT).as_posix()
+            with self.subTest(contract=relative):
+                result = run_validator(CONTRACT_VALIDATOR, contract_path)
+                self.assertEqual(
+                    result.returncode, 0, msg=result.stderr or result.stdout
+                )
+                self.assertIn("validation passed", result.stdout.lower())
 
     def test_contract_validator_rejects_invalid_fixture(self) -> None:
         invalid_path = FIXTURES / "lab-contracts" / "invalid"

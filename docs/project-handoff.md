@@ -193,6 +193,23 @@ Solution 16 ran once against pinned FSI commit
   not advance to Solution 17 until Solution 16 returns an accepted result.
 - **Remaining review PRs.** 21 draft PRs remain open with `Lab status: pending`;
   Solutions 17–23 are the next serial run set after Solution 16 is accepted.
+- **Structural merge blocker (remediated).** 20 of the 21 draft PRs reported
+  `CONFLICTING` against a single shared path,
+  `scripts/test_lab_validation_contracts.py`. That module now discovers
+  `solutions/*/lab/*.lab.json` instead of hardcoding per-solution assertions, so
+  reviewed solutions no longer edit it and the conflict source is removed. Rebase
+  each branch by taking `main`'s version of that module and dropping the branch
+  edit. PRs #330 and #335 still need the stale-snapshot correction below.
+- **Stale `solutions.json` snapshots on #330 and #335.** Both branches carry a
+  `solutions.json` regenerated before Solutions 01 and 02 were released, recording
+  Solution 01 at `0.2.3` and Solution 02 at `0.2.4`. Accepting either snapshot
+  wholesale would revert released version metadata. Regenerate `solutions.json`
+  (and `solutions-graph.json` for #330) from `main` and reapply only that branch's
+  own entry.
+
+See the [Solution Review Disposition Record](./reference/solution-review-disposition.md)
+for the per-solution and per-PR disposition, the validator evidence behind each one,
+and the merge-eligibility assessment.
 
 ## Metadata Gaps
 
@@ -245,6 +262,11 @@ Durable engineering rules verified during the review program:
   `foreach` loop that relies on captured loop variables; use Pester's `-ForEach`
   parameter so values remain available at run time.
 - **Strict MkDocs.** The site must build clean under `mkdocs build --strict`.
+- **Derive shared test coverage; never hardcode it.** Shared validator test modules
+  must discover reviewed solutions from the filesystem rather than enumerate them by
+  hand. Hardcoded per-solution assertions force every parallel review branch to edit
+  the same region of the same file, which guarantees an N-way conflict and lets a
+  single branch silently drop another solution's coverage.
 - **Commercial-only contracts.** Forward-facing solution contracts omit the optional
   `prohibitedClouds` field and rely on the commercial-scope constants.
 - **No sensitive data in evidence.** No raw identifiers, secrets, or PII in any evidence

@@ -262,6 +262,7 @@ nav:
     - Examination Readiness: reference/examination-readiness.md
     - Shared Modules Contract: reference/shared-modules-contract.md
     - Lab Validation Contract: reference/lab-validation-contract.md
+    - Solution Review Disposition: reference/solution-review-disposition.md
     - Runtime Hardening Audit: reference/runtime-hardening-audit.md
     - Runtime Hardening Findings: reference/runtime-hardening-findings.md
     - Changelog: reference/changelog.md
