@@ -125,7 +125,7 @@ Run against the reviewed `main` and re-run against the change in this record.
 | `scripts/validate_solutions_graph.py` | `PASS` | 23 solutions; 56 framework controls referenced |
 | `scripts/validate_data_classification.py` | `PASS` | Matrix validation passed |
 | `scripts/verify_readme_counts.py` | `PASS` | 23 solutions; 58 controls; 243 playbooks |
-| `scripts/verify_commercial_scope.py` | `PASS` | 489 forward-facing files; no sovereign-cloud content |
+| `scripts/verify_commercial_scope.py` | `PASS` | 489 forward-facing files; commercial-cloud scope clean |
 | `scripts/validate-lab-contracts.py` | `PASS` | Repository contracts validated |
 | `scripts/validate-lab-result.py` | `PASS` | 0 results present; zero-result case allowed |
 | `scripts/test_lab_validation_contracts.py` | `PASS` | 12 tests |
