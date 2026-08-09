@@ -4,6 +4,14 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this solution uses semantic versioning.
 
+## [Unreleased]
+
+### Fixed
+
+- Re-verified Microsoft Purview DLP for Microsoft 365 Copilot and Copilot Chat on 2026-08-09.
+- Updated the external web-search grounding restriction from preview to generally available.
+- Aligned file coverage and licensing wording with the current Microsoft Purview documentation.
+
 ## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy corrections
 
 ### Fixed

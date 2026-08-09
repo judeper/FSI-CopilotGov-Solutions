@@ -9,7 +9,7 @@
 | Exception flow does not trigger | The Power Automate connection, trigger, or approval connector is not configured correctly | Review the flow owner account, connection references, and trigger filters in Power Automate |
 | Sensitivity label checks do not match Solution 03 | The label audit is stale or the tier references labels that changed after the last audit | Re-run `03-sensitivity-label-auditor`, update the label mapping, and refresh the baseline |
 | Graph reads fail with permission errors | Microsoft Graph scopes were not granted during connection | Reconnect with `InformationProtectionPolicy.Read` and `Policy.Read.All` scopes |
-| Exchange workload is missing from policy scope | Licensing or workload enablement is incomplete | Confirm Microsoft 365 E5 or E5 Compliance and the required Copilot workload enablement |
+| Exchange workload is missing from policy scope | Licensing or workload enablement is incomplete | Confirm an eligible Microsoft 365 E5, Office 365 E5, or Microsoft Purview suite plan and the required Copilot workload enablement |
 
 ## Diagnostic tips
 

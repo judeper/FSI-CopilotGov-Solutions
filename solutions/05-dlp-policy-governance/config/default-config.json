@@ -61,7 +61,7 @@
       {
         "id": "externalWebSearchGroundingRestriction",
         "displayName": "Restrict external web search when prompt text contains sensitive information types",
-        "availability": "preview",
+        "availability": "generallyAvailable",
         "condition": "Content contains > Sensitive information types",
         "action": "Prevent Copilot from processing content > Performing Web Searches"
       },
