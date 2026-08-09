@@ -1,6 +1,6 @@
 # Sensitivity Label Coverage Auditor
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** A | **Last Verified:** 2026-08-09
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -139,6 +139,32 @@ Each exported JSON file receives a companion `.sha256` file, and the package sum
 ## Power Automate Note
 
 Power Automate is documentation-first in this version. The solution documents two flows, `LabelGapAlert` and `RemediationManifestApproval`, but does not automatically deploy them. Teams should use the documented design to implement tenant-approved flows that match local notification, approval, and change-management processes.
+
+## Sources
+
+- https://learn.microsoft.com/graph/api/driveitem-assignsensitivitylabel?view=graph-rest-1.0
+
+  - Verifies that assignSensitivityLabel is a protected, metered Microsoft Graph API for SharePoint and OneDrive files at rest; notes metered usage and that availability is documented for the Global service only.
+
+- https://learn.microsoft.com/purview/apply-sensitivity-label-automatically
+
+  - Confirms service-side auto-labeling limits including 'Maximum of 100,000 automatically labeled files in your tenant per day' and policy/location limits; also notes licensing requirements (E5/P2-tier SKUs).
+
+- https://learn.microsoft.com/graph/api/resources/security-sensitivitylabel?view=graph-rest-beta
+
+  - Shows sensitivity label enumeration exposed via Microsoft Graph (beta) and documents properties, methods, and that beta APIs are subject to change.
+
+- https://learn.microsoft.com/graph/permissions-reference
+
+  - Documents Microsoft Graph permissions including InformationProtectionPolicy.Read vs InformationProtectionPolicy.Read.All and guidance on delegated vs application permissions.
+
+- https://learn.microsoft.com/purview/migrate-sensitivity-label-scheme
+
+  - Documents migration from parent labels to label groups, warns migration is irreversible, and that migration is rolling out gradually.
+
+- https://learn.microsoft.com/en-us/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description
+
+  - Confirms Microsoft Purview licensing notes and lists SKUs such as Microsoft 365 E5/A5/G5, Microsoft Purview Suite, and Microsoft 365 Information Protection and Governance.
 
 ## Known Limitations
 
