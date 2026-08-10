@@ -2,7 +2,7 @@
 
 ## Licensing
 
-- Microsoft 365 E5 or E5 Compliance for Purview DLP capabilities used to monitor the Microsoft 365 Copilot and Copilot Chat policy location and complementary workload DLP baselines
+- For Copilot DLP, prompt safeguards are available to users of Microsoft 365 Copilot and Copilot Chat; restricting Copilot from processing files and emails requires an eligible Microsoft 365 E5, Office 365 E5, or Microsoft Purview suite plan
 - Microsoft 365 Copilot licensing for the users and Copilot experiences being reviewed
 - Power Automate Premium if the exception approval workflow is deployed in production
 

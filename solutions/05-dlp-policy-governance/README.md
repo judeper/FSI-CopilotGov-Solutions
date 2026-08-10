@@ -1,6 +1,6 @@
 # DLP Policy Governance for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-06-05
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-08-09
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -10,7 +10,7 @@ DLP Policy Governance for Copilot deploys a read-only governance pattern for Mic
 
 This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Article 9 ICT security expectations, GDPR, FINRA Rule 4511, and SOX 302/404 by helping security and compliance teams monitor how Copilot-related DLP controls are scoped, tuned, and approved over time.
 
-> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location. The location supports sensitive-information-type prompt blocking **(preview)**, external web-search grounding restrictions for sensitive prompts **(preview)**, and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available). Selecting this location disables all other locations for that policy.
+> **Microsoft 365 Copilot and Copilot Chat policy location:** Microsoft Purview DLP supports **Microsoft 365 Copilot and Copilot Chat** as a dedicated policy location. The location supports sensitive-information-type prompt blocking **(preview)**, external web-search grounding restrictions for sensitive prompts (generally available), and sensitivity-label protection for supported files and emails used in Copilot response summarization (generally available). Selecting this location disables all other locations for that policy.
 
 ## Related Controls
 
@@ -25,7 +25,7 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 
 - Compares baseline records for the Microsoft 365 Copilot and Copilot Chat policy location and its supported conditions and actions
 - Tracks separate complementary workload DLP baseline records when tenant policy design requires Exchange, SharePoint, OneDrive, Teams, devices, or endpoint locations
-- Checks policy modes such as Audit and Block for expected sensitivity label handling on supported files and emails
+- Checks solution-defined Audit and Block expectations for sensitivity label handling on supported files and emails
 - Documents prompt-text controls for sensitive information types, including prompt blocking and external web-search grounding restrictions
 - Documents a Power Automate approval flow for policy exceptions and attestation evidence
 - Exports evidence artifacts that align to `data\evidence-schema.json`
@@ -49,9 +49,9 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 ## Prerequisites
 
 - Dependency `03-sensitivity-label-auditor` is complete and the latest label inventory has been reviewed
-- Microsoft 365 E5 or E5 Compliance licensing is available for Purview DLP and Copilot data protection features
+- Licensing aligns to the current Microsoft Purview service description: prompt safeguards are available to users of Microsoft 365 Copilot and Copilot Chat, while restricting Copilot from processing files and emails requires an eligible Microsoft 365 E5, Office 365 E5, or Microsoft Purview suite plan
 - Power Automate Premium is available if the exception approval flow is deployed
-- Policy editors use one of the current Microsoft Learn roles for Copilot DLP policy create/edit, such as Entra AI Admin, Purview Data Security AI Admin, Purview Compliance Administrator, Purview Compliance Data Administrator, Purview Information Protection Admin, Purview Security Administrator, or Entra Global Admin
+- Policy editors use one of the current Microsoft Learn roles for Copilot DLP policy create/edit, such as Microsoft Entra AI Admin, Purview Data Security AI Admin, Purview Compliance Administrator, Purview Compliance Data Administrator, Purview Information Protection Admin, Purview Security Administrator, or Microsoft Entra Global Admin
 - Security Reader-style access is treated as read-only review only and is not sufficient for Copilot DLP policy create/edit
 - PowerShell 7, `ExchangeOnlineManagement`, and `Microsoft.Graph` are available for read-only data collection
 
@@ -66,8 +66,8 @@ This solution separates two DLP governance layers:
 
 The Copilot policy-location baseline tracks:
 
-- Sensitive information types in prompt text, including prompt-blocking behavior **(preview)** and external web-search grounding restrictions **(preview)**
-- Sensitive information types in prompt text that restrict external web search as a grounding source **(preview)**
+- Sensitive information types in prompt text, including prompt-blocking behavior **(preview)** and external web-search grounding restrictions (generally available)
+- Sensitive information types in prompt text that restrict external web search as a grounding source (generally available)
 - Sensitivity labels on supported files and emails used in Copilot response summarization
 - Scope definitions for included and excluded user groups
 - Exception handling requirements by governance tier
@@ -142,7 +142,7 @@ See [docs/evidence-export.md](docs/evidence-export.md) for package details.
 - Some tenants expose Purview DLP metadata in read-only form only after Exchange Online and Security and Compliance sessions are connected.
 - The Microsoft 365 Copilot and Copilot Chat policy location disables other DLP locations for the same policy, so workload DLP policies should be represented separately.
 - DLP for Copilot does not evaluate the contents of files uploaded directly into prompts; it evaluates the typed prompt text for this scenario.
-- Sensitivity-label protection for files and emails is limited to supported files in SharePoint Online or OneDrive for Business and emails sent on or after January 1, 2025; calendar invites are not supported.
+- Sensitivity-label protection applies to supported stored or actively open file items and emails sent on or after January 1, 2025; calendar invites are not supported.
 - The Power Automate approval flow is documentation-led in this repository and still requires tenant-specific connection setup.
 - Drift results are only as current as the latest baseline and policy snapshot available to the monitoring process.
-- The prompt-text SIT blocking and external web-search grounding restriction capabilities are currently in **preview**; only sensitivity-label file/email blocking is generally available. Check tenant rollout status before relying on preview capabilities in production governance baselines.
+- Prompt-text SIT blocking remains in **preview** and requires tenant rollout validation; external web-search grounding restrictions and sensitivity-label file/email blocking are generally available.
