@@ -37,7 +37,7 @@ See `docs\architecture.md` for the component diagram, Graph data flow, workload 
 ## Prerequisites
 
 - Sensitivity label taxonomy is finalized in Microsoft Purview.
-- Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or Microsoft 365 Information Protection and Governance licensing is confirmed for the target tenant where sensitivity labeling features are used.
+- Licensing is confirmed for each sensitivity-labeling capability and benefiting user. Client- and service-side automatic labeling require eligible E5/P2-tier entitlements; verify the exact current SKU and base-license requirements in the Microsoft Purview service description.
 - Microsoft Graph permissions distinguish delegated label enumeration (`InformationProtectionPolicy.Read`) from application label enumeration (`InformationProtectionPolicy.Read.All`), and tenant plans note that organization label definition enumeration currently uses Microsoft Graph beta.
 - SharePoint and OneDrive label extraction uses approved `Files.Read.All`; any approved bulk assignment scenario also needs protected API validation plus `Files.ReadWrite.All` or `Sites.ReadWrite.All`.
 - `01-copilot-readiness-scanner` baseline outputs are complete.
@@ -139,6 +139,15 @@ Each exported JSON file receives a companion `.sha256` file, and the package sum
 ## Power Automate Note
 
 Power Automate is documentation-first in this version. The solution documents two flows, `LabelGapAlert` and `RemediationManifestApproval`, but does not automatically deploy them. Teams should use the documented design to implement tenant-approved flows that match local notification, approval, and change-management processes.
+
+## Microsoft Learn Sources
+
+- [driveItem: assignSensitivityLabel](https://learn.microsoft.com/graph/api/driveitem-assignsensitivitylabel?view=graph-rest-1.0) — protected and metered SharePoint and OneDrive API status, files-at-rest scope, permissions, asynchronous operation behavior, and Global-service availability.
+- [Automatically apply a sensitivity label to Microsoft 365 data](https://learn.microsoft.com/purview/apply-sensitivity-label-automatically) — the 100,000-files-per-tenant daily cap, service-side workload scope, eligible licensing, and configurable replacement of lower-priority manually applied labels.
+- [sensitivityLabel resource type](https://learn.microsoft.com/graph/api/resources/security-sensitivitylabel?view=graph-rest-beta) — beta status and list/get methods for sensitivity label definitions.
+- [Microsoft Graph permissions reference](https://learn.microsoft.com/graph/permissions-reference) — delegated `InformationProtectionPolicy.Read` and application `InformationProtectionPolicy.Read.All` permission semantics.
+- [Migrate parent sensitivity labels to label groups](https://learn.microsoft.com/purview/migrate-sensitivity-label-scheme) — label-group migration, documented automatic-migration cases, tenant rollout availability, and the irreversible migration warning.
+- [Microsoft Purview service description](https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description) — feature-specific eligible plans, base-license considerations, and benefiting-user licensing requirements.
 
 ## Known Limitations
 
