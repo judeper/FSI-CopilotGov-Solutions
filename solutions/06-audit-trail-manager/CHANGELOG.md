@@ -4,6 +4,11 @@ All notable changes to this solution are documented in this file.
 
 The format is based on Keep a Changelog, and this project follows semantic versioning.
 
+## [Unreleased]
+
+### Verified
+- Re-verified all Microsoft product and feature claims against current Microsoft Learn sources on 2026-08-16 (issue #440); no technical drift found, so the solution version is unchanged and only the README Last Verified date was refreshed. Confirmed the Copilot audit event names (`CopilotInteraction`, `ConnectedAIAppInteraction`, `AIAppInteraction`), Audit (Standard) and Audit (Premium) tiers and their default retention, audit record availability guidance (typically 60-90 minutes for core services), the unified Microsoft Purview eDiscovery experience, the retention policy cmdlets, the audit and eDiscovery roles, the Microsoft Graph `AuditLogsQuery.Read.All` and service-specific `AuditLogsQuery-*.Read.All` permissions, and the Microsoft 365 E5 / Microsoft Purview Suite / Microsoft 365 E5 eDiscovery and Audit add-on licensing.
+
 ## [v0.2.3] — 2026-06-05 — MS Learn accuracy fix
 
 ### Fixed
