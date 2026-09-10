@@ -33,7 +33,29 @@ This deployment guide follows a documentation-first pattern for Power Automate a
 3. Configure the reviewer mailbox or approver distribution group used by `CPG-ApprovalRouter`.
 4. If the tenant uses Teams-based notifications, validate Teams app policy and channel access before enabling alert delivery.
 
-## Step 4: Select and review the governance tier
+## Step 4: Reconcile the Microsoft 365 control planes
+
+This is a manual tenant-validation step. The repository scripts do not read or change
+these settings.
+
+1. Before changing any category setting, open **Copilot connectors > Your
+   connections** and preserve each in-scope connector's current allowed-user scope
+   and **Staged rollout** group assignments.
+2. Capture **Agents > Settings > Allowed agent types** and record the approved
+   Microsoft-published, organization-built, and external-publisher category posture.
+   Document the broader effect on agents and apps; do not treat this as a
+   connector-specific allow-list. Disabling the connector's agent type sets existing
+   connectors' allowed-user scope to **No users**.
+3. Return to **Copilot connectors > Your connections** and record the resulting
+   connector-specific scope. Keep unapproved connectors at **No users** and restore
+   only approved user or staged-rollout assignments through the tenant's change process.
+4. Document the connector's user-scoped authentication and consent model. Validate
+   with controlled accounts that an approved user remains limited by source-system
+   permissions and that an unapproved user cannot connect or invoke the connector.
+5. Open **Agents > Tools** and separately record MCP server registry, availability,
+   blocking, and request decisions. Do not infer MCP posture from connector settings.
+
+## Step 5: Select and review the governance tier
 
 Review the tier JSON files under `config\` and confirm the operating model:
 
@@ -43,7 +65,7 @@ Review the tier JSON files under `config\` and confirm the operating model:
 
 Update blocked connector IDs, data-flow boundaries, and SLA values if internal policy requires stricter treatment.
 
-## Step 5: Run the deployment script
+## Step 6: Run the deployment script
 
 Execute the deployment script from the solution directory or repository root:
 
@@ -60,7 +82,7 @@ Execute the deployment script from the solution directory or repository root:
 
 Use `-WhatIf` first in regulated environments to preview connector blocking and approval request generation.
 
-## Step 6: Review the initial inventory run
+## Step 7: Review the initial inventory run
 
 After the script completes, review the generated artifacts:
 
@@ -76,14 +98,17 @@ Validate that:
 - blocked connectors appear as denied or blocked findings
 - approval requests include the correct review stages and due dates
 
-## Step 7: Load baseline approvals and findings into Dataverse
+Treat these artifacts as representative inventory and workflow records. They do not
+prove the live tenant settings or controlled access results captured in Step 4.
+
+## Step 8: Load baseline approvals and findings into Dataverse
 
 1. Import approved connectors into `fsi_cg_cpg_baseline`.
 2. Import unapproved or blocked items into `fsi_cg_cpg_finding`.
 3. Import cross-boundary attestation records into `fsi_cg_cpg_evidence`.
 4. Confirm that duplicate connector IDs are rejected or merged according to the Dataverse key design.
 
-## Step 8: Enable monitoring and evidence export
+## Step 9: Enable monitoring and evidence export
 
 Run monitoring and evidence export after the initial inventory load:
 
@@ -100,7 +125,7 @@ Run monitoring and evidence export after the initial inventory load:
 
 Confirm that the evidence package captures connector inventory, approval register, and data-flow attestation outputs with the expected `.sha256` companion file.
 
-## Step 9: Integrate with solution 09 rollout controls
+## Step 10: Integrate with solution 09 rollout controls
 
 Before production enablement:
 

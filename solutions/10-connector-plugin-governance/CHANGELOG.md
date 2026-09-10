@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.2.4] — 2026-09-10 — Control 2.16 reconciliation
+
+### Changed
+
+- Distinguished tenant-wide **Allowed agent types** publisher-category controls from connector-specific allowed-user scope, including **No users**, and staged rollout.
+- Documented user-scoped authentication and source-system permission evidence requirements.
+- Documented **Agents > Tools** MCP server management as a separate control plane.
+- Clarified that generated inventory is supplemental and does not prove live tenant settings or effective user access.
+
 ## [v0.2.3] — 2026-06-05 — MS Learn accuracy pass-2 correction
 
 ### Fixed

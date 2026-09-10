@@ -77,7 +77,7 @@
     "residency_options": ["commercial"],
     "retention_default_days": 365,
     "retention_max_days": 365,
-    "notes": "Connector and plugin inventory metadata only; live connector telemetry is not collected by the scaffold."
+    "notes": "Generated outputs contain connector and plugin inventory metadata only; live connector telemetry and manually captured user-access evidence are not collected by the scaffold. Any separately collected validation evidence must be minimized and sanitized."
   },
   {
     "slug": "11-risk-tiered-rollout",

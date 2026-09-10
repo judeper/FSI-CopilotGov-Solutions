@@ -21,6 +21,8 @@
 - Access to the target Dataverse environment URL
 - Access to Entra app registration and admin-consent records approved by the tenant security team for custom connector or API authentication dependencies
 - Access to Microsoft 365 admin center Agent Registry and agent details metadata; if programmatic access is approved, document that Microsoft Graph Agent Registry APIs are preview and work with the AI Admin role
+- Read access to **Agents > Settings > Allowed agent types**, **Copilot connectors > Your connections**, and **Agents > Tools** for manual Control 2.16 reconciliation
+- Approved test identities representing an allowed user and an unapproved user, plus a source-system record the allowed user is not permitted to retrieve
 
 ## Shared Modules Used
 
@@ -37,3 +39,8 @@ Before deployment, confirm the following decisions are documented:
 - approved data-flow boundaries for Copilot extensibility use cases
 - review mailbox or distribution group for security and CISO or DLP approval tasks
 - target governance tier: `baseline`, `recommended`, or `regulated`
+- approved tenant-wide publisher-category posture and its effect on agents and apps
+- connector-specific allowed-user scope, including which connectors remain at **No users**
+- staged rollout groups for approved connector pilots
+- acceptable user-authentication and source-system permission test procedure
+- separate MCP server availability, blocking, and request posture under **Agents > Tools**
