@@ -25,6 +25,43 @@
 4. Compare agent, plugin, and tool metadata to Microsoft 365 admin center Agents > All agents > Registry and agent details output; if Microsoft Graph Agent Registry APIs are used, document the preview and AI Admin role caveats.
 5. Compare custom connector or API authentication dependencies to Entra app registration and admin-consent inventory.
 
+## Inventory does not match effective connector access
+
+**Symptoms**
+
+- A connector appears in the administrator inventory but users cannot invoke it
+- A generated inventory row is being treated as proof that users have access
+- Tenant-wide category settings and connector-specific assignments appear inconsistent
+
+**Common causes**
+
+- **Allowed agent types** was interpreted as a connector-specific allow-list
+- The connector's allowed-user scope is **No users** or excludes the test account
+- A staged rollout group does not include the test account
+- The user has not completed delegated authentication and consent
+- Source-system permissions deny the requested record
+
+**Resolution**
+
+1. Capture **Agents > Settings > Allowed agent types** and document the tenant-wide publisher-category posture.
+2. Capture the connector under **Copilot connectors > Your connections**, including allowed-user scope and staged rollout.
+3. Test with one approved user and one unapproved user.
+4. For the approved user, test both an accessible source record and a record the user cannot access.
+5. Keep the portal and controlled-test evidence separate from the generated inventory artifacts.
+
+## MCP server state does not match connector settings
+
+**Symptoms**
+
+- Connector settings appear compliant but an MCP server is still available
+- An MCP request or blocked state is missing from connector evidence
+
+**Resolution**
+
+1. Review MCP servers separately under **Agents > Tools**.
+2. Capture the Registry and Requests state required by the organization's review procedure.
+3. Do not infer MCP availability or approval from **Allowed agent types** or **Copilot connectors > Your connections**.
+
 ## Approval flow notifications not sending
 
 **Symptoms**

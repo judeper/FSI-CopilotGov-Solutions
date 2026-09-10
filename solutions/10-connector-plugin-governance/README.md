@@ -1,6 +1,6 @@
 # Copilot Connector and Plugin Governance
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** C
+> **Status:** Documentation-first scaffold | **Version:** v0.2.4 | **Priority:** P1 | **Track:** C
 >
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -12,6 +12,13 @@ This solution inventories connectors and plugins, applies risk classification, r
 
 The **Copilot Control System** is a framework whose controls span the Microsoft 365 admin center, Power Platform admin center, and Copilot Studio for managing Copilot connectors, plugins, and **declarative agents** — a newer extensibility path that allows organizations to define custom Copilot behaviors using Copilot's own orchestrator and models, buildable with low-code or pro-code tooling. This solution documents governance patterns that help meet oversight expectations for all three extensibility categories.
 
+For Control 2.16, the governance surfaces are complementary rather than interchangeable:
+
+- **Agents > Settings > Allowed agent types** provides tenant-wide publisher-category controls that also affect agents and apps in those categories.
+- **Copilot connectors > Your connections** provides connector-specific allowed-user scope, including **No users**, and staged rollout where available.
+- Federated and self-serve connector access uses the user's identity and remains bounded by authentication, consent, and source-system permissions.
+- **Agents > Tools** separately governs tool and MCP server inventory, availability, blocking, and requests.
+
 ## Features
 
 | Feature | What it does | Primary evidence output |
@@ -21,6 +28,7 @@ The **Copilot Control System** is a framework whose controls span the Microsoft 
 | Approval workflow | Routes connector or plugin requests through security review and CISO or DLP review before production enablement. | `approval-register` |
 | Data flow attestation | Records approved source and destination boundaries for extensibility scenarios that move data outside Microsoft 365. | `data-flow-attestations` |
 | Ongoing monitoring | Detects new connectors, stale approvals, and overdue review actions for operational follow-up. | `approval-register`, `connector-inventory` |
+| Control 2.16 reconciliation | Documents the manual comparison of tenant-wide category settings, connector-specific user scope, controlled access tests, and the separate MCP Tools registry. | Tenant portal captures and controlled test records; not emitted by the sample scripts |
 
 ## Scope Boundaries
 
@@ -33,6 +41,8 @@ The **Copilot Control System** is a framework whose controls span the Microsoft 
 - ❌ Does not deploy Power Automate flows (governance workflows are documented, not exported)
 - ❌ Does not create Dataverse tables (schema contracts are provided for manual deployment)
 - ❌ Does not produce production evidence (evidence packages contain sample data for format validation)
+- ❌ Does not prove the tenant's **Allowed agent types** settings, connector-specific allowed-user scope, staged rollout, user authentication, source-system permissions, or effective end-user access
+- ❌ Does not manage, approve, block, or validate MCP servers in **Agents > Tools**
 - ❌ Does not cover Agent 365 platform governance, Entra Agent ID security controls, or agent pinning (v1.3+ framework features pending solution update)
 - ❌ Does not govern third-party model provider integrations
 
@@ -66,7 +76,7 @@ The **Copilot Control System** is a framework whose controls span the Microsoft 
    - `baseline` for Microsoft-built connectors with limited external reach
    - `recommended` for risk-based approvals across low, medium, and high risk connectors
    - `regulated` for full approval, retention, and third-party register discipline
-3. Review the JSON settings under `.\config\` and confirm blocked connectors, SLAs, and data-flow boundaries.
+3. Review the JSON settings under `.\config\` and confirm blocked connectors, SLAs, and data-flow boundaries. These local tiers do not configure Microsoft 365 admin center settings.
 4. Run the deployment script with tenant and environment details:
 
    ```powershell
@@ -85,6 +95,8 @@ The **Copilot Control System** is a framework whose controls span the Microsoft 
    .\scripts\Monitor-Compliance.ps1 -ConfigurationTier recommended -AlertOnNewConnectors -OutputPath .\artifacts
    .\scripts\Export-Evidence.ps1 -ConfigurationTier recommended -OutputPath .\artifacts
    ```
+
+6. Separately reconcile the generated inventory with saved tenant evidence from **Allowed agent types**, **Copilot connectors > Your connections**, and **Agents > Tools**. Use controlled approved-user and unapproved-user tests to validate effective access and source-system permission trimming.
 
 ## Solution Components
 
@@ -110,7 +122,9 @@ Key deployment stages:
 1. Import the Dataverse solution and create the `fsi_cg_cpg_baseline`, `fsi_cg_cpg_finding`, and `fsi_cg_cpg_evidence` tables.
 2. Configure the `CPG-ConnectorInventory`, `CPG-ApprovalRouter`, and `CPG-DataFlowAudit` Power Automate flows with the target environment and reviewer account.
 3. Run `Deploy-Solution.ps1` to generate the initial inventory, approval register, and data-flow attestation seeds.
-4. Use solution `09-feature-management-controller` to gate production rollout until connectors and plugins reach the approved state for the target ring.
+4. Capture the tenant-wide **Allowed agent types** posture, then record each connector's allowed-user scope and staged rollout under **Copilot connectors > Your connections**.
+5. Record the separate **Agents > Tools** posture for MCP servers.
+6. Use solution `09-feature-management-controller` to document rollout coordination until connectors and plugins reach the approved state for the target ring.
 
 ## Prerequisites
 
@@ -132,7 +146,7 @@ Key deployment stages:
 | 1.13 | Third-party connectors and plugins extend the Copilot operating boundary and require formal risk review. | Maintains inventory and classification records, then flags where manual third-party due diligence is still required. |
 | 2.13 | Data flow boundaries must be documented before Copilot can reach external systems through extensibility. | Captures approved data-flow boundaries and records attestation evidence for cross-boundary use cases. |
 | 2.14 | Extensibility requests need a repeatable approval path before tenant deployment. | Routes requests through security review, CISO or DLP decision points, and approval or denial registration. |
-| 2.16 | Federated connector and MCP governance requires documented trust boundaries before cross-boundary extensibility is enabled. | Documents metadata, scope boundaries, and manual reconciliation steps for federated connector and MCP oversight; live validation remains outside this scaffold. |
+| 2.16 | Federated connector and MCP governance requires distinct tenant-wide, connector-specific, identity, source-permission, and MCP control evidence. | Documents manual reconciliation of **Allowed agent types**, connector-specific allowed-user scope (including **No users**) and staged rollout, controlled access tests, user-scoped authentication and source-system permissions, and the separate **Agents > Tools** MCP control plane. Live validation remains outside this scaffold. |
 | 4.13 | Operational monitoring must detect drift, new connectors, and stale approvals after deployment. | Compares live inventory to the approved baseline and raises monitoring findings for new or overdue items. |
 
 ## Regulatory Alignment
@@ -153,8 +167,20 @@ Key deployment stages:
 | `approval-register` | Review tasks and decisions for requested or denied connectors and plugins. |
 | `data-flow-attestations` | Recorded boundary decisions for approved extensibility paths that reach external systems. |
 
+The generated artifacts are supplemental inventory and workflow evidence. They do not prove current tenant-wide category settings, connector-specific assignments, staged rollout, successful or denied authentication, source-system permission trimming, or MCP server availability. Control 2.16 review therefore also requires manually captured portal settings and controlled access-test records described in [Evidence Export](docs/evidence-export.md).
+
 ## Known Limitations
 
 - Copilot Studio tools/actions and declarative agents can require separate tenant and Teams app policy configuration outside this solution package.
 - Microsoft 365 admin center Agent Registry and agent details metadata, AppSource metadata, and Microsoft Graph Agent Registry APIs (preview) can require manual reconciliation for custom plugin publishers.
+- Tenant-wide **Allowed agent types** settings have a broader effect than connector-specific access settings; the scaffold does not infer one from the other.
+- Administrative inventory visibility is not proof that a connector is available to users or that source-system permissions are enforced for a specific user.
 - Risk classification supports compliance with governance objectives, but exceptional business context still requires human review before approval.
+
+## Microsoft Primary References
+
+- [Agent settings in Microsoft 365 admin center](https://learn.microsoft.com/microsoft-365/admin/manage/agent-settings?view=o365-worldwide#allowed-agent-types)
+- [Manage federated connector availability](https://learn.microsoft.com/microsoft-365/copilot/connectors/manage-federated-connectors)
+- [Manage self-serve sync connector availability](https://learn.microsoft.com/microsoft-365/copilot/connectors/manage-personal-sync-connectors)
+- [Copilot connectors overview](https://learn.microsoft.com/microsoft-365/copilot/connectors/overview)
+- [Manage tools for agents in Microsoft 365 admin center](https://learn.microsoft.com/microsoft-365/admin/manage/manage-tools-for-agent?view=o365-worldwide)

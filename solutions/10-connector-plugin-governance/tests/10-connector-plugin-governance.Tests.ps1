@@ -51,6 +51,19 @@ Describe 'Copilot Connector and Plugin Governance solution content' {
         ($defaultConfig.PSObject.Properties.Name -contains 'blockedConnectorIds') | Should -BeTrue
     }
 
+    It 'documents the distinct Control 2.16 control planes and evidence limits' {
+        $readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
+        $evidenceGuide = Get-Content -Path (Join-Path $script:docsRoot 'evidence-export.md') -Raw
+
+        $readme.Contains('Allowed agent types') | Should -BeTrue
+        $readme.Contains('Copilot connectors > Your connections') | Should -BeTrue
+        $readme.Contains('No users') | Should -BeTrue
+        $readme.Contains('staged rollout') | Should -BeTrue
+        $readme.Contains('Agents > Tools') | Should -BeTrue
+        $evidenceGuide.Contains('source-system permissions') | Should -BeTrue
+        $evidenceGuide | Should -Match 'Inventory evidence does\s+not prove effective'
+    }
+
     It 'retains regulated evidence for at least 365 days' {
         $regulatedConfig = Get-Content -Path (Join-Path $script:configRoot 'regulated.json') -Raw | ConvertFrom-Json -Depth 20
         [int]$regulatedConfig.evidenceRetentionDays | Should -BeGreaterOrEqual 365

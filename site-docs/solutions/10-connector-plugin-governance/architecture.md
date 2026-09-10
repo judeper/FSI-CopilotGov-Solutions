@@ -28,7 +28,10 @@ Copilot Connector and Plugin Governance uses a documentation-first architecture 
 | Component | Technology | Responsibility |
 |-----------|------------|----------------|
 | Connector Discovery | Power Platform Admin API | Enumerates environment connectors, connector metadata, and policy-relevant identifiers used by Copilot or agent workflows. |
+| Tenant-wide category posture | Microsoft 365 admin center **Agents > Settings > Allowed agent types** | Documents the approved publisher-category posture. This setting is broader than connector access because it also affects agents and apps in the selected categories. |
+| Connector-specific access | Microsoft 365 admin center **Copilot connectors > Your connections** | Documents each connector's allowed-user scope, including **No users**, and staged rollout assignments where available. |
 | Agent Registry and app inventory | Microsoft 365 admin center Agent Registry; Microsoft Graph Agent Registry APIs (preview); Entra app registrations | Documents agent and plugin metadata separately from app registration dependencies used for custom connector or API authentication. |
+| MCP server management | Microsoft 365 admin center **Agents > Tools** | Documents MCP server registry, availability, blocking, and request decisions as a separate control plane. |
 | Risk Classifier | `Deploy-Solution.ps1` and config JSON | Applies low, medium, high, or blocked treatment based on publisher trust, certification, data-flow boundaries, and access to financial systems. |
 | Approval Router | Power Automate flow `CPG-ApprovalRouter` | Routes requests through security review, then CISO or DLP review, before recording approval or denial. |
 | Dataverse Registry | Dataverse tables | Stores approved baseline records, findings for unapproved or risky integrations, and evidence-ready data-flow attestations. |
@@ -60,13 +63,17 @@ The solution uses the required naming convention `fsi_cg_{solution}_{purpose}` a
 ## Discovery and Classification Logic
 
 1. `CPG-ConnectorInventory` or `Deploy-Solution.ps1` models the Power Platform Admin API inventory path for connector enumeration.
-2. Microsoft 365 admin center Agent Registry and agent details metadata supplement discovery for agent and plugin context; Entra app registration inventory is reviewed separately for custom connector or API authentication dependencies, and Microsoft Graph Agent Registry APIs remain preview when used programmatically.
-3. The risk classifier uses the configured risk categories:
+2. **Allowed agent types** supplies the tenant-wide publisher-category posture; it is not a per-connector allow-list and can affect non-connector agents and apps.
+3. **Copilot connectors > Your connections** supplies connector-specific allowed-user scope and staged rollout. **No users** is the restrictive per-connector state.
+4. Federated and self-serve connector access is user-scoped. Authentication and consent use the user's identity, while the source system enforces what content that user may access.
+5. **Agents > Tools** separately supplies MCP server registry, availability, blocking, and request evidence.
+6. Microsoft 365 admin center Agent Registry and agent details metadata supplement discovery for agent and plugin context; Entra app registration inventory is reviewed separately for custom connector or API authentication dependencies, and Microsoft Graph Agent Registry APIs remain preview when used programmatically.
+7. The risk classifier uses the configured risk categories:
    - `low` for Microsoft-built connectors with no external data egress
    - `medium` for certified third-party connectors with limited external reach
    - `high` for custom or uncertified connectors and cross-boundary data flows
    - `blocked` for prohibited connectors such as personal storage or public social services in regulated scenarios
-4. Approval requirements are derived from the selected governance tier and written into the approval register.
+8. Approval requirements are derived from the selected governance tier and written into the approval register.
 
 ## Integration with Solution 09
 
@@ -88,3 +95,9 @@ Recommended integration points:
 - stale or missing data-flow attestations for external boundary use cases
 
 `Export-Evidence.ps1` packages the resulting `connector-inventory`, `approval-register`, and `data-flow-attestations` records for audit support, supervisory review, and DORA third-party risk documentation.
+
+Those generated records are supplemental evidence only. They do not read or prove the
+effective **Allowed agent types** posture, connector-specific user assignments, staged
+rollout, authentication outcome, source-system permissions, or MCP server state. Control
+2.16 evidence must reconcile the generated inventory with portal captures and controlled
+approved-user and unapproved-user tests.
