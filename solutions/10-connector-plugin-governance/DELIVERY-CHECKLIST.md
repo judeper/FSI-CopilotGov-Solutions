@@ -43,8 +43,9 @@
 - [ ] Validate Power Platform Admin API access to enumerate connectors in the target environment.
 - [ ] Validate Entra app registration and admin-consent records for custom connector or API authentication dependencies.
 - [ ] Validate Microsoft 365 admin center Agent Registry and agent details metadata; if programmatic access is approved, document that Microsoft Graph Agent Registry APIs are preview and work with the AI Admin role.
-- [ ] Capture tenant-wide **Agents > Settings > Allowed agent types** publisher-category settings and document their broader agent/app effect.
-- [ ] Capture each in-scope connector's allowed-user scope under **Copilot connectors > Your connections**, including **No users** and staged rollout groups where available.
+- [ ] Before changing **Allowed agent types**, preserve each in-scope connector's current allowed-user scope and staged rollout assignments.
+- [ ] Capture tenant-wide **Agents > Settings > Allowed agent types** publisher-category settings, document their broader agent/app effect, and account for the reset of existing connector scopes to **No users** when the connector's agent type is disabled.
+- [ ] Capture each in-scope connector's resulting allowed-user scope under **Copilot connectors > Your connections**, including **No users** and staged rollout groups where available.
 - [ ] Validate user-scoped authentication and source-system permission trimming with controlled approved-user and unapproved-user tests.
 - [ ] Capture MCP server registry, availability, blocking, and request state separately under **Agents > Tools**.
 - [ ] Review `config\default-config.json` blocked connector IDs against current DLP and AppSource policy decisions.

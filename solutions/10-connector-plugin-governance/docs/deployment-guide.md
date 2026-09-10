@@ -38,17 +38,21 @@ This deployment guide follows a documentation-first pattern for Power Automate a
 This is a manual tenant-validation step. The repository scripts do not read or change
 these settings.
 
-1. Capture **Agents > Settings > Allowed agent types** and record the approved
+1. Before changing any category setting, open **Copilot connectors > Your
+   connections** and preserve each in-scope connector's current allowed-user scope
+   and **Staged rollout** group assignments.
+2. Capture **Agents > Settings > Allowed agent types** and record the approved
    Microsoft-published, organization-built, and external-publisher category posture.
    Document the broader effect on agents and apps; do not treat this as a
-   connector-specific allow-list.
-2. Open **Copilot connectors > Your connections** and record each in-scope
-   connector's allowed-user scope. Use **No users** for connectors that are not
-   approved, and record **Staged rollout** groups where available for approved pilots.
-3. Document the connector's user-scoped authentication and consent model. Validate
+   connector-specific allow-list. Disabling the connector's agent type sets existing
+   connectors' allowed-user scope to **No users**.
+3. Return to **Copilot connectors > Your connections** and record the resulting
+   connector-specific scope. Keep unapproved connectors at **No users** and restore
+   only approved user or staged-rollout assignments through the tenant's change process.
+4. Document the connector's user-scoped authentication and consent model. Validate
    with controlled accounts that an approved user remains limited by source-system
    permissions and that an unapproved user cannot connect or invoke the connector.
-4. Open **Agents > Tools** and separately record MCP server registry, availability,
+5. Open **Agents > Tools** and separately record MCP server registry, availability,
    blocking, and request decisions. Do not infer MCP posture from connector settings.
 
 ## Step 5: Select and review the governance tier

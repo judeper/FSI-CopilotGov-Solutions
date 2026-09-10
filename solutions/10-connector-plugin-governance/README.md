@@ -16,7 +16,7 @@ For Control 2.16, the governance surfaces are complementary rather than intercha
 
 - **Agents > Settings > Allowed agent types** provides tenant-wide publisher-category controls that also affect agents and apps in those categories.
 - **Copilot connectors > Your connections** provides connector-specific allowed-user scope, including **No users**, and staged rollout where available.
-- Federated and self-serve connector access uses the user's identity and remains bounded by authentication, consent, and source-system permissions.
+- Federated connector access uses the user's identity and remains bounded by authentication, consent, and source-system permissions.
 - **Agents > Tools** separately governs tool and MCP server inventory, availability, blocking, and requests.
 
 ## Features
@@ -124,7 +124,7 @@ Key deployment stages:
 3. Run `Deploy-Solution.ps1` to generate the initial inventory, approval register, and data-flow attestation seeds.
 4. Capture the tenant-wide **Allowed agent types** posture, then record each connector's allowed-user scope and staged rollout under **Copilot connectors > Your connections**.
 5. Record the separate **Agents > Tools** posture for MCP servers.
-6. Use solution `09-feature-management-controller` to document rollout coordination until connectors and plugins reach the approved state for the target ring.
+6. Use solution `09-feature-management-controller` to gate production rollout until connectors and plugins reach the approved state for the target ring.
 
 ## Prerequisites
 
@@ -146,7 +146,7 @@ Key deployment stages:
 | 1.13 | Third-party connectors and plugins extend the Copilot operating boundary and require formal risk review. | Maintains inventory and classification records, then flags where manual third-party due diligence is still required. |
 | 2.13 | Data flow boundaries must be documented before Copilot can reach external systems through extensibility. | Captures approved data-flow boundaries and records attestation evidence for cross-boundary use cases. |
 | 2.14 | Extensibility requests need a repeatable approval path before tenant deployment. | Routes requests through security review, CISO or DLP decision points, and approval or denial registration. |
-| 2.16 | Federated connector and MCP governance requires distinct tenant-wide, connector-specific, identity, source-permission, and MCP control evidence. | Documents manual reconciliation of **Allowed agent types**, connector-specific allowed-user scope (including **No users**) and staged rollout, controlled access tests, user-scoped authentication and source-system permissions, and the separate **Agents > Tools** MCP control plane. Live validation remains outside this scaffold. |
+| 2.16 | Federated connectors and MCP endpoints require approved access, effective-access testing, user-scoped permission validation, documented ownership, and periodic review. | Documents manual reconciliation of **Allowed agent types**, connector-specific allowed-user scope (including **No users**) and staged rollout, controlled access tests, user-scoped authentication and source-system permissions, and the separate **Agents > Tools** MCP control plane. Live validation remains outside this scaffold. |
 | 4.13 | Operational monitoring must detect drift, new connectors, and stale approvals after deployment. | Compares live inventory to the approved baseline and raises monitoring findings for new or overdue items. |
 
 ## Regulatory Alignment
@@ -173,14 +173,13 @@ The generated artifacts are supplemental inventory and workflow evidence. They d
 
 - Copilot Studio tools/actions and declarative agents can require separate tenant and Teams app policy configuration outside this solution package.
 - Microsoft 365 admin center Agent Registry and agent details metadata, AppSource metadata, and Microsoft Graph Agent Registry APIs (preview) can require manual reconciliation for custom plugin publishers.
-- Tenant-wide **Allowed agent types** settings have a broader effect than connector-specific access settings; the scaffold does not infer one from the other.
+- Tenant-wide **Allowed agent types** settings have a broader effect than connector-specific access settings. Capture approved connector assignments before a category change because disabling the connector's agent type sets existing connectors' allowed-user scope to **No users**.
 - Administrative inventory visibility is not proof that a connector is available to users or that source-system permissions are enforced for a specific user.
 - Risk classification supports compliance with governance objectives, but exceptional business context still requires human review before approval.
 
-## Microsoft Primary References
+## Microsoft Learn References
 
 - [Agent settings in Microsoft 365 admin center](https://learn.microsoft.com/microsoft-365/admin/manage/agent-settings?view=o365-worldwide#allowed-agent-types)
 - [Manage federated connector availability](https://learn.microsoft.com/microsoft-365/copilot/connectors/manage-federated-connectors)
-- [Manage self-serve sync connector availability](https://learn.microsoft.com/microsoft-365/copilot/connectors/manage-personal-sync-connectors)
 - [Copilot connectors overview](https://learn.microsoft.com/microsoft-365/copilot/connectors/overview)
 - [Manage tools for agents in Microsoft 365 admin center](https://learn.microsoft.com/microsoft-365/admin/manage/manage-tools-for-agent?view=o365-worldwide)

@@ -64,8 +64,8 @@ The solution uses the required naming convention `fsi_cg_{solution}_{purpose}` a
 
 1. `CPG-ConnectorInventory` or `Deploy-Solution.ps1` models the Power Platform Admin API inventory path for connector enumeration.
 2. **Allowed agent types** supplies the tenant-wide publisher-category posture; it is not a per-connector allow-list and can affect non-connector agents and apps.
-3. **Copilot connectors > Your connections** supplies connector-specific allowed-user scope and staged rollout. **No users** is the restrictive per-connector state.
-4. Federated and self-serve connector access is user-scoped. Authentication and consent use the user's identity, while the source system enforces what content that user may access.
+3. **Copilot connectors > Your connections** supplies connector-specific allowed-user scope and staged rollout. **No users** is the restrictive per-connector state. Capture approved assignments before changing the tenant-wide category because disabling the connector's agent type sets existing connectors to **No users**.
+4. Federated connector access is user-scoped. Authentication and consent use the user's identity, while the source system enforces what content that user may access.
 5. **Agents > Tools** separately supplies MCP server registry, availability, blocking, and request evidence.
 6. Microsoft 365 admin center Agent Registry and agent details metadata supplement discovery for agent and plugin context; Entra app registration inventory is reviewed separately for custom connector or API authentication dependencies, and Microsoft Graph Agent Registry APIs remain preview when used programmatically.
 7. The risk classifier uses the configured risk categories:
