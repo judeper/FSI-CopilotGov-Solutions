@@ -51,7 +51,7 @@ Describe 'Copilot Connector and Plugin Governance solution content' {
         ($defaultConfig.PSObject.Properties.Name -contains 'blockedConnectorIds') | Should -BeTrue
     }
 
-    It 'documents the distinct Control 2.16 control planes and evidence limits' {
+    It 'documents distinct connector governance planes and evidence limits' {
         $readme = Get-Content -Path (Join-Path $solutionRoot 'README.md') -Raw
         $evidenceGuide = Get-Content -Path (Join-Path $script:docsRoot 'evidence-export.md') -Raw
 

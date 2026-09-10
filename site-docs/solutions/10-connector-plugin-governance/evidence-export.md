@@ -96,6 +96,13 @@ attach the following separately collected evidence:
 Administrative catalog visibility, a generated connector row, or an approval record
 must not be presented as proof of current tenant settings or effective user access.
 
+Sanitize manually collected evidence before retention or sharing. Use pseudonymous
+role labels such as `approved-test-user` and `unapproved-test-user`; remove or redact
+user principal names, object and tenant identifiers, access or refresh tokens,
+authentication secrets, connector account identifiers, and source-record identifiers.
+Retain only the minimum result needed to demonstrate allowed, denied, and
+permission-trimmed outcomes.
+
 ## Retention and Review Guidance
 
 - Baseline environments should retain evidence long enough to support supervisory sampling and change review.
