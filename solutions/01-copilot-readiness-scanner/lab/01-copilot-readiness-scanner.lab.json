@@ -31,7 +31,7 @@
   "microsoftSourceClaims": [
     {
       "id": "claim-optimization-assessment-name",
-      "claimText": "The current Microsoft Learn enablement resources page references Microsoft 365 Copilot Optimization Assessment as a readiness input for onboarding and operational planning.",
+      "claimText": "The current Microsoft Learn adoption guide references Microsoft Copilot Optimization Assessment as a readiness input for onboarding and operational planning.",
       "affectedFiles": [
         "solutions/01-copilot-readiness-scanner/README.md",
         "solutions/01-copilot-readiness-scanner/CHANGELOG.md"
@@ -57,7 +57,7 @@
     },
     {
       "id": "claim-copilot-control-system-surfaces",
-      "claimText": "Manage Microsoft 365 Copilot Scenarios documents control-system management surfaces and portal pivots used for cross-admin-center visibility checks.",
+      "claimText": "Microsoft Learn documents Copilot controls management settings and portal pivots used for cross-admin-center visibility checks.",
       "affectedFiles": [
         "solutions/01-copilot-readiness-scanner/README.md",
         "solutions/01-copilot-readiness-scanner/docs/deployment-guide.md"
@@ -147,8 +147,8 @@
       "Power Platform Administrator"
     ],
     "features": [
-      "Microsoft 365 Copilot Optimization Assessment visibility in onboarding guidance.",
-      "Copilot management surfaces visible in Microsoft 365 admin center.",
+      "Microsoft Copilot Optimization Assessment visibility in onboarding guidance.",
+      "Copilot controls management surfaces visible in Microsoft 365 admin center.",
       "Copilot usage reports accessible through Microsoft Graph with Reports.Read.All.",
       "Restricted Content Discovery configuration visible in SharePoint admin center."
     ],

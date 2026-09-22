@@ -6,6 +6,10 @@ The format is based on Keep a Changelog and uses solution version tags instead o
 
 ## [Unreleased]
 
+### Validated
+
+- Rechecked the README Microsoft product claims on 2026-09-22 against current Microsoft Learn sources for Restricted SharePoint Search, Restricted Content Discovery, SharePoint Advanced Management prerequisites, and Microsoft Purview DSPM. No wording changes were required.
+
 ## [v0.2.5] — 2026-07-16 — Current-source review and accepted lab validation
 
 ### Changed

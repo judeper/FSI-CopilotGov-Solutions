@@ -94,7 +94,7 @@ Describe 'Documentation regression checks' {
         $checklist = Get-Content -Path (Join-Path $script:solutionRoot 'DELIVERY-CHECKLIST.md') -Raw
 
         $readme | Should -Match '\*\*Version:\*\* v0\.2\.5'
-        $readme | Should -Match 'Last Verified:\*\* 2026-07-16'
+        $readme | Should -Match 'Last Verified:\*\* 2026-09-22'
         $readme | Should -Match 'Accepted `PASS` on 2026-07-16'
 
         $script:defaultConfig.version | Should -Be 'v0.2.5'
