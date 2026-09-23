@@ -6,7 +6,7 @@
     "name": "Copilot Readiness Assessment Scanner",
     "binding": "template"
   },
-  "reviewedOn": "2026-07-13",
+  "reviewedOn": "2026-09-22",
   "scope": {
     "cloud": "m365-us-commercial",
     "usCommercialOnly": true
@@ -39,7 +39,7 @@
       "sourceType": "learn-doc",
       "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-enablement-resources",
       "lifecycleState": "generally-available",
-      "verifiedOn": "2026-07-13",
+      "verifiedOn": "2026-09-22",
       "disposition": "supported"
     },
     {
@@ -65,7 +65,7 @@
       "sourceType": "learn-doc",
       "sourceUrl": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-page",
       "lifecycleState": "generally-available",
-      "verifiedOn": "2026-07-13",
+      "verifiedOn": "2026-09-22",
       "disposition": "supported"
     },
     {
