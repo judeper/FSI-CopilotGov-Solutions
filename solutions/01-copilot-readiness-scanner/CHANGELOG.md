@@ -4,6 +4,10 @@ All notable changes to this solution are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Updated current-source terminology from `Microsoft 365 Copilot Optimization Assessment` to `Microsoft Copilot Optimization Assessment`, and from `Copilot Control System` to `Copilot controls`, to match current Microsoft Learn wording.
+
 ## [v0.2.4] — 2026-07-15 — Current-source review and accepted lab validation
 
 ### Added

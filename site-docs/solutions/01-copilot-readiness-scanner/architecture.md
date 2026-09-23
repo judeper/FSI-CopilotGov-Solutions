@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Copilot Readiness Assessment Scanner is a PowerShell-first solution that documents how to collect readiness signals from six Microsoft 365 governance domains, applies a financial services weighting model, and exports structured artifacts for Power BI reporting and evidence retention. The architecture aligns to Microsoft 365 Copilot readiness guidance, including the Microsoft 365 Copilot Optimization Assessment, while remaining intentionally modular so customer teams can replace the repository's representative sample logic with live tenant connectors, adjust score thresholds, and add new regulatory evidence outputs without changing the repository-wide contracts.
+The Copilot Readiness Assessment Scanner is a PowerShell-first solution that documents how to collect readiness signals from six Microsoft 365 governance domains, applies a financial services weighting model, and exports structured artifacts for Power BI reporting and evidence retention. The architecture aligns to Microsoft 365 Copilot readiness guidance, including the Microsoft Copilot Optimization Assessment, while remaining intentionally modular so customer teams can replace the repository's representative sample logic with live tenant connectors, adjust score thresholds, and add new regulatory evidence outputs without changing the repository-wide contracts.
 
 ## Component Diagram
 
