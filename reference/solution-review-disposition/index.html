@@ -1,0 +1,2440 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Governance solution scaffolds and documentation patterns for Microsoft 365 Copilot in financial services">
+      
+      
+      
+        <link rel="canonical" href="https://judeper.github.io/FSI-CopilotGov-Solutions/reference/solution-review-disposition/">
+      
+      
+        <link rel="prev" href="../lab-validation-contract/">
+      
+      
+        <link rel="next" href="../runtime-hardening-audit/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Solution Review Disposition - FSI Copilot Governance Solutions</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#solution-review-disposition-record" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-header__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FSI Copilot Governance Solutions
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Solution Review Disposition
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operational-handbook/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../solutions/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Solutions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/managed-identity-standard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Disclaimer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="FSI Copilot Governance Solutions" class="md-nav__button md-logo" aria-label="FSI Copilot Governance Solutions" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    FSI Copilot Governance Solutions
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/judeper/FSI-CopilotGov-Solutions" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    judeper/FSI-CopilotGov-Solutions
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../getting-started/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../operational-handbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../solutions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solutions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/managed-identity-standard/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../project-handoff/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Handoff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-classification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Classification Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examination-readiness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examination Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shared-modules-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Modules Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-validation-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab Validation Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution Review Disposition
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution Review Disposition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scope-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disposition-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disposition Vocabulary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#program-level-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Program-Level Findings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Program-Level Findings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#f-1-shared-lab-test-module-forced-an-n-way-conflict-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-1 — Shared lab test module forced an N-way conflict — FIXED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-2-branch-edits-silently-dropped-accepted-solution-coverage-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-2 — Branch edits silently dropped accepted-solution coverage — FIXED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-3-stale-solutionsjson-snapshots-would-revert-released-versions-blocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-3 — Stale solutions.json snapshots would revert released versions — BLOCKED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-4-legal-or-compliance-escalation-none-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-4 — Legal or compliance escalation — none identified
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-validation-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Validation Evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-contract-verification-all-23-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Contract Verification — All 23 Solutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pull-request-backlog-disposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pull Request Backlog Disposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-policy-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Policy Assessment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-next-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Next Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-hardening-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-hardening-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime Hardening Findings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disclaimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scope-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disposition-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disposition Vocabulary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#program-level-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Program-Level Findings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Program-Level Findings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#f-1-shared-lab-test-module-forced-an-n-way-conflict-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-1 — Shared lab test module forced an N-way conflict — FIXED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-2-branch-edits-silently-dropped-accepted-solution-coverage-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-2 — Branch edits silently dropped accepted-solution coverage — FIXED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-3-stale-solutionsjson-snapshots-would-revert-released-versions-blocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-3 — Stale solutions.json snapshots would revert released versions — BLOCKED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-4-legal-or-compliance-escalation-none-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F-4 — Legal or compliance escalation — none identified
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-validation-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Validation Evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-contract-verification-all-23-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Contract Verification — All 23 Solutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pull-request-backlog-disposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pull Request Backlog Disposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-policy-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Policy Assessment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-next-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Next Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="solution-review-disposition-record">Solution Review Disposition Record<a class="headerlink" href="#solution-review-disposition-record" title="Permanent link">&para;</a></h1>
+<p>Authoritative disposition record for the FSI-CopilotGov-Solutions 23-solution and
+PR-backlog review. Every reviewed item carries an explicit disposition, the evidence
+that supports it, and the rationale for the change or non-change.</p>
+<blockquote>
+<p><strong>Cloud scope.</strong> This content targets US commercial-cloud Microsoft 365 only. See the
+<a href="../../disclaimer/">Disclaimer</a>.</p>
+<p>⚠️ <strong>Documentation-first repository.</strong> Scripts and lab contracts use representative
+sample data and do not connect to live Microsoft 365 services in their repository form.
+See the <a href="../../documentation-vs-runnable-assets-guide/">Documentation vs Runnable Assets Guide</a>.</p>
+</blockquote>
+<p>Read the <a href="../../project-handoff/">Project Handoff</a> for the durable phase state, the
+lab-execution blocker, and the resume sequence. This page records the review outcome;
+the handoff records where the program stands.</p>
+<h2 id="scope-boundaries">Scope Boundaries<a class="headerlink" href="#scope-boundaries" title="Permanent link">&para;</a></h2>
+<p>This record does <strong>not</strong>:</p>
+<ul>
+<li>accept, replace, or substitute for attended live-lab evidence;</li>
+<li>merge, rebase, or approve any review pull request;</li>
+<li>assert implemented control state for any solution lacking accepted lab evidence;</li>
+<li>modify any solution's reviewed content, version, or control mappings;</li>
+<li>execute browser automation or connect to a Microsoft 365 tenant.</li>
+</ul>
+<h2 id="disposition-vocabulary">Disposition Vocabulary<a class="headerlink" href="#disposition-vocabulary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Disposition</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PASS</code></td>
+<td>Verified against repository validators or accepted evidence; no change required.</td>
+</tr>
+<tr>
+<td><code>FIXED</code></td>
+<td>A defect was found and remediated in this repository, with validator evidence.</td>
+</tr>
+<tr>
+<td><code>BLOCKED</code></td>
+<td>Verification cannot complete here; the blocking gate and its owner are named.</td>
+</tr>
+<tr>
+<td><code>LEGAL-REVIEW</code></td>
+<td>Requires legal or compliance judgment before it can be dispositioned.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="review-baseline">Review Baseline<a class="headerlink" href="#review-baseline" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review date</td>
+<td>2026-07-25</td>
+</tr>
+<tr>
+<td>Repository baseline</td>
+<td><code>4a4d3e2766cf3305f2d4b8f7e80369612aeb685c</code> (issue baseline)</td>
+</tr>
+<tr>
+<td>Reviewed <code>main</code></td>
+<td><code>d1620f6</code></td>
+</tr>
+<tr>
+<td>Solutions reviewed</td>
+<td>23</td>
+</tr>
+<tr>
+<td>Draft review pull requests reviewed</td>
+<td>21 (#320–#340)</td>
+</tr>
+<tr>
+<td>Deterministic validators run on <code>main</code></td>
+<td>14 of 14 <code>PASS</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="program-level-findings">Program-Level Findings<a class="headerlink" href="#program-level-findings" title="Permanent link">&para;</a></h2>
+<h3 id="f-1-shared-lab-test-module-forced-an-n-way-conflict-fixed">F-1 — Shared lab test module forced an N-way conflict — <code>FIXED</code><a class="headerlink" href="#f-1-shared-lab-test-module-forced-an-n-way-conflict-fixed" title="Permanent link">&para;</a></h3>
+<p><strong>Observed.</strong> 20 of the 21 draft review pull requests reported <code>CONFLICTING</code>. A
+<code>git merge-tree</code> pass against <code>main</code> showed a single shared conflict path in every
+case: <code>scripts/test_lab_validation_contracts.py</code>. Pull requests #330 and #335 carried
+additional metadata conflicts (see F-3).</p>
+<p><strong>Cause.</strong> The module asserted contract coverage through hardcoded per-solution
+assertions. Adding a reviewed solution therefore required editing the same region of
+the same file on every review branch, which guaranteed a conflict for each branch
+after the first.</p>
+<p><strong>Remediation.</strong> The module now derives coverage from the filesystem by discovering
+<code>solutions/*/lab/*.lab.json</code>. Reviewed solutions no longer require an edit to the
+shared module, so the conflict source is removed at its origin. A guard test fails if
+discovery returns nothing, so an empty result cannot make the suite vacuously pass.</p>
+<p><strong>Validation.</strong> <code>python scripts/test_lab_validation_contracts.py</code> — 12 tests, exit 0.</p>
+<h3 id="f-2-branch-edits-silently-dropped-accepted-solution-coverage-fixed">F-2 — Branch edits silently dropped accepted-solution coverage — <code>FIXED</code><a class="headerlink" href="#f-2-branch-edits-silently-dropped-accepted-solution-coverage-fixed" title="Permanent link">&para;</a></h3>
+<p><strong>Observed.</strong> Each review branch replaced the Solution 01 and Solution 02 contract
+assertions with an assertion for its own solution. Merging any single branch would
+have removed test coverage for the two solutions that already hold accepted lab
+evidence, without any validator reporting the loss.</p>
+<p><strong>Cause.</strong> Same root cause as F-1: coverage was enumerated by hand rather than
+derived.</p>
+<p><strong>Remediation.</strong> Coverage is now derived, so it grows as contracts land and cannot be
+narrowed by a branch edit.</p>
+<p><strong>Validation.</strong> In the test-merge pass below, every resolved merge reported
+<code>Lab contract validation passed: 3 file(s) checked</code> — Solutions 01 and 02 retained
+alongside the branch's own contract.</p>
+<h3 id="f-3-stale-solutionsjson-snapshots-would-revert-released-versions-blocked">F-3 — Stale <code>solutions.json</code> snapshots would revert released versions — <code>BLOCKED</code><a class="headerlink" href="#f-3-stale-solutionsjson-snapshots-would-revert-released-versions-blocked" title="Permanent link">&para;</a></h3>
+<p><strong>Observed.</strong> Pull request #330 and pull request #335 each carry a <code>solutions.json</code>
+regenerated before Solutions 01 and 02 were released. Both branches record Solution 01
+at <code>0.2.3</code> and Solution 02 at <code>0.2.4</code>, while <code>main</code> records the released <code>0.2.4</code> and
+<code>0.2.5</code>. Pull request #330 additionally conflicts on <code>solutions-graph.json</code>.</p>
+<p><strong>Impact.</strong> Accepting either branch snapshot wholesale would revert the released
+version metadata for two solutions that hold accepted lab evidence.</p>
+<p><strong>Resolution rule (for the branch owner).</strong> Do not accept the branch snapshot
+wholesale. Regenerate <code>solutions.json</code> and <code>solutions-graph.json</code> from <code>main</code> and
+reapply only the branch's own solution entry — Solution 08 <code>0.1.4</code> for #330, and the
+Solution 21 summary rewrite for #335. This is consistent with the Solution 08 version
+note in the <a href="../../project-handoff/">Project Handoff</a>.</p>
+<p><strong>Why <code>BLOCKED</code> here.</strong> The correction belongs on the review branches, which are owned
+by the serial review program and remain gated on lab evidence. Changing them from this
+review would modify reviewed content outside this record's scope.</p>
+<h3 id="f-4-legal-or-compliance-escalation-none-identified">F-4 — Legal or compliance escalation — none identified<a class="headerlink" href="#f-4-legal-or-compliance-escalation-none-identified" title="Permanent link">&para;</a></h3>
+<p>No item in this review required legal or compliance judgment, so no item carries a
+<code>LEGAL-REVIEW</code> disposition. Regulatory naming and cautious-language checks passed
+across all forward-facing files (<code>validate-documentation.py</code>, 379 markdown files;
+<code>verify_commercial_scope.py</code>, 489 forward-facing files).</p>
+<h2 id="repository-validation-evidence">Repository Validation Evidence<a class="headerlink" href="#repository-validation-evidence" title="Permanent link">&para;</a></h2>
+<p>Run against the reviewed <code>main</code> and re-run against the change in this record.</p>
+<table>
+<thead>
+<tr>
+<th>Validator</th>
+<th>Result</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scripts/test_docs_protection.py</code></td>
+<td><code>PASS</code></td>
+<td>5 tests</td>
+</tr>
+<tr>
+<td><code>scripts/build-docs.py</code></td>
+<td><code>PASS</code></td>
+<td>Documentation build inputs refreshed</td>
+</tr>
+<tr>
+<td><code>scripts/validate-contracts.py</code></td>
+<td><code>PASS</code></td>
+<td>Contract validation passed</td>
+</tr>
+<tr>
+<td><code>scripts/validate-solutions.py</code></td>
+<td><code>PASS</code></td>
+<td>23 solutions validated</td>
+</tr>
+<tr>
+<td><code>scripts/validate-documentation.py</code></td>
+<td><code>PASS</code></td>
+<td>379 markdown files checked</td>
+</tr>
+<tr>
+<td><code>scripts/validate_solutions_json.py</code></td>
+<td><code>PASS</code></td>
+<td>23 solutions validated</td>
+</tr>
+<tr>
+<td><code>scripts/validate_solutions_graph.py</code></td>
+<td><code>PASS</code></td>
+<td>23 solutions; 56 framework controls referenced</td>
+</tr>
+<tr>
+<td><code>scripts/validate_data_classification.py</code></td>
+<td><code>PASS</code></td>
+<td>Matrix validation passed</td>
+</tr>
+<tr>
+<td><code>scripts/verify_readme_counts.py</code></td>
+<td><code>PASS</code></td>
+<td>23 solutions; 58 controls; 243 playbooks</td>
+</tr>
+<tr>
+<td><code>scripts/verify_commercial_scope.py</code></td>
+<td><code>PASS</code></td>
+<td>489 forward-facing files; commercial-cloud scope clean</td>
+</tr>
+<tr>
+<td><code>scripts/validate-lab-contracts.py</code></td>
+<td><code>PASS</code></td>
+<td>Repository contracts validated</td>
+</tr>
+<tr>
+<td><code>scripts/validate-lab-result.py</code></td>
+<td><code>PASS</code></td>
+<td>0 results present; zero-result case allowed</td>
+</tr>
+<tr>
+<td><code>scripts/test_lab_validation_contracts.py</code></td>
+<td><code>PASS</code></td>
+<td>12 tests</td>
+</tr>
+<tr>
+<td><code>python -m mkdocs build --strict</code></td>
+<td><code>PASS</code></td>
+<td>Exit 0</td>
+</tr>
+<tr>
+<td>PowerShell parse check</td>
+<td><code>PASS</code></td>
+<td>All <code>*.ps1</code> parse without error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lab-contract-verification-all-23-solutions">Lab Contract Verification — All 23 Solutions<a class="headerlink" href="#lab-contract-verification-all-23-solutions" title="Permanent link">&para;</a></h2>
+<p>Every solution's <code>lab/&lt;solution&gt;.lab.json</code> was extracted from its pull request head and
+validated with the validator on <code>main</code> (<code>scripts/validate-lab-contracts.py</code>).</p>
+<p><strong>Result: 23 of 23 contracts valid.</strong></p>
+<p>Invariants verified across all 23 contracts:</p>
+<table>
+<thead>
+<tr>
+<th>Invariant</th>
+<th>Expected</th>
+<th>Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schemaVersion</code></td>
+<td><code>1.0.0</code></td>
+<td><code>1.0.0</code> in all 23</td>
+</tr>
+<tr>
+<td><code>mutations</code></td>
+<td>empty (read-only first cycle)</td>
+<td><code>0</code> in all 23</td>
+</tr>
+<tr>
+<td>Step <code>mutationRef</code></td>
+<td>none</td>
+<td><code>0</code> in all 23</td>
+</tr>
+<tr>
+<td><code>scope.cloud</code></td>
+<td><code>m365-us-commercial</code></td>
+<td>all 23</td>
+</tr>
+<tr>
+<td><code>scope.usCommercialOnly</code></td>
+<td><code>true</code></td>
+<td>all 23</td>
+</tr>
+<tr>
+<td><code>prohibitedClouds</code></td>
+<td>omitted (commercial-only)</td>
+<td>omitted in all 23</td>
+</tr>
+<tr>
+<td><code>execution.phases</code></td>
+<td>4</td>
+<td><code>4</code> in all 23</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Sol</th>
+<th>Solution</th>
+<th>PR</th>
+<th>Contract</th>
+<th>Steps</th>
+<th>Source claims</th>
+<th>Disposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>Copilot Readiness Assessment Scanner</td>
+<td>merged</td>
+<td>valid</td>
+<td>9</td>
+<td>8</td>
+<td><code>PASS</code></td>
+</tr>
+<tr>
+<td>02</td>
+<td>Oversharing Risk Assessment and Remediation</td>
+<td>merged</td>
+<td>valid</td>
+<td>8</td>
+<td>5</td>
+<td><code>PASS</code></td>
+</tr>
+<tr>
+<td>03</td>
+<td>Sensitivity Label Coverage Auditor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/326">#326</a></td>
+<td>valid</td>
+<td>8</td>
+<td>6</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>04</td>
+<td>FINRA Supervision Workflow for Copilot</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/331">#331</a></td>
+<td>valid</td>
+<td>9</td>
+<td>5</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>05</td>
+<td>DLP Policy Governance for Copilot</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/327">#327</a></td>
+<td>valid</td>
+<td>9</td>
+<td>10</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>06</td>
+<td>Copilot Interaction Audit Trail Manager</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/323">#323</a></td>
+<td>valid</td>
+<td>8</td>
+<td>7</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>07</td>
+<td>Conditional Access Policy Automation for Copilot</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/328">#328</a></td>
+<td>valid</td>
+<td>9</td>
+<td>5</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>08</td>
+<td>License Governance and ROI Tracker</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/330">#330</a></td>
+<td>valid</td>
+<td>10</td>
+<td>6</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>09</td>
+<td>Copilot Feature Management Controller</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/333">#333</a></td>
+<td>valid</td>
+<td>11</td>
+<td>7</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Copilot Connector and Plugin Governance</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/334">#334</a></td>
+<td>valid</td>
+<td>12</td>
+<td>9</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Risk-Tiered Rollout Automation</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/329">#329</a></td>
+<td>valid</td>
+<td>8</td>
+<td>6</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Regulatory Compliance Dashboard</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/340">#340</a></td>
+<td>valid</td>
+<td>8</td>
+<td>6</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td>DORA Operational Resilience Monitor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/339">#339</a></td>
+<td>valid</td>
+<td>11</td>
+<td>5</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td>Communication Compliance Configurator</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/332">#332</a></td>
+<td>valid</td>
+<td>12</td>
+<td>8</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td>Copilot Pages and Notebooks Compliance Gap Monitor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/324">#324</a></td>
+<td>valid</td>
+<td>7</td>
+<td>4</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td>Item-Level Oversharing Scanner</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320">#320</a></td>
+<td>valid</td>
+<td>7</td>
+<td>4</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>17</td>
+<td>SharePoint Permissions Drift Detection</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321">#321</a></td>
+<td>valid</td>
+<td>7</td>
+<td>3</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>18</td>
+<td>Entra Access Reviews Automation</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/322">#322</a></td>
+<td>valid</td>
+<td>7</td>
+<td>3</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>19</td>
+<td>Copilot Tuning Governance</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/337">#337</a></td>
+<td>valid</td>
+<td>7</td>
+<td>5</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td>Generative AI Model Governance Monitor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/338">#338</a></td>
+<td>valid</td>
+<td>12</td>
+<td>8</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>21</td>
+<td>Cross-Tenant Agent Federation Auditor</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/335">#335</a></td>
+<td>valid</td>
+<td>11</td>
+<td>7</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>22</td>
+<td>Pages and Notebooks Retention Tracker</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/325">#325</a></td>
+<td>valid</td>
+<td>8</td>
+<td>5</td>
+<td><code>BLOCKED</code></td>
+</tr>
+<tr>
+<td>23</td>
+<td>Copilot Studio Agent Lifecycle Tracker</td>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/336">#336</a></td>
+<td>valid</td>
+<td>11</td>
+<td>6</td>
+<td><code>BLOCKED</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Blocking gate for Solutions 03–23.</strong> Accepted attended live-lab evidence does not yet
+exist. This repository cannot produce it: it stays documentation-first, and Playwright
+execution and evidence capture are owned by the separate <code>studio-video-factory</code>
+executor lane. Solution 16 holds an initial <code>PARTIAL</code> result that is explicitly not
+accepted. No solution in this table without accepted evidence claims implemented
+control state.</p>
+<p><strong>Control-mapping note.</strong> Contracts for Solutions 20, 21, 22, and 23 omit controls
+<code>3.8a</code>, <code>2.17</code>, <code>3.14</code>, and <code>4.14</code> from machine-checked arrays because those IDs are
+not yet canonical upstream. This matches the Metadata Gaps table in the
+<a href="../../project-handoff/">Project Handoff</a> and keeps validation deterministic.</p>
+<h2 id="pull-request-backlog-disposition">Pull Request Backlog Disposition<a class="headerlink" href="#pull-request-backlog-disposition" title="Permanent link">&para;</a></h2>
+<p>Each pull request was test-merged against the remediated <code>main</code>. Where the shared lab
+test module conflicted, it was resolved by the documented rule — take <code>main</code>'s
+discovery-driven module and drop the branch's edit, which is now redundant. The full
+lab test suite and the contract validator were then run on the merged tree.</p>
+<p><strong>Resolution rule for <code>scripts/test_lab_validation_contracts.py</code>:</strong> take <code>main</code>'s
+version. The branch edit only existed to register that branch's contract, and
+discovery now performs that registration automatically.</p>
+<table>
+<thead>
+<tr>
+<th>PR</th>
+<th>Sol</th>
+<th>Pre-fix merge state</th>
+<th>Post-fix test-merge</th>
+<th>Suite on merged tree</th>
+<th>Contracts seen</th>
+<th>Disposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/320">#320</a></td>
+<td>16</td>
+<td>Mergeable</td>
+<td>Clean</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/321">#321</a></td>
+<td>17</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/322">#322</a></td>
+<td>18</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/323">#323</a></td>
+<td>06</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/324">#324</a></td>
+<td>15</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/325">#325</a></td>
+<td>22</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/326">#326</a></td>
+<td>03</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/327">#327</a></td>
+<td>05</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/328">#328</a></td>
+<td>07</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/329">#329</a></td>
+<td>11</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/330">#330</a></td>
+<td>08</td>
+<td>Conflicting</td>
+<td>Residual: <code>solutions.json</code>, <code>solutions-graph.json</code></td>
+<td>not run</td>
+<td>—</td>
+<td><code>BLOCKED</code> on F-3 and lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/331">#331</a></td>
+<td>04</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/332">#332</a></td>
+<td>14</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/333">#333</a></td>
+<td>09</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/334">#334</a></td>
+<td>10</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/335">#335</a></td>
+<td>21</td>
+<td>Conflicting</td>
+<td>Residual: <code>solutions.json</code></td>
+<td>not run</td>
+<td>—</td>
+<td><code>BLOCKED</code> on F-3 and lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/336">#336</a></td>
+<td>23</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/337">#337</a></td>
+<td>19</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/338">#338</a></td>
+<td>20</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/339">#339</a></td>
+<td>13</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+<tr>
+<td><a href="https://github.com/judeper/FSI-CopilotGov-Solutions/pull/340">#340</a></td>
+<td>12</td>
+<td>Conflicting</td>
+<td>Resolved by rule</td>
+<td><code>PASS</code></td>
+<td>3</td>
+<td><code>BLOCKED</code> on lab evidence</td>
+</tr>
+</tbody>
+</table>
+<p><code>Contracts seen</code> is the number of lab contracts the validator discovered on the merged
+tree: Solutions 01 and 02 plus the branch's own contract. That count is the direct
+evidence that F-2 is remediated — no branch narrows accepted-solution coverage.</p>
+<p><strong>Structural conflict repair: 19 of 20 conflicting pull requests are resolved by a
+single documented rule. The remaining 2 need the F-3 metadata correction on their own
+branches.</strong></p>
+<h2 id="merge-policy-assessment">Merge Policy Assessment<a class="headerlink" href="#merge-policy-assessment" title="Permanent link">&para;</a></h2>
+<p>The merge policy for this program requires repository validation, source grounding,
+exact-head independent approval, a clean merge state, and accepted live-lab evidence.</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository validation</td>
+<td>Satisfied on <code>main</code> and on this change (15 of 15 checks).</td>
+</tr>
+<tr>
+<td>Structural merge state</td>
+<td>Repaired for 19 of 20 conflicting pull requests; 2 need F-3.</td>
+</tr>
+<tr>
+<td>Contract schema validity</td>
+<td>Satisfied for all 23 solutions.</td>
+</tr>
+<tr>
+<td>Accepted live-lab evidence</td>
+<td><strong>Not satisfied</strong> for Solutions 03–23.</td>
+</tr>
+<tr>
+<td>Exact-head independent approval</td>
+<td>Not applicable while evidence is outstanding.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusion: no review pull request is eligible for merge.</strong> All 21 remain correctly
+draft. This record changes no pull request state, approves nothing, and merges nothing.</p>
+<h2 id="recommended-next-actions">Recommended Next Actions<a class="headerlink" href="#recommended-next-actions" title="Permanent link">&para;</a></h2>
+<p>Ordered, and consistent with the resume sequence in the
+<a href="../../project-handoff/">Project Handoff</a>.</p>
+<ol>
+<li>Land the F-1 and F-2 remediation on <code>main</code> so the shared conflict source is gone
+   before any branch is rebased.</li>
+<li>Rebase the 19 rule-resolvable pull requests onto the remediated <code>main</code>, taking
+   <code>main</code>'s <code>scripts/test_lab_validation_contracts.py</code> and dropping the branch edit.</li>
+<li>Apply the F-3 correction to #330 and #335: regenerate <code>solutions.json</code> and
+   <code>solutions-graph.json</code> from <code>main</code> and reapply only that branch's own entry.</li>
+<li>Resolve the Solution 16 account-picker blocker, then continue the serial lab program
+   one solution at a time. Never auto-select an identity.</li>
+<li>Merge only after accepted evidence exists for that solution, one pull request at a
+   time, in the documented serial order.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../lab-validation-contract/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab Validation Contract">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab Validation Contract
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../runtime-hardening-audit/" class="md-footer__link md-footer__link--next" aria-label="Next: Runtime Hardening Audit">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Runtime Hardening Audit
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2026 FSI Copilot Governance Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
