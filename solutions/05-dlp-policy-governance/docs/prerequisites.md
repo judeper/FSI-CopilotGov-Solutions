@@ -3,8 +3,10 @@
 ## Licensing
 
 - For Copilot DLP, prompt safeguards are available to users of Microsoft 365 Copilot and Copilot Chat; restricting Copilot from processing files and emails requires an eligible Microsoft 365 E5, Office 365 E5, or Microsoft Purview suite plan
-- Microsoft 365 Copilot licensing for the users and Copilot experiences being reviewed
-- Power Automate Premium if the exception approval workflow is deployed in production
+- Confirm entitlement for the Copilot experiences being reviewed; do not require a Microsoft 365 Copilot add-on solely for Copilot Chat prompt safeguards
+- Power Automate licensing for the connectors used by the exception workflow; the standard Approvals connector does not itself require Premium. Confirm additional licensing if the design uses premium connectors.
+
+Sources: [Microsoft Purview service description](https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description#microsoft-purview-data-loss-prevention-dlp-for-microsoft-copilot) and [Power Automate approvals](https://learn.microsoft.com/power-automate/get-started-approvals).
 
 ## Roles
 
@@ -24,13 +26,15 @@ For least-privilege operations, keep Security Reader-style access limited to rea
 
 Power Automate deployment can also require a Power Platform environment admin or flow owner depending on tenant design.
 
+Approvals require a Dataverse database. In a non-default environment, the first approval flow's runner needs an environment administrator role for automatic database provisioning; later approval-flow authors do not need that elevated role. See [approvals prerequisites](https://learn.microsoft.com/power-automate/get-started-approvals#prerequisites).
+
 ## Dependency
 
 - `03-sensitivity-label-auditor` must be completed before DLP baseline approval so the Copilot label inventory is current.
 
 ## PowerShell modules
 
-Install the required modules in PowerShell 7:
+The repository scripts run locally in PowerShell 7 without service connections. For optional tenant-bound collection, install the modules:
 
 ```powershell
 Install-Module ExchangeOnlineManagement -Scope CurrentUser
@@ -44,15 +48,17 @@ Connect to Microsoft Graph with delegated permissions that allow sensitivity-lab
 - `InformationProtectionPolicy.Read` — returns sensitivity-label policy metadata
 - `Policy.Read.All` — returns Entra ID policy metadata
 
-> **Note:** Microsoft Graph does not expose Purview DLP policy metadata. DLP policies for the Copilot location are read via Security & Compliance PowerShell (`Get-DlpCompliancePolicy` / `Get-DlpComplianceRule`).
+> **Note:** These Graph scopes do not return Purview DLP policy metadata. DLP policies for the Copilot location are read via Security & Compliance PowerShell (`Get-DlpCompliancePolicy` / `Get-DlpComplianceRule`). `InformationProtectionPolicy.Read` is delegated access on behalf of the signed-in user, not an organization-wide application permission. See the [Graph permissions reference](https://learn.microsoft.com/graph/permissions-reference#informationprotectionpolicyread).
 
 ## Service connections
 
-The solution expects read-only access to:
+Optional tenant-bound collection uses read-only access to:
 
-- Exchange Online and Security and Compliance PowerShell for Purview DLP policy metadata (`Get-DlpCompliancePolicy`, `Get-DlpComplianceRule`)
+- Security & Compliance PowerShell for Purview DLP policy metadata (`Get-DlpCompliancePolicy`, `Get-DlpComplianceRule`), connected with `Connect-IPPSSession` and appropriate RBAC permissions; a separate Exchange Online session is not required
 - Microsoft Graph for sensitivity-label and Entra ID policy metadata
 - Power Automate connections for the exception approval workflow when deployed
+
+See [Connect to Security & Compliance PowerShell](https://learn.microsoft.com/powershell/exchange/connect-to-scc-powershell) and the [Copilot DLP permissions](https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about#permissions). Prefer the least-privileged supported role for the operation.
 
 ## Operational prerequisites
 

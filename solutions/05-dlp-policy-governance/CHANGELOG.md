@@ -6,6 +6,12 @@ The format is based on Keep a Changelog and this solution uses semantic versioni
 
 ## [Unreleased]
 
+### Changed
+
+- Re-verified Copilot DLP technical claims against live Microsoft Learn sources on 2026-10-15; retained v0.2.3 and the existing preview/GA capability metadata.
+- Corrected approvals licensing (standard Approvals does not itself require Premium) and the DLP metadata connection prerequisite (`Connect-IPPSSession`, not a mandatory separate Exchange Online session).
+- Propagated Custom-template, rule separation, citation, upload, propagation, and file-reopen boundaries to deployment, architecture, troubleshooting, delivery checks, and evidence instructions. Regulatory wording and mappings are unchanged.
+
 ### Fixed
 
 - Re-verified Microsoft Purview DLP for Microsoft 365 Copilot and Copilot Chat on 2026-08-09.
