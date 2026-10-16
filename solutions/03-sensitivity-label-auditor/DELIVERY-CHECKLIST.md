@@ -16,6 +16,8 @@
 - [ ] Confirm Microsoft Purview Information Protection licensing is available for the target tenant.
 - [ ] Confirm Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) or equivalent licensing is approved for the solution scope.
 - [ ] Confirm required admin roles are assigned to the deployment and evidence export operators.
+- [ ] Verify feature-specific labeling entitlements, base service plans, and all benefiting users against the current Purview service description; manual-labeling access alone does not establish automatic-labeling eligibility.
+- [ ] Use read-only label-review roles for taxonomy inspection and observe label groups without initiating irreversible migration.
 
 ## Dependency Readiness
 
@@ -39,13 +41,15 @@
 - [ ] Run the initial label coverage scan with `scripts\Monitor-Compliance.ps1`.
 - [ ] Review the `label-gap-findings` output with records management and data owners.
 - [ ] Plan the remediation wave with data owners before any bulk labeling activity.
-- [ ] Respect the auto-labeling cap of 100,000 files per day per tenant when scheduling remediation.
+- [ ] Confirm the applicable auto-labeling limit before scheduling remediation: the dedicated article currently documents 500,000 files per tenant per day, while the linked SharePoint/OneDrive PDF guidance still states 100,000. Neither is a guaranteed processing rate or Graph assignment quota.
+- [ ] Keep any Graph assignment extension separate from monitoring; verify protected access, metered API setup, write permissions, and completed asynchronous operation status before declaring assignment complete.
 - [ ] Confirm Exchange mailboxes that require enhanced coverage are identified before production rollout.
 
 ## Evidence and Audit Readiness
 
 - [ ] Run `scripts\Export-Evidence.ps1` and confirm all JSON artifacts have companion `.sha256` files.
 - [ ] Verify the evidence package includes `label-coverage-report`, `label-gap-findings`, and `remediation-manifest`.
+- [ ] Mark sample exports as sample data; for future tenant evidence, distinguish successful label-absence checks from unsupported/error/unknown cases and do not equate label coverage with protection or Copilot exclusion.
 - [ ] Confirm the control status mapping matches 1.5, 2.2, 3.11, and 3.12.
 - [ ] Confirm regulated tier evidence retention is configured for seven years where required.
 - [ ] Confirm examiner-ready evidence storage assumptions are documented for regulated deployments.
