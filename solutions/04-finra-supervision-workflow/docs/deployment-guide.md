@@ -112,7 +112,7 @@ Create or update roles so that:
 - Governance administrators can create, read, update, and delete configuration rows.
 - Supervisory principals can read queue rows, update rows available through the approved ownership/sharing model, and create log rows. Verify the assignment field and actual access agree.
 - Evidence analysts can read all three tables but cannot modify them.
-- Service principals used by flows can create queue and log rows and update queue rows.
+- Service principals used by flows can create queue and log rows, update queue rows, and hold `Assign` and/or `Share` privileges on `fsi_cg_fsw_queue` when user/team-owned routing transfers row ownership or shares records with the assigned reviewer.
 
 ## 5. Apply tier configuration
 

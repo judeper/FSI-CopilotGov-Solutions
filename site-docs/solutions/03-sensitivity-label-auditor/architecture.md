@@ -2,7 +2,7 @@
 
 ## Overview
 
-Sensitivity Label Coverage Auditor is a monitoring-first solution that measures how much Copilot-accessible content is protected by sensitivity labels. It focuses on three workloads that commonly hold regulated FSI data: SharePoint, OneDrive, and Exchange. The solution collects label coverage data, identifies unlabeled gaps, ranks remediation candidates, and packages evidence for audit and control review.
+Sensitivity Label Coverage Auditor provides a documentation-first model for measuring label coverage across SharePoint, OneDrive, and Exchange. Label coverage measures classification, not whether encryption or access restrictions are configured. The sample scripts model coverage data, identify unlabeled gaps, rank remediation candidates, and package sample evidence for format review.
 
 ## Text-Based Component Diagram
 
@@ -25,7 +25,7 @@ Sensitivity Label Coverage Auditor is a monitoring-first solution that measures 
                        v
 +-------------------------------------------+
 | scripts\Monitor-Compliance.ps1            |
-| - queries workload coverage sources       |
+| - models workload coverage sources        |
 | - calculates coverage metrics             |
 | - cross-references oversharing findings   |
 | - produces gap findings and manifest      |
@@ -76,7 +76,7 @@ Sensitivity Label Coverage Auditor is a monitoring-first solution that measures 
 2. `scripts\Monitor-Compliance.ps1` is designed to query approved coverage sources for:
    - SharePoint and OneDrive drive items through `driveItem: extractSensitivityLabels`, using returned `sensitivityLabelAssignment` values for supported file types and documenting locked, encrypted, or unsupported files as limitations
    - Exchange message labeling evidence from a tenant-approved Purview audit/activity export, documented Internet message headers, or documented extended-property collection pattern because Microsoft Graph message resources do not expose a first-class sensitivity-label field
-   - Sensitivity label definitions needed for tier mapping through Microsoft Graph beta `/security/informationProtection/sensitivityLabels`, with beta change-management caveats
+   - Sensitivity label definitions needed for tier mapping through Microsoft Graph beta: the organization route `/security/informationProtection/sensitivityLabels` uses application permissions; delegated lookup uses `/me/security/informationProtection/sensitivityLabels`. Microsoft does not support beta APIs in production applications.
 3. The coverage calculator converts raw counts into workload metrics:
    - labeled count
    - unlabeled count
@@ -114,6 +114,13 @@ The solution calculates the following metrics for each workload and for the over
 - **Distribution by label tier:** counts grouped into the FSI taxonomy from Tier 1 Public through Tier 5 Restricted.
 
 These metrics are summarized in `label-coverage-report` so control owners can compare current performance to target thresholds.
+
+For a future tenant-bound collector, distinguish successfully observed label absence
+from unsupported files, failed extraction, and unavailable email metadata. Record
+unknowns and the assessed population separately rather than counting unknown items
+as unlabeled. These collection checks are not implemented by the sample calculator.
+Label presence alone does not establish Copilot exclusion; permissions, configured
+encryption, DLP, and the specific Copilot experience also matter.
 
 ## Gap Prioritization
 
@@ -159,6 +166,7 @@ Both flows are documentation-first in this version. The design is intentionally 
 
 ## Operational Notes
 
-- Auto-labeling policies alone may not clear the backlog in large tenants because of the 100,000 file per tenant per day processing limit.
+- The [dedicated auto-labeling article](https://learn.microsoft.com/purview/apply-sensitivity-label-automatically) currently documents a ceiling of 500,000 automatically labeled files per tenant per day. The [SharePoint/OneDrive PDF guidance](https://learn.microsoft.com/purview/sensitivity-labels-sharepoint-onedrive-files) still states 100,000 per day; confirm the applicable limit before planning waves. This is not a guaranteed rate or a Graph assignment quota.
+- [`extractSensitivityLabels`](https://learn.microsoft.com/graph/api/driveitem-extractsensitivitylabels?view=graph-rest-1.0) can refresh service-side item metadata. Read permission does not imply zero service-side state changes; assess this behavior separately for a strictly non-mutating lab.
 - `assignSensitivityLabel` should be reserved for approved bulk remediation scenarios after business-owner review.
 - Regulated-tier deployments should store exported evidence in immutable or otherwise protected repositories aligned to the organization's recordkeeping model.
