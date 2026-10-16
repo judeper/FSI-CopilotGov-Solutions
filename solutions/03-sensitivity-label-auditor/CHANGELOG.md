@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Technical re-verification - 2026-10-15
+
+- Re-checked the README's Microsoft product claims against live Microsoft Learn and refreshed Last Verified without changing the released version or regulatory mappings.
+- Updated remediation planning to the dedicated auto-labeling article's currently documented 500,000-files-per-tenant daily ceiling, explicitly recording the conflicting 100,000 reference in SharePoint/OneDrive PDF guidance.
+- Distinguished label classification from encryption, access restriction, and actual Copilot exposure; documented unknown/error collection cases and extraction metadata-refresh behavior.
+- Clarified beta label-definition route permissions, unsupported production use, feature-specific licensing, and non-mutating taxonomy review.
+- Propagated the review into implementation, troubleshooting, checklist, and evidence guidance; retained protected and metered assignment prerequisites verified against current sources.
+
 ## [v0.2.4] — 2026-06-05 — MS Learn accuracy pass-2 correction
 
 ### Fixed

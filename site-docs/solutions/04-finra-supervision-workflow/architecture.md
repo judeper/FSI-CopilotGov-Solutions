@@ -14,6 +14,11 @@ This architecture supports compliance with supervisory review requirements by se
 
 ### Tables
 
+Use user/team ownership for queue rows that need row-level reviewer access. The
+custom `fsi_assignedprincipal` field does not grant access or reassign the row.
+Log access is an append-only security-role design, not native immutable storage.
+Review cumulative role privileges and administrator access before relying on it.
+
 | Display name | Logical name | Purpose |
 | --- | --- | --- |
 | SupervisionQueue | fsi_cg_fsw_queue | Review queue for flagged Copilot-assisted communications. |
@@ -55,13 +60,14 @@ This architecture supports compliance with supervisory review requirements by se
   - Normalizes metadata and creates queue and log entries.
 - Assignment Flow
   - Routes queue items to supervisory principals by zone and tier.
+  - Aligns actual row ownership or approved sharing/team access with the assignment field when row-scoped review is required.
   - Calculates SLA due dates using configuration rows.
 - Escalation Flow
   - Scans open queue items for warning and breach thresholds.
   - Records exception and escalation events in the log.
 - Review Complete Flow
   - Validates reviewer dispositions and final notes.
-  - Closes or escalates queue items and appends immutable log rows.
+  - Closes or escalates queue items and appends log rows under the configured access restrictions.
 
 ## Layer 3: Evidence export
 
@@ -132,5 +138,6 @@ This architecture supports compliance with supervisory review requirements by se
 
 - Queue rows are the operational system of record for review status.
 - Log rows should be append-only to preserve reviewer accountability.
+- The `immutableLogRequired` configuration flag records a requirement only; neither the flag nor a SHA-256 export hash enforces immutable Dataverse storage.
 - Configuration changes should be tightly controlled because they change supervisory coverage.
 - Evidence packaging is separate from workflow execution so firms can export evidence on demand for audits and exams.

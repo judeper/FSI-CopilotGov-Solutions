@@ -8,7 +8,7 @@ Review [Prerequisites](./prerequisites.md) before running the solution scripts. 
 
 1. Confirm Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 E5, or Office 365 E3 with the Advanced Compliance add-on covers users governed by Communication Compliance policies.
 2. Confirm the deployment operator is in the `Communication Compliance Admins` role group or has the Microsoft Entra ID `Compliance Administrator` role or Microsoft Purview portal `Compliance Administrator` role group, as appropriate.
-3. Confirm reviewers and supervisors are assigned to `Communication Compliance Analysts`, `Communication Compliance Investigators`, or other approved role groups before policy publication.
+3. Confirm reviewers and supervisors are assigned to investigation-capable role groups such as `Communication Compliance Analysts` or `Communication Compliance Investigators` and are also reviewers on the relevant policy. Global Reader alone is not investigation access. Validate supported AI-app locations and applicable billing for the Copilot surfaces handed to Solution 04. See [Copilot interaction prerequisites](https://learn.microsoft.com/purview/communication-compliance-copilot#prerequisites).
 4. Confirm the target tenant ID is available for deployment records.
 
 ## Step 2: Review and customize policy templates in `config\`

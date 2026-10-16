@@ -16,6 +16,12 @@ Documentation-first export:
 
 Live Dataverse export:
 
+Before using `-LiveExport`, discover the actual queue, log, and config
+`EntitySetName` values in the target environment and update
+`dataverseTables[].entitySetName` in `config/default-config.json`. The supplied
+plural names are examples, not proof of the deployed collection names. See
+[Query data using the Web API](https://learn.microsoft.com/power-apps/developer/data-platform/webapi/query/overview).
+
 ```powershell
 $env:DATAVERSE_ACCESS_TOKEN = '<access-token>'
 .\scripts\Export-Evidence.ps1 `
@@ -63,6 +69,13 @@ artifacts\evidence\
 - Reviewers should recalculate SHA-256 before uploading artifacts to the records repository.
 - Hash verification should be documented in the deployment or audit workpaper.
 
+The disposition log and hashes do not establish immutable storage or prove that
+reviewers cannot edit or delete Dataverse rows. Retain a separate access review
+covering reviewer/flow Create, Read, Write, Delete, relationship privileges, all
+cumulative role grants, and administrator access. The `immutableLogRequired` flag
+is configured intent, not a tested storage property. See
+[Dataverse security roles and privileges](https://learn.microsoft.com/power-platform/admin/security-roles-privileges).
+
 ## Retention schedule
 
 | Tier | Suggested evidence retention | Rationale to confirm with records management |
@@ -78,6 +91,7 @@ These defaults support FINRA Rule 3110 supervisory review evidence and FINRA Rul
 - Export output follows `config\evidence-schema.json` for package structure.
 - Documentation-first mode is suitable for design reviews and dry runs.
 - Live export mode should be used only in approved environments with authenticated Dataverse access.
+- Record policy scope (supported Copilot surfaces/item classes and selected AI-app locations), applicable billing prerequisites, policy-specific reviewer access, and the validated handoff metadata separately. A queue export does not establish comprehensive Copilot coverage or prove that alert/audit metadata includes full communication content.
 
 ## Live export security considerations
 
@@ -104,4 +118,3 @@ artifacts/evidence-live/
 ```
 
 Alternatively, always specify `-OutputPath` pointing to a directory outside the repository so that live supervisory records are never committed to source control.
-

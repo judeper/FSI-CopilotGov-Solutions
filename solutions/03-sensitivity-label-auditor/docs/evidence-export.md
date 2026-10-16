@@ -73,6 +73,28 @@ Typical contents:
 - recommended action
 - owner review notes
 
+## Product-Verification Notes
+
+The current exports contain representative sample data, not live label or
+Copilot-access observations. For a future tenant-bound collection, attach review
+notes that identify the source, supported population, successful label absence
+checks, and unknown/error cases. Do not count unsupported files or missing email
+metadata as confirmed unlabeled items. Label coverage alone does not establish
+encryption, access restriction, or whether Copilot used an item.
+
+The remediation manifest's `autoLabelingDailyCap` models the dedicated
+[auto-labeling article's](https://learn.microsoft.com/purview/apply-sensitivity-label-automatically)
+currently documented ceiling of 500,000 automatically labeled files per tenant
+per day. Record the conflicting 100,000 statement in the
+[SharePoint/OneDrive PDF guidance](https://learn.microsoft.com/purview/sensitivity-labels-sharepoint-onedrive-files)
+and verify the applicable service limit before planning live waves. This value is
+not an observed rate, a completion-time estimate, or a Graph assignment quota.
+
+For separately approved Graph assignment, protected access, metered API setup,
+and asynchronous completion evidence are distinct prerequisites; a remediation
+manifest or `202 Accepted` response does not demonstrate completed assignment.
+The scaffold does not perform this action.
+
 ## Control Status Mapping
 
 | Control | Status | Evidence interpretation |
