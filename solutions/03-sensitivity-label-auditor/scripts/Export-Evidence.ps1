@@ -239,12 +239,13 @@ $remediationManifestArtifact = [pscustomobject]@{
     }
     summary = [pscustomobject]@{
         itemCount = @($monitorResult.remediationManifest).Count
-        autoLabelingDailyCap = 100000
+        # Source: https://learn.microsoft.com/en-us/purview/apply-sensitivity-label-automatically
+        autoLabelingDailyCap = 500000
     }
     items = $monitorResult.remediationManifest
     executionConstraints = [pscustomobject]@{
-        autoLabelingDailyCap = 100000
-        notes = 'Plan remediation waves so tenant auto-labeling capacity is not exceeded.'
+        autoLabelingDailyCap = 500000
+        notes = 'This is the currently documented tenant-wide service auto-labeling ceiling, not observed throughput or a Graph assignment quota. Linked SharePoint/OneDrive PDF guidance conflicts; confirm the applicable limit before live waves.'
     }
 }
 

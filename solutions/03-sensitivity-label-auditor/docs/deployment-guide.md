@@ -18,6 +18,11 @@ The auditor depends on readiness scope from solution 01 and uses solution 02 fin
 
 ## Step 1: Review Label Taxonomy in Purview Portal
 
+In the Microsoft Purview portal, open **Solutions > Information Protection >
+Sensitivity labels** and review the existing taxonomy with approved read access.
+Observe label groups and migration availability without starting migration;
+[migration is irreversible](https://learn.microsoft.com/purview/migrate-sensitivity-label-scheme).
+
 Validate that the deployed labels match the FSI governance model:
 
 - Tier 1: Public
@@ -69,6 +74,11 @@ Expected outcome:
 - Oversharing findings are cross-referenced if solution 02 output is present.
 - Gap findings are produced for unlabeled sites, drives, and mailboxes.
 
+These outputs use representative sample data, not a live tenant assessment.
+A future collector must distinguish confirmed label absence from extraction
+errors, unsupported files, and unavailable message metadata. Label presence does
+not itself establish encryption or Copilot exclusion.
+
 ## Step 5: Review `label-gap-findings`
 
 Review the findings with compliance, records, and workload owners:
@@ -91,8 +101,9 @@ Use the manifest to separate immediate corrective action from longer-term policy
 
 Plan remediation in waves with data owners and service administrators.
 
-- Respect the Purview auto-labeling cap of 100,000 files per tenant per day.
+- The [dedicated Purview auto-labeling article](https://learn.microsoft.com/purview/apply-sensitivity-label-automatically) currently documents a ceiling of 500,000 automatically labeled files per tenant per day. The [SharePoint/OneDrive PDF guidance](https://learn.microsoft.com/purview/sensitivity-labels-sharepoint-onedrive-files) still states 100,000 per day; confirm the applicable service limit before sizing waves. Do not treat either figure as a guaranteed processing rate or Graph assignment quota.
 - Use bulk labeling only after owner review and change approval.
+- For a separately approved Graph `assignSensitivityLabel` extension, verify protected-API access, metered API setup, the correct write permission, and completed asynchronous operation status. The monitor does not perform assignment.
 - Sequence regulated repositories and mailboxes ahead of general collaboration areas.
 
 ## Step 8: Export Evidence Package
