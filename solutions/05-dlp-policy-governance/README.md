@@ -1,6 +1,6 @@
 # DLP Policy Governance for Copilot
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-08-09
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P1 | **Track:** B | **Last Verified:** 2026-10-15
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -43,6 +43,7 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 - ❌ Does not configure Adaptive Protection policies (Insider Risk Management integration with DLP is documented as a complementary capability)
 - ❌ Does not evaluate the contents of files uploaded directly into Copilot prompts; Microsoft Purview DLP for Copilot evaluates the prompt text itself for this scenario
 - ❌ Does not combine the Microsoft 365 Copilot and Copilot Chat policy location with Exchange, SharePoint, OneDrive, Teams, or endpoint DLP locations in the same policy
+- Does not model the separate external-email blocking preview or extend its baseline to Cowork; these appear in the current Microsoft documentation but are outside this scaffold's three capability identifiers
 
 > **Data classification:** See [Data Classification Matrix](../../docs/reference/data-classification.md) for residency, retention, and data-class metadata.
 
@@ -50,10 +51,10 @@ This solution supports compliance with GLBA 501(b), SEC Regulation S-P, DORA Art
 
 - Dependency `03-sensitivity-label-auditor` is complete and the latest label inventory has been reviewed
 - Licensing aligns to the current Microsoft Purview service description: prompt safeguards are available to users of Microsoft 365 Copilot and Copilot Chat, while restricting Copilot from processing files and emails requires an eligible Microsoft 365 E5, Office 365 E5, or Microsoft Purview suite plan
-- Power Automate Premium is available if the exception approval flow is deployed
+- Power Automate licensing covers the connectors used by the exception flow; the Approvals connector is standard and does not itself require Power Automate Premium
 - Policy editors use one of the current Microsoft Learn roles for Copilot DLP policy create/edit, such as Microsoft Entra AI Admin, Purview Data Security AI Admin, Purview Compliance Administrator, Purview Compliance Data Administrator, Purview Information Protection Admin, Purview Security Administrator, or Microsoft Entra Global Admin
 - Security Reader-style access is treated as read-only review only and is not sufficient for Copilot DLP policy create/edit
-- PowerShell 7, `ExchangeOnlineManagement`, and `Microsoft.Graph` are available for read-only data collection
+- PowerShell 7 is available for the local scripts; `ExchangeOnlineManagement` and `Microsoft.Graph` are needed only for optional tenant-bound read-only data collection
 
 See [docs/prerequisites.md](docs/prerequisites.md) for details.
 
@@ -66,12 +67,14 @@ This solution separates two DLP governance layers:
 
 The Copilot policy-location baseline tracks:
 
-- Sensitive information types in prompt text, including prompt-blocking behavior **(preview)** and external web-search grounding restrictions (generally available)
+- Sensitive information types in prompt text that block prompt processing **(preview)**, including internal and external searches for that prompt
 - Sensitive information types in prompt text that restrict external web search as a grounding source (generally available)
 - Sensitivity labels on supported files and emails used in Copilot response summarization
 - Scope definitions for included and excluded user groups
 - Exception handling requirements by governance tier
 - Evidence retention and notification settings needed for review
+
+The location is available only in the **Custom** policy template and does not support administrative units. Sensitive-information-type and sensitivity-label conditions require separate rules, although those rules can share one Copilot-location policy. A web-search-only restriction still permits a response using allowed internal sources; label-based blocking can leave an item visible in citations without using its content. See the [Microsoft Learn Copilot DLP guidance](https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about).
 
 ## Power Automate exception flow
 
@@ -103,7 +106,7 @@ The repository uses a documentation-first pattern for Power Automate assets. The
 ## Deployment
 
 1. Confirm that solution `03-sensitivity-label-auditor` has produced a current label inventory.
-2. Connect to Security and Compliance PowerShell and Microsoft Graph with read permissions.
+2. For optional tenant data collection, connect to Security & Compliance PowerShell with `Connect-IPPSSession`; use Microsoft Graph only for supporting label and Entra ID policy metadata. Local scaffold generation does not require service connections.
 3. Run `Deploy-Solution.ps1` to create the baseline template and deployment manifest.
 4. Configure the Power Automate exception approval flow using the documented design.
 5. Schedule `Monitor-Compliance.ps1` based on the selected tier.
@@ -139,10 +142,22 @@ See [docs/evidence-export.md](docs/evidence-export.md) for package details.
 
 ## Known limitations
 
-- Some tenants expose Purview DLP metadata in read-only form only after Exchange Online and Security and Compliance sessions are connected.
+- Purview DLP policy and rule reads use Security & Compliance PowerShell (`Get-DlpCompliancePolicy` / `Get-DlpComplianceRule`) with appropriate RBAC permissions. A separate `Connect-ExchangeOnline` session is not a prerequisite for those cmdlets.
 - The Microsoft 365 Copilot and Copilot Chat policy location disables other DLP locations for the same policy, so workload DLP policies should be represented separately.
 - DLP for Copilot does not evaluate the contents of files uploaded directly into prompts; it evaluates the typed prompt text for this scenario.
 - Sensitivity-label protection applies to supported stored or actively open file items and emails sent on or after January 1, 2025; calendar invites are not supported.
 - The Power Automate approval flow is documentation-led in this repository and still requires tenant-specific connection setup.
 - Drift results are only as current as the latest baseline and policy snapshot available to the monitoring process.
 - Prompt-text SIT blocking remains in **preview** and requires tenant rollout validation; external web-search grounding restrictions and sensitivity-label file/email blocking are generally available.
+- Policy updates can take up to four hours to appear in Copilot. In Word, Excel, and PowerPoint, label-based restrictions are evaluated at file open; reopen the file after a mid-session label change before checking enforcement.
+
+## Technical verification sources
+
+Product statements were re-checked against live Microsoft Learn documentation on **2026-10-15**. This is a documentation review, not tenant validation or a regulatory assessment.
+
+- [Copilot DLP capabilities, availability, roles, conditions, and limitations](https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about)
+- [Microsoft Purview service description: Copilot DLP licensing](https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description#microsoft-purview-data-loss-prevention-dlp-for-microsoft-copilot)
+- [Connect to Security & Compliance PowerShell](https://learn.microsoft.com/powershell/exchange/connect-to-scc-powershell)
+- [Get-DlpCompliancePolicy](https://learn.microsoft.com/powershell/module/exchangepowershell/get-dlpcompliancepolicy) and [Get-DlpComplianceRule](https://learn.microsoft.com/powershell/module/exchangepowershell/get-dlpcompliancerule)
+- [Microsoft Graph permissions reference](https://learn.microsoft.com/graph/permissions-reference)
+- [Power Automate approvals prerequisites and licensing](https://learn.microsoft.com/power-automate/get-started-approvals)

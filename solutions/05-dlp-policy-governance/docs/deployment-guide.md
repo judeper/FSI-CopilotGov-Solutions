@@ -8,6 +8,8 @@
 
 ## 2. Prepare access and modules
 
+Local scaffold generation does not require tenant connections. The following setup is for optional, separately implemented read-only collection; repository scripts do not collect live policies.
+
 Run the following from PowerShell 7 if the modules are not already installed:
 
 ```powershell
@@ -18,10 +20,23 @@ Install-Module Microsoft.Graph -Scope CurrentUser
 Connect to the required services with read permissions:
 
 ```powershell
-Connect-ExchangeOnline -ShowBanner:$false
 Connect-IPPSSession
 Connect-MgGraph -Scopes 'InformationProtectionPolicy.Read', 'Policy.Read.All'
 ```
+
+`Connect-IPPSSession` supplies the Security & Compliance cmdlets; a separate Exchange Online session is not required for `Get-DlpCompliancePolicy` or `Get-DlpComplianceRule`. Graph is only for supporting label and Entra ID policy metadata, not DLP policy reads. The generated Exchange connection stub opens both sessions for convenience, not as a DLP requirement. See [Microsoft's connection guidance](https://learn.microsoft.com/powershell/exchange/connect-to-scc-powershell).
+
+### Copilot policy review checkpoints
+
+Review existing policies read-only in the [Microsoft Purview portal](https://purview.microsoft.com), under **Data Loss Prevention** > **Policies**. Do not create or modify policies as part of this review.
+
+- Confirm the **Custom** template and **Microsoft 365 Copilot and Copilot Chat** location; other workload locations belong in separate policies. Administrative units are unsupported for the Copilot location.
+- Review **Content contains** > **Sensitive information types** with **Prevent Copilot from processing content** > **Processing prompts** (preview) or **Performing Web Searches** (generally available). Only the former blocks a response; the latter still permits allowed internal grounding.
+- Review **Content contains** > **Sensitivity labels** with **Prevent Copilot from processing content** in a separate rule from SIT conditions. Labeled items can remain in citations without contributing content.
+- Record tenant availability rather than assuming preview rollout. Alerts, notifications, and simulation mode are supported; solution-defined `Audit` / `Block` values are governance expectations, not literal portal policy-mode names.
+- For separately approved enforcement testing, allow up to four hours after policy updates and reopen Word, Excel, or PowerPoint files after mid-session label changes. Use synthetic content only; direct prompt-uploaded file contents are not evaluated by this location.
+
+Source: [Copilot DLP capabilities and boundaries](https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about).
 
 ## 3. Create the baseline snapshot
 
@@ -42,6 +57,8 @@ Expected outputs:
 - `artifacts\connection-stubs\exchange-online-connection.stub.ps1`
 
 ## 4. Configure the Power Automate exception flow
+
+The Approvals connector is standard; Premium is not required solely for approvals. Confirm licenses for any additional connectors and Dataverse database provisioning before deployment. See [approvals prerequisites and licensing](https://learn.microsoft.com/power-automate/get-started-approvals).
 
 Use the documented flow design to create an exception approval process that:
 

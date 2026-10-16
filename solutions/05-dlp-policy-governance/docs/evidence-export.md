@@ -24,6 +24,18 @@ The baseline snapshot should document:
 - Included and excluded user groups
 - Evidence retention and notification settings
 
+## Product-boundary verification evidence
+
+For a separately authorized tenant review, retain a sanitized companion review record alongside the package; these observations are not automatically produced or checked by the local scripts:
+
+- Source URL and verification date, observed capability availability, and policy mode; distinguish preview prompt blocking from generally available web-search and label-based restrictions.
+- Custom-template Copilot location, separate complementary workload policies, no administrative-unit scope, and separate SIT and sensitivity-label rules.
+- The selected action and expected outcome: web-search-only restriction permits internal grounding; prompt processing restriction blocks a response; label-based blocking can retain citations while excluding content.
+- Supported file type and email sent-date boundary (on or after January 1, 2025); calendar invites and direct prompt-uploaded file contents are not positive coverage cases.
+- If enforcement testing is separately approved, record policy-update time and file reopen state before evaluating a result; propagation can take up to four hours.
+
+Use [Microsoft's Copilot DLP guidance](https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about) as the product reference. Use synthetic content and redact tenant identifiers and PII. Local baseline comparisons and file hashes alone are not proof of tenant enforcement; preserve the existing evidence schema and artifact identifiers.
+
 ## Drift findings contents
 
 Each drift finding should include enough detail for review and escalation:

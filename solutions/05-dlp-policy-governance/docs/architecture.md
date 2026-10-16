@@ -54,6 +54,10 @@ If Dataverse is used for durable storage, table names should follow the shared c
 
 ## Security and operational notes
 
+- Copilot DLP uses a Custom-template, exclusive policy location with no administrative-unit support. SIT and sensitivity-label conditions belong in separate rules, not a combined rule.
+- Prompt processing blocking remains preview; web-search-only restriction still allows permitted internal grounding. Label-based blocking excludes content but can retain citations. Direct prompt-uploaded file contents are outside this location's evaluation.
+- Optional DLP metadata collection uses `Connect-IPPSSession` and Security & Compliance RBAC; a separate Exchange Online connection is not required. Graph is supporting metadata only.
+- These boundaries follow [Microsoft's Copilot DLP documentation](https://learn.microsoft.com/purview/dlp-microsoft365-copilot-location-learn-about) and [Security & Compliance connection guidance](https://learn.microsoft.com/powershell/exchange/connect-to-scc-powershell).
 - PowerShell collection is read-only and does not create or modify DLP policies.
 - The Power Automate flow is documentation-first in this repository and must be connected to tenant-specific identities before production use.
 - Tier-specific controls determine whether exceptions are optional, required, or subject to senior compliance approval.
