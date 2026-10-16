@@ -8,6 +8,7 @@ Symptoms:
 
 Checks:
 - Confirm the Communication Compliance policy is enabled and includes Copilot prompts and responses.
+- Check the specific supported application/item class, selected AI-app locations, and applicable pay-as-you-go billing rather than assuming every Copilot/agent surface is covered. See [Configure generative AI detection](https://learn.microsoft.com/purview/communication-compliance-copilot).
 - Confirm the customer-validated handoff produced an alert-context item, report export, or audit-log record for the requested period.
 - If the handoff uses a connection reference, confirm `fsi_cr_fsw_handoff` resolves successfully in the target environment.
 - Confirm the trigger or import account has approved Communication Compliance role-group access and the environment variables are populated.
@@ -55,11 +56,14 @@ Symptoms:
 
 Checks:
 - Confirm the service account or principal has table permissions for queue, log, and config tables.
+- For schema-creation failures, verify customization/Entity table privileges separately from licensing. For queue assignment failures, verify user/team ownership and actual owner/sharing access; `fsi_assignedprincipal` alone grants no rights.
+- Verify configured `entitySetName` values against the target environment's Web API service document; example plural names are not authoritative.
 - Confirm column security is not blocking review notes or outcome fields.
 - Confirm the user is in the correct Power Platform security role.
 
 Resolution:
 - Grant read or read-write access to the required tables.
+- Keep log privileges limited to the approved append-only pattern; do not grant log Write/Delete merely to clear an ingestion error. Check all cumulative role grants and administrator access. See [Dataverse security roles](https://learn.microsoft.com/power-platform/admin/security-roles-privileges).
 - Review environment-level security role assignments.
 - Reopen the connection reference after role changes.
 
@@ -71,9 +75,10 @@ Symptoms:
 
 Checks:
 - Confirm the account is in the Communication Compliance Admins role group, Communication Compliance role group, or an approved Compliance Administrator role/role group.
+- Distinguish policy administration from content investigation: inspecting Copilot matches requires Communication Compliance, Communication Compliance Analysts, or Communication Compliance Investigators membership and assignment as a reviewer on that policy. Global Reader is not a substitute. See [Copilot interaction prerequisites](https://learn.microsoft.com/purview/communication-compliance-copilot#prerequisites).
 - Confirm the policy ID in `fsi_ev_fsw_purviewpolicyid` matches the approved policy.
 - Confirm the policy has produced cases or alerts for the requested period.
-- If using Power Automate, confirm the flow is launched from a Communication Compliance alert action rather than scheduled polling.
+- If using the documented Power Automate path, confirm **Automate > Manage Power Automate flows** is used from within an alert and that the actual payload supports the required queue metadata. No scheduled policy-match collector is implemented in this repository.
 
 Resolution:
 - Update the environment variable with the correct policy ID.
@@ -113,5 +118,4 @@ Resolution:
 - `Invoke-DataverseTableQuery` includes automatic retry logic for HTTP 429, 503, and 504 responses with exponential backoff (2s, 4s, 8s) up to 3 retries. If the issue persists after retries, investigate Dataverse service health.
 - Reduce concurrent API consumers or stagger export schedules to avoid hitting the per-user rate limit.
 - For large result sets, confirm pagination completes within 1,000 pages. If exceeded, apply a narrower `$filter` to reduce the result set (for example, shorter date ranges).
-- Monitor the Power Platform admin center for environment-level API capacity metrics and consider capacity add-ons if limits are consistently reached.
-
+- Distinguish request entitlements from service-protection throttling. Capacity add-ons address entitlement limits, not the five-minute service-protection rate limit; handle throttling with `Retry-After`, retry/backoff, and load reduction. See [Dataverse API limits overview](https://learn.microsoft.com/power-apps/maker/data-platform/api-limits-overview) and [Service protection API limits](https://learn.microsoft.com/power-apps/developer/data-platform/api-limits).

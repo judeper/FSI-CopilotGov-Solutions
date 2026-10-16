@@ -4,6 +4,13 @@ All notable changes to this solution will be documented in this file.
 
 The format is based on Keep a Changelog and this project follows Semantic Versioning.
 
+## [Unreleased]
+
+### Fixed
+- Re-verified Microsoft product guidance on 2026-10-15 for issue #843; retained released version v0.2.3 and existing regulatory mappings.
+- Distinguished manually built workflow intent from repository sample behavior, aligned queue ownership with row-level access, and replaced immutable-storage claims with an append-only access pattern and explicit verification limits.
+- Propagated technical corrections to implementation, troubleshooting, checklist, evidence, and dependent guidance; source citations and artifact dispositions are recorded in `artifacts-review/04-finra-supervision-workflow/review-2026-10-15.md`.
+
 ## [v0.2.3] — 2026-06-05 — Microsoft product/feature accuracy fix
 
 ### Fixed
@@ -47,4 +54,3 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ### Added
 - Initial scaffold for FINRA Supervision Workflow for Copilot.
 - Placeholder configuration, documentation, scripts, and tests for repository onboarding.
-

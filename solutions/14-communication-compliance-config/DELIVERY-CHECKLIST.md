@@ -40,6 +40,7 @@
 
 - [ ] Confirm expected Microsoft Purview Communication Compliance policies are active in the Microsoft Purview portal.
 - [ ] Confirm reviewer queue access is available to assigned reviewers.
+- [ ] Verify investigation-role membership plus policy-specific reviewer assignment, supported Copilot surfaces/AI-app locations, applicable billing, and the actual handoff metadata used by Solution 04.
 - [ ] Confirm escalation routing aligns to the supervision workflow dependency.
 - [ ] Confirm queue age and overdue counts are within the selected SLA threshold.
 - [ ] Confirm `scripts\Export-Evidence.ps1` completes successfully and writes a JSON evidence package plus SHA-256 hash.

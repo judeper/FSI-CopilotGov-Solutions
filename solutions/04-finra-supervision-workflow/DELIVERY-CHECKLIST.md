@@ -13,12 +13,14 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 
 ## 1. Prerequisites and access
 
-- [ ] Confirm Power Apps Premium, Power Automate Premium, and eligible Communication Compliance licensing such as Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with Advanced Compliance are assigned.
+- [ ] Confirm appropriate premium Dataverse app/flow entitlements (not automatically both Power Apps Premium and Power Automate Premium for every participant) and eligible Communication Compliance licensing such as Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 Enterprise E5, or Office 365 Enterprise E3 with Advanced Compliance.
 - [ ] Confirm Power Platform administrator, Global Reader, and Communication Compliance Admins role group or Compliance Administrator role/role group access are available to the deployment team.
+- [ ] Verify Dataverse customization/Entity table privileges separately from licensing; verify investigation-role membership and policy-specific reviewer assignment before testing individual Copilot matches.
 - [ ] Confirm Microsoft Entra ID groups exist for supervisory principals, escalation recipients, and service accounts.
 - [ ] Confirm the target Dataverse environment URL is known and approved for use.
 - [ ] Confirm PowerShell 7 or later is installed on the admin workstation.
 - [ ] Confirm Microsoft Graph Audit Search permissions and any customer-validated Communication Compliance handoff (report export, audit-log review, or alert-launched Power Automate) are approved for live export or validation workflows.
+- [ ] Record supported Copilot surfaces/item classes, selected AI-app locations, applicable pay-as-you-go billing, and actual metadata fields available from the handoff.
 
 ## 2. Configuration files
 
@@ -34,13 +36,16 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 - [ ] Create the `fsi_cg_fsw_queue` table with the required queue fields.
 - [ ] Create the `fsi_cg_fsw_log` table with append-only action logging fields.
 - [ ] Create the `fsi_cg_fsw_config` table with zone, tier, SLA, and sampling columns.
+- [ ] Use user/team ownership for row-scoped queue access; verify actual owner/sharing access separately from `fsi_assignedprincipal`.
+- [ ] Discover each table's actual `EntitySetName` and update `dataverseTables[].entitySetName` rather than assuming the example plural names.
 - [ ] Configure alternate keys or duplicate detection for queue and log numbers.
 - [ ] Configure column security or role restrictions for review notes and exception details.
+- [ ] Verify reviewer/flow identities can append log rows but cannot update or delete prior rows through any assigned role; document administrator access and the distinction between append-only access and immutable storage.
 - [ ] Seed configuration rows for each supported zone and tier.
 
 ## 4. Power Automate flows
 
-- [ ] Create the Ingest Flagged Items flow and validate the customer-approved Communication Compliance handoff (report export, audit-log review, or alert-launched Power Automate) rather than an unsupported scheduled policy-match polling connector.
+- [ ] Create the Ingest Flagged Items flow and validate the customer-approved Communication Compliance handoff (report export, audit-log review, or alert-launched Power Automate); do not assume this repository supplies a scheduled policy-match collector.
 - [ ] Create the Assignment Flow and validate principal routing by zone and tier.
 - [ ] Create the Escalation Flow and validate warning and breach notifications.
 - [ ] Create the Review Complete Flow and validate disposition logging.
@@ -55,6 +60,7 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 - [ ] Verify the evidence package contains `supervision-queue-snapshot`, `review-disposition-log`, and `sampling-summary`.
 - [ ] Verify each evidence file has a matching `.sha256` companion file.
 - [ ] Verify the final evidence package conforms to `config\evidence-schema.json`.
+- [ ] Record separate deployed-workflow/access verification; sample exports, hashes, and `immutableLogRequired` alone are not proof of live ingestion or immutable storage.
 
 ## 6. Sign-off
 
@@ -63,4 +69,3 @@ Use this checklist before promoting the FINRA Supervision Workflow for Copilot s
 - [ ] Power Platform administrator has approved Dataverse security roles and environment variables.
 - [ ] Records management has approved the retention period for evidence artifacts.
 - [ ] Project owner has recorded final deployment date, tier, and evidence package location.
-
