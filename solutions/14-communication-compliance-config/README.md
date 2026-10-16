@@ -86,6 +86,7 @@ Deploy this solution by generating the tier-aware policy templates with `Deploy-
 
 - Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), Office 365 E5, or Office 365 E3 with the Advanced Compliance add-on should cover users governed by Communication Compliance policies.
 - Administrator access through the `Communication Compliance Admins` role group or Compliance Administrator, reviewer access through `Communication Compliance Analysts` or `Communication Compliance Investigators`, and read-only access through `Communication Compliance Viewers` where appropriate.
+- For investigating Copilot interactions, assign reviewers to the relevant policy as well as an investigation-capable role group; Global Reader alone is not queue-content access. Validate supported AI-app locations and applicable billing before handing items to Solution 04. See [Copilot interaction prerequisites](https://learn.microsoft.com/purview/communication-compliance-copilot#prerequisites).
 - Legal and compliance review of supervised lexicon words before publication.
 - `04-finra-supervision-workflow` deployed first so escalation procedures are documented.
 - Access to repository shared modules under `scripts\common\`.

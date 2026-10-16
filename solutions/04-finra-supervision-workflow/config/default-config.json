@@ -94,7 +94,7 @@
     },
     {
       "name": "Review Complete Flow",
-      "purpose": "Validate review dispositions and append immutable log rows."
+      "purpose": "Validate review dispositions and append log rows under customer-configured access restrictions."
     }
   ],
   "defaults": {

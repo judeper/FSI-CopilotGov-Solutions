@@ -12,9 +12,13 @@ Minimum roles for deployment and operations:
 
 - `Communication Compliance Admins` role group for Communication Compliance administration
 - Microsoft Entra ID `Compliance Administrator` role or Microsoft Purview portal `Compliance Administrator` role group, as appropriate
-- `Communication Compliance Viewers` or Global Reader for reporting, audit, and validation support
+- `Communication Compliance Viewers` for the reporting scope allowed by that role group; Global Reader is only for supported tenant configuration checks and does not replace investigation-role or policy-reviewer access
 
 Additional tenant-specific roles may be required if the customer uses delegated administration, administrative units, or centralized security operations.
+
+For Copilot investigation and the Solution 04 handoff, validate supported
+applications/item classes, selected AI-app locations, and applicable pay-as-you-go
+billing prerequisites. See [Configure generative AI detection](https://learn.microsoft.com/purview/communication-compliance-copilot).
 
 ## Reviewer Requirements
 
