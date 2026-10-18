@@ -6,6 +6,10 @@ The format is based on Keep a Changelog, and this project follows semantic versi
 
 ## [Unreleased]
 
+### Changed
+- 2026-10-18 (judeper/OceanSquad#866): Re-verified Microsoft Learn sources and corrected new Copilot retention locations/cmdlets, interaction-message versus file-label scope, audit/content retention separation, task-specific access, and module/runtime prerequisites. Propagated the boundaries to implementation, troubleshooting, acceptance, evidence, and dependency guidance; recorded sources and changed/unchanged downstream inventory in `artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md`.
+- Identified stale implementation-guidance strings emitted by the existing scripts. Documentation warns against using them; code-owner follow-up remains required and no script/configuration changes or tenant validation are claimed.
+
 ### Verified
 - Re-verified all Microsoft product and feature claims against current Microsoft Learn sources on 2026-08-16 (issue #440); no technical drift found, so the solution version is unchanged and only the README Last Verified date was refreshed. Confirmed the Copilot audit event names (`CopilotInteraction`, `ConnectedAIAppInteraction`, `AIAppInteraction`), Audit (Standard) and Audit (Premium) tiers and their default retention, audit record availability guidance (typically 60-90 minutes for core services), the unified Microsoft Purview eDiscovery experience, the retention policy cmdlets, the audit and eDiscovery roles, the Microsoft Graph `AuditLogsQuery.Read.All` and service-specific `AuditLogsQuery-*.Read.All` permissions, and the Microsoft 365 E5 / Microsoft Purview Suite / Microsoft 365 E5 eDiscovery and Audit add-on licensing.
 

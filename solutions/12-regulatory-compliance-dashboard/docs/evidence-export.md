@@ -81,3 +81,4 @@ Dashboard export packages should capture:
 - Every JSON package must have a matching `.sha256` file.
 - Export notes should use precise language such as "supports compliance with" and avoid absolute claims.
 - Evidence freshness should be calculated from upstream export timestamps, not from the time the dashboard was opened.
+- For Solution 06, a fresh timestamp or valid hash does not turn sample audit/hold counts into tenant evidence. Preserve the distinction between UAL retention, interaction-message retention, and supported file/record labels in the source notes; follow its [evidence instructions](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/solutions/06-audit-trail-manager/docs/evidence-export.md).
