@@ -3,13 +3,13 @@
   "solutionCode": "ATM",
   "tier": "baseline",
   "tenantId": "not-specified",
-  "generatedAt": "2026-04-15T20:10:43.9651267-04:00",
+  "generatedAt": "2026-10-18T20:34:00.5243544-04:00",
   "periodStart": "2026-01-01",
   "periodEnd": "2026-01-31",
   "ualStatus": {
     "enabledCheck": "check",
     "auditLevel": "Audit (Standard)",
-    "validationCommand": "Check-AuditLogCompleteness",
+    "validationCommand": "Not executable: Check-AuditLogCompleteness is an unimplemented placeholder. Separately validate audit ingestion and event coverage using documented Microsoft Purview Audit search procedures: https://learn.microsoft.com/purview/audit-search.",
     "latencyNote": "Microsoft does not guarantee a specific audit record return time; core services typically appear within 60-90 minutes, while other services can take longer."
   },
   "requiredEventTypes": [
@@ -33,7 +33,8 @@
     }
   ],
   "notes": [
-    "Copilot event detail depends on Microsoft 365 audit level.",
-    "Sample counts should be refreshed from tenant audit data before examination use."
+    "Microsoft 365 Copilot interaction activities are logged by Audit (Standard) when auditing is enabled; Audit (Premium) licensing supports longer retention and additional capabilities, not a prerequisite for basic Copilot capture. See https://learn.microsoft.com/purview/audit-copilot and https://learn.microsoft.com/purview/audit-solutions-overview.",
+    "Content retention policies do not configure audit log retention; validate audit retention and licensing separately.",
+    "Local sample only: capturedEventTypes reflects configured scope and zero sample counts are placeholders, not observed tenant events. Obtain separately validated tenant evidence before examination use."
   ]
 }

@@ -3,7 +3,7 @@
   "solutionCode": "ATM",
   "tier": "baseline",
   "tenantId": "not-specified",
-  "generatedAt": "2026-04-15T20:10:43.9651267-04:00",
+  "generatedAt": "2026-10-18T20:34:00.5243544-04:00",
   "activePolicies": [
     {
       "policyName": "ATM-baseline-SEC_17a4",
@@ -61,7 +61,7 @@
   "labels": [
     {
       "labelName": "ATM-baseline-Copilot-Record",
-      "appliesTo": "Copilot interaction artifacts and supporting files",
+      "appliesTo": "Supported files in SharePoint and OneDrive only; not Copilot interaction messages (user prompts and responses), which use retention policies. See https://learn.microsoft.com/purview/retention-policies-copilot and https://learn.microsoft.com/purview/ai-m365-copilot.",
       "required": true,
       "publishingMode": "portal-documented"
     }
@@ -99,7 +99,7 @@
   "wormDocumentationRequired": false,
   "immutableStorageAttestationRequired": false,
   "notes": [
-    "Retention schedules should be confirmed in Microsoft Purview before relying on the evidence package.",
+    "Local sample only: activePolicies and labels describe configured expectations, not observed tenant state. Confirm content retention schedules in Microsoft Purview separately from audit log retention before relying on the evidence package.",
     "SEC 17a-4 immutable storage requirements are documented separately from this JSON output."
   ]
 }
