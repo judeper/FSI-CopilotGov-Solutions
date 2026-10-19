@@ -6,6 +6,9 @@ The format is based on Keep a Changelog, and this project follows semantic versi
 
 ## [Unreleased]
 
+### Fixed
+- Made ATM sample JSON output UTF-8/LF on Windows and Linux, pinned maintained sample checkout line endings, and regenerated sidecars from the committed LF bytes. Added byte-contract regressions without changing sample metadata, tier configuration, or integrity assertions.
+
 ### Verified
 - Re-verified all Microsoft product and feature claims against current Microsoft Learn sources on 2026-08-16 (issue #440); no technical drift found, so the solution version is unchanged and only the README Last Verified date was refreshed. Confirmed the Copilot audit event names (`CopilotInteraction`, `ConnectedAIAppInteraction`, `AIAppInteraction`), Audit (Standard) and Audit (Premium) tiers and their default retention, audit record availability guidance (typically 60-90 minutes for core services), the unified Microsoft Purview eDiscovery experience, the retention policy cmdlets, the audit and eDiscovery roles, the Microsoft Graph `AuditLogsQuery.Read.All` and service-specific `AuditLogsQuery-*.Read.All` permissions, and the Microsoft 365 E5 / Microsoft Purview Suite / Microsoft 365 E5 eDiscovery and Audit add-on licensing.
 

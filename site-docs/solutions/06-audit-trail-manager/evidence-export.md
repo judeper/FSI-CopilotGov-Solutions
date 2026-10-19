@@ -4,6 +4,15 @@
 
 `Export-Evidence.ps1` produces a structured JSON evidence package for format validation and examination-support workflows. The script also writes SHA-256 companion files for each JSON artifact.
 
+The three ATM sample artifacts use UTF-8 without a BOM, LF line endings, and one
+final newline. Maintained samples in `artifacts/evidence-test` have the same Git
+checkout policy on Windows and Linux. Their sidecars hash the exact file bytes;
+do not reformat or convert line endings after hashing. To refresh maintained
+samples without changing their metadata, use `Read-AtmJsonFile` and
+`Write-AtmJsonFile` from `scripts/AtmShared.psm1`, then regenerate the sidecars with
+`Write-CopilotGovSha256File` from `scripts/common/EvidenceExport.psm1` at the
+repository root. These remain local samples, not tenant evidence.
+
 ## Artifact: audit-log-completeness.json
 
 This artifact records:
