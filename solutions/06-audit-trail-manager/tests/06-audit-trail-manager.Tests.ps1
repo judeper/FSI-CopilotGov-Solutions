@@ -149,6 +149,16 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
     }
 
     Describe 'ATM maintained evidence samples' {
+        It 'keeps maintained sample bytes in UTF-8 without BOM and LF on every checkout' {
+            $fixtureRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'artifacts\evidence-test'
+            foreach ($sample in Get-ChildItem $fixtureRoot -Filter '*.json' -File) {
+                $bytes = [IO.File]::ReadAllBytes($sample.FullName)
+                $bytes | Should -Not -Contain 13
+                [Convert]::ToHexString($bytes[0..2]) | Should -Not -Be 'EFBBBF'
+                $bytes[-1] | Should -Be 10
+            }
+        }
+
         It 'has corrected guidance and valid hashes for every maintained JSON sample' {
             $fixtureRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'artifacts\evidence-test'
             $samples = @(Get-ChildItem $fixtureRoot -Filter '*.json' -File)
@@ -160,6 +170,29 @@ Describe 'Copilot Interaction Audit Trail Manager solution' {
             $state = Get-Content (Join-Path $fixtureRoot 'retention-policy-state.json') -Raw | ConvertFrom-Json
             $audit.ualStatus.validationCommand | Should -Match '^Not executable:'
             $state.labels[0].appliesTo | Should -Match 'not Copilot interaction messages'
+        }
+    }
+
+    Describe 'ATM JSON writer byte contract' {
+        It 'writes canonical LF bytes without changing multiline or Unicode values' {
+            Import-Module (Join-Path $scriptsRoot 'AtmShared.psm1') -Force
+            $inputObject = [ordered]@{
+                notes = @("first`r`nsecond", "third`nfourth")
+                displayName = "Copilot $([char]0x2014) sample"
+            }
+            $path = Join-Path $TestDrive 'writer\sample.json'
+            Write-AtmJsonFile -Path $path -InputObject $inputObject | Should -Be $path
+            $bytes = [IO.File]::ReadAllBytes($path)
+            $bytes | Should -Not -Contain 13
+            [Convert]::ToHexString($bytes[0..2]) | Should -Not -Be 'EFBBBF'
+            $bytes[-1] | Should -Be 10
+            $bytes[-2] | Should -Not -Be 10
+            $expectedJson = (($inputObject | ConvertTo-Json -Depth 20) -replace "`r`n?", "`n") + "`n"
+            [Convert]::ToHexString($bytes) | Should -BeExactly ([Convert]::ToHexString([Text.Encoding]::UTF8.GetBytes($expectedJson)))
+            $roundTrip = Get-Content $path -Raw | ConvertFrom-Json
+            $roundTrip.notes[0] | Should -BeExactly $inputObject.notes[0]
+            $roundTrip.notes[1] | Should -BeExactly $inputObject.notes[1]
+            $roundTrip.displayName | Should -BeExactly $inputObject.displayName
         }
     }
 
