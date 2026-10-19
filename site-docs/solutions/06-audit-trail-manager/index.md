@@ -89,7 +89,7 @@ Audit records describe activity and resource references; use eDiscovery for stor
    - SOX 404 supervisory evidence reference: 2555 days
 5. For regulated deployments, document WORM-capable storage or equivalent immutable storage attestations separately.
 
-> **Generated guidance boundary:** Manifest/evidence guidance distinguishes cmdlet families by content location and limits retention labels to supported files. `Check-AuditLogCompleteness` remains an explicitly non-executable workflow placeholder, not a shipped or Microsoft cmdlet. These manifests and sample exports are not executable policy plans or tenant observations. Review the [deployment guide](deployment-guide.md) and [technical re-verification handoff](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md); the trusted parent must verify the implementation prerequisite's delivery before completing the dependent documentation work.
+> **Generated guidance boundary:** Manifest/evidence guidance distinguishes cmdlet families by content location and limits retention labels to supported files. `Check-AuditLogCompleteness` remains an explicitly non-executable workflow placeholder, not a shipped or Microsoft cmdlet. These manifests and sample exports are not executable policy plans or tenant observations. Review the [deployment guide](deployment-guide.md) and [technical re-verification handoff](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md).
 
 ## Microsoft Purview eDiscovery readiness
 

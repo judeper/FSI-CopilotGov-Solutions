@@ -6,7 +6,32 @@ The original source review changed no regulatory wording/mappings, scripts,
 schemas, workflows, configuration, or tenant state. The solution remains v0.2.3,
 documentation-first.
 
-## Implementation-aligned preparation — 2026-10-19
+## Delivered implementation and documentation refresh — 2026-10-19
+
+The trusted parent verified that PR #372 was independently reviewed at head
+`4fba6defb9c27f2b1a18d6a6ca256846f17f157b` and merged at
+`2026-10-19T21:24:11Z` as squash commit
+`f0fd51a6762b7dde9e104ab85db74df86ad4c789` on actual `main`. Its parent is
+`50f0a258928f879eacd5e439903b8d78365fd360`; its complete tree
+`beb7ab4397e7d62cd4b9e2626053bc68a68fad32` equals the reviewed implementation
+candidate's tree. The documentation refresh fetched and verified that commit,
+parent, and tree before a preserving merge from `main`.
+
+This is repository implementation delivery, **not live tenant validation**.
+Transient internal delivery gates have been removed from the public README,
+generated index, checklist, and changelog. All human acceptance checkboxes
+remain unchecked, and the original `Last Verified: 2026-10-18` source-review date
+is unchanged. The LF/hash repair preserved metadata relative to the initial
+implementation candidate; the earlier sample regeneration had already changed
+`generatedAt` from 2026-04-15 to 2026-10-18 relative to pre-implementation `main`.
+
+PR #371 remains dependent documentation preparation, not delivered documentation.
+Its previous candidate approvals do not carry forward: the refreshed head needs
+new independent review and current checks before the trusted parent decides
+whether to merge or finalize its issue. The following preparation and original
+source-review records are historical, not outstanding implementation gates.
+
+## Historical implementation-aligned preparation — 2026-10-19
 
 This documentation candidate integrates PR #372 implementation head
 `4fba6defb9c27f2b1a18d6a6ca256846f17f157b` locally. Integration into this branch is

@@ -41,7 +41,7 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 - [ ] SHA-256 companion files validate successfully.
 - [ ] The full evidence package is archived with the deployment record.
 - [ ] Sample JSON and zero/pending audit counts are kept distinct from sanitized tenant observations; hashes are not treated as proof of control operation.
-- [ ] The trusted parent has independently reviewed and verified delivery of the implementation prerequisite (PR #372 / OceanSquad#869) to `main` before completing this dependent documentation work (OceanSquad#866); candidate integration is not proof of delivery.
+- [ ] Generated guidance is reviewed as illustrative content-location instructions; placeholders are not treated as executable commands and local samples are not accepted as tenant evidence.
 
 ## Sign-Off
 
