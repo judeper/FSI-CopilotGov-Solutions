@@ -231,7 +231,7 @@ $controls = @(
         controlId = '3.11'
         status = $control311Status
         dashboardScore = (Get-CopilotGovStatusScore -Status $control311Status)
-        notes = 'Retention label coverage is documented for Copilot interaction artifacts.'
+        notes = 'Retention label and publishing-mode expectations apply to supported files, not Copilot interaction messages; those use retention policies. This is local configuration guidance, not observed tenant state.'
     }
     [pscustomobject]@{
         controlId = '3.12'

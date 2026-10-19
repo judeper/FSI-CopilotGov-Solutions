@@ -39,7 +39,10 @@ function Write-AtmJsonFile {
         New-Item -ItemType Directory -Path $directory -Force | Out-Null
     }
 
-    $InputObject | ConvertTo-Json -Depth 20 | Set-Content -Path $Path -Encoding utf8
+    # Hash the same UTF-8/LF bytes that Git preserves in maintained evidence samples.
+    $json = ($InputObject | ConvertTo-Json -Depth 20) -replace "`r`n?", "`n"
+    $resolvedPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+    [IO.File]::WriteAllText($resolvedPath, "$json`n", [Text.UTF8Encoding]::new($false))
     return $Path
 }
 

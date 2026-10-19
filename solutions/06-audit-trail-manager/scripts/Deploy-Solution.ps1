@@ -86,9 +86,9 @@ $retentionPolicies = foreach ($property in $defaultConfig.defaults.retentionPeri
         configuredDays = $configuredDays
         meetsMinimum = ($configuredDays -ge $minimumDays)
         workloads = @('Exchange', 'SharePoint', 'Teams', 'Microsoft Copilot experiences')
-        targetArtifacts = @($defaultConfig.defaults.auditEventTypes)
+        targetArtifacts = @('Copilot user prompts and responses', 'Exchange email', 'SharePoint files', 'Teams chat and channel messages')
         retentionLabelRequired = [bool]$tierConfig.retentionLabelRequired
-        policyApplication = 'Apply through the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as New-RetentionCompliancePolicy, Set-RetentionCompliancePolicy, and New/Set-RetentionComplianceRule.'
+        policyApplication = 'Illustrative content retention guidance, not audit log retention or evidence of tenant configuration. Review separate policies by location in Microsoft Purview. Microsoft Copilot experiences use New-AppRetentionCompliancePolicy, Set-AppRetentionCompliancePolicy, New-AppRetentionComplianceRule, and Set-AppRetentionComplianceRule. Exchange mailboxes and SharePoint sites use New-RetentionCompliancePolicy, Set-RetentionCompliancePolicy, New-RetentionComplianceRule, and Set-RetentionComplianceRule. Teams chats without Copilot interactions use the newer AppRetentionCompliance cmdlet family; Teams channel messages and the legacy Teams chats and Copilot interactions location use the older RetentionCompliance cmdlet family. Verify the exact location before any application: https://learn.microsoft.com/purview/retention-cmdlets and https://learn.microsoft.com/purview/retention-policies-copilot.'
         wormNote = if ($regKey -eq 'SEC_17a4') {
             if ($tierConfig.PSObject.Properties.Name -contains 'wormDocumentationRequired' -and $tierConfig.wormDocumentationRequired) {
                 'Document non-rewriteable, non-erasable storage support through a third-party archive or Azure Immutable Storage.'
@@ -121,7 +121,7 @@ $auditRequirements = [ordered]@{
     unifiedAuditLog = [ordered]@{
         checkRequired = $true
         statusIndicator = $ualStatusFlag
-        validationCommand = 'Check-AuditLogCompleteness'
+        validationCommand = 'Not executable: Check-AuditLogCompleteness is an unimplemented placeholder. Separately validate audit ingestion and event coverage using documented Microsoft Purview Audit search procedures: https://learn.microsoft.com/purview/audit-search.'
         requiredAuditLevel = $tierConfig.auditLevel
         allowedAuditLevels = @($defaultConfig.defaults.auditLevelRequired)
         requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
@@ -158,11 +158,11 @@ $deploymentManifest = [ordered]@{
         preservationStatus = $tierConfig.ediscovery.preservationStatus
     }
     nextSteps = @(
-        'Review retention-policy-manifest.json and apply policies through Microsoft Purview.',
-        'Run Check-AuditLogCompleteness after audit settings propagation.',
+        'Review the illustrative retention-policy-manifest.json by content location before any separately authorized Microsoft Purview policy application; this script does not apply policies or configure audit log retention.',
+        'Check-AuditLogCompleteness is an unimplemented placeholder, not executable. Separately validate audit ingestion and event coverage after propagation using https://learn.microsoft.com/purview/audit-search.',
         'Confirm Microsoft Purview eDiscovery cases, holds, and custodians match the selected tier.',
         'Document Power BI dashboard refresh ownership and Power Automate alert ownership.',
-        'Run Export-Evidence.ps1 after baseline validation to capture evidence.'
+        'Run Export-Evidence.ps1 to generate local sample evidence for format validation, not tenant observations.'
     )
 }
 

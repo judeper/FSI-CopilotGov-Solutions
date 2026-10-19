@@ -6,6 +6,15 @@
 
 All counts and statuses below are scaffold values until separately verified against tenant sources. A hash proves file integrity, not audit capture, retention enforcement, or preservation. The script does not ingest manual observations.
 
+The three ATM sample artifacts use UTF-8 without a BOM, LF line endings, and one
+final newline. Maintained samples in `artifacts/evidence-test` have the same Git
+checkout policy on Windows and Linux. Their sidecars hash the exact file bytes;
+do not reformat or convert line endings after hashing. To refresh maintained
+samples without changing their metadata, use `Read-AtmJsonFile` and
+`Write-AtmJsonFile` from `scripts/AtmShared.psm1`, then regenerate the sidecars with
+`Write-CopilotGovSha256File` from `scripts/common/EvidenceExport.psm1` at the
+repository root. These remain local samples, not tenant evidence.
+
 ## Artifact: audit-log-completeness.json
 
 This artifact records:
