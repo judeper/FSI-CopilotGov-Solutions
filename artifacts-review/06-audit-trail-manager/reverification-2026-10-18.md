@@ -2,10 +2,54 @@
 
 Local handoff for judeper/OceanSquad#866, prepared by Linus. Scope: current-source product
 accuracy and documentation propagation only, US commercial-cloud Microsoft 365.
-No regulatory wording/mappings, scripts, schemas, workflows, configuration, or
-tenant state were changed. The solution remains v0.2.3, documentation-first.
+The original source review changed no regulatory wording/mappings, scripts,
+schemas, workflows, configuration, or tenant state. The solution remains v0.2.3,
+documentation-first.
 
-**Disposition: documentation corrected; issue not fully resolved.** The README's
+## Implementation-aligned preparation — 2026-10-19
+
+This documentation candidate integrates PR #372 implementation head
+`4fba6defb9c27f2b1a18d6a6ca256846f17f157b` locally. Integration into this branch is
+**not delivery to `main`**. The trusted parent must independently review and merge
+PR #372, verify OceanSquad#869 delivery, refresh the documentation diff/checks
+against the resulting base, and only then complete PR #371 / OceanSquad#866.
+No issue dependency metadata or tenant state was changed during preparation.
+
+The candidate corrects generated workload/cmdlet guidance, message-versus-file
+label scope, the non-executable completeness placeholder, and sample-only audit
+notes. It preserves the tier settings, schemas, counts, and status logic. All
+three maintained sample sidecars previously hashed Windows CRLF representations,
+but their committed JSON blobs were LF. This reproduced the exact Ubuntu CI
+failure. The ATM JSON writer now emits UTF-8 without a BOM and LF with one final
+newline, fixture paths pin LF checkout, and sidecars were regenerated with the
+existing hash helper. Exact-byte hash assertions were retained, not relaxed.
+
+The README, deployment guide, evidence instructions, and checklist no longer
+claim the corrected strings are still pending. They continue to distinguish
+local configured expectations from separately sourced tenant observations. The
+README's `Last Verified: 2026-10-18` remains the original source-review date, not
+a new lab or UI observation.
+
+Primary sources were checked again on 2026-10-19. The retention cmdlet matrix
+(S2) remains location-specific; the current `New-AppRetentionCompliancePolicy`
+help marks its Microsoft Copilot experiences application values as Preview
+([cmdlet help](https://learn.microsoft.com/powershell/module/exchangepowershell/new-appretentioncompliancepolicy?view=exchange-ps)).
+The deployment guide records this limitation rather than claiming tenant
+availability. Existing combined Teams/Copilot policies become uneditable once
+the tenant supports separate locations
+([configuration guidance](https://learn.microsoft.com/purview/create-retention-policies)).
+Do not infer that older-family support permits editing those policies. No
+blanket cmdlet replacement, live tenant availability, or regulatory
+interpretation is asserted.
+
+The following source-review record is historical: its pending code-owner
+findings and original validation counts describe the state before PR #372.
+They are preserved for traceability, not instructions to repeat completed
+candidate changes or evidence that the prerequisite has merged.
+
+## Original source-review disposition — 2026-10-18
+
+**Original disposition: documentation corrected; issue not fully resolved.** The README's
 `Last Verified` date records the source review, not tenant validation or completion
 of the implementation follow-up below. Existing scripts still emit contradictory
 implementation/evidence guidance. Rusty must correct those strings before the

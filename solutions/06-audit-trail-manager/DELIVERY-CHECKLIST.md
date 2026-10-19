@@ -41,7 +41,7 @@ Use this checklist before handing the Copilot Interaction Audit Trail Manager so
 - [ ] SHA-256 companion files validate successfully.
 - [ ] The full evidence package is archived with the deployment record.
 - [ ] Sample JSON and zero/pending audit counts are kept distinct from sanitized tenant observations; hashes are not treated as proof of control operation.
-- [ ] Pending generated-guidance correction in the [technical handoff](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md) is resolved by the code owner before generated strings are used as implementation instructions.
+- [ ] The trusted parent has independently reviewed and verified delivery of the implementation prerequisite (PR #372 / OceanSquad#869) to `main` before completing this dependent documentation work (OceanSquad#866); candidate integration is not proof of delivery.
 
 ## Sign-Off
 

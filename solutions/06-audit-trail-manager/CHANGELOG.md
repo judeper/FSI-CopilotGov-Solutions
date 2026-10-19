@@ -8,7 +8,7 @@ The format is based on Keep a Changelog, and this project follows semantic versi
 
 ### Changed
 - 2026-10-18 (judeper/OceanSquad#866): Re-verified Microsoft Learn sources and corrected new Copilot retention locations/cmdlets, interaction-message versus file-label scope, audit/content retention separation, task-specific access, and module/runtime prerequisites. Propagated the boundaries to implementation, troubleshooting, acceptance, evidence, and dependency guidance; recorded sources and changed/unchanged downstream inventory in `artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md`.
-- Identified stale implementation-guidance strings emitted by the existing scripts. Documentation warns against using them; code-owner follow-up remains required and no script/configuration changes or tenant validation are claimed.
+- Reconciled guidance against the PR #372 implementation candidate: emitted content locations/cmdlets, supported-file label scope, non-executable completeness placeholder, and local-sample disclaimers now match the documentation. The trusted parent must verify that prerequisite's delivery before completing the dependent work; no tenant validation or configuration change is claimed.
 
 ### Fixed
 - Made ATM sample JSON output UTF-8/LF on Windows and Linux, pinned maintained sample checkout line endings, and regenerated sidecars from the committed LF bytes. Added byte-contract regressions without changing sample metadata, tier configuration, or integrity assertions.
