@@ -15,6 +15,7 @@ Recommended validation checks:
 
 - Confirm each dependency can run its evidence export script successfully.
 - Confirm each dependency publishes current evidence packages and hash files.
+- For Solution 06, verify the provenance of tenant observations separately: its local export contains zero/pending audit counts and tier-derived eDiscovery counts, not live collection. Follow its [current evidence instructions](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/solutions/06-audit-trail-manager/docs/evidence-export.md) before accepting a package as observed posture.
 - Confirm the target environment can access Dataverse, Power Automate, and Power BI with the same tenant context.
 
 ## Step 1: Import Dataverse Solution
