@@ -1,6 +1,6 @@
 # Copilot Interaction Audit Trail Manager
 
-> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-08-16
+> **Status:** Documentation-first scaffold | **Version:** v0.2.3 | **Priority:** P0 | **Track:** B | **Last Verified:** 2026-10-18
 
 > ⚠️ **Documentation-first repository.** Scripts use representative sample data and do not connect to live Microsoft 365 services. See [Disclaimer](../../docs/disclaimer.md) and [Documentation vs Runnable Assets Guide](../../docs/documentation-vs-runnable-assets-guide.md).
 
@@ -21,7 +21,7 @@ Copilot Interaction Audit Trail Manager supports compliance with books-and-recor
 ## What this solution does
 
 - Supports validation of Microsoft 365 Unified Audit Log configuration by checking tier-specific audit level expectations and confirming that `CopilotInteraction` events are included in validation scope.
-- Documents Purview retention policy and retention label requirements for Copilot interaction artifacts.
+- Documents Purview retention policies for Copilot prompts and responses, separately from retention labels for supported referenced files and exported records.
 - Validates Microsoft Purview eDiscovery readiness against tier requirements including preservation status, hold counts, case coverage, and custodian scope.
 - Packages JSON evidence with SHA-256 companion files for examination support.
 - Defines Power BI dashboard metrics for audit completeness, retention coverage, and Microsoft Purview eDiscovery readiness (requires customer implementation in their tenant).
@@ -51,11 +51,11 @@ This solution supports compliance with those obligations by organizing audit val
 
 ## Prerequisites
 
-- Microsoft 365 E5, Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance), or Microsoft 365 E5 eDiscovery and Audit add-on licensing for Purview features used by audit, retention, and Microsoft Purview eDiscovery operations.
-- Power BI Pro for dashboard publication and refresh management.
-- Roles: Compliance Administrator, eDiscovery Manager, Audit Reader for audit search/export access, Audit Manager for audit administration as required, and Global Reader.
-- PowerShell 7.0 or later with modules: ExchangeOnlineManagement and Microsoft.Graph.
-- Graph permissions for Microsoft Purview Audit Search API workflows: `AuditLogsQuery.Read.All` or the least-privileged service-specific `AuditLogsQuery-*` scope required for the selected workload.
+- Eligible Microsoft 365 licensing for Audit (Standard) and the selected retention features; Microsoft 365 E5 or an eligible base subscription with Microsoft Purview Suite (formerly Microsoft 365 E5 Compliance) or Microsoft 365 E5 eDiscovery and Audit add-on for Audit (Premium) and premium eDiscovery features. Validate retention and label entitlements separately; an audit/eDiscovery add-on is not a blanket retention-feature license.
+- Power BI Pro or Premium Per User for publishing to shared workspaces; viewer licensing depends on workspace capacity.
+- Roles assigned by task: Audit Reader for portal audit search/export, Audit Manager for audit administration, and eDiscovery Manager with access to the relevant case. Compliance Administrator and Global Reader do not replace those task-specific permissions.
+- PowerShell 7.0 or later for local scaffold scripts. Optional tenant workflows require a supported ExchangeOnlineManagement/runtime combination and Microsoft.Graph for Graph calls; see [prerequisites](./docs/prerequisites.md).
+- Graph permission for a tenant-specific Copilot Audit Search API workflow: `AuditLogsQuery.Read.All`. Service-specific `AuditLogsQuery-*` permissions restrict access to their named workloads and are not interchangeable Copilot permissions.
 - Unified Audit Log enabled in the tenant.
 
 See [docs/prerequisites.md](./docs/prerequisites.md) for the detailed prerequisite matrix.
@@ -67,7 +67,7 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
 ## Audit configuration steps
 
 1. Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
-2. Manually verify that `CopilotInteraction` events appear in the Unified Audit Log through the Microsoft Purview portal or PowerShell; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope.
+2. Manually verify that `CopilotInteraction` events appear in Microsoft Purview **Audit > Search** or through Exchange Online PowerShell `Search-UnifiedAuditLog`; include `ConnectedAIAppInteraction` or `AIAppInteraction` only when custom or third-party AI apps are in scope. Microsoft-developed Copilot interactions are included in Audit (Standard) when auditing is enabled; Premium is not required just to generate these events. Expanded non-Microsoft AI app auditing has separate onboarding and pay-as-you-go requirements.
 3. Confirm the expected Microsoft Purview Audit tier for the selected tier:
    - baseline: Audit (Standard)
    - recommended: Audit (Premium)
@@ -75,11 +75,13 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
 4. Record sample event counts for the target validation window and retain the results in `audit-log-completeness.json`.
 5. Re-run the validation after major Microsoft 365 audit configuration changes.
 
+Audit records describe activity and resource references; use eDiscovery for stored prompt and response content. Audit (Standard) retains records for 180 days. Audit (Premium)'s one-year default covers eligible users' Microsoft Entra ID, Exchange, OneDrive, and SharePoint records, not every workload automatically. Review a separate audit log retention policy for Copilot records; content retention policies do not extend UAL retention. Ten-year audit retention requires the additional per-user add-on and an applicable policy.
+
 ## Retention policy setup
 
 1. Use `scripts\Deploy-Solution.ps1` to generate `retention-policy-manifest.json`.
-2. Apply the manifest through the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as `New-RetentionCompliancePolicy`, `Set-RetentionCompliancePolicy`, and `New-RetentionComplianceRule`/`Set-RetentionComplianceRule`.
-3. Assign retention labels to Copilot interaction artifacts, transcripts, shared files, and related investigation records where firm policy requires label coverage.
+2. Translate the manifest's intent into workload-specific policies in the Microsoft Purview portal. New policies for prompts and responses use **Microsoft Copilot experiences**, separate from **Teams chats**. In Security & Compliance PowerShell, use `New-AppRetentionCompliancePolicy`/`Set-AppRetentionCompliancePolicy` and `New-AppRetentionComplianceRule`/`Set-AppRetentionComplianceRule` for this location. `RetentionCompliancePolicy`/`RetentionComplianceRule` cmdlets remain applicable to supported older locations and file/label policies. Existing **Teams chats and Copilot interactions** policies remain supported but cannot be edited once the tenant supports the separate locations; create new policies with the new locations instead.
+3. Use retention policies for prompt/response messages stored in hidden user-mailbox folders. Apply retention labels to supported files and exported investigation records, not directly to those interaction messages. Auto-apply cloud-attachment labeling can retain the version of a supported file referenced by Copilot.
 4. Document the final retention schedule by regulation:
    - SEC 17a-4 minimum reference: 2190 days
    - FINRA 4511 minimum reference: 1095 days
@@ -87,10 +89,12 @@ Deploy this solution in stages: validate Unified Audit Log coverage, generate th
    - SOX 404 supervisory evidence reference: 2555 days
 5. For regulated deployments, document WORM-capable storage or equivalent immutable storage attestations separately.
 
+> **Generated guidance boundary:** Manifest/evidence guidance distinguishes cmdlet families by content location and limits retention labels to supported files. `Check-AuditLogCompleteness` remains an explicitly non-executable workflow placeholder, not a shipped or Microsoft cmdlet. These manifests and sample exports are not executable policy plans or tenant observations. Review the [deployment guide](./docs/deployment-guide.md) and [technical re-verification handoff](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md).
+
 ## Microsoft Purview eDiscovery readiness
 
-- Confirm that at least one Microsoft Purview eDiscovery case template exists for the selected tier.
-- Validate preservation status, hold counts, and custodian coverage before evidence export.
+- Confirm an accessible case and the required mailbox/site data sources in the current Microsoft Purview eDiscovery experience. The tier's `caseTemplate` and `basic`/`enhanced`/`full` values are solution-defined readiness metadata, not Microsoft case templates or product editions.
+- Validate actual hold status and data-source coverage before evidence export; case, hold, and custodian counts from the scaffold are illustrative, not tenant observations.
 - Confirm legal hold owners, escalation contacts, and export responsibilities are documented.
 - Use `scripts\Monitor-Compliance.ps1` to record readiness status before examination support exports.
 - Use `scripts\Export-Evidence.ps1` to package the readiness snapshot.
@@ -153,7 +157,7 @@ The evidence package supports compliance with recordkeeping examinations by pres
 ## Known limitations
 
 - Microsoft doesn't guarantee a specific time for audit records to be returned; core services typically appear within 60-90 minutes, while other services can take longer.
-- Copilot interaction detail depends on the Microsoft 365 audit level available in the tenant.
+- Copilot activity auditing is included in Audit (Standard); Premium adds retention and investigation capabilities. Audit metadata is not a substitute for eDiscovery of prompt/response content.
 - WORM retention under SEC 17a-4 requires a third-party archive, Azure Immutable Storage, or another approved immutable storage pattern outside this repository.
 - The repository provides documentation-first definitions for Power BI and Power Automate; deployment teams must implement tenant-specific assets.
 - Evidence exports describe expected control state and support compliance with validation workflows, but they do not replace legal or regulatory review.
@@ -161,6 +165,12 @@ The evidence package supports compliance with recordkeeping examinations by pres
 
 ## Additional documentation
 
+- [Microsoft Learn: Copilot and AI audit records](https://learn.microsoft.com/purview/audit-copilot)
+- [Microsoft Learn: Audit capabilities and retention defaults](https://learn.microsoft.com/purview/audit-solutions-overview)
+- [Microsoft Learn: Copilot and AI retention](https://learn.microsoft.com/purview/retention-policies-copilot)
+- [Microsoft Learn: Retention cmdlets by location](https://learn.microsoft.com/purview/retention-cmdlets)
+- [Microsoft Learn: Current eDiscovery experience](https://learn.microsoft.com/purview/edisc)
+- [Technical re-verification sources and downstream review](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md)
 - [Architecture](./docs/architecture.md)
 - [Deployment Guide](./docs/deployment-guide.md)
 - [Evidence Export](./docs/evidence-export.md)

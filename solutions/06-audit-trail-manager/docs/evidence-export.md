@@ -4,6 +4,17 @@
 
 `Export-Evidence.ps1` produces a structured JSON evidence package for format validation and examination-support workflows. The script also writes SHA-256 companion files for each JSON artifact.
 
+All counts and statuses below are scaffold values until separately verified against tenant sources. A hash proves file integrity, not audit capture, retention enforcement, or preservation. The script does not ingest manual observations.
+
+The three ATM sample artifacts use UTF-8 without a BOM, LF line endings, and one
+final newline. Maintained samples in `artifacts/evidence-test` have the same Git
+checkout policy on Windows and Linux. Their sidecars hash the exact file bytes;
+do not reformat or convert line endings after hashing. To refresh maintained
+samples without changing their metadata, use `Read-AtmJsonFile` and
+`Write-AtmJsonFile` from `scripts/AtmShared.psm1`, then regenerate the sidecars with
+`Write-CopilotGovSha256File` from `scripts/common/EvidenceExport.psm1` at the
+repository root. These remain local samples, not tenant evidence.
+
 ## Artifact: audit-log-completeness.json
 
 This artifact records:
@@ -15,6 +26,8 @@ This artifact records:
 - Sample counts by event type.
 - Validation window and notes on possible UAL latency.
 
+`sampleCounts` are zero with `pending-tenant-query`, and `capturedEventTypes` comes from configuration, not captured activity. `validationCommand` starts with `Not executable:` and explains that `Check-AuditLogCompleteness` is an unimplemented placeholder. Keep a separate sanitized observation record of the query window, operation filter, audit tier, effective audit log retention policy, and actual result counts from Purview Audit or Exchange Online PowerShell. Use eDiscovery for stored prompt/response content, not the audit metadata.
+
 ## Artifact: retention-policy-state.json
 
 This artifact records:
@@ -24,6 +37,8 @@ This artifact records:
 - Retention periods by regulation.
 - WORM documentation and immutable storage attestation flags for regulated deployments.
 - Policy gap notes for any configured value below the regulatory minimum.
+
+`activePolicies` and `labels` are intended configuration, not service read-back. Verify **Microsoft Copilot experiences** policy scope for messages separately from labels on supported files/exports and from UAL retention. Generated label `appliesTo` text explicitly excludes interaction messages; it is not evidence of any tenant policy or label. Record the actual policy location, applicable `AppRetentionCompliance*` versus older `RetentionCompliance*` cmdlet family, and supported file-label scope in separately sourced observations, not by relabeling the sample JSON as observed state. See [retention cmdlets](https://learn.microsoft.com/purview/retention-cmdlets) and [Copilot retention](https://learn.microsoft.com/purview/retention-policies-copilot).
 
 ## Artifact: ediscovery-readiness-package.json
 
@@ -35,6 +50,8 @@ This artifact records:
 - Preservation status.
 - Case template and scope.
 - Readiness notes for legal hold ownership and production support.
+
+Counts are fixed examples selected by the tier's `basic`/`enhanced`/`full` mode; `caseTemplate` is a local naming convention. Neither proves a native template, case, hold, or custodian exists. Separately verify case access, actual mailbox/site data sources, effective holds, and search/export readiness in [Microsoft Purview eDiscovery](https://learn.microsoft.com/purview/edisc). Preserve only sanitized summaries and hashes; do not place prompts, responses, raw identifiers, secrets, or personal data in Git.
 
 ## Package structure
 

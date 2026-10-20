@@ -16,6 +16,7 @@
 - [ ] Compliance team briefed on current Copilot Pages and Notebooks supported capabilities, documented limitations, sharing considerations, and Microsoft Purview eDiscovery validation items
 - [ ] Legal team reviewed the preservation exception approach for SEC 17a-4 and FINRA 4511 scenarios
 - [ ] Dependency solution 06-audit-trail-manager deployed and validated
+- [ ] Dependency evidence distinguishes interaction-message retention and UAL retention from Pages/Notebooks content preservation; sample exports are not accepted as tenant observations
 - [ ] Tenant decision recorded for baseline, recommended, or regulated tier
 - [ ] Named owners assigned for records management, Microsoft Purview eDiscovery operations, and collaboration governance
 

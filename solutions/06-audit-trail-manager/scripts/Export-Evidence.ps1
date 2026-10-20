@@ -4,9 +4,10 @@
 Exports Copilot Interaction Audit Trail Manager evidence package.
 
 .DESCRIPTION
-Assembles audit-log-completeness, retention-policy-state, and ediscovery-readiness-package
-artifacts, writes SHA-256 companion files, and creates the shared evidence package for the
-selected configuration tier.
+Assembles local sample audit-log-completeness, retention-policy-state, and
+ediscovery-readiness-package artifacts, writes SHA-256 companion files, and creates the
+shared evidence package for the selected configuration tier. No tenant state is queried.
+Retention labels describe supported files, not Copilot interaction messages.
 
 .PARAMETER ConfigurationTier
 Specifies the governance tier to export. Valid values are baseline, recommended, and regulated.
@@ -127,15 +128,16 @@ $auditArtifact = [ordered]@{
     ualStatus = [ordered]@{
         enabledCheck = $ualStatusFlag
         auditLevel = $tierConfig.auditLevel
-        validationCommand = 'Check-AuditLogCompleteness'
+        validationCommand = 'Not executable: Check-AuditLogCompleteness is an unimplemented placeholder. Separately validate audit ingestion and event coverage using documented Microsoft Purview Audit search procedures: https://learn.microsoft.com/purview/audit-search.'
         latencyNote = 'Microsoft does not guarantee a specific audit record return time; core services typically appear within 60-90 minutes, while other services can take longer.'
     }
     requiredEventTypes = @($defaultConfig.defaults.auditEventTypes)
     capturedEventTypes = @($tierConfig.auditEventTypes)
     sampleCounts = $sampleCounts
     notes = @(
-        'Copilot event detail depends on Microsoft 365 audit level.',
-        'Sample counts should be refreshed from tenant audit data before examination use.'
+        'Microsoft 365 Copilot interaction activities are logged by Audit (Standard) when auditing is enabled; Audit (Premium) licensing supports longer retention and additional capabilities, not a prerequisite for basic Copilot capture. See https://learn.microsoft.com/purview/audit-copilot and https://learn.microsoft.com/purview/audit-solutions-overview.',
+        'Content retention policies do not configure audit log retention; validate audit retention and licensing separately.',
+        'Local sample only: capturedEventTypes reflects configured scope and zero sample counts are placeholders, not observed tenant events. Obtain separately validated tenant evidence before examination use.'
     )
 }
 
@@ -160,7 +162,7 @@ $retentionArtifact = [ordered]@{
     labels = @(
         [ordered]@{
             labelName = "ATM-$ConfigurationTier-Copilot-Record"
-            appliesTo = 'Copilot interaction artifacts and supporting files'
+            appliesTo = 'Supported files in SharePoint and OneDrive only; not Copilot interaction messages (user prompts and responses), which use retention policies. See https://learn.microsoft.com/purview/retention-policies-copilot and https://learn.microsoft.com/purview/ai-m365-copilot.'
             required = [bool]$tierConfig.retentionLabelRequired
             publishingMode = $tierConfig.retentionPolicyMode
         }
@@ -169,7 +171,7 @@ $retentionArtifact = [ordered]@{
     wormDocumentationRequired = [bool](($tierConfig.PSObject.Properties.Name -contains 'wormDocumentationRequired') -and $tierConfig.wormDocumentationRequired)
     immutableStorageAttestationRequired = [bool](($tierConfig.PSObject.Properties.Name -contains 'immutableStorageAttestationRequired') -and $tierConfig.immutableStorageAttestationRequired)
     notes = @(
-        'Retention schedules should be confirmed in Microsoft Purview before relying on the evidence package.',
+        'Local sample only: activePolicies and labels describe configured expectations, not observed tenant state. Confirm content retention schedules in Microsoft Purview separately from audit log retention before relying on the evidence package.',
         'SEC 17a-4 immutable storage requirements are documented separately from this JSON output.'
     )
 }
@@ -284,7 +286,7 @@ $controls = @(
     [pscustomobject]@{
         controlId = '3.11'
         status = $control311Status
-        notes = 'Retention labels and publishing mode are documented for Copilot interaction artifacts.'
+        notes = 'Retention label and publishing-mode expectations apply to supported files, not Copilot interaction messages; those use retention policies. This is local configuration guidance, not observed tenant state.'
     }
     [pscustomobject]@{
         controlId = '3.12'

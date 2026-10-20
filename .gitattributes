@@ -7,3 +7,5 @@
 # Hash fixtures must have identical bytes on Windows and Linux.
 scripts/tests/fixtures/lab-package/**/*.json text eol=lf
 scripts/tests/fixtures/lab-package/**/*.sha256 text eol=lf
+solutions/06-audit-trail-manager/artifacts/evidence-test/*.json text eol=lf
+solutions/06-audit-trail-manager/artifacts/evidence-test/*.sha256 text eol=lf

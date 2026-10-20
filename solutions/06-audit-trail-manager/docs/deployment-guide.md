@@ -4,12 +4,15 @@
 
 Confirm licensing, roles, PowerShell modules, and Graph permissions described in [prerequisites.md](./prerequisites.md).
 
+The script examples below write local sample artifacts only. They neither collect tenant evidence nor apply policies. Perform tenant checks separately under the customer's authorization; this source review did not execute them.
+
 ## 2. Verify Unified Audit Log and Copilot event capture
 
-- Confirm that Microsoft 365 Unified Audit Log is enabled in the tenant.
-- Run the operational validation workflow aligned to `Check-AuditLogCompleteness`.
+- Confirm ingestion using `Get-AdminAuditLogConfig` and its `UnifiedAuditLogIngestionEnabled` property in **Exchange Online PowerShell**, not Security & Compliance PowerShell, where that property reports false. See [audit search prerequisites](https://learn.microsoft.com/purview/audit-search).
+- `Check-AuditLogCompleteness` in generated metadata is a workflow placeholder, not an implemented command. Use Microsoft Purview **Audit > Search** with the operation name filter, or Exchange Online PowerShell `Search-UnifiedAuditLog`, for separately authorized validation.
 - Confirm that `CopilotInteraction` (interactions with a Microsoft-developed Copilot application) and supporting workload events such as `FileAccessed` appear in scope; include `ConnectedAIAppInteraction` (a custom-built Copilot or third-party AI application deployed and registered within your organization) or `AIAppInteraction` (a third-party AI application that isn't deployed within your organization) only when those AI applications are in scope.
 - Allow for audit record availability to vary; Microsoft doesn't guarantee a specific return time, core services typically appear within 60-90 minutes, and other services can take longer.
+- Record the audit tier and effective audit log retention policy separately from content retention. Audit (Standard) includes Microsoft-developed Copilot interactions and 180-day log retention. Premium's one-year default is workload-specific, not automatic one-year Copilot retention; longer retention needs the appropriate policy and licensing. See [audit capabilities](https://learn.microsoft.com/purview/audit-solutions-overview) and [AI app scope/billing](https://learn.microsoft.com/purview/audit-copilot).
 
 ## 3. Generate solution manifests
 
@@ -25,25 +28,30 @@ The deployment script creates the following files:
 
 ## 4. Apply retention policies
 
-- Use the Microsoft Purview portal or Security & Compliance PowerShell cmdlets such as `New-RetentionCompliancePolicy`, `Set-RetentionCompliancePolicy`, and `New-RetentionComplianceRule`/`Set-RetentionComplianceRule` to create or update the retention policies defined in `retention-policy-manifest.json`.
+- Treat `retention-policy-manifest.json` as retention intent, not an importable policy or an executable command plan. Its `targetArtifacts` describe content such as prompts/responses and SharePoint files, not audit operation names or command parameters.
+- In the Microsoft Purview portal, new prompt/response policies use **Microsoft Copilot experiences**, separate from **Teams chats**. Use Security & Compliance PowerShell `New-AppRetentionCompliancePolicy`/`Set-AppRetentionCompliancePolicy` with `New-AppRetentionComplianceRule`/`Set-AppRetentionComplianceRule` for this location. Older `RetentionCompliance*` cmdlets apply to supported older locations. Existing **Teams chats and Copilot interactions** policies remain supported but cannot be edited once the tenant supports the separate locations; new policies must use the new locations. See [retention cmdlets](https://learn.microsoft.com/purview/retention-cmdlets) and [policy configuration](https://learn.microsoft.com/purview/create-retention-policies).
+- Confirm exact location and parameter support before any separately authorized tenant operation. The current [`New-AppRetentionCompliancePolicy` help](https://learn.microsoft.com/powershell/module/exchangepowershell/new-appretentioncompliancepolicy?view=exchange-ps) marks its **Microsoft Copilot experiences** application values as Preview. This source review does not establish tenant availability or authorize executing the illustrative guidance.
 - Validate that the selected tier aligns to the target preservation objective:
   - baseline: 1095 days
   - recommended: 1825 days
   - regulated: 2555 days
-- Confirm that retention labels are scoped to Copilot interaction artifacts, related files, and exported evidence where firm policy requires coverage.
+- Retain prompt/response messages with retention policies; these messages are stored in hidden user-mailbox folders. Retention labels apply separately to supported files and exported records, not directly to interaction messages. Auto-apply cloud-attachment labels can preserve supported file versions referenced in Copilot. See [Copilot retention](https://learn.microsoft.com/purview/retention-policies-copilot) and [supported capabilities](https://learn.microsoft.com/purview/ai-m365-copilot).
+- Verify retention through eDiscovery, not chat visibility alone; retention processing typically runs over 1-7 days and holds can suspend permanent deletion. Do not remove holds or purge content as a verification test.
+
+> **Generated guidance is illustrative:** `policyApplication` distinguishes newer and older content locations, label-scope notes exclude prompt/response messages, and completeness validation is explicitly non-executable. The scripts still neither apply policies nor collect tenant evidence. The [re-verification handoff](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/artifacts-review/06-audit-trail-manager/reverification-2026-10-18.md) records the implementation prerequisite and its separate delivery gate.
 
 ## 5. Configure Microsoft Purview eDiscovery holds
 
 - Create or update Microsoft Purview eDiscovery cases for the selected tier.
-- Confirm hold count, custodian list, preservation status, and legal hold ownership.
+- Confirm actual hold status, people/groups, mailbox/site data sources, and legal hold ownership in the [current eDiscovery experience](https://learn.microsoft.com/purview/edisc). Use mailbox data sources to search stored prompts/responses; audit metadata alone is not their content.
 - Document export permissions and examination response contacts.
-- Align case naming to the readiness templates in the tier configuration.
+- Treat tier `caseTemplate` names and `basic`/`enhanced`/`full` modes as local readiness conventions, not native Microsoft case templates or editions. Sample counts from the export script do not demonstrate preservation.
 
 ## 6. Deploy the Power BI monitoring dashboard
 
 - Build the dashboard from the documented JSON outputs and metrics described in the README and [evidence-export.md](./evidence-export.md).
 - Include pages for audit completeness, retention coverage, and Microsoft Purview eDiscovery readiness.
-- Configure scheduled refresh using approved Graph or data gateway credentials.
+- Configure scheduled refresh using credentials for the implemented data source and a gateway only where that source requires one; the scaffold does not provide a live Graph binding.
 - Record the dashboard owner, workspace name, and refresh schedule.
 
 ## 7. Configure Power Automate exception alerts
@@ -59,7 +67,7 @@ The deployment script creates the following files:
 .\scripts\Export-Evidence.ps1 -ConfigurationTier baseline -OutputPath .\artifacts\evidence -PeriodStart 2026-01-01 -PeriodEnd 2026-01-31 -TenantId <tenant-id>
 ```
 
-Review the generated SHA-256 companions and archive the evidence package with the deployment record.
+Review the generated SHA-256 companions and archive the evidence package with the deployment record. Keep separately sourced, sanitized tenant observations distinct from these samples; do not relabel zero/pending event counts or tier-derived case/hold counts as observed values.
 
 ## 9. Validate ongoing posture
 

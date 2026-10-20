@@ -8,6 +8,7 @@ This guide walks through the deployment sequence for Copilot Pages and Notebooks
 
 - Review [prerequisites](./prerequisites.md).
 - Confirm `06-audit-trail-manager` is deployed and baseline retention evidence has been reviewed.
+- Review its [current retention boundary](https://github.com/judeper/FSI-CopilotGov-Solutions/blob/main/solutions/06-audit-trail-manager/docs/deployment-guide.md): prompt/response retention, UAL retention, and Pages/Notebooks content preservation are separate surfaces. A **Microsoft Copilot experiences** policy for interactions is not proof that SharePoint Embedded content is retained. Do not treat sample Solution 06 exports as tenant observations.
 - Select the governance tier to use for the tenant: `baseline`, `recommended`, or `regulated`.
 - Identify compliance, legal, records management, and Microsoft Purview eDiscovery reviewers.
 
@@ -37,7 +38,7 @@ For every open limitation or validation item, assign the control that will reduc
 
 - retention policy scope validation and manual export when scope cannot be demonstrated
 - restricted sharing and site membership review
-- enhanced audit logging through `06-audit-trail-manager`
+- separately verified audit coverage using the guidance in `06-audit-trail-manager` (the scaffold does not enable logging or collect live records)
 - quarterly notebook storage, retention label, and export validation
 - legal-hold container inclusion review for SharePoint Embedded content
 
